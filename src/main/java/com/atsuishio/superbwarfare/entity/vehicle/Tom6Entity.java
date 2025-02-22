@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
@@ -97,13 +98,19 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        super.hurt(source, amount);
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount *= 2f;
-        }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+
+        amount = damageModifier.compute(source, amount);
         this.hurt(amount, source.getEntity(), true);
+        super.hurt(source, amount);
+
         return true;
+    }
+
+    @Override
+    public DamageModifier getDamageModifier() {
+        return super.getDamageModifier()
+                .multiply(2, ModDamageTypes.VEHICLE_STRIKE);
     }
 
     @Override

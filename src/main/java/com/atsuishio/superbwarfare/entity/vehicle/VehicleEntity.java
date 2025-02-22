@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
@@ -154,33 +155,34 @@ public class VehicleEntity extends Entity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount -= 8;
-            crash = true;
-        } else {
-            crash = false;
-        }
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
-        lastHurtTick = 0;
-        repairCoolDown = 200;
+        if (amount > 0) {
+            lastHurtTick = 0;
+            repairCoolDown = 200;
+        }
 
         return super.hurt(source, amount);
+    }
+
+    protected final DamageModifier damageModifier = this.getDamageModifier();
+
+    /**
+     * 控制载具伤害免疫
+     *
+     * @return DamageModifier
+     */
+    public DamageModifier getDamageModifier() {
+        return new DamageModifier()
+                .immuneTo(source -> source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
+                .immuneTo(DamageTypes.FALL)
+                .immuneTo(DamageTypes.CACTUS)
+                .immuneTo(DamageTypes.DROWN)
+                .immuneTo(DamageTypes.DRAGON_BREATH)
+                .immuneTo(DamageTypes.WITHER)
+                .immuneTo(DamageTypes.WITHER_SKULL)
+                .reduce(8, ModDamageTypes.VEHICLE_STRIKE);
     }
 
     public void heal(float pHealAmount) {

@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -114,67 +115,39 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
-
-        if (source.is(DamageTypes.ARROW)) {
-            amount *= 0.1f;
-        }
-        if (source.is(DamageTypes.TRIDENT)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.MOB_PROJECTILE)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.PLAYER_ATTACK)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.LAVA)) {
-            amount *= 2f;
-        }
-        if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 2f;
-        }
-        if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 2f;
-        }
-
-        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.MINE)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.LUNGE_MINE)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 0.6f;
-        }
-        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
-            amount *= 0.08f;
-        }
-        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount *= 5f;
-        }
-
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 2, 0), source.getEntity(), true);
+
+        amount = damageModifier.compute(source, amount);
+        super.hurt(source, amount);
+        this.hurt(amount, source.getEntity(), true);
+
         return true;
+    }
+
+    @Override
+    public DamageModifier getDamageModifier() {
+        return super.getDamageModifier()
+                .multiply(0.1f, DamageTypes.ARROW)
+                .multiply(0.2f, DamageTypes.TRIDENT)
+                .multiply(0.2f, DamageTypes.MOB_ATTACK)
+                .multiply(0.2f, DamageTypes.MOB_ATTACK_NO_AGGRO)
+                .multiply(0.2f, DamageTypes.MOB_PROJECTILE)
+                .multiply(0.2f, DamageTypes.PLAYER_ATTACK)
+                .multiply(2f, DamageTypes.LAVA)
+                .multiply(2f, DamageTypes.EXPLOSION)
+                .multiply(2f, DamageTypes.PLAYER_EXPLOSION)
+                .multiply(0.5f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.5f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.5f, ModDamageTypes.MINE)
+                .multiply(0.5f, ModDamageTypes.LUNGE_MINE)
+                .multiply(0.6f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.08f, ModTags.DamageTypes.PROJECTILE)
+                .multiply(0.5f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .multiply(5f, ModDamageTypes.VEHICLE_STRIKE)
+                .reduce(2);
     }
 
     @Override

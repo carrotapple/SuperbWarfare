@@ -93,9 +93,12 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        super.hurt(source, amount);
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+
+        amount = damageModifier.compute(source, amount);
+        super.hurt(source, amount);
         this.hurt(amount, source.getEntity(), true);
+
         return true;
     }
 

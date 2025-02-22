@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.projectile.WgMissileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -138,67 +139,39 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ILan
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
-
-        if (source.is(DamageTypes.ARROW)) {
-            amount *= 0.3f;
-        }
-        if (source.is(DamageTypes.TRIDENT)) {
-            amount *= 0.3f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK)) {
-            amount *= 0.5f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
-            amount *= 0.4f;
-        }
-        if (source.is(DamageTypes.MOB_PROJECTILE)) {
-            amount *= 0.3f;
-        }
-        if (source.is(DamageTypes.PLAYER_ATTACK)) {
-            amount *= 0.2f;
-        }
-        if (source.is(DamageTypes.LAVA)) {
-            amount *= 2.5f;
-        }
-        if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 1.2f;
-        }
-        if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 1.2f;
-        }
-
-        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
-            amount *= 0.4f;
-        }
-        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.4f;
-        }
-        if (source.is(ModDamageTypes.MINE)) {
-            amount *= 0.14f;
-        }
-        if (source.is(ModDamageTypes.LUNGE_MINE)) {
-            amount *= 0.18f;
-        }
-        if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 0.3f;
-        }
-        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
-            amount *= 0.02f;
-        }
-        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            amount *= 0.14f;
-        }
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount *= 1.7f;
-        }
-
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 8, 0), source.getEntity(), true);
+
+        amount = damageModifier.compute(source, amount);
+        super.hurt(source, amount);
+        this.hurt(amount, source.getEntity(), true);
+
         return true;
+    }
+
+    @Override
+    public DamageModifier getDamageModifier() {
+        return super.getDamageModifier()
+                .multiply(0.3f, DamageTypes.ARROW)
+                .multiply(0.3f, DamageTypes.TRIDENT)
+                .multiply(0.5f, DamageTypes.MOB_ATTACK)
+                .multiply(0.4f, DamageTypes.MOB_ATTACK_NO_AGGRO)
+                .multiply(0.3f, DamageTypes.MOB_PROJECTILE)
+                .multiply(0.2f, DamageTypes.PLAYER_ATTACK)
+                .multiply(2.5f, DamageTypes.LAVA)
+                .multiply(1.2f, DamageTypes.EXPLOSION)
+                .multiply(1.2f, DamageTypes.PLAYER_EXPLOSION)
+                .multiply(0.4f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.4f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.14f, ModDamageTypes.MINE)
+                .multiply(0.18f, ModDamageTypes.LUNGE_MINE)
+                .multiply(0.3f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.02f, ModTags.DamageTypes.PROJECTILE)
+                .multiply(0.14f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .multiply(1.7f, ModDamageTypes.VEHICLE_STRIKE)
+                .reduce(8);
     }
 
     @Override
