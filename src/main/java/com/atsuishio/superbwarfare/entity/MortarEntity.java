@@ -120,11 +120,11 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
 
-        if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
+        if (mainHandItem.getItem() == ModItems.MORTAR_SHELL.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
 
             if (!player.isCreative()) {
-                player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+                player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELL.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
             if (!this.level().isClientSide()) {
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);

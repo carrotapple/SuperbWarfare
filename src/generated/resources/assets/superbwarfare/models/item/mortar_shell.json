@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "superbwarfare:item/mortar_shells"
+    "layer0": "superbwarfare:item/mortar_shell"
   }
 }

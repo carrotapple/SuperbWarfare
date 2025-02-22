@@ -445,7 +445,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "superbwarfare:mortar_shells",
+          "name": "superbwarfare:mortar_shell",
           "weight": 6,
           "functions": [
             {

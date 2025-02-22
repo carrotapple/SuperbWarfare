@@ -23,7 +23,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         simpleItem(ModItems.EMPTY_PERK, "perk/");
 
-        simpleItem(ModItems.MORTAR_SHELLS);
+        simpleItem(ModItems.MORTAR_SHELL);
 
         // misc
         simpleItem(ModItems.ANCIENT_CPU);

@@ -113,7 +113,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.MORTAR_SHELLS.get();
+        return ModItems.MORTAR_SHELL.get();
     }
 
     @Override

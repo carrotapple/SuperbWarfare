@@ -322,7 +322,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
             // 返还神风弹药
             if (this.entityData.get(KAMIKAZE_MODE) == 1) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELLS.get()));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELL.get()));
             } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.C4_BOMB.get()));
             }
@@ -346,7 +346,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
             }
-        } else if (stack.getItem() == ModItems.MORTAR_SHELLS.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+        } else if (stack.getItem() == ModItems.MORTAR_SHELL.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
             // 迫击炮神风
             if (!player.isCreative()) {
                 stack.shrink(1);
