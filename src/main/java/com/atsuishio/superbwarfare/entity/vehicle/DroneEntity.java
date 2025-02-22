@@ -167,6 +167,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
+    public int maxRepairCoolDown() {
+        return -1;
+    }
+
+    @Override
     public void baseTick() {
         pitchO = this.getBodyPitch();
         setBodyXRot(pitch * 0.9f);

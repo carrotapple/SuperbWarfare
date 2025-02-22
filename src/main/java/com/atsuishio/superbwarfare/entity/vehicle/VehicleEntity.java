@@ -66,7 +66,7 @@ public class VehicleEntity extends Entity {
     public float roll;
     public float prevRoll;
     public int lastHurtTick;
-    public int repairCoolDown;
+    public int repairCoolDown = maxRepairCoolDown();
     public boolean crash;
 
     public float getRoll() {
@@ -162,7 +162,7 @@ public class VehicleEntity extends Entity {
         }
         if (amount > 0) {
             lastHurtTick = 0;
-            repairCoolDown = 200;
+            repairCoolDown = maxRepairCoolDown();
         }
 
         return super.hurt(source, amount);
@@ -265,6 +265,20 @@ public class VehicleEntity extends Entity {
         return 0;
     }
 
+    /**
+     * 呼吸回血冷却时长(单位:tick)，设为小于0的值以禁用呼吸回血
+     */
+    public int maxRepairCoolDown() {
+        return 200;
+    }
+
+    /**
+     * 呼吸回血回血量
+     */
+    public float repairAmount() {
+        return 0.05F;
+    }
+
     @Override
     public void baseTick() {
         super.baseTick();
@@ -308,10 +322,12 @@ public class VehicleEntity extends Entity {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
 
         if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
+            // 血量过低时自动扣血
             this.hurt(0.1f, attacker, false);
         } else {
-            if (!(this instanceof DroneEntity) && repairCoolDown == 0) {
-                this.heal(0.05f);
+            // 呼吸回血
+            if (repairCoolDown == 0) {
+                this.heal(repairAmount());
             }
         }
 
