@@ -138,7 +138,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
 
-        amount = getDamageModifier().compute(source, amount);
+        amount = damageModifier.compute(source, amount);
         super.hurt(source, amount);
         this.hurt(amount, source.getEntity(), true);
 
