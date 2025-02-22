@@ -114,8 +114,9 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
             }
 
             if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-                    && (name.equals("Hidden") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing"))) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+                    && (name.equals("Hidden") || name.equals("gun") || name.equals("Lefthand")) && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {
+                bone.setHidden(true);
+                renderingArms = false;
             }
 
             if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
