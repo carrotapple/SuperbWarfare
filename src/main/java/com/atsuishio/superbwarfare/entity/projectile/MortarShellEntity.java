@@ -16,6 +16,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -173,6 +174,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+                this.createAreaCloud(this.level());
             }
             this.discard();
         }
@@ -189,6 +191,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
             if (this.tickCount > 1) {
                 ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+                this.createAreaCloud(this.level());
             }
         }
         this.discard();
@@ -207,6 +210,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.tickCount > this.life || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+                this.createAreaCloud(this.level());
             }
             this.discard();
         }
@@ -232,5 +236,18 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);
         }
         super.onRemovedFromWorld();
+    }
+
+    private void createAreaCloud(Level level) {
+        if (this.potion == Potions.EMPTY) return;
+
+        AreaEffectCloud cloud = new AreaEffectCloud(level, this.getX(), this.getY(), this.getZ());
+        cloud.setPotion(this.potion);
+        cloud.setDuration((int) this.damage);
+        cloud.setRadius(this.radius);
+        if (this.getOwner() instanceof LivingEntity living) {
+            cloud.setOwner(living);
+        }
+        level.addFreshEntity(cloud);
     }
 }
