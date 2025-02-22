@@ -481,4 +481,9 @@ public class VehicleEntity extends Entity {
     public boolean allowFreeCam() {
         return false;
     }
+
+    // 本方法留空
+    @Override
+    public void push(double pX, double pY, double pZ) {
+    }
 }
