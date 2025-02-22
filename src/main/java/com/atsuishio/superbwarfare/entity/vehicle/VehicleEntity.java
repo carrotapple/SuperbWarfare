@@ -155,6 +155,8 @@ public class VehicleEntity extends Entity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        this.crash = source.is(ModDamageTypes.VEHICLE_STRIKE);
+
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
