@@ -39,7 +39,7 @@ public class SbwJEIPlugin implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(ModItems.CONTAINER.get(), (ingredient, context) -> {
-                    assert ingredient.getTag() != null;
+                    if (ingredient.getTag() == null) return IIngredientSubtypeInterpreter.NONE;
                     return ingredient.getTag().getCompound("BlockEntityTag").getString("EntityType");
                 }
         );
