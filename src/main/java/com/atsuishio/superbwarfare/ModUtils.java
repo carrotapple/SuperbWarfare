@@ -14,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
@@ -69,8 +70,13 @@ public class ModUtils {
 
         bus.addListener(this::onCommonSetup);
         bus.addListener(this::onClientSetup);
+        bus.addListener(this::onRegisterColorHandlers);
 
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static ResourceLocation loc(String path) {
+        return new ResourceLocation(MODID, path);
     }
 
     private static final String PROTOCOL_VERSION = "1";
@@ -184,7 +190,7 @@ public class ModUtils {
         MouseMovementHandler.init();
     }
 
-    public static ResourceLocation loc(String path) {
-        return new ResourceLocation(MODID, path);
+    public void onRegisterColorHandlers(final RegisterColorHandlersEvent.Item event) {
+        event.register((stack, count) -> count == 0 ? PotionUtils.getColor(stack) : -1, ModItems.POTION_MORTAR_SHELL.get());
     }
 }
