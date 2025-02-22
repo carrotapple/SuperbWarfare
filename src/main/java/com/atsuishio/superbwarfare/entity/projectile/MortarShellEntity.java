@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -14,11 +15,16 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,12 +32,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class MortarShellEntity extends ThrowableItemProjectile implements GeoEntity {
@@ -41,6 +50,9 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
     private float radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public Set<Long> loadedChunks = new HashSet<>();
+
+    private Potion potion = Potions.EMPTY;
+    private final Set<MobEffectInstance> effects = Sets.newHashSet();
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -60,6 +72,21 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         this(ModEntities.MORTAR_SHELL.get(), level);
     }
 
+    public void setEffectsFromItem(ItemStack pStack) {
+        if (pStack.is(ModItems.POTION_MORTAR_SHELL.get())) {
+            this.potion = PotionUtils.getPotion(pStack);
+            Collection<MobEffectInstance> collection = PotionUtils.getCustomEffects(pStack);
+            if (!collection.isEmpty()) {
+                for (MobEffectInstance mobeffectinstance : collection) {
+                    this.effects.add(new MobEffectInstance(mobeffectinstance));
+                }
+            }
+        } else if (pStack.is(ModItems.MORTAR_SHELL.get())) {
+            this.potion = Potions.EMPTY;
+            this.effects.clear();
+        }
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -74,6 +101,18 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             listTag.add(tag);
         }
         pCompound.put("Chunks", listTag);
+
+        if (this.potion != Potions.EMPTY) {
+            pCompound.putString("Potion", Objects.requireNonNullElse(ForgeRegistries.POTIONS.getKey(this.potion), "empty").toString());
+        }
+
+        if (!this.effects.isEmpty()) {
+            ListTag listtag = new ListTag();
+            for (MobEffectInstance mobeffectinstance : this.effects) {
+                listtag.add(mobeffectinstance.save(new CompoundTag()));
+            }
+            pCompound.put("CustomPotionEffects", listtag);
+        }
     }
 
     @Override
@@ -104,6 +143,12 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
                 this.loadedChunks.add(tag.getLong("Pos"));
             }
         }
+
+        if (pCompound.contains("Potion", 8)) {
+            this.potion = PotionUtils.getPotion(pCompound);
+        }
+
+        this.effects.addAll(PotionUtils.getCustomEffects(pCompound));
     }
 
     @Override

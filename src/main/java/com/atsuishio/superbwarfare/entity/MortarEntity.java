@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -47,12 +48,12 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEntity {
+
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
 
     public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MORTAR.get(), world);
@@ -118,9 +119,9 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        ItemStack mainHandItem = player.getMainHandItem();
+        ItemStack stack = player.getMainHandItem();
 
-        if (mainHandItem.getItem() == ModItems.MORTAR_SHELL.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
+        if (stack.getItem() instanceof MortarShell shell && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
 
             if (!player.isCreative()) {
@@ -134,7 +135,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
             ModUtils.queueServerWork(20, () -> {
                 Level level = this.level();
                 if (level instanceof ServerLevel server) {
-                    MortarShellEntity entityToSpawn = new MortarShellEntity(player, level);
+                    MortarShellEntity entityToSpawn = shell.createShell(player, level, stack);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 11.4f, (float) 0.1);
                     level.addFreshEntity(entityToSpawn);
@@ -165,7 +166,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
         }
 
         if (player.isShiftKeyDown()) {
-            if (mainHandItem.getItem() == ModItems.CROWBAR.get()) {
+            if (stack.getItem() == ModItems.CROWBAR.get()) {
                 this.discard();
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
                 return InteractionResult.SUCCESS;
@@ -249,11 +250,8 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
 
     @Override
     public void travel() {
-        float diffY;
-        float diffX;
-
-        diffY = (float) Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
-        diffX = (float) Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
+        float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
+        float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -20f, 20f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.5f * diffX, -20f, 20f), -89, -20));
