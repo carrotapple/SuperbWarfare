@@ -8,32 +8,38 @@ import net.minecraft.world.damagesource.DamageType;
 import java.util.function.Function;
 
 public class DamageModify {
-    public enum ReduceType {
+    public enum ModifyType {
         IMMUNITY,   // 完全免疫
         REDUCE,     // 固定数值减伤
         MULTIPLY,   // 乘以指定倍数
     }
 
     private final float value;
-    private final ReduceType type;
+    private final ModifyType type;
 
     private TagKey<DamageType> sourceTagKey = null;
     private ResourceKey<DamageType> sourceKey = null;
     private Function<DamageSource, Boolean> condition = null;
 
-    public DamageModify(ReduceType type, float value, TagKey<DamageType> sourceTagKey) {
+    public DamageModify(ModifyType type, float value) {
+        this.type = type;
+        this.value = value;
+    }
+
+
+    public DamageModify(ModifyType type, float value, TagKey<DamageType> sourceTagKey) {
         this.type = type;
         this.value = value;
         this.sourceTagKey = sourceTagKey;
     }
 
-    public DamageModify(ReduceType type, float value, ResourceKey<DamageType> sourceKey) {
+    public DamageModify(ModifyType type, float value, ResourceKey<DamageType> sourceKey) {
         this.type = type;
         this.value = value;
         this.sourceKey = sourceKey;
     }
 
-    public DamageModify(ReduceType type, float value, Function<DamageSource, Boolean> condition) {
+    public DamageModify(ModifyType type, float value, Function<DamageSource, Boolean> condition) {
         this.type = type;
         this.value = value;
         this.condition = condition;
@@ -52,9 +58,8 @@ public class DamageModify {
             return source.is(sourceTagKey);
         } else if (sourceKey != null) {
             return source.is(sourceKey);
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

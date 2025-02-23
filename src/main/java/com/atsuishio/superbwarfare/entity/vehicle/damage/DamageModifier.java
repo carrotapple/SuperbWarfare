@@ -11,13 +11,15 @@ import java.util.function.Function;
 
 public class DamageModifier {
 
-    private final List<DamageModify> list = new ArrayList<>();
+    private final List<DamageModify> immuneList = new ArrayList<>();
+    private final List<DamageModify> reduceList = new ArrayList<>();
+    private final List<DamageModify> multiplyList = new ArrayList<>();
 
     /**
      * 免疫所有伤害
      */
     public DamageModifier immuneTo() {
-        list.add(new DamageModify(DamageModify.ReduceType.IMMUNITY, 0, (TagKey<DamageType>) null));
+        immuneList.add(new DamageModify(DamageModify.ModifyType.IMMUNITY, 0));
         return this;
     }
 
@@ -27,7 +29,7 @@ public class DamageModifier {
      * @param sourceTagKey 伤害类型
      */
     public DamageModifier immuneTo(TagKey<DamageType> sourceTagKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.IMMUNITY, 0, sourceTagKey));
+        immuneList.add(new DamageModify(DamageModify.ModifyType.IMMUNITY, 0, sourceTagKey));
         return this;
     }
 
@@ -37,7 +39,7 @@ public class DamageModifier {
      * @param sourceKey 伤害类型
      */
     public DamageModifier immuneTo(ResourceKey<DamageType> sourceKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.IMMUNITY, 0, sourceKey));
+        immuneList.add(new DamageModify(DamageModify.ModifyType.IMMUNITY, 0, sourceKey));
         return this;
     }
 
@@ -47,7 +49,7 @@ public class DamageModifier {
      * @param condition 伤害来源判定条件
      */
     public DamageModifier immuneTo(Function<DamageSource, Boolean> condition) {
-        list.add(new DamageModify(DamageModify.ReduceType.IMMUNITY, 0, condition));
+        immuneList.add(new DamageModify(DamageModify.ModifyType.IMMUNITY, 0, condition));
         return this;
     }
 
@@ -57,7 +59,7 @@ public class DamageModifier {
      * @param value 要减少的数值
      */
     public DamageModifier reduce(float value) {
-        list.add(new DamageModify(DamageModify.ReduceType.REDUCE, value, (TagKey<DamageType>) null));
+        reduceList.add(new DamageModify(DamageModify.ModifyType.REDUCE, value));
         return this;
     }
 
@@ -68,7 +70,7 @@ public class DamageModifier {
      * @param sourceTagKey 伤害类型
      */
     public DamageModifier reduce(float value, TagKey<DamageType> sourceTagKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.REDUCE, value, sourceTagKey));
+        reduceList.add(new DamageModify(DamageModify.ModifyType.REDUCE, value, sourceTagKey));
         return this;
     }
 
@@ -79,7 +81,7 @@ public class DamageModifier {
      * @param sourceKey 伤害类型
      */
     public DamageModifier reduce(float value, ResourceKey<DamageType> sourceKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.REDUCE, value, sourceKey));
+        reduceList.add(new DamageModify(DamageModify.ModifyType.REDUCE, value, sourceKey));
         return this;
     }
 
@@ -90,52 +92,54 @@ public class DamageModifier {
      * @param condition 伤害来源判定条件
      */
     public DamageModifier reduce(float value, Function<DamageSource, Boolean> condition) {
-        list.add(new DamageModify(DamageModify.ReduceType.REDUCE, value, condition));
+        reduceList.add(new DamageModify(DamageModify.ModifyType.REDUCE, value, condition));
         return this;
     }
 
     /**
-     * 将所有类型的伤害乘以指定数值
+     * 将所有类型的伤害值乘以指定数值
      *
      * @param value 要乘以的数值
      */
     public DamageModifier multiply(float value) {
-        list.add(new DamageModify(DamageModify.ReduceType.MULTIPLY, value, (TagKey<DamageType>) null));
+        multiplyList.add(new DamageModify(DamageModify.ModifyType.MULTIPLY, value));
         return this;
     }
 
     /**
-     * 将指定类型的伤害乘以指定数值
+     * 将指定类型的伤害值乘以指定数值
      *
      * @param value        要乘以的数值
      * @param sourceTagKey 伤害类型
      */
     public DamageModifier multiply(float value, TagKey<DamageType> sourceTagKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.MULTIPLY, value, sourceTagKey));
+        multiplyList.add(new DamageModify(DamageModify.ModifyType.MULTIPLY, value, sourceTagKey));
         return this;
     }
 
     /**
-     * 将指定类型的伤害乘以指定数值
+     * 将指定类型的伤害值乘以指定数值
      *
      * @param value     要乘以的数值
      * @param sourceKey 伤害类型
      */
     public DamageModifier multiply(float value, ResourceKey<DamageType> sourceKey) {
-        list.add(new DamageModify(DamageModify.ReduceType.MULTIPLY, value, sourceKey));
+        multiplyList.add(new DamageModify(DamageModify.ModifyType.MULTIPLY, value, sourceKey));
         return this;
     }
 
     /**
-     * 将指定类型的伤害乘以指定数值
+     * 将指定类型的伤害值乘以指定数值
      *
      * @param value     要乘以的数值
      * @param condition 伤害来源判定条件
      */
     public DamageModifier multiply(float value, Function<DamageSource, Boolean> condition) {
-        list.add(new DamageModify(DamageModify.ReduceType.MULTIPLY, value, condition));
+        multiplyList.add(new DamageModify(DamageModify.ModifyType.MULTIPLY, value, condition));
         return this;
     }
+
+    private final List<DamageModify> combinedList = new ArrayList<>();
 
     /**
      * 计算减伤后的伤害值
@@ -145,7 +149,14 @@ public class DamageModifier {
      * @return 减伤后的伤害值
      */
     public float compute(DamageSource source, float damage) {
-        for (DamageModify damageModify : list) {
+        if (combinedList.isEmpty()) {
+            // 计算优先级 免疫 > 固定减伤 > 乘
+            combinedList.addAll(immuneList);
+            combinedList.addAll(reduceList);
+            combinedList.addAll(multiplyList);
+        }
+
+        for (DamageModify damageModify : combinedList) {
             if (damageModify.match(source)) {
                 damage = damageModify.compute(damage);
 
