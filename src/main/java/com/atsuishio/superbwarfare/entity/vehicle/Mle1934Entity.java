@@ -24,6 +24,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -56,6 +58,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.MLE1934_HP.get();
 
@@ -72,6 +76,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
         super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
+        this.entityData.define(PITCH, 0f);
+        this.entityData.define(YAW, 0f);
     }
 
     @Override
@@ -79,6 +85,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
         super.addAdditionalSaveData(compound);
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
         compound.putInt("Type", this.entityData.get(TYPE));
+        compound.putFloat("Pitch", this.entityData.get(PITCH));
+        compound.putFloat("Yaw", this.entityData.get(YAW));
     }
 
     @Override
@@ -86,6 +94,48 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
         super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
         this.entityData.set(TYPE, compound.getInt("Type"));
+        this.entityData.set(PITCH, compound.getFloat("Pitch"));
+        this.entityData.set(YAW, compound.getFloat("Yaw"));
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+
+        if (stack.getItem() instanceof CannonShellItem) {
+            if (this.entityData.get(COOL_DOWN) == 0) {
+                vehicleShoot(player);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.interact(player, hand);
+    }
+
+    public void setTarget(ItemStack stack) {
+        int targetX = stack.getOrCreateTag().getInt("TargetX");
+        int targetY = stack.getOrCreateTag().getInt("TargetY");
+        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+        this.look(new Vec3(targetX, targetY, targetZ));
+    }
+
+    private void look(Vec3 pTarget) {
+        Vec3 vec3 = this.getEyePosition();
+        double d0 = pTarget.x - vec3.x;
+        double d1 = pTarget.y - vec3.y;
+        double d2 = pTarget.z - vec3.z;
+        double d3 = java.lang.Math.sqrt(d0 * d0 + d2 * d2);
+        double distance = pTarget.distanceTo(vec3);
+        entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))) - (float) (distance * 0.008f));
     }
 
     @Override
@@ -404,15 +454,16 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     @Override
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (!(passenger instanceof LivingEntity entity)) return;
+        if (passenger != null) {
+            entityData.set(YAW, passenger.getYHeadRot());
+            entityData.set(PITCH, passenger.getXRot() - 1.2f);
+        }
 
-        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
-        float diffX = entity.getXRot() - 1.2f - this.getXRot();
-
-        diffX = diffX * 0.15f;
+        float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
+        float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.25f, 1.25f));
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.5f * diffX, -2f, 2f), -30, 4f));
     }
 
     protected void clampRotation(Entity entity) {

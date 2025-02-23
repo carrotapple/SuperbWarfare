@@ -22,6 +22,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -30,11 +32,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -60,6 +64,9 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<String> SHOOTER_UUID = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = VehicleConfig.ANNIHILATOR_HP.get();
@@ -80,21 +87,78 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
+        this.entityData.define(SHOOTER_UUID, "none");
         this.entityData.define(LASER_LEFT_LENGTH, 0f);
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
+        this.entityData.define(PITCH, 0f);
+        this.entityData.define(YAW, 0f);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
+        compound.putFloat("Pitch", this.entityData.get(PITCH));
+        compound.putFloat("Yaw", this.entityData.get(YAW));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
+        this.entityData.set(PITCH, compound.getFloat("Pitch"));
+        this.entityData.set(YAW, compound.getFloat("Yaw"));
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+
+        if (stack.is(ModItems.CROWBAR.get()) && !player.isCrouching()) {
+            if (this.entityData.get(COOL_DOWN) == 0) {
+                vehicleShoot(player);
+                entityData.set(SHOOTER_UUID, player.getStringUUID());
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.interact(player, hand);
+    }
+
+    public void setTarget(ItemStack stack) {
+        int targetX = stack.getOrCreateTag().getInt("TargetX");
+        int targetY = stack.getOrCreateTag().getInt("TargetY");
+        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+        this.look(new Vec3(targetX, targetY, targetZ));
+    }
+
+    private void look(Vec3 pTarget) {
+        float yRot = this.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var BarrelRoot = new Vector3d(4.95, 2.25, 0);
+        BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 vec3 = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
+
+        double d0 = pTarget.x - vec3.x;
+        double d1 = pTarget.y - vec3.y;
+        double d2 = pTarget.z - vec3.z;
+        double d3 = java.lang.Math.sqrt(d0 * d0 + d2 * d2);
+        entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
     }
 
     @Override
@@ -224,11 +288,8 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 //        } else {
 //            travel();
 //        }
-
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-
-        if (passenger instanceof ServerPlayer serverPlayer && this.entityData.get(COOL_DOWN) == 20) {
-            SoundTool.playLocalSound(serverPlayer, ModSounds.ANNIHILATOR_RELOAD.get(), 1, 1);
+        if (this.entityData.get(COOL_DOWN) == 20) {
+            this.level().playSound(null, this.getOnPos(), ModSounds.ANNIHILATOR_RELOAD.get(), SoundSource.PLAYERS, 1, 1);
         }
     }
 
@@ -275,8 +336,13 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             if (this.entityData.get(COOL_DOWN) > 98) {
                 laserExplosion(hitPos);
             }
-            this.level().explode(this, hitPos.x, hitPos.y, hitPos.z, 5, ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
 
+            if (this.getFirstPassenger() != null) {
+                this.level().explode(this.getFirstPassenger(), hitPos.x, hitPos.y, hitPos.z, 5, ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            } else {
+                Entity shooter = EntityFindUtil.findEntity(this.level(), this.entityData.get(SHOOTER_UUID));
+                this.level().explode(shooter, hitPos.x, hitPos.y, hitPos.z, 5, ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            }
         }
 
         return (float) pos.distanceTo((Vec3.atLowerCornerOf(cannon.level().clip(
@@ -311,7 +377,15 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                 if (hitResult.getType() == HitResult.Type.ENTITY) {
                     Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
                     Entity target = ((EntityHitResult) hitResult).getEntity();
-                    target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
+
+                    if (passenger != null) {
+                        target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), this, passenger), (float) 200);
+                    } else {
+                        Entity shooter = EntityFindUtil.findEntity(this.level(), this.entityData.get(SHOOTER_UUID));
+                        target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), this, shooter), (float) 200);
+
+                    }
+
                     target.invulnerableTime = 0;
                     if (this.entityData.get(COOL_DOWN) > 98) {
                         laserExplosion(targetPos);
@@ -326,13 +400,24 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     private void laserExplosion(Vec3 pos) {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
-        CustomExplosion explosion = new CustomExplosion(this.level(), passenger,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), passenger, passenger), 300f,
-                pos.x, pos.y, pos.z, 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnHugeExplosionParticles(this.level(), pos);
+        if (passenger != null) {
+            CustomExplosion explosion = new CustomExplosion(this.level(), passenger,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, passenger), 300f,
+                    pos.x, pos.y, pos.z, 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnHugeExplosionParticles(this.level(), pos);
+        } else {
+            Entity shooter = EntityFindUtil.findEntity(this.level(), this.entityData.get(SHOOTER_UUID));
+            CustomExplosion explosion = new CustomExplosion(this.level(), shooter,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, shooter), 300f,
+                    pos.x, pos.y, pos.z, 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnHugeExplosionParticles(this.level(), pos);
+        }
     }
 
     @Override
@@ -344,7 +429,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 600f,
                     this.getX(), this.getY(), this.getZ(), 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
-            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
@@ -404,39 +489,42 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     @Override
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (!(passenger instanceof LivingEntity entity)) return;
         if (this.getEnergy() <= 0) return;
 
-        float yRot = this.getYRot();
-        if (yRot < 0) {
-            yRot += 360;
+        if (passenger instanceof LivingEntity entity) {
+            float yRot = this.getYRot();
+            if (yRot < 0) {
+                yRot += 360;
+            }
+            yRot = yRot + 90 % 360;
+
+            var BarrelRoot = new Vector3d(4.95, 2.25, 0);
+            BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+            Vec3 barrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
+
+            Vec3 passengersEyePos = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
+
+            Entity lookingAt = TraceTool.findLookingEntity(entity, 512);
+
+            if (lookingAt == null) {
+                HitResult result = entity.level().clip(new ClipContext(passengersEyePos, passengersEyePos.add(entity.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity));
+                Vec3 blockHitPos = result.getLocation();
+                barrelLookAt = new Vec3(blockHitPos.x - barrelRootPos.x, blockHitPos.y - barrelRootPos.y, blockHitPos.z - barrelRootPos.z);
+            } else {
+                barrelLookAt = new Vec3(lookingAt.getX() - barrelRootPos.x, lookingAt.getEyeY() - barrelRootPos.y, lookingAt.getZ() - barrelRootPos.z);
+            }
+
+            float offset = (float) VectorTool.calculateAngle(entity.getViewVector(1), barrelLookAt);
+
+            entityData.set(YAW, passenger.getYHeadRot());
+            entityData.set(PITCH, passenger.getXRot() - offset);
         }
-        yRot = yRot + 90 % 360;
 
-        var BarrelRoot = new Vector3d(4.95, 2.25, 0);
-        BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+        float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
+        float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
 
-        Vec3 barrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
-
-        Vec3 passengersEyePos = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
-
-        Entity lookingAt = TraceTool.findLookingEntity(entity, 512);
-
-        if (lookingAt == null) {
-            HitResult result = entity.level().clip(new ClipContext(passengersEyePos, passengersEyePos.add(entity.getViewVector(1).scale(512)),
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity));
-            Vec3 blockHitPos = result.getLocation();
-            barrelLookAt = new Vec3(blockHitPos.x - barrelRootPos.x, blockHitPos.y - barrelRootPos.y, blockHitPos.z - barrelRootPos.z);
-        } else {
-            barrelLookAt = new Vec3(lookingAt.getX() - barrelRootPos.x, lookingAt.getEyeY() - barrelRootPos.y, lookingAt.getZ() - barrelRootPos.z);
-        }
-
-        float offset = (float) VectorTool.calculateAngle(entity.getViewVector(1), barrelLookAt);
-
-        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
-        float diffX = entity.getXRot() - offset - this.getXRot();
-
-        diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -0.6f, 0.6f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f));

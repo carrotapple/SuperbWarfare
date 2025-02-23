@@ -24,6 +24,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -79,12 +81,56 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
+        compound.putFloat("Pitch", this.entityData.get(PITCH));
+        compound.putFloat("Yaw", this.entityData.get(YAW));
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
+        this.entityData.set(PITCH, compound.getFloat("Pitch"));
+        this.entityData.set(YAW, compound.getFloat("Yaw"));
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
+            setTarget(player.getOffhandItem());
+            return InteractionResult.SUCCESS;
+        }
+
+        if (stack.getItem() instanceof CannonShellItem) {
+            if (this.entityData.get(COOL_DOWN) == 0) {
+                vehicleShoot(player);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.interact(player, hand);
+    }
+
+    public void setTarget(ItemStack stack) {
+        int targetX = stack.getOrCreateTag().getInt("TargetX");
+        int targetY = stack.getOrCreateTag().getInt("TargetY");
+        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+        this.look(new Vec3(targetX, targetY, targetZ));
+    }
+
+    private void look(Vec3 pTarget) {
+        Vec3 vec3 = this.getEyePosition();
+        double d0 = pTarget.x - vec3.x;
+        double d1 = pTarget.y - vec3.y;
+        double d2 = pTarget.z - vec3.z;
+        double d3 = java.lang.Math.sqrt(d0 * d0 + d2 * d2);
+        double distance = pTarget.distanceTo(vec3);
+        entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))) - (float) (distance * 0.008f));
     }
 
     @Override
@@ -314,19 +360,20 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
         }
     }
 
+
     @Override
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        float diffY = 0;
-        float diffX = 0;
-
-        if (passenger instanceof Player player) {
-            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
-            diffX = passenger.getXRot() - 1.3f - this.getXRot();
-            diffX = diffX * 0.15f;
-            this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
-            this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
+        if (passenger != null) {
+            entityData.set(YAW, passenger.getYHeadRot());
+            entityData.set(PITCH, passenger.getXRot() - 1.3f);
         }
+
+        float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
+        float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
+
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.5f * diffX, -3f, 3f), -85, 16.3f));
     }
 
     protected void clampRotation(Entity entity) {

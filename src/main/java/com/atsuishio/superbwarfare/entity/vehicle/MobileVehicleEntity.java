@@ -202,9 +202,13 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 2);
 
-            this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+            this.pushNew(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
             entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
         }
+    }
+
+    public void pushNew(double pX, double pY, double pZ) {
+        this.setDeltaMovement(this.getDeltaMovement().add(pX, pY, pZ));
     }
 
     /**
@@ -246,7 +250,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                         this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                     }
                     if (!(entity instanceof TargetEntity)) {
-                        this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+                        this.pushNew(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
                     }
                     entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
                     entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 20 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
