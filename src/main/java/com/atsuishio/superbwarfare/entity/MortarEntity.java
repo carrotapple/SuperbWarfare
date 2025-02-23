@@ -37,6 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -99,12 +100,8 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-
-        amount = this.damageModifier.compute(source, amount);
         super.hurt(source, amount);
-        this.hurt(amount, source.getEntity(), true);
-
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         return true;
     }
 

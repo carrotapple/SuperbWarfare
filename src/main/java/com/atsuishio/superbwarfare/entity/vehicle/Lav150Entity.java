@@ -135,16 +135,12 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IL
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-
-        amount = damageModifier.compute(source, amount);
-        super.hurt(source, amount);
-        this.hurt(amount, source.getEntity(), true);
-
         return true;
     }
 

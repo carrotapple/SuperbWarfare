@@ -154,18 +154,20 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        float computedAmount = damageModifier.compute(source, amount);
         this.crash = source.is(ModDamageTypes.VEHICLE_STRIKE);
 
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
-        if (amount > 0) {
+        if (computedAmount > 0) {
             lastHurtTick = 0;
             repairCoolDown = maxRepairCoolDown();
         }
 
-        return super.hurt(source, amount);
+        this.onHurt(computedAmount, source.getEntity(), true);
+        return super.hurt(source, computedAmount);
     }
 
     protected final DamageModifier damageModifier = this.getDamageModifier();
@@ -194,7 +196,7 @@ public class VehicleEntity extends Entity {
 
     }
 
-    public void hurt(float pHealAmount, Entity attacker, boolean send) {
+    public void onHurt(float pHealAmount, Entity attacker, boolean send) {
         if (this.level() instanceof ServerLevel) {
             var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
             if (attacker instanceof ServerPlayer player && pHealAmount > 0 && this.getHealth() > 0 && send && !(this instanceof DroneEntity)) {
@@ -323,7 +325,7 @@ public class VehicleEntity extends Entity {
 
         if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
             // 血量过低时自动扣血
-            this.hurt(0.1f, attacker, false);
+            this.onHurt(0.1f, attacker, false);
         } else {
             // 呼吸回血
             if (repairCoolDown == 0) {

@@ -97,13 +97,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-
-        amount = damageModifier.compute(source, amount);
-        this.hurt(amount, source.getEntity(), true);
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         super.hurt(source, amount);
-
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         return true;
     }
 
