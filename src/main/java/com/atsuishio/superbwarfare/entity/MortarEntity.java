@@ -55,12 +55,18 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(ModEntities.MORTAR.get(), world);
+    public MortarEntity(PlayMessages.SpawnEntity packet, Level level) {
+        this(ModEntities.MORTAR.get(), level);
     }
 
-    public MortarEntity(EntityType<MortarEntity> type, Level world) {
-        super(type, world);
+    public MortarEntity(EntityType<MortarEntity> type, Level level) {
+        super(type, level);
+    }
+
+    public MortarEntity(Level level, float yRot) {
+        super(ModEntities.MORTAR.get(), level);
+        this.setYRot(yRot);
+        this.entityData.set(YAW, yRot);
     }
 
     @Override
@@ -68,7 +74,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
         super.defineSynchedData();
         this.entityData.define(FIRE_TIME, 0);
         this.entityData.define(PITCH, -70f);
-        this.entityData.define(YAW, 0f);
+        this.entityData.define(YAW, this.getYRot());
     }
 
     @Override
@@ -95,7 +101,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
     public boolean hurt(DamageSource source, float amount) {
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
 
-        amount = damageModifier.compute(source, amount);
+        amount = this.damageModifier.compute(source, amount);
         super.hurt(source, amount);
         this.hurt(amount, source.getEntity(), true);
 
@@ -115,7 +121,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
         if (compound.contains("Pitch")) {
             this.entityData.set(PITCH, compound.getFloat("Pitch"));
         }
-        if (compound.contains("YRot")) {
+        if (compound.contains("Yaw")) {
             this.entityData.set(YAW, compound.getFloat("Yaw"));
         }
     }
