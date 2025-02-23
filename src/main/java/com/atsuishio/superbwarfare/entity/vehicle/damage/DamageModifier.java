@@ -4,14 +4,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import org.apache.commons.compress.utils.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class DamageModifier {
 
-    private final List<DamageModify> list = Lists.newArrayList();
+    private final List<DamageModify> list = new ArrayList<>();
 
     /**
      * 免疫所有伤害
