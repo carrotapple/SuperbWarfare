@@ -26,7 +26,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +37,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -51,8 +49,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 import java.util.List;
-
-import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
 
@@ -147,16 +143,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
     @Override
     public double getPassengersRidingOffset() {
         return super.getPassengersRidingOffset() - 0.25;
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
-        super.hurt(source, amount);
-        if (this.level() instanceof ServerLevel serverLevel) {
-            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
-        }
-        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        return true;
     }
 
     @Override

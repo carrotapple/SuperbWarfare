@@ -50,6 +50,8 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
+
 public class VehicleEntity extends Entity {
 
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
@@ -155,19 +157,46 @@ public class VehicleEntity extends Entity {
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
+        // 计算减伤后的伤害
         float computedAmount = damageModifier.compute(source, amount);
         this.crash = source.is(ModDamageTypes.VEHICLE_STRIKE);
 
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
+
+        // 受伤打断呼吸回血
         if (computedAmount > 0) {
             lastHurtTick = 0;
             repairCoolDown = maxRepairCoolDown();
         }
 
         this.onHurt(computedAmount, source.getEntity(), true);
+
+        // 显示火花粒子效果
+        if (this.sendFireStarParticleOnHurt() && this.level() instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+        }
+        // 播放受击音效
+        if (this.playHitSoundOnHurt()) {
+            this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+        }
+
         return super.hurt(source, computedAmount);
+    }
+
+    /**
+     * 受击时是否显示火花粒子效果
+     */
+    public boolean sendFireStarParticleOnHurt() {
+        return true;
+    }
+
+    /**
+     * 受击时是否播放受击音效
+     */
+    public boolean playHitSoundOnHurt() {
+        return true;
     }
 
     protected final DamageModifier damageModifier = this.getDamageModifier();
