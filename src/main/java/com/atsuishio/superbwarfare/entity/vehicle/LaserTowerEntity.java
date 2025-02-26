@@ -63,6 +63,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     public static final float MAX_HEALTH = 100;
     public static final int MAX_ENERGY = 500000;
     public static final int SHOOT_COST = 5000;
+    public int changeTargetTimer = 5000;
 
     public LaserTowerEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.LASER_TOWER.get(), world);
@@ -281,6 +282,10 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
             this.setRot(this.getYRot(), this.getXRot());
 
             if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1) {
+                changeTargetTimer++;
+            }
+
+            if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1 && NoClip(target)) {
 
                 this.entityData.set(COOL_DOWN, 40);
 
@@ -293,14 +298,22 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                 target.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), this, this.getOwner()), (float) 15);
                 target.invulnerableTime = 0;
                 entityData.set(LASER_LENGTH, distanceTo(target));
-                entityData.set(TARGET_UUID, "none");
                 if (Math.random() < 0.25 && target instanceof LivingEntity living) {
                     living.setSecondsOnFire(2);
                 }
+                if (!target.isAlive()) {
+                    entityData.set(TARGET_UUID, "none");
+                }
                 this.consumeEnergy(SHOOT_COST);
             }
+
         } else {
             entityData.set(TARGET_UUID, "none");
+        }
+
+        if (changeTargetTimer > 60) {
+            entityData.set(TARGET_UUID, "none");
+            changeTargetTimer = 0;
         }
     }
 
@@ -308,14 +321,17 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         return StreamSupport.stream(EntityFindUtil.getEntities(level()).getAll().spliterator(), false)
                 .filter(e -> {
                     // TODO 自定义目标列表
-                    if (e.distanceTo(this) <= seekRange && (
-                            (e instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0)
+                    if (e.distanceTo(this) <= seekRange && ((e instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0)
                     )) {
-                        return level().clip(new ClipContext(this.getEyePosition(), e.getEyePosition(),
-                                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
+                        return NoClip(e);
                     }
                     return false;
                 }).min(Comparator.comparingDouble(e -> e.distanceTo(this))).orElse(null);
+    }
+
+    public boolean NoClip(Entity target) {
+        return level().clip(new ClipContext(this.getEyePosition(), target.getEyePosition(),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
     }
 
     private PlayState movementPredicate(AnimationState<LaserTowerEntity> event) {
