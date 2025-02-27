@@ -1,9 +1,6 @@
 package com.atsuishio.superbwarfare.config;
 
-import com.atsuishio.superbwarfare.config.client.DisplayConfig;
-import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
-import com.atsuishio.superbwarfare.config.client.ReloadConfig;
-import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
+import com.atsuishio.superbwarfare.config.client.*;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ClientConfig {
@@ -15,6 +12,7 @@ public class ClientConfig {
         KillMessageConfig.init(builder);
         DisplayConfig.init(builder);
         VehicleControlConfig.init(builder);
+        ModSellWarningConfig.init(builder);
 
         return builder.build();
     }

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.screens;
 
+import com.atsuishio.superbwarfare.config.client.ModSellWarningConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -46,12 +47,6 @@ public class ModSellWarningScreen extends WarningScreen {
                 "stupidNoPayWarningChecksum"            // 神秘的盐
         );
 
-        //
-//        System.out.println("env info:");
-//        environmentInfo.forEach(System.out::println);
-//        System.out.println("env info end");
-        //
-
         return sha256(String.join("|", environmentInfo));
     }
 
@@ -79,32 +74,25 @@ public class ModSellWarningScreen extends WarningScreen {
         this.lastScreen = lastScreen;
     }
 
-    // TODO 正确实现校验和配置文件
-    private static String checksumTest = "";
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onGuiOpen(ScreenEvent.Opening event) {
         if (!(event.getNewScreen() instanceof JoinMultiplayerScreen && !(event.getCurrentScreen() instanceof ModSellWarningScreen)))
             return;
 
-        System.out.println("multiplayer screen open");
-
-        if (checksumTest.equals(ENVIRONMENT_CHECKSUM)) return;
-//        if (ModSellWarningConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return;
+        if (ModSellWarningConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return;
 
         // 拦截多人游戏界面加载
         event.setCanceled(true);
         Minecraft.getInstance().setScreen(new ModSellWarningScreen(event.getCurrentScreen()));
-        System.out.println(ENVIRONMENT_CHECKSUM);
     }
 
     @Override
     protected void initButtons(int pYOffset) {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_PROCEED, button -> {
             if (this.stopShowing.selected()) {
-                checksumTest = ENVIRONMENT_CHECKSUM;
-//                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
-//                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
+                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
+                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
             }
             Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
         }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build());
