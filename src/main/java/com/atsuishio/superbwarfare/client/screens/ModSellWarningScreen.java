@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.config.client.ModSellWarningConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
@@ -61,11 +62,9 @@ public class ModSellWarningScreen extends WarningScreen {
         }
     }
 
-    // TODO 正确实现提示文本
-    //    private static final Component TITLE = Component.translatable("multiplayerWarning.header").withStyle(ChatFormatting.BOLD);
-    private static final Component TITLE = Component.literal("test").withStyle(ChatFormatting.BOLD);
-    private static final Component CONTENT = Component.literal("这里应该写个多人游戏警告");
-    private static final Component CHECK = Component.literal("这里应该是确认勾选框");
+    private static final Component TITLE = Component.translatable("multiplayer.superbwarfare.warning.title").withStyle(ChatFormatting.BOLD);
+    private static final Component CONTENT = Component.translatable("multiplayer.superbwarfare.warning.content");
+    private static final Component CHECK = Component.translatable("multiplayer.superbwarfare.warning.check");
     private static final Component NARRATION = TITLE.copy().append("\n").append(CONTENT);
     private final Screen lastScreen;
 
@@ -74,6 +73,30 @@ public class ModSellWarningScreen extends WarningScreen {
         this.lastScreen = lastScreen;
     }
 
+    @Override
+    protected void initButtons(int pYOffset) {
+        this.addRenderableWidget(this.createProceedButton(pYOffset));
+
+        this.addRenderableWidget(
+                Button.builder(CommonComponents.GUI_BACK, button -> Minecraft.getInstance().setScreen(this.lastScreen))
+                        .bounds(this.width / 2 - 155 + 160, 100 + pYOffset, 150, 20)
+                        .build()
+        );
+    }
+
+    // TODO 实现按钮状态刷新
+    private AbstractButton createProceedButton(int pYOffset) {
+        boolean flag = this.stopShowing != null && this.stopShowing.selected();
+        var proceedButton = Button.builder(CommonComponents.GUI_PROCEED, button -> {
+            if (flag) {
+                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
+                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
+            }
+            Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
+        }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build();
+        proceedButton.active = flag;
+        return proceedButton;
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onGuiOpen(ScreenEvent.Opening event) {
@@ -85,22 +108,5 @@ public class ModSellWarningScreen extends WarningScreen {
         // 拦截多人游戏界面加载
         event.setCanceled(true);
         Minecraft.getInstance().setScreen(new ModSellWarningScreen(event.getCurrentScreen()));
-    }
-
-    @Override
-    protected void initButtons(int pYOffset) {
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_PROCEED, button -> {
-            if (this.stopShowing.selected()) {
-                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
-                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
-            }
-            Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
-        }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build());
-
-        this.addRenderableWidget(
-                Button.builder(CommonComponents.GUI_BACK, button -> Minecraft.getInstance().setScreen(this.lastScreen))
-                        .bounds(this.width / 2 - 155 + 160, 100 + pYOffset, 150, 20)
-                        .build()
-        );
     }
 }

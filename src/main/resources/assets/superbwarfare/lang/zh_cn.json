@@ -525,5 +525,9 @@
 
   "config.jade.plugin_superbwarfare.vehicle_energy": "载具能量",
   "config.jade.plugin_superbwarfare.vehicle_health": "载具血量",
-  "config.jade.plugin_superbwarfare.container_entity": "集装箱实体"
+  "config.jade.plugin_superbwarfare.container_entity": "集装箱实体",
+
+  "multiplayer.superbwarfare.warning.title": "【卓越前线 警示声明】",
+  "multiplayer.superbwarfare.warning.content": "== 本模组完全免费开源，禁止用于任何商业行为 ==\n本模组代码采用GPL-3协议开源，美术资源私有禁止商用\n禁止付费下载、充值获取道具等违反协议和Mojang EULA的行为\n如遇以上行为，请到本模组仓库处提交Issue进行举报",
+  "multiplayer.superbwarfare.warning.check": "我已阅读并同意，不再显示此警告"
 }
