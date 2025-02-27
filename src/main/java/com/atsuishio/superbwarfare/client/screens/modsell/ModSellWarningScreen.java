@@ -63,7 +63,6 @@ public class ModSellWarningScreen extends WarningScreen {
     }
 
     private final Screen lastScreen;
-    private AbstractButton proceedButton;
 
     public ModSellWarningScreen(Screen lastScreen) {
         super(
@@ -77,8 +76,8 @@ public class ModSellWarningScreen extends WarningScreen {
 
     @Override
     protected void initButtons(int pYOffset) {
-        this.proceedButton = this.createProceedButton(pYOffset);
-        this.addRenderableWidget(this.proceedButton);
+        AbstractButton proceedButton = this.createProceedButton(pYOffset);
+        this.addRenderableWidget(proceedButton);
 
         this.addRenderableWidget(
                 Button.builder(CommonComponents.GUI_BACK, button -> Minecraft.getInstance().setScreen(this.lastScreen))
@@ -88,21 +87,13 @@ public class ModSellWarningScreen extends WarningScreen {
     }
 
     private AbstractButton createProceedButton(int pYOffset) {
-        var proceedButton = Button.builder(CommonComponents.GUI_PROCEED, button -> {
+        return Button.builder(CommonComponents.GUI_PROCEED, button -> {
             if (this.stopShowing != null && this.stopShowing.selected()) {
                 ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
                 ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
             }
             Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
         }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build();
-        proceedButton.active = false;
-        return proceedButton;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        this.proceedButton.active = this.stopShowing != null && this.stopShowing.selected();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
