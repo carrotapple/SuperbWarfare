@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.client.screens;
+package com.atsuishio.superbwarfare.client.screens.modsell;
 
 import com.atsuishio.superbwarfare.config.client.ModSellWarningConfig;
 import net.minecraft.ChatFormatting;
@@ -62,15 +62,16 @@ public class ModSellWarningScreen extends WarningScreen {
         }
     }
 
-    private static final Component TITLE = Component.translatable("multiplayer.superbwarfare.warning.title").withStyle(ChatFormatting.BOLD);
-    private static final Component CONTENT = Component.translatable("multiplayer.superbwarfare.warning.content");
-    private static final Component CHECK = Component.translatable("multiplayer.superbwarfare.warning.check");
-    private static final Component NARRATION = TITLE.copy().append("\n").append(CONTENT);
     private final Screen lastScreen;
     private AbstractButton proceedButton;
 
     public ModSellWarningScreen(Screen lastScreen) {
-        super(TITLE, CONTENT, CHECK, NARRATION);
+        super(
+                Component.literal(TranslationRecord.get(TranslationRecord.TITLE)).withStyle(ChatFormatting.BOLD),
+                Component.literal(TranslationRecord.get(TranslationRecord.CONTENT)),
+                Component.literal(TranslationRecord.get(TranslationRecord.CHECK)),
+                Component.literal(TranslationRecord.get(TranslationRecord.TITLE)).withStyle(ChatFormatting.BOLD).append("\n").append(Component.literal(TranslationRecord.get(TranslationRecord.CONTENT)))
+        );
         this.lastScreen = lastScreen;
     }
 
