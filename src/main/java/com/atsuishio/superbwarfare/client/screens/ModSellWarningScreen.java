@@ -67,6 +67,7 @@ public class ModSellWarningScreen extends WarningScreen {
     private static final Component CHECK = Component.translatable("multiplayer.superbwarfare.warning.check");
     private static final Component NARRATION = TITLE.copy().append("\n").append(CONTENT);
     private final Screen lastScreen;
+    private AbstractButton proceedButton;
 
     public ModSellWarningScreen(Screen lastScreen) {
         super(TITLE, CONTENT, CHECK, NARRATION);
@@ -75,7 +76,8 @@ public class ModSellWarningScreen extends WarningScreen {
 
     @Override
     protected void initButtons(int pYOffset) {
-        this.addRenderableWidget(this.createProceedButton(pYOffset));
+        this.proceedButton = this.createProceedButton(pYOffset);
+        this.addRenderableWidget(this.proceedButton);
 
         this.addRenderableWidget(
                 Button.builder(CommonComponents.GUI_BACK, button -> Minecraft.getInstance().setScreen(this.lastScreen))
@@ -84,18 +86,22 @@ public class ModSellWarningScreen extends WarningScreen {
         );
     }
 
-    // TODO 实现按钮状态刷新
     private AbstractButton createProceedButton(int pYOffset) {
-        boolean flag = this.stopShowing != null && this.stopShowing.selected();
         var proceedButton = Button.builder(CommonComponents.GUI_PROCEED, button -> {
-            if (flag) {
+            if (this.stopShowing != null && this.stopShowing.selected()) {
                 ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
                 ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
             }
             Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
         }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build();
-        proceedButton.active = flag;
+        proceedButton.active = false;
         return proceedButton;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.proceedButton.active = this.stopShowing != null && this.stopShowing.selected();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
