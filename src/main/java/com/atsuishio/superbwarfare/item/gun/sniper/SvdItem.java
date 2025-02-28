@@ -17,7 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -146,11 +145,6 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
         int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
 
-        if (scopeType == 3) {
-            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
-            tag.putInt("Scope", 0);
-        }
-
         int customMag = switch (magType) {
             case 1 -> 10;
             case 2 -> 20;
@@ -163,6 +157,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
             default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
         };
 
+        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
         GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
     }

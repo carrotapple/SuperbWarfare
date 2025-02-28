@@ -103,14 +103,14 @@ public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
                     || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
         }
 
-        if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-                && (name.equals("Hidden") || name.equals("gun") || name.equals("bolt") || name.equals("Lefthand") || name.equals("Barrel") || name.equals("bipod")) && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {
+        if ((GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3)
+                && (name.equals("Hidden2") || name.equals("Hidden") || name.equals("gun") || name.equals("bolt") || name.equals("Lefthand") || name.equals("Barrel") || name.equals("bipod") || name.equals("mount")) && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {
             bone.setHidden(true);
             renderingArms = false;
         }
 
         if (name.equals("flare")) {
-            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 3) {
                 bone.setHidden(true);
             } else {
                 if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {

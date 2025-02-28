@@ -43,6 +43,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
     public void setCustomAnimations(SvdItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -75,24 +76,28 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         float posX = switch (type) {
             case 0, 1 -> 1.701f;
             case 2 -> 1.531f;
+            case 3 -> 1.708f;
             default -> 0f;
         };
         float posY = switch (type) {
             case 0 -> 1.02f;
             case 1 -> 0.04f;
             case 2 -> 0.12f;
+            case 3 -> -0.13f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
             case 0 -> 0.4f;
             case 1 -> 0.45f;
             case 2 -> 0.85f;
+            case 3 -> 0.95f;
             default -> 0f;
         };
         float posZ = switch (type) {
             case 0 -> 7f;
             case 1 -> 7.5f;
             case 2 -> 12.85f;
+            case 3 -> 14.08f;
             default -> 0f;
         };
 
@@ -101,6 +106,8 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         gun.setPosZ(posZ * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.05f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
+        cross3.setScaleX((float) (1f + (0.1 * zp)));
+        cross3.setScaleY((float) (1f + (0.1 * zp)));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() <= 1.4);
 
@@ -112,6 +119,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
                 case 0 -> getAnimationProcessor().getBone("fireRoot0");
                 case 1 -> getAnimationProcessor().getBone("fireRoot1");
                 case 2 -> getAnimationProcessor().getBone("fireRoot2");
+                case 3 -> getAnimationProcessor().getBone("fireRoot3");
                 default -> getAnimationProcessor().getBone("fireRootNormal");
             };
         }
