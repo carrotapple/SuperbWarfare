@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ContainerMobileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -736,10 +736,10 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
-        if (event.getEntity().getVehicle() instanceof ContainerMobileEntity containerMobileEntity) {
+        if (event.getEntity().getVehicle() instanceof ContainerMobileVehicleEntity containerMobileVehicleEntity) {
             var pickUp = event.getItem();
-            if (!containerMobileEntity.level().isClientSide) {
-                HopperBlockEntity.addItem(containerMobileEntity, pickUp);
+            if (!containerMobileVehicleEntity.level().isClientSide) {
+                HopperBlockEntity.addItem(containerMobileVehicleEntity, pickUp);
             }
             event.setCanceled(true);
         }
@@ -753,11 +753,11 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getVehicle() instanceof ContainerMobileEntity containerMobileEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+        if (player.getVehicle() instanceof ContainerMobileVehicleEntity containerMobileVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
             drops.forEach(itemEntity -> {
                 ItemStack item = itemEntity.getItem();
-                if (!HopperBlockEntity.addItem(containerMobileEntity, itemEntity)) {
+                if (!HopperBlockEntity.addItem(containerMobileVehicleEntity, itemEntity)) {
                     player.drop(item, false);
                 }
             });

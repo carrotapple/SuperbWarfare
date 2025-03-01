@@ -60,7 +60,7 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
+public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.AH_6_HP.get();

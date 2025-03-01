@@ -62,7 +62,7 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, ILandArmorEntity, MultiWeaponVehicleEntity {
+public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEntity, ILandArmorEntity, MultiWeaponVehicleEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.FLOAT);

@@ -26,14 +26,14 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 
-public class ContainerMobileEntity extends MobileVehicleEntity implements HasCustomInventoryScreen, ContainerEntity {
+public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements HasCustomInventoryScreen, ContainerEntity {
 
     public static final int CONTAINER_SIZE = 102;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
-    public ContainerMobileEntity(EntityType<?> pEntityType, Level pLevel) {
+    public ContainerMobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
