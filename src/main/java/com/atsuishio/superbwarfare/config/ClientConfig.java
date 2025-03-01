@@ -12,7 +12,7 @@ public class ClientConfig {
         KillMessageConfig.init(builder);
         DisplayConfig.init(builder);
         VehicleControlConfig.init(builder);
-        ModSellWarningConfig.init(builder);
+        EnvironmentChecksumConfig.init(builder);
 
         return builder.build();
     }

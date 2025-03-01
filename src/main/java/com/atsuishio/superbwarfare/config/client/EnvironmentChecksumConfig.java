@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.config.client;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ModSellWarningConfig {
+public class EnvironmentChecksumConfig {
 
     public static ForgeConfigSpec.ConfigValue<String> ENVIRONMENT_CHECKSUM;
 

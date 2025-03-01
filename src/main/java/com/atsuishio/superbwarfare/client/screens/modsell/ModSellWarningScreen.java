@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.screens.modsell;
 
-import com.atsuishio.superbwarfare.config.client.ModSellWarningConfig;
+import com.atsuishio.superbwarfare.config.client.EnvironmentChecksumConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -89,8 +89,8 @@ public class ModSellWarningScreen extends WarningScreen {
     private AbstractButton createProceedButton(int pYOffset) {
         return Button.builder(CommonComponents.GUI_PROCEED, button -> {
             if (this.stopShowing != null && this.stopShowing.selected()) {
-                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
-                ModSellWarningConfig.ENVIRONMENT_CHECKSUM.save();
+                EnvironmentChecksumConfig.ENVIRONMENT_CHECKSUM.set(ENVIRONMENT_CHECKSUM);
+                EnvironmentChecksumConfig.ENVIRONMENT_CHECKSUM.save();
             }
             Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(this.lastScreen));
         }).bounds(this.width / 2 - 155, 100 + pYOffset, 150, 20).build();
@@ -101,7 +101,7 @@ public class ModSellWarningScreen extends WarningScreen {
         if (!(event.getNewScreen() instanceof JoinMultiplayerScreen && !(event.getCurrentScreen() instanceof ModSellWarningScreen)))
             return;
 
-        if (ModSellWarningConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return;
+        if (EnvironmentChecksumConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return;
 
         // 拦截多人游戏界面加载
         event.setCanceled(true);
