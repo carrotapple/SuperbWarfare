@@ -155,7 +155,7 @@ public class VehicleConfig {
         SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 16, 0, 2147483647);
 
         builder.comment("The max energy storage of Speedboat");
-        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 10000000, 0, 2147483647);
+        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 1000000, 0, 2147483647);
 
         builder.comment("The gun damage of Speedboat");
         SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 25, 1, 10000000);
