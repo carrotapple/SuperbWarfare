@@ -119,6 +119,7 @@ public class GunsTool {
             case HANDGUN -> c.handgunAmmo;
             case SHOTGUN -> c.shotgunAmmo;
             case SNIPER -> c.sniperAmmo;
+            case HEAVY -> c.heavyAmmo;
         }).orElse(0);
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -128,6 +129,7 @@ public class GunsTool {
                 case HANDGUN -> capability.handgunAmmo = newAmmoCount;
                 case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
                 case SNIPER -> capability.sniperAmmo = newAmmoCount;
+                case HEAVY -> capability.heavyAmmo = newAmmoCount;
             }
 
             capability.syncPlayerVariables(player);

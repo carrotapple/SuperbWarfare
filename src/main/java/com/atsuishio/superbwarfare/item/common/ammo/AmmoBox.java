@@ -58,6 +58,11 @@ public class AmmoBox extends Item {
                     tag.putInt("SniperAmmo", 0);
                 }
 
+                if (type == 0 || type == 5) {
+                    capability.heavyAmmo = cap.heavyAmmo + tag.getInt("HeavyAmmo");
+                    tag.putInt("HeavyAmmo", 0);
+                }
+
                 capability.syncPlayerVariables(player);
 
                 if (!level.isClientSide()) {
@@ -88,6 +93,11 @@ public class AmmoBox extends Item {
                     capability.sniperAmmo = 0;
                 }
 
+                if (type == 0 || type == 5) {
+                    tag.putInt("HeavyAmmo", tag.getInt("HeavyAmmo") + cap.heavyAmmo);
+                    capability.heavyAmmo = 0;
+                }
+
                 capability.syncPlayerVariables(player);
 
                 if (!level.isClientSide()) {
@@ -103,7 +113,7 @@ public class AmmoBox extends Item {
         if (entity instanceof Player player && player.isCrouching()) {
             int type = stack.getOrCreateTag().getInt("Type");
             ++type;
-            type %= 5;
+            type %= 6;
 
             switch (type) {
                 case 0 ->
@@ -116,6 +126,8 @@ public class AmmoBox extends Item {
                         player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.shotgun").withStyle(ChatFormatting.RED), true);
                 case 4 ->
                         player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.sniper").withStyle(ChatFormatting.GOLD), true);
+                case 5 ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.heavy").withStyle(ChatFormatting.LIGHT_PURPLE), true);
             }
 
             entity.playSound(ModSounds.FIRE_RATE.get(), 1f, 1f);
@@ -145,6 +157,10 @@ public class AmmoBox extends Item {
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "SniperAmmo", 0)) + ((type == 0 || type == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.heavy").withStyle(ChatFormatting.LIGHT_PURPLE)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "HeavyAmmo", 0)) + ((type == 0 || type == 5) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
     }
 
 }

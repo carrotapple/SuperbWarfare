@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.item.common.BlueprintItem;
 import com.atsuishio.superbwarfare.item.common.MaterialPack;
 import com.atsuishio.superbwarfare.item.common.ammo.*;
 import com.atsuishio.superbwarfare.item.gun.handgun.*;
+import com.atsuishio.superbwarfare.item.gun.heavy.Ntw20Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
@@ -85,10 +86,11 @@ public class ModItems {
      */
     public static final DeferredRegister<Item> AMMO = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.HANDGUN, 5, new Item.Properties()));
-    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", () -> new AmmoSupplierItem(GunInfo.Type.RIFLE, 5, new Item.Properties()));
-    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SNIPER, 2, new Item.Properties()));
-    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SHOTGUN, 2, new Item.Properties()));
+    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.HANDGUN, 1, new Item.Properties()));
+    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", () -> new AmmoSupplierItem(GunInfo.Type.RIFLE, 1, new Item.Properties()));
+    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SNIPER, 1, new Item.Properties()));
+    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SHOTGUN, 1, new Item.Properties()));
+    public static final RegistryObject<Item> HEAVY_AMMO = AMMO.register("heavy_ammo", () -> new AmmoSupplierItem(GunInfo.Type.HEAVY, 1, new Item.Properties()));
     public static final RegistryObject<Item> HANDGUN_AMMO_BOX = AMMO.register("handgun_ammo_box", HandgunAmmoBox::new);
     public static final RegistryObject<Item> RIFLE_AMMO_BOX = AMMO.register("rifle_ammo_box", RifleAmmoBox::new);
     public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBox::new);
@@ -108,7 +110,6 @@ public class ModItems {
     public static final RegistryObject<Item> RGO_GRENADE = AMMO.register("rgo_grenade", RgoGrenade::new);
     public static final RegistryObject<Item> CLAYMORE_MINE = AMMO.register("claymore_mine", ClaymoreMine::new);
     public static final RegistryObject<Item> C4_BOMB = AMMO.register("c4_bomb", C4Bomb::new);
-    public static final RegistryObject<Item> HEAVY_AMMO = AMMO.register("heavy_ammo", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SMALL_SHELL = AMMO.register("small_shell", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET_70 = AMMO.register("rocket_70", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WIRE_GUIDE_MISSILE = AMMO.register("wire_guide_missile", () -> new Item(new Item.Properties()));

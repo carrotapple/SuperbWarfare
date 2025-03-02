@@ -146,14 +146,16 @@ public class LivingEventHandler {
 
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-                    damage = reduceDamageByDistance(amount, distance, 0.015, 50);
+                    damage = reduceDamageByDistance(amount, distance, 0.015, 30);
                 } else {
-                    damage = reduceDamageByDistance(amount, distance, 0.03, 25);
+                    damage = reduceDamageByDistance(amount, distance, 0.05, 15);
                 }
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.001, 150);
+            } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                damage = reduceDamageByDistance(amount, distance, 0.0007, 250);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                damage = reduceDamageByDistance(amount, distance, 0.02, 50);
+                damage = reduceDamageByDistance(amount, distance, 0.03, 40);
             } else if (stack.is(ModTags.Items.SMG)) {
                 damage = reduceDamageByDistance(amount, distance, 0.02, 50);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
@@ -706,7 +708,7 @@ public class LivingEventHandler {
         if (!entity.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player) {
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo > 0;
+            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo + cap.heavyAmmo > 0;
 
             if (drop) {
                 ItemStack stack = new ItemStack(ModItems.AMMO_BOX.get());
@@ -721,6 +723,8 @@ public class LivingEventHandler {
                     capability.shotgunAmmo = 0;
                     tag.putInt("SniperAmmo", cap.sniperAmmo);
                     capability.sniperAmmo = 0;
+                    tag.putInt("HeavyAmmo", cap.heavyAmmo);
+                    capability.heavyAmmo = 0;
                     tag.putBoolean("IsDrop", true);
                     capability.syncPlayerVariables(player);
                 });

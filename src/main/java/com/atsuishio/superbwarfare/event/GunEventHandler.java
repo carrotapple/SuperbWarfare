@@ -427,6 +427,8 @@ public class GunEventHandler {
                 GunsTool.reload(player, stack, GunInfo.Type.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.RIFLE, gunItem.bulletInBarrel(stack));
+            } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                GunsTool.reload(player, stack, GunInfo.Type.HEAVY, gunItem.bulletInBarrel(stack));
             }
         }
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
@@ -450,6 +452,8 @@ public class GunEventHandler {
                 GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
+            } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                GunsTool.reload(player, stack, GunInfo.Type.HEAVY);
             } else if (stack.getItem() == ModItems.TASER.get()) {
                 GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
@@ -590,6 +594,8 @@ public class GunEventHandler {
                     tag.putBoolean("force_stage3_start", true);
                 } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                     tag.putBoolean("force_stage3_start", true);
+                } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && capability.heavyAmmo == 0) {
+                    tag.putBoolean("force_stage3_start", true);
                 } else if (stack.is(ModTags.Items.LAUNCHER) && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                     tag.putBoolean("force_stage3_start", true);
                 } else if (stack.is(ModItems.SECONDARY_CATACLYSM.get()) && GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0)) {
@@ -670,6 +676,8 @@ public class GunEventHandler {
                     tag.putInt("reload_stage", 3);
                 } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                     tag.putInt("reload_stage", 3);
+                } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && capability.heavyAmmo == 0) {
+                    tag.putInt("reload_stage", 3);
                 }
             }
 
@@ -734,6 +742,11 @@ public class GunEventHandler {
                     capability.rifleAmmo -= 1;
                     capability.syncPlayerVariables(player);
                 });
+            } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.heavyAmmo -= 1;
+                    capability.syncPlayerVariables(player);
+                });
             } else if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
             }
@@ -777,7 +790,7 @@ public class GunEventHandler {
                 ModUtils.queueServerWork((int) (GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0) / 2 + 3 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
-                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE) || stack.is(ModTags.Items.HEAVY_WEAPON)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
@@ -807,7 +820,7 @@ public class GunEventHandler {
                 ModUtils.queueServerWork((int) (8 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
-                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE) || stack.is(ModTags.Items.HEAVY_WEAPON)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);

@@ -37,6 +37,7 @@ public class AmmoCommand {
                                 case RIFLE -> c.rifleAmmo;
                                 case SHOTGUN -> c.shotgunAmmo;
                                 case SNIPER -> c.sniperAmmo;
+                                case HEAVY -> c.heavyAmmo;
                             }
                     ).orElse(0);
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.get", Component.translatable(type.translatableKey), value), true);
@@ -54,6 +55,7 @@ public class AmmoCommand {
                                 case RIFLE -> capability.rifleAmmo = value;
                                 case SHOTGUN -> capability.shotgunAmmo = value;
                                 case SNIPER -> capability.sniperAmmo = value;
+                                case HEAVY -> capability.heavyAmmo = value;
                             }
                             capability.syncPlayerVariables(player);
                         });
@@ -74,12 +76,14 @@ public class AmmoCommand {
                                 case RIFLE -> capability.rifleAmmo += value;
                                 case SHOTGUN -> capability.shotgunAmmo += value;
                                 case SNIPER -> capability.sniperAmmo += value;
+                                case HEAVY -> capability.heavyAmmo += value;
                             }
                             // 迫真溢出检测
                             if (capability.handgunAmmo < 0) capability.handgunAmmo = Integer.MAX_VALUE;
                             if (capability.rifleAmmo < 0) capability.rifleAmmo = Integer.MAX_VALUE;
                             if (capability.shotgunAmmo < 0) capability.shotgunAmmo = Integer.MAX_VALUE;
                             if (capability.sniperAmmo < 0) capability.sniperAmmo = Integer.MAX_VALUE;
+                            if (capability.heavyAmmo < 0) capability.heavyAmmo = Integer.MAX_VALUE;
 
                             capability.syncPlayerVariables(player);
                         });

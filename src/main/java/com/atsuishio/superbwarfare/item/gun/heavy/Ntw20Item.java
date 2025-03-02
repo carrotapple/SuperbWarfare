@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.item.gun.sniper;
+package com.atsuishio.superbwarfare.item.gun.heavy;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;

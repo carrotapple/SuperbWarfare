@@ -82,8 +82,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.RIFLE).add(ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.SKS.get(),
                 ModItems.MK_14.get(), ModItems.MARLIN.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.SNIPER_RIFLE).add(ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.SENTINEL.get(),
+        this.tag(ModTags.Items.SNIPER_RIFLE).add(ModItems.HUNTING_RIFLE.get(), ModItems.SENTINEL.get(),
                 ModItems.SVD.get(), ModItems.M_98B.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
+
+        this.tag(ModTags.Items.HEAVY_WEAPON).add(ModItems.NTW_20.get());
 
         this.tag(ModTags.Items.SHOTGUN).add(ModItems.ABEKIRI.get(), ModItems.M_870.get(), ModItems.AA_12.get());
 
@@ -101,8 +103,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.USE_SHOTGUN_AMMO).add(ModItems.ABEKIRI.get(), ModItems.M_870.get(), ModItems.AA_12.get());
 
-        this.tag(ModTags.Items.USE_SNIPER_AMMO).add(ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.SENTINEL.get(),
+        this.tag(ModTags.Items.USE_SNIPER_AMMO).add(ModItems.HUNTING_RIFLE.get(), ModItems.SENTINEL.get(),
                 ModItems.SVD.get(), ModItems.M_98B.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
+
+        this.tag(ModTags.Items.USE_HEAVY_AMMO).add(ModItems.NTW_20.get());
 
         this.tag(ModTags.Items.LAUNCHER).add(ModItems.M_79.get(), ModItems.RPG.get(), ModItems.JAVELIN.get(), ModItems.SECONDARY_CATACLYSM.get());
 

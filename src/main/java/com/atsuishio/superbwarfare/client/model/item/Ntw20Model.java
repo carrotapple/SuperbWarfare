@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.sniper.Ntw20Item;
+import com.atsuishio.superbwarfare.item.gun.heavy.Ntw20Item;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -89,7 +89,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         CrossHairOverlay.gunRot = shen.getRotZ();
 
         gun.setPosX(4.54f * (float) zp);
-        gun.setPosY(-0.45f * (float) zp - (float) (0.2f * zpz));
+        gun.setPosY(-0.47f * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(10.0f * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.02f * zpz));
         gun.setScaleZ(1f - (0.8f * (float) zp));

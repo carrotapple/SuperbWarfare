@@ -73,6 +73,7 @@ public class ModVariables {
             clone.handgunAmmo = original.handgunAmmo;
             clone.shotgunAmmo = original.shotgunAmmo;
             clone.sniperAmmo = original.sniperAmmo;
+            clone.heavyAmmo = original.heavyAmmo;
             clone.bowPullHold = original.bowPullHold;
             clone.bowPull = original.bowPull;
             clone.playerDoubleJump = original.playerDoubleJump;
@@ -213,6 +214,7 @@ public class ModVariables {
         public int handgunAmmo = 0;
         public int shotgunAmmo = 0;
         public int sniperAmmo = 0;
+        public int heavyAmmo = 0;
         public boolean bowPullHold = false;
         public boolean bowPull = false;
         public boolean playerDoubleJump = false;
@@ -237,6 +239,7 @@ public class ModVariables {
             nbt.putInt("HandgunAmmo", handgunAmmo);
             nbt.putInt("ShotgunAmmo", shotgunAmmo);
             nbt.putInt("SniperAmmo", sniperAmmo);
+            nbt.putInt("HeavyAmmo", heavyAmmo);
             nbt.putBoolean("BowPullHold", bowPullHold);
             nbt.putBoolean("BowPull", bowPull);
             nbt.putBoolean("DoubleJump", playerDoubleJump);
@@ -260,6 +263,7 @@ public class ModVariables {
             handgunAmmo = nbt.getInt("HandgunAmmo");
             shotgunAmmo = nbt.getInt("ShotgunAmmo");
             sniperAmmo = nbt.getInt("SniperAmmo");
+            heavyAmmo = nbt.getInt("HeavyAmmo");
             bowPullHold = nbt.getBoolean("BowPullHold");
             bowPull = nbt.getBoolean("BowPull");
             playerDoubleJump = nbt.getBoolean("DoubleJump");
@@ -313,6 +317,7 @@ public class ModVariables {
                 variables.handgunAmmo = message.data.handgunAmmo;
                 variables.shotgunAmmo = message.data.shotgunAmmo;
                 variables.sniperAmmo = message.data.sniperAmmo;
+                variables.heavyAmmo = message.data.heavyAmmo;
                 variables.bowPullHold = message.data.bowPullHold;
                 variables.bowPull = message.data.bowPull;
                 variables.playerDoubleJump = message.data.playerDoubleJump;

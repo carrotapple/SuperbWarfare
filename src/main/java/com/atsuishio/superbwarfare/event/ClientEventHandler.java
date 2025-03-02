@@ -374,7 +374,7 @@ public class ClientEventHandler {
 
         double zoomSpread;
 
-        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+        if (stack.is(ModTags.Items.SNIPER_RIFLE) || stack.is(ModTags.Items.HEAVY_WEAPON)) {
             zoomSpread = 1 - (0.995 * zoomTime);
         } else if (stack.is(ModTags.Items.SHOTGUN)) {
             if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
@@ -671,7 +671,7 @@ public class ClientEventHandler {
             if (gunItem.ejectShell(stack)) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     player.playSound(ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
-                } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                } else if (stack.is(ModTags.Items.SNIPER_RIFLE) || stack.is(ModTags.Items.HEAVY_WEAPON)) {
                     player.playSound(ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                 } else {
                     player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);

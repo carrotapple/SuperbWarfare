@@ -302,6 +302,9 @@ public class PlayerEventHandler {
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
                         GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
                     }
+                    if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && cap.heavyAmmo > 0) {
+                        GunsTool.reload(player, stack, GunInfo.Type.HEAVY);
+                    }
 
                     if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                         GunsTool.setGunIntTag(stack, "Ammo", 1);

@@ -88,7 +88,10 @@ public abstract class GunItem extends Item {
                         capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
                     } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
+                    } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                        capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).heavyAmmo + count;
                     }
+
                     capability.syncPlayerVariables(entity);
                 });
 

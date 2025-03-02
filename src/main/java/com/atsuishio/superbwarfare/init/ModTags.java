@@ -18,6 +18,7 @@ public class ModTags {
         public static final TagKey<Item> USE_RIFLE_AMMO = tag("use_rifle_ammo");
         public static final TagKey<Item> USE_SHOTGUN_AMMO = tag("use_shotgun_ammo");
         public static final TagKey<Item> USE_SNIPER_AMMO = tag("use_sniper_ammo");
+        public static final TagKey<Item> USE_HEAVY_AMMO = tag("use_heavy_ammo");
 
         public static final TagKey<Item> SMG = tag("smg");
         public static final TagKey<Item> HANDGUN = tag("handgun");
@@ -25,6 +26,8 @@ public class ModTags {
         public static final TagKey<Item> SNIPER_RIFLE = tag("sniper_rifle");
         public static final TagKey<Item> MACHINE_GUN = tag("machine_gun");
         public static final TagKey<Item> SHOTGUN = tag("shotgun");
+        public static final TagKey<Item> HEAVY_WEAPON = tag("heavy_weapon");
+
         public static final TagKey<Item> LAUNCHER = tag("launcher");
         public static final TagKey<Item> REVOLVER = tag("revolver");
 

@@ -36,12 +36,14 @@ public class AmmoSupplierItem extends Item {
                 case RIFLE -> capability.rifleAmmo;
                 case SHOTGUN -> capability.shotgunAmmo;
                 case SNIPER -> capability.sniperAmmo;
+                case HEAVY -> capability.heavyAmmo;
             } + ammoToAdd * count;
             switch (this.type) {
                 case HANDGUN -> capability.handgunAmmo = newAmmoCount;
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
                 case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
                 case SNIPER -> capability.sniperAmmo = newAmmoCount;
+                case HEAVY -> capability.heavyAmmo = newAmmoCount;
             }
             capability.syncPlayerVariables(player);
         });

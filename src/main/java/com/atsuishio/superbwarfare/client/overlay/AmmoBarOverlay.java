@@ -249,6 +249,9 @@ public class AmmoBarOverlay {
             if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo;
             }
+            if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).heavyAmmo;
+            }
             return "";
         }
 
@@ -285,6 +288,9 @@ public class AmmoBarOverlay {
         }
         if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
             return "Sniper Ammo";
+        }
+        if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+            return "Heavy Ammo";
         }
         return "";
     }
