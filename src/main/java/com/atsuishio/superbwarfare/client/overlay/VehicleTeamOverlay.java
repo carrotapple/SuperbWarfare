@@ -43,7 +43,7 @@ public class VehicleTeamOverlay {
                         Component.literal(player1.getDisplayName().getString() + (player1.getTeam() == null ? "" : " <" + (player1.getTeam().getName()) + ">")),
                         w / 2 + 90, h / 2 - 4, player1.getTeamColor(), false);
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                        Component.literal(lookingEntity.getDisplayName().getString() + FormatTool.format1D(entityRange, "m")),
+                        Component.literal(lookingEntity.getDisplayName().getString() + " " + FormatTool.format1D(entityRange, "m")),
                         w / 2 + 90, h / 2 + 5, player1.getTeamColor(), false);
             } else {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
