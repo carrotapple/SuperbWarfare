@@ -96,6 +96,10 @@ public class FuMO25Menu extends EnergyMenu {
         }
     }
 
+    public void setTargetToLaserTower() {
+
+    }
+
     @Nullable
     public BlockPos getCurrentPos() {
         if (this.posX != Integer.MIN_VALUE && this.posY != Integer.MIN_VALUE && this.posZ != Integer.MIN_VALUE) {

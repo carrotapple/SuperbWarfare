@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetPosMessage;
+import com.atsuishio.superbwarfare.network.message.RadarSetTargetMessage;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -277,7 +278,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class LockButton extends AbstractButton {
+    class LockButton extends AbstractButton {
 
         public LockButton(int pX, int pY) {
             super(pX, pY, 29, 15, Component.literal(""));
@@ -285,12 +286,20 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
         @Override
         public void onPress() {
-            ModUtils.PACKET_HANDLER.sendToServer(new RadarSetParametersMessage((byte) 0));
+            if (FuMO25Screen.this.menu.getFuncType() == 3 && FuMO25Screen.this.menu.getSlot(0).getItem().isEmpty()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new RadarSetTargetMessage((byte) 0));
+            } else {
+                ModUtils.PACKET_HANDLER.sendToServer(new RadarSetParametersMessage((byte) 0));
+            }
         }
 
         @Override
         protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 148, this.isHovered() ? 183 : 167, 29, 15, 358, 328);
+            if (FuMO25Screen.this.menu.getFuncType() == 3 && FuMO25Screen.this.menu.getSlot(0).getItem().isEmpty()) {
+                pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 148, this.isHovered() ? 311 : 295, 29, 15, 358, 328);
+            } else {
+                pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 148, this.isHovered() ? 183 : 167, 29, 15, 358, 328);
+            }
         }
 
         @Override

@@ -38,6 +38,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoBlockEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final int MAX_ENERGY = 1000000;
@@ -230,7 +231,6 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoB
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
     }
 
     @Override
@@ -244,6 +244,4 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoB
         GLOW,
         GUIDE
     }
-
-
 }
