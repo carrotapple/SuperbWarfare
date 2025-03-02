@@ -173,7 +173,6 @@ public class ModItems {
     public static final RegistryObject<Item> CELL = ITEMS.register("cell", Cell::new);
     public static final RegistryObject<Item> TRANSCRIPT = ITEMS.register("transcript", Transcript::new);
     public static final RegistryObject<Item> FIRING_PARAMETERS = ITEMS.register("firing_parameters", FiringParameters::new);
-    public static final RegistryObject<Item> RIDE_TOOL = ITEMS.register("ride_tool", RideTool::new);
 
     public static final RegistryObject<Item> TUNGSTEN_ROD = ITEMS.register("tungsten_rod", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));
