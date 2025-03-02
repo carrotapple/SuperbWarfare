@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.BarbedWireBlock;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
@@ -724,10 +725,18 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
             entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), normalDamage * this.headShot);
             entity.invulnerableTime = 0;
             entity.hurt(ModDamageTypes.causeGunFireHeadshotAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * this.headShot);
+            entity.invulnerableTime = 0;
+
         } else {
             entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), normalDamage);
             entity.invulnerableTime = 0;
             entity.hurt(ModDamageTypes.causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage);
+            entity.invulnerableTime = 0;
+
+            //大于1的穿甲对载具造成额外伤害
+            if (entity instanceof VehicleEntity vehicle && this.bypassArmorRate > 1) {
+                vehicle.hurt(ModDamageTypes.causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * (this.bypassArmorRate - 1) * 0.5f);
+            }
         }
     }
 
