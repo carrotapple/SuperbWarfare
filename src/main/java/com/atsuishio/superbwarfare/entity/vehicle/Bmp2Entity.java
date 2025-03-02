@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.projectile.WgMissileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -67,7 +66,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_MISSILE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
@@ -107,7 +105,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         this.entityData.define(HEAT, 0);
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(WEAPON_TYPE, 0);
-        this.entityData.define(LOADED_COAX_AMMO, 0);
         this.entityData.define(LOADED_MISSILE, 0);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
@@ -116,14 +113,12 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("LoadedCoaxAmmo", this.entityData.get(LOADED_COAX_AMMO));
         compound.putInt("LoadedMissile", this.entityData.get(LOADED_MISSILE));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.entityData.set(LOADED_COAX_AMMO, compound.getInt("LoadedCoaxAmmo"));
         this.entityData.set(LOADED_MISSILE, compound.getInt("LoadedMissile"));
     }
 
@@ -282,9 +277,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
             }
             return false;
-        }).mapToInt(stack -> stack.getOrCreateTag().getInt("RifleAmmo")).sum();
-
-        this.entityData.set(LOADED_COAX_AMMO, ammoCount);
+        }).mapToInt(stack -> stack.getOrCreateTag().getInt("RifleAmmo")).sum()
+                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum();
 
         if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0
                 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
@@ -300,7 +294,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         if (this.getEntityData().get(WEAPON_TYPE) == 0) {
             this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
         } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
-            this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
+            this.entityData.set(AMMO, ammoCount);
         } else {
             this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
         }
@@ -312,15 +306,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         if (this.isInWater() && horizontalCollision) {
             setDeltaMovement(this.getDeltaMovement().add(0, 0.07, 0));
         }
-    }
-
-    public boolean zooming() {
-        Entity driver = this.getFirstPassenger();
-        if (driver == null) return false;
-        if (driver instanceof Player player) {
-            return player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-        }
-        return false;
     }
 
     @Override
@@ -376,7 +361,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
-            if (this.entityData.get(LOADED_COAX_AMMO) > 0 || hasCreativeAmmo) {
+            if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 ProjectileEntity projectileRight = new ProjectileEntity(player.level())
                         .shooter(player)
                         .damage(9.5f)
@@ -399,6 +384,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
                     if (!ammoBox.isEmpty()) {
                         ammoBox.getOrCreateTag().putInt("RifleAmmo", Math.max(0, ammoBox.getOrCreateTag().getInt("RifleAmmo") - 1));
+                    } else {
+                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                     }
                 }
             }
@@ -749,7 +736,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         if (entityData.get(WEAPON_TYPE) == 0) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
         } else if (entityData.get(WEAPON_TYPE) == 1) {
-            return (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
+            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
         } else if (entityData.get(WEAPON_TYPE) == 2) {
             return (this.entityData.get(LOADED_MISSILE) > 0);
         }

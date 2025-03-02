@@ -156,7 +156,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         }
 
         if (this.level() instanceof ServerLevel) {
-            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+            this.handleAmmo();
         }
 
         Entity driver = this.getFirstPassenger();
@@ -196,6 +196,21 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         }
 
         this.refreshDimensions();
+    }
+
+    private void handleAmmo() {
+        if (!(this.getFirstPassenger() instanceof Player player)) return;
+
+        int ammoCount = this.getItemStacks().stream().filter(stack -> {
+            if (stack.is(ModItems.AMMO_BOX.get())) {
+                return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+            }
+            return false;
+        }).mapToInt(stack -> stack.getOrCreateTag().getInt("HeavyAmmo")).sum()
+                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+
+
+        this.entityData.set(AMMO, ammoCount);
     }
 
     public boolean zooming() {
@@ -247,7 +262,23 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
         this.entityData.set(FIRE_ANIM, 3);
-        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+
+        boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+
+        if (!hasCreativeAmmo) {
+            ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
+                if (stack.is(ModItems.AMMO_BOX.get())) {
+                    return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                }
+                return false;
+            }).findFirst().orElse(ItemStack.EMPTY);
+
+            if (!ammoBox.isEmpty()) {
+                ammoBox.getOrCreateTag().putInt("HeavyAmmo", java.lang.Math.max(0, ammoBox.getOrCreateTag().getInt("HeavyAmmo") - 1));
+            } else {
+                this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+            }
+        }
     }
 
     @Override

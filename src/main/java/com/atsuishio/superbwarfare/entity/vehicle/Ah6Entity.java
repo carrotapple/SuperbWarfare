@@ -182,22 +182,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             if (decoyReloadCoolDown > 0) {
                 decoyReloadCoolDown--;
             }
-            if (this.getFirstPassenger() instanceof Player player) {
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
-                    this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
-                    reloadCoolDown = 25;
-                    if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                    }
-                    this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
-                }
-            }
-
-            if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
-            } else {
-                this.entityData.set(AMMO, this.getEntityData().get(LOADED_ROCKET));
-            }
+            handleAmmo();
         }
 
         if (this.onGround()) {
@@ -219,6 +204,33 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         lowHealthWarning();
 
         this.refreshDimensions();
+    }
+
+    private void handleAmmo() {
+        if (!(this.getFirstPassenger() instanceof Player player)) return;
+
+        int ammoCount = this.getItemStacks().stream().filter(stack -> {
+            if (stack.is(ModItems.AMMO_BOX.get())) {
+                return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+            }
+            return false;
+        }).mapToInt(stack -> stack.getOrCreateTag().getInt("HeavyAmmo")).sum()
+                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+
+        if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
+            this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
+            reloadCoolDown = 25;
+            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+            }
+            this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
+        }
+
+        if (this.getEntityData().get(WEAPON_TYPE) == 0) {
+            this.entityData.set(AMMO, ammoCount);
+        } else {
+            this.entityData.set(AMMO, this.getEntityData().get(LOADED_ROCKET));
+        }
     }
 
     public void releaseDecoy() {
@@ -520,6 +532,8 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void vehicleShoot(Player player) {
+        boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+
         Matrix4f transform = getVehicleTransform();
         float x;
         float y;
@@ -538,7 +552,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             worldPositionRight = transformPosition(transform, -x, y, z);
             worldPositionLeft = transformPosition(transform, x, y, z);
 
-            if (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 ProjectileEntity projectileRight = new ProjectileEntity(player.level())
                         .shooter(player)
                         .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
@@ -557,7 +571,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 }
             }
 
-            if (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
                         .shooter(player)
                         .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
@@ -571,9 +585,22 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                         (float) 0.2);
                 this.level().addFreshEntity(projectileLeft);
                 sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
-                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+
+                if (!hasCreativeAmmo) {
+                    ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
+                        if (stack.is(ModItems.AMMO_BOX.get())) {
+                            return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                        }
+                        return false;
+                    }).findFirst().orElse(ItemStack.EMPTY);
+
+                    if (!ammoBox.isEmpty()) {
+                        ammoBox.getOrCreateTag().putInt("HeavyAmmo", java.lang.Math.max(0, ammoBox.getOrCreateTag().getInt("HeavyAmmo") - 1));
+                    } else {
+                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    }
                 }
+
             }
 
             if (!player.level().isClientSide) {

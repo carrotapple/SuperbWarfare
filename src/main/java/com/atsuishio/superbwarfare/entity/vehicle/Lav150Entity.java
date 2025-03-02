@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -69,7 +68,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
@@ -107,19 +105,16 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         this.entityData.define(HEAT, 0);
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(WEAPON_TYPE, 0);
-        this.entityData.define(LOADED_COAX_AMMO, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("LoadedCoaxAmmo", this.entityData.get(LOADED_COAX_AMMO));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.entityData.set(LOADED_COAX_AMMO, compound.getInt("LoadedCoaxAmmo"));
     }
 
     @Override
@@ -194,27 +189,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         }
 
         if (this.level() instanceof ServerLevel) {
-            if (this.getFirstPassenger() instanceof Player) {
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                }
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 5);
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                }
-            }
-
-            if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
-            } else {
-                this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
-            }
+            this.handleAmmo();
         }
-
-//        if (this.level() instanceof ServerLevel) {
-//            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
-//        }
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
@@ -269,44 +245,29 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             collideHardBlock();
         }
 
-
         gunnerAngle();
         lowHealthWarning();
 
-//        Matrix4f transform = getVehicleTransform();
-//        暂时屁用没有的点位计算
-//        Vector4f worldPosition1 = transformPosition(transform, 1.6f, 3f, 4);
-//        Vector4f worldPosition2 = transformPosition(transform, -1.6f, 3f, 4);
-//        Vector4f worldPosition3 = transformPosition(transform, 1.6f, 3f, -4);
-//        Vector4f worldPosition4 = transformPosition(transform, -1.6f, 3f, -4);
-//        Vector4f worldPosition5 = transformPosition(transform, 1.6f, 0.1f, 4);
-//        Vector4f worldPosition6 = transformPosition(transform, -1.6f, 0.1f, 4);
-//        Vector4f worldPosition7 = transformPosition(transform, 1.6f, 0.1f, -4);
-//        Vector4f worldPosition8 = transformPosition(transform, -1.6f, 0.1f, -4);
-//
-//        Vec3 p1 = new Vec3(worldPosition1.x,worldPosition1.y,worldPosition1.z);
-//        Vec3 p2 = new Vec3(worldPosition2.x,worldPosition2.y,worldPosition2.z);
-//        Vec3 p3 = new Vec3(worldPosition3.x,worldPosition3.y,worldPosition3.z);
-//        Vec3 p4 = new Vec3(worldPosition4.x,worldPosition4.y,worldPosition4.z);
-//        Vec3 p5 = new Vec3(worldPosition5.x,worldPosition5.y,worldPosition5.z);
-//        Vec3 p6 = new Vec3(worldPosition6.x,worldPosition6.y,worldPosition6.z);
-//        Vec3 p7 = new Vec3(worldPosition7.x,worldPosition7.y,worldPosition7.z);
-//        Vec3 p8 = new Vec3(worldPosition8.x,worldPosition8.y,worldPosition8.z);
-//
-//        if (player != null) {
-//            if (player.level() instanceof ServerLevel serverLevel ) {
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p5.x, p5.y, p5.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p6.x, p6.y, p6.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p7.x, p7.y, p7.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p8.x, p8.y, p8.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//            }
-//        }
-
         this.refreshDimensions();
+    }
+
+    private void handleAmmo() {
+        if (!(this.getFirstPassenger() instanceof Player player)) return;
+
+        int ammoCount = this.getItemStacks().stream().filter(stack -> {
+            if (stack.is(ModItems.AMMO_BOX.get())) {
+                return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+            }
+            return false;
+        }).mapToInt(stack -> stack.getOrCreateTag().getInt("RifleAmmo")).sum()
+                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+
+
+        if (this.getEntityData().get(WEAPON_TYPE) == 0) {
+            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
+        } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
+            this.entityData.set(AMMO, ammoCount);
+        }
     }
 
     @Override
@@ -317,17 +278,10 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         }
     }
 
-    public boolean zooming() {
-        Entity driver = this.getFirstPassenger();
-        if (driver == null) return false;
-        if (driver instanceof Player player) {
-            return player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-        }
-        return false;
-    }
-
     @Override
     public void vehicleShoot(Player player) {
+        boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+
         Matrix4f transform = getBarrelTransform();
         if (entityData.get(WEAPON_TYPE) == 0) {
             if (this.cannotFire) return;
@@ -379,7 +333,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
 
-            if (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 ProjectileEntity projectileRight = new ProjectileEntity(player.level())
                         .shooter(player)
                         .damage(9.5f)
@@ -392,8 +346,19 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                         0.25f);
                 this.level().addFreshEntity(projectileRight);
 
-                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) - 1);
+                if (!hasCreativeAmmo) {
+                    ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
+                        if (stack.is(ModItems.AMMO_BOX.get())) {
+                            return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+                        }
+                        return false;
+                    }).findFirst().orElse(ItemStack.EMPTY);
+
+                    if (!ammoBox.isEmpty()) {
+                        ammoBox.getOrCreateTag().putInt("RifleAmmo", java.lang.Math.max(0, ammoBox.getOrCreateTag().getInt("RifleAmmo") - 1));
+                    } else {
+                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    }
                 }
             }
 
@@ -718,7 +683,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         if (entityData.get(WEAPON_TYPE) == 0) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
         } else if (entityData.get(WEAPON_TYPE) == 1) {
-            return (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
+            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
         }
         return false;
     }
