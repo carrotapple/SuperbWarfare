@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
@@ -34,6 +35,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -127,11 +129,11 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         }
     }
 
-    public void setOwnerUUID(@javax.annotation.Nullable UUID pUuid) {
+    public void setOwnerUUID(@Nullable UUID pUuid) {
         this.entityData.set(OWNER_UUID, Optional.ofNullable(pUuid));
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public UUID getOwnerUUID() {
         return this.entityData.get(OWNER_UUID).orElse(null);
     }
@@ -206,7 +208,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         } else {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
-        autoAim();
+        this.autoAim();
     }
 
     @Override
@@ -223,7 +225,6 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         setYRot(getYRot() + (float) interpolatedYaw / (float) interpolationSteps);
         setXRot(getXRot() + (float) (serverXRot - (double) getXRot()) / (float) interpolationSteps);
         setRot(getYRot(), getXRot());
-
     }
 
     @Override
@@ -249,8 +250,9 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     }
 
     public void autoAim() {
-        if (this.getEnergy() <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30)
+        if (this.getEnergy() <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30) {
             return;
+        }
 
         if (entityData.get(TARGET_UUID).equals("none") && tickCount % 10 == 0) {
             Entity naerestEntity = seekNearLivingEntity(72);
@@ -263,9 +265,14 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
 
         if (target != null) {
             if (target instanceof LivingEntity living && living.getHealth() <= 0) {
-                entityData.set(TARGET_UUID, "none");
+                this.entityData.set(TARGET_UUID, "none");
                 return;
             }
+            if (target == this || target instanceof TargetEntity) {
+                this.entityData.set(TARGET_UUID, "none");
+                return;
+            }
+
             Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
             Vec3 targetVec = barrelRootPos.vectorTo(target.getEyePosition()).normalize();
 
@@ -285,7 +292,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                 changeTargetTimer++;
             }
 
-            if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1 && NoClip(target)) {
+            if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1 && checkNoClip(target)) {
 
                 this.entityData.set(COOL_DOWN, 40);
 
@@ -323,13 +330,13 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                     // TODO 自定义目标列表
                     if (e.distanceTo(this) <= seekRange && ((e instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0)
                     )) {
-                        return NoClip(e);
+                        return checkNoClip(e);
                     }
                     return false;
                 }).min(Comparator.comparingDouble(e -> e.distanceTo(this))).orElse(null);
     }
 
-    public boolean NoClip(Entity target) {
+    public boolean checkNoClip(Entity target) {
         return level().clip(new ClipContext(this.getEyePosition(), target.getEyePosition(),
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
     }
