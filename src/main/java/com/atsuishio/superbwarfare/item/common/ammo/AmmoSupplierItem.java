@@ -31,26 +31,26 @@ public class AmmoSupplierItem extends Item {
         player.getCooldowns().addCooldown(this, 10);
         stack.shrink(count);
 
-        ItemStack ammobox = player.getOffhandItem();
+        ItemStack offhandItem = player.getOffhandItem();
 
-        if (ammobox.is(ModItems.AMMO_BOX.get())) {
-            var newAmmoCount = switch (this.type) {
-                case HANDGUN -> ammobox.getOrCreateTag().getInt("HandgunAmmo");
-                case RIFLE -> ammobox.getOrCreateTag().getInt("RifleAmmo");
-                case SHOTGUN -> ammobox.getOrCreateTag().getInt("ShotgunAmmo");
-                case SNIPER -> ammobox.getOrCreateTag().getInt("SniperAmmo");
-                case HEAVY -> ammobox.getOrCreateTag().getInt("HeavyAmmo");
+        if (offhandItem.is(ModItems.AMMO_BOX.get())) {
+            int newAmmoCount = switch (this.type) {
+                case HANDGUN -> offhandItem.getOrCreateTag().getInt("HandgunAmmo");
+                case RIFLE -> offhandItem.getOrCreateTag().getInt("RifleAmmo");
+                case SHOTGUN -> offhandItem.getOrCreateTag().getInt("ShotgunAmmo");
+                case SNIPER -> offhandItem.getOrCreateTag().getInt("SniperAmmo");
+                case HEAVY -> offhandItem.getOrCreateTag().getInt("HeavyAmmo");
             } + ammoToAdd * count;
             switch (this.type) {
-                case HANDGUN -> ammobox.getOrCreateTag().putInt("HandgunAmmo", newAmmoCount);
-                case RIFLE -> ammobox.getOrCreateTag().putInt("RifleAmmo", newAmmoCount);
-                case SHOTGUN -> ammobox.getOrCreateTag().putInt("ShotgunAmmo", newAmmoCount);
-                case SNIPER -> ammobox.getOrCreateTag().putInt("SniperAmmo", newAmmoCount);
-                case HEAVY -> ammobox.getOrCreateTag().putInt("HeavyAmmo", newAmmoCount);
+                case HANDGUN -> offhandItem.getOrCreateTag().putInt("HandgunAmmo", newAmmoCount);
+                case RIFLE -> offhandItem.getOrCreateTag().putInt("RifleAmmo", newAmmoCount);
+                case SHOTGUN -> offhandItem.getOrCreateTag().putInt("ShotgunAmmo", newAmmoCount);
+                case SNIPER -> offhandItem.getOrCreateTag().putInt("SniperAmmo", newAmmoCount);
+                case HEAVY -> offhandItem.getOrCreateTag().putInt("HeavyAmmo", newAmmoCount);
             }
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                var newAmmoCount = switch (this.type) {
+                int newAmmoCount = switch (this.type) {
                     case HANDGUN -> capability.handgunAmmo;
                     case RIFLE -> capability.rifleAmmo;
                     case SHOTGUN -> capability.shotgunAmmo;

@@ -30,8 +30,10 @@ public class AmmoBox extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        CompoundTag tag = stack.getOrCreateTag();
 
+        if (hand == InteractionHand.OFF_HAND) return InteractionResultHolder.fail(stack);
+
+        CompoundTag tag = stack.getOrCreateTag();
         player.getCooldowns().addCooldown(this, 10);
         int type = stack.getOrCreateTag().getInt("Type");
 
@@ -162,5 +164,4 @@ public class AmmoBox extends Item {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "HeavyAmmo", 0)) + ((type == 0 || type == 5) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
     }
-
 }
