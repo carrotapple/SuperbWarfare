@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.GunInfo;
@@ -30,23 +31,42 @@ public class AmmoSupplierItem extends Item {
         player.getCooldowns().addCooldown(this, 10);
         stack.shrink(count);
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        ItemStack ammobox = player.getOffhandItem();
+
+        if (ammobox.is(ModItems.AMMO_BOX.get())) {
             var newAmmoCount = switch (this.type) {
-                case HANDGUN -> capability.handgunAmmo;
-                case RIFLE -> capability.rifleAmmo;
-                case SHOTGUN -> capability.shotgunAmmo;
-                case SNIPER -> capability.sniperAmmo;
-                case HEAVY -> capability.heavyAmmo;
+                case HANDGUN -> ammobox.getOrCreateTag().getInt("HandgunAmmo");
+                case RIFLE -> ammobox.getOrCreateTag().getInt("RifleAmmo");
+                case SHOTGUN -> ammobox.getOrCreateTag().getInt("ShotgunAmmo");
+                case SNIPER -> ammobox.getOrCreateTag().getInt("SniperAmmo");
+                case HEAVY -> ammobox.getOrCreateTag().getInt("HeavyAmmo");
             } + ammoToAdd * count;
             switch (this.type) {
-                case HANDGUN -> capability.handgunAmmo = newAmmoCount;
-                case RIFLE -> capability.rifleAmmo = newAmmoCount;
-                case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
-                case SNIPER -> capability.sniperAmmo = newAmmoCount;
-                case HEAVY -> capability.heavyAmmo = newAmmoCount;
+                case HANDGUN -> ammobox.getOrCreateTag().putInt("HandgunAmmo", newAmmoCount);
+                case RIFLE -> ammobox.getOrCreateTag().putInt("RifleAmmo", newAmmoCount);
+                case SHOTGUN -> ammobox.getOrCreateTag().putInt("ShotgunAmmo", newAmmoCount);
+                case SNIPER -> ammobox.getOrCreateTag().putInt("SniperAmmo", newAmmoCount);
+                case HEAVY -> ammobox.getOrCreateTag().putInt("HeavyAmmo", newAmmoCount);
             }
-            capability.syncPlayerVariables(player);
-        });
+        } else {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                var newAmmoCount = switch (this.type) {
+                    case HANDGUN -> capability.handgunAmmo;
+                    case RIFLE -> capability.rifleAmmo;
+                    case SHOTGUN -> capability.shotgunAmmo;
+                    case SNIPER -> capability.sniperAmmo;
+                    case HEAVY -> capability.heavyAmmo;
+                } + ammoToAdd * count;
+                switch (this.type) {
+                    case HANDGUN -> capability.handgunAmmo = newAmmoCount;
+                    case RIFLE -> capability.rifleAmmo = newAmmoCount;
+                    case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
+                    case SNIPER -> capability.sniperAmmo = newAmmoCount;
+                    case HEAVY -> capability.heavyAmmo = newAmmoCount;
+                }
+                capability.syncPlayerVariables(player);
+            });
+        }
 
         if (!level.isClientSide()) {
             player.displayClientMessage(Component.translatable("item.superbwarfare.ammo_supplier.supply", Component.translatable(this.type.translatableKey), ammoToAdd * count), true);
