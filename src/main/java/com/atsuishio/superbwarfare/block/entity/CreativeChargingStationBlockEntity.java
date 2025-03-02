@@ -42,6 +42,7 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
 
     private void chargeEntity() {
         if (this.level == null) return;
+        if (this.level.getGameTime() % 20 != 0) return;
 
         List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
         entities.forEach(entity -> entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {

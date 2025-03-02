@@ -190,11 +190,12 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     private void chargeEntity(EnergyStorage handler) {
         if (this.level == null) return;
+        if (this.level.getGameTime() % 20 != 0) return;
 
         List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
         entities.forEach(entity -> entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {
             if (cap.canReceive()) {
-                int charged = cap.receiveEnergy(Math.min(handler.getEnergyStored(), CHARGE_OTHER_SPEED), false);
+                int charged = cap.receiveEnergy(Math.min(handler.getEnergyStored(), CHARGE_OTHER_SPEED * 20), false);
                 handler.extractEnergy(charged, false);
             }
         }));
