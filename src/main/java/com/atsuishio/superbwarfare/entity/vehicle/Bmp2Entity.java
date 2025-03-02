@@ -40,13 +40,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -163,12 +160,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         this.playSound(ModSounds.BMP_STEP.get(), Mth.abs(this.entityData.get(POWER)) * 8, random.nextFloat() * 0.15f + 1f);
     }
 
+    @Override
     public double getSubmergedHeight(Entity entity) {
-        for (FluidType fluidType : ForgeRegistries.FLUID_TYPES.get().getValues()) {
-            if (entity.level().getFluidState(entity.blockPosition()).getFluidType() == fluidType)
-                return entity.getFluidTypeHeight(fluidType);
-        }
-        return 0;
+        return super.getSubmergedHeight(entity);
     }
 
     @Override
@@ -220,40 +214,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             if (reloadCoolDown > 0) {
                 reloadCoolDown--;
             }
-            if (this.getFirstPassenger() instanceof Player player) {
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                }
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 5);
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                }
-            }
-
-            if (this.getFirstPassenger() instanceof Player player) {
-                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_MISSILE) < 1) {
-                    this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) + 1);
-                    reloadCoolDown = 160;
-                    if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-                    }
-                    this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
-                }
-            }
-
-            if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
-            } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
-                this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
-            } else {
-                this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
-            }
+            this.handleAmmo();
         }
-
-//        if (this.level() instanceof ServerLevel) {
-//            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
-//        }
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
@@ -279,7 +241,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             float f0 = 0.54f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.05 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f0, 0.85, f0));
-
         } else if (this.isInWater()) {
             float f1 = 0.61f + 0.08f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().horizontalDistance())));
@@ -311,6 +272,38 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         gunnerAngle();
         lowHealthWarning();
         this.refreshDimensions();
+    }
+
+    private void handleAmmo() {
+        if (!(this.getFirstPassenger() instanceof Player player)) return;
+
+        int ammoCount = this.getItemStacks().stream().filter(stack -> {
+            if (stack.is(ModItems.AMMO_BOX.get())) {
+                return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+            }
+            return false;
+        }).mapToInt(stack -> stack.getOrCreateTag().getInt("RifleAmmo")).sum();
+
+        this.entityData.set(LOADED_COAX_AMMO, ammoCount);
+
+        if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0
+                || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+                && this.reloadCoolDown <= 0 && this.getEntityData().get(LOADED_MISSILE) < 1) {
+            this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) + 1);
+            this.reloadCoolDown = 160;
+            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+            }
+            this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
+        }
+
+        if (this.getEntityData().get(WEAPON_TYPE) == 0) {
+            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
+        } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
+            this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
+        } else {
+            this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
+        }
     }
 
     @Override
@@ -374,7 +367,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-
         } else if (entityData.get(WEAPON_TYPE) == 1) {
             if (this.cannotFireCoax) return;
             float x = 0.1125f;
@@ -382,8 +374,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             float z = 2f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
+            boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
-            if (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (this.entityData.get(LOADED_COAX_AMMO) > 0 || hasCreativeAmmo) {
                 ProjectileEntity projectileRight = new ProjectileEntity(player.level())
                         .shooter(player)
                         .damage(9.5f)
@@ -396,8 +389,17 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                         0.25f);
                 this.level().addFreshEntity(projectileRight);
 
-                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) - 1);
+                if (!hasCreativeAmmo) {
+                    ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
+                        if (stack.is(ModItems.AMMO_BOX.get())) {
+                            return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+                        }
+                        return false;
+                    }).findFirst().orElse(ItemStack.EMPTY);
+
+                    if (!ammoBox.isEmpty()) {
+                        ammoBox.getOrCreateTag().putInt("RifleAmmo", Math.max(0, ammoBox.getOrCreateTag().getInt("RifleAmmo") - 1));
+                    }
                 }
             }
 
@@ -502,9 +504,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         this.entityData.set(TRACK_L, (float) ((entityData.get(TRACK_L) - 1.9 * Math.PI * s0) + Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
         this.entityData.set(TRACK_R, (float) ((entityData.get(TRACK_R) - 1.9 * Math.PI * s0) - Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
-
         if (this.isInWater() || onGround()) {
-            this.setYRot((float) (this.getYRot() - Math.max(isInWater() && !onGround() ? 2.5 : 6, 0) * entityData.get(DELTA_ROT)));
+            this.setYRot((float) (this.getYRot() - (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT)));
             this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER)));
         }
     }
