@@ -1,13 +1,13 @@
 package com.atsuishio.superbwarfare.compat.jade.providers;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.compat.jade.elements.WrenchHealthElement;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.impl.ui.HealthElement;
 
 public enum VehicleHealthProvider implements IEntityComponentProvider {
     INSTANCE;
@@ -20,7 +20,8 @@ public enum VehicleHealthProvider implements IEntityComponentProvider {
         var vehicle = (VehicleEntity) accessor.getEntity();
         float health = vehicle.getHealth();
         float maxHealth = vehicle.getMaxHealth();
-        tooltip.add(new HealthElement(maxHealth, health));
+//        tooltip.add(new HealthElement(maxHealth, health));
+        tooltip.add(new WrenchHealthElement(maxHealth, health));
     }
 
     public ResourceLocation getUid() {

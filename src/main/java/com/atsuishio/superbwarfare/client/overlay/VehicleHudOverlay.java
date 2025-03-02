@@ -80,17 +80,17 @@ public class VehicleHudOverlay {
         if (vehicle instanceof EnergyVehicleEntity energyVehicleEntity) {
             float energy = energyVehicleEntity.getEnergy();
             float maxEnergy = energyVehicleEntity.getMaxEnergy();
-            guiGraphics.blit(ENERGY, 10, h - 22 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
-            guiGraphics.blit(HEALTH_FRAME, 20, h - 21 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
-            guiGraphics.blit(HEALTH, 20, h - 21 - compatHeight, 100, 0, 0, (int) (60 * energy / maxEnergy), 6, 60, 6);
+            preciseBlit(guiGraphics, ENERGY, 10, h - 22 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, HEALTH_FRAME, 20, h - 21 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
+            preciseBlit(guiGraphics, HEALTH, 20, h - 21 - compatHeight, 100, 0, 0, (int) (60 * energy / maxEnergy), 6, 60, 6);
         }
 
         if (vehicle instanceof VehicleEntity pVehicle) {
             float health = pVehicle.getHealth();
             float maxHealth = pVehicle.getMaxHealth();
-            guiGraphics.blit(ARMOR, 10, h - 13 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
-            guiGraphics.blit(HEALTH_FRAME, 20, h - 12 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
-            guiGraphics.blit(HEALTH, 20, h - 12 - compatHeight, 100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
+            preciseBlit(guiGraphics, ARMOR, 10, h - 13 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, HEALTH_FRAME, 20, h - 12 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
+            preciseBlit(guiGraphics, HEALTH, 20, h - 12 - compatHeight, 100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
         }
         poseStack.popPose();
 
@@ -209,8 +209,8 @@ public class VehicleHudOverlay {
                 int addW = (w / h) * 48;
                 int addH = (w / h) * 27;
                 preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2, 10, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 - 64, h - 56, 0, 0.0F, 128, 1, 128, 1);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2f - 64, h - 56, 0, 0.0F, 128, 1, 128, 1);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2f + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
 
                 // 不同武器种类的准星
                 if (multiWeaponVehicle.getWeaponType() == 0) {
@@ -223,12 +223,12 @@ public class VehicleHudOverlay {
 
                 // 指南针
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * player.getYRot()), 0, 256, 16, 512, 16);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), w / 2 - 8, 30, 0, 0.0F, 16, 16, 16, 16);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), w / 2f - 8, 30, 0, 0.0F, 16, 16, 16, 16);
 
                 // 炮塔方向
                 poseStack.pushPose();
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())), w / 2 + 112, h - 56, 0);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2 + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())), w / 2f + 112, h - 56, 0);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2f + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
                 poseStack.popPose();
 
                 // 时速
