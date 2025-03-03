@@ -142,7 +142,19 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
             ItemStack fuel = blockEntity.getItem(SLOT_FUEL);
             int burnTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
-            if (burnTime > 0) {
+
+            if (fuel.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+                // 优先当作电池处理
+                fuel.getCapability(ForgeCapabilities.ENERGY).ifPresent(itemEnergy -> blockEntity.energyHandler.ifPresent(energy -> {
+                    var energyToExtract = Math.min(CHARGE_OTHER_SPEED, energy.getMaxEnergyStored() - energy.getEnergyStored());
+                    if (itemEnergy.canExtract() && energy.canReceive()) {
+                        energy.receiveEnergy(itemEnergy.extractEnergy(energyToExtract, false), false);
+                    }
+                }));
+
+                blockEntity.setChanged();
+            } else if (burnTime > 0) {
+                // 其次尝试作为燃料处理
                 blockEntity.fuelTick = burnTime;
                 blockEntity.maxFuelTick = burnTime;
 
@@ -168,6 +180,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
                 blockEntity.setChanged();
             } else if (fuel.getItem().isEdible()) {
+                // 最后作为食物处理
                 var properties = fuel.getFoodProperties(null);
                 if (properties == null) return;
 
