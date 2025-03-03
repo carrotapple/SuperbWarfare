@@ -35,7 +35,6 @@ import org.joml.Math;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
-import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.AMMO;
@@ -105,7 +104,7 @@ public class VehicleHudOverlay {
 
             if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))
                     && !(iVehicle instanceof ICannonEntity
-                    || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getEntityData().get(WEAPON_TYPE) == 1))
+                    || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getWeaponType() == 1))
             ) {
                 event.getGuiGraphics().drawString(
                         Minecraft.getInstance().font,
@@ -157,7 +156,7 @@ public class VehicleHudOverlay {
             return Component.translatable("des.superbwarfare.tips.ammo_type.cal50").getString();
         }
         if (iVehicle instanceof Ah6Entity ah6Entity) {
-            if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
+            if (ah6Entity.getWeaponType() == 0) {
                 return Component.translatable("des.superbwarfare.tips.ammo_type.20mm_cannon").getString();
             } else {
                 return Component.translatable("des.superbwarfare.tips.ammo_type.rocket").getString();

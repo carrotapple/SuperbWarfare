@@ -249,20 +249,18 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     private void handleAmmo() {
-        if (!(this.getFirstPassenger() instanceof Player player)) return;
+        if (!(this.getFirstPassenger() instanceof Player)) return;
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
                 return AmmoType.RIFLE.get(stack) > 0;
             }
             return false;
-        }).mapToInt(AmmoType.RIFLE::get).sum()
-                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+        }).mapToInt(AmmoType.RIFLE::get).sum() + countItem(ModItems.RIFLE_AMMO.get());
 
-
-        if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
-        } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
+        if (getWeaponType() == 0) {
+            this.entityData.set(AMMO, countItem(ModItems.SMALL_SHELL.get()));
+        } else if (getWeaponType() == 1) {
             this.entityData.set(AMMO, ammoCount);
         }
     }
@@ -280,7 +278,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
         Matrix4f transform = getBarrelTransform();
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             if (this.cannotFire) return;
             float x = -0.0234375f;
             float y = 0f;
@@ -322,7 +320,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             this.entityData.set(FIRE_ANIM, 3);
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
 
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             if (this.cannotFireCoax) return;
             float x = 0.3f;
             float y = 0.08f;
@@ -629,11 +627,11 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     private PlayState firePredicate(AnimationState<Lav150Entity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 1 && entityData.get(WEAPON_TYPE) == 0) {
+        if (this.entityData.get(FIRE_ANIM) > 1 && getWeaponType() == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
         }
 
-        if (this.entityData.get(FIRE_ANIM) > 0 && entityData.get(WEAPON_TYPE) == 1) {
+        if (this.entityData.get(FIRE_ANIM) > 0 && getWeaponType() == 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire2"));
         }
 
@@ -667,9 +665,9 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public int mainGunRpm() {
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             return 300;
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             return 600;
         }
         return 300;
@@ -677,9 +675,9 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public boolean canShoot(Player player) {
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
         }
         return false;
@@ -707,8 +705,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public void changeWeapon(int scroll) {
-        var type = (entityData.get(WEAPON_TYPE) + scroll + 2) % 2;
-        entityData.set(WEAPON_TYPE, type);
+        var type = (getWeaponType() + scroll + 2) % 2;
+        setWeaponType(type);
 
         var sound = switch (type) {
             case 0 -> ModSounds.INTO_MISSILE.get();
@@ -722,6 +720,11 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     @Override
     public int getWeaponType() {
         return entityData.get(WEAPON_TYPE);
+    }
+
+    @Override
+    public void setWeaponType(int type) {
+        entityData.set(WEAPON_TYPE, type);
     }
 
     @Override

@@ -12,10 +12,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -23,6 +25,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 
@@ -127,6 +130,70 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     @Override
     public NonNullList<ItemStack> getItemStacks() {
         return this.items;
+    }
+
+    /**
+     * 计算当前载具内指定物品的数量
+     *
+     * @param item 物品类型
+     * @return 物品数量
+     */
+    public int countItem(@NotNull Item item) {
+        return this.getItemStacks().stream()
+                .filter(stack -> stack.is(item))
+                .mapToInt(ItemStack::getCount)
+                .sum();
+    }
+
+    /**
+     * 消耗载具内指定物品
+     *
+     * @param item  物品类型
+     * @param count 要消耗的数量
+     * @return 成功消耗的物品数量
+     */
+    public int consumeItem(Item item, int count) {
+        int initialCount = count;
+        var items = this.getItemStacks().stream().filter(stack -> stack.is(item)).toList();
+        for (var stack : items) {
+            var countToShrink = Math.min(stack.getCount(), count);
+            stack.shrink(countToShrink);
+            count -= countToShrink;
+            if (count <= 0) break;
+        }
+        return initialCount - count;
+    }
+
+    /**
+     * 尝试插入指定物品指定数量，如果载具内已满则生成掉落物
+     *
+     * @param item  物品类型
+     * @param count 要插入的数量
+     */
+    public void insertItem(Item item, int count) {
+        var defaultStack = new ItemStack(item);
+        var maxStackSize = item.getMaxStackSize(defaultStack);
+
+        for (int i = 0; i < this.getItemStacks().size(); i++) {
+            var stack = this.getItemStacks().get(i);
+
+            if (stack.is(item) && stack.getCount() < maxStackSize) {
+                var countToAdd = Math.min(maxStackSize - stack.getCount(), count);
+                stack.grow(countToAdd);
+                count -= countToAdd;
+            } else if (stack.isEmpty()) {
+                var countToAdd = Math.min(maxStackSize, count);
+                this.getItemStacks().set(i, new ItemStack(item, countToAdd));
+                count -= countToAdd;
+            }
+
+            if (count <= 0) break;
+        }
+
+        if (count > 0) {
+            var stackToDrop = new ItemStack(item, count);
+            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stackToDrop));
+        }
     }
 
     @Override

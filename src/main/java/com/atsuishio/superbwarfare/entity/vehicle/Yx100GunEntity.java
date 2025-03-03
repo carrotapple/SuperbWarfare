@@ -18,7 +18,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -101,8 +100,7 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, ICannonE
                     return AmmoType.HEAVY.get(stack) > 0;
                 }
                 return false;
-            }).mapToInt(AmmoType.HEAVY::get).sum()
-                    + yx100.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+            }).mapToInt(AmmoType.HEAVY::get).sum() + yx100.countItem(ModItems.HEAVY_AMMO.get());
 
 
             this.entityData.set(AMMO, ammoCount);

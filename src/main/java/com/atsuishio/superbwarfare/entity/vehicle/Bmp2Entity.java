@@ -274,10 +274,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 return AmmoType.RIFLE.get(stack) > 0;
             }
             return false;
-        }).mapToInt(AmmoType.RIFLE::get).sum()
-                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+        }).mapToInt(AmmoType.RIFLE::get).sum() + countItem(ModItems.RIFLE_AMMO.get());
 
-        if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0
+        if ((countItem(ModItems.WIRE_GUIDE_MISSILE.get()) > 0
                 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
                 && this.reloadCoolDown <= 0 && this.getEntityData().get(LOADED_MISSILE) < 1) {
             this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) + 1);
@@ -288,9 +287,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
         }
 
-        if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
-        } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
+        if (getWeaponType() == 0) {
+            this.entityData.set(AMMO, countItem(ModItems.SMALL_SHELL.get()));
+        } else if (getWeaponType() == 1) {
             this.entityData.set(AMMO, ammoCount);
         } else {
             this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
@@ -308,7 +307,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void vehicleShoot(Player player) {
         Matrix4f transform = getBarrelTransform();
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             if (this.cannotFire) return;
             float x = -0.1125f;
             float y = 0.174025f;
@@ -349,7 +348,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             if (this.cannotFireCoax) return;
             float x = 0.1125f;
             float y = 0.174025f;
@@ -397,7 +396,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                     serverPlayer.playSound(ModSounds.M_60_VERYFAR.get(), 12, 1);
                 }
             }
-        } else if (entityData.get(WEAPON_TYPE) == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
+        } else if (getWeaponType() == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
             Matrix4f transformT = getBarrelTransform();
             Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
 
@@ -682,11 +681,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     private PlayState firePredicate(AnimationState<Bmp2Entity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 1 && entityData.get(WEAPON_TYPE) == 0) {
+        if (this.entityData.get(FIRE_ANIM) > 1 && getWeaponType() == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
         }
 
-        if (this.entityData.get(FIRE_ANIM) > 0 && entityData.get(WEAPON_TYPE) == 1) {
+        if (this.entityData.get(FIRE_ANIM) > 0 && getWeaponType() == 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire2"));
         }
 
@@ -720,9 +719,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public int mainGunRpm() {
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             return 250;
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             return 750;
         }
         return 250;
@@ -730,11 +729,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public boolean canShoot(Player player) {
-        if (entityData.get(WEAPON_TYPE) == 0) {
+        if (getWeaponType() == 0) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
+        } else if (getWeaponType() == 1) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
-        } else if (entityData.get(WEAPON_TYPE) == 2) {
+        } else if (getWeaponType() == 2) {
             return (this.entityData.get(LOADED_MISSILE) > 0);
         }
         return false;
@@ -762,8 +761,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public void changeWeapon(int scroll) {
-        var type = (entityData.get(WEAPON_TYPE) + scroll + 3) % 3;
-        entityData.set(WEAPON_TYPE, type);
+        var type = (getWeaponType() + scroll + 3) % 3;
+        setWeaponType(type);
 
         var sound = switch (type) {
             case 0, 2 -> ModSounds.INTO_MISSILE.get();
@@ -777,6 +776,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public int getWeaponType() {
         return entityData.get(WEAPON_TYPE);
+    }
+
+    @Override
+    public void setWeaponType(int type) {
+        entityData.set(WEAPON_TYPE, type);
     }
 
     @Override

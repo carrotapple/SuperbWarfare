@@ -203,8 +203,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 return AmmoType.HEAVY.get(stack) > 0;
             }
             return false;
-        }).mapToInt(AmmoType.HEAVY::get).sum()
-                + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
+        }).mapToInt(AmmoType.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
 
 
         this.entityData.set(AMMO, ammoCount);
