@@ -139,13 +139,13 @@ public class VehicleEntity extends Entity {
             return InteractionResult.SUCCESS;
         } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
+//                player.setXRot(this.getXRot());
+//                player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 this.getFirstPassenger().stopRiding();
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
+//                player.setXRot(this.getXRot());
+//                player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {

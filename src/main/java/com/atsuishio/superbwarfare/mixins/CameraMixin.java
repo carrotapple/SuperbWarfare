@@ -89,6 +89,19 @@ public abstract class CameraMixin {
                 return;
             }
 
+            if (player.getVehicle() instanceof Yx100Entity yx100 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
+                if (yx100.getFirstPassenger() == player) {
+                    setRotation(-Mth.lerp(partialTicks, yx100.turretYRotO - yx100.yRotO, yx100.getTurretYRot() - yx100.getYRot()), Mth.lerp(partialTicks, yx100.turretXRotO - yx100.xRotO, yx100.getTurretXRot() - yx100.getXRot()));
+                    setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
+                    info.cancel();
+                } else {
+                    setRotation(Mth.lerp(partialTicks, player.yHeadRotO, player.getYHeadRot()), Mth.lerp(partialTicks, player.xRotO, player.getXRot()));
+                    setPosition(Mth.lerp(partialTicks, player.xo, player.getX()) - 6 * player.getViewVector(partialTicks).x, Mth.lerp(partialTicks, player.yo + player.getEyeHeight() + 1, player.getEyeY() + 1) - 6 * player.getViewVector(partialTicks).y, Mth.lerp(partialTicks, player.zo, player.getZ()) - 6 * player.getViewVector(partialTicks).z);
+                    info.cancel();
+                }
+                return;
+            }
+
             if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
                 if (drone != null) {
@@ -163,6 +176,10 @@ public abstract class CameraMixin {
 
         if (thirdPerson && entity.getVehicle() instanceof Bmp2Entity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(3), 1, 0.0);
+        }
+
+        if (thirdPerson && entity.getVehicle() instanceof Yx100Entity && !ClientEventHandler.zoomVehicle) {
+            move(-getMaxZoom(4), 1, 0.0);
         }
     }
 
