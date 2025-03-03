@@ -175,7 +175,7 @@ public class VehicleEntity extends Entity {
 
         // 显示火花粒子效果
         if (this.sendFireStarParticleOnHurt() && this.level() instanceof ServerLevel serverLevel) {
-            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 0.5 * getBbHeight(), this.getZ(), 2, 0.4, 0.4, 0.4, 0.2, false);
         }
         // 播放受击音效
         if (this.playHitSoundOnHurt()) {

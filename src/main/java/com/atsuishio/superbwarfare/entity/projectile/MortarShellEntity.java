@@ -241,7 +241,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
     private void createAreaCloud(Level level) {
         if (this.potion == Potions.EMPTY) return;
 
-        AreaEffectCloud cloud = new AreaEffectCloud(level, this.getX(), this.getY(), this.getZ());
+        AreaEffectCloud cloud = new AreaEffectCloud(level, this.getX() + 0.75 * getDeltaMovement().x, this.getY() + 0.5 * getBbHeight() + 0.75 * getDeltaMovement().y, this.getZ() + 0.75 * getDeltaMovement().z);
         cloud.setPotion(this.potion);
         cloud.setDuration((int) this.damage);
         cloud.setRadius(this.radius);

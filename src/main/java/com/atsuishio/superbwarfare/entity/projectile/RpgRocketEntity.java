@@ -1,15 +1,14 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -20,14 +19,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,8 +41,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import javax.annotation.Nullable;
 
 public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
@@ -118,9 +113,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeRpgExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -139,9 +132,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeRpgExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -168,22 +159,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 100 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeRpgExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
             this.discard();
         }
-    }
-
-    public static void causeRpgExplode(ThrowableItemProjectile projectile, @Nullable DamageSource source, Entity target, float damage, float radius, float damageMultiplier) {
-        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile, source, damage,
-                projectile.getX(), projectile.getY(), projectile.getZ(), radius, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnHugeExplosionParticles(projectile.level(), projectile.position());
-        projectile.discard();
     }
 
     private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
