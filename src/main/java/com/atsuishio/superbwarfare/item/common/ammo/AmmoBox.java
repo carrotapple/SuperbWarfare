@@ -2,8 +2,8 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,8 +17,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AmmoBox extends Item {
@@ -28,140 +30,118 @@ public class AmmoBox extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (hand == InteractionHand.OFF_HAND) return InteractionResultHolder.fail(stack);
 
         CompoundTag tag = stack.getOrCreateTag();
         player.getCooldowns().addCooldown(this, 10);
-        int type = stack.getOrCreateTag().getInt("Type");
+        String type = stack.getOrCreateTag().getString("Type");
 
         var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            if (!player.isCrouching()) {
-                if (type == 0 || type == 1) {
-                    capability.rifleAmmo = cap.rifleAmmo + tag.getInt("RifleAmmo");
-                    tag.putInt("RifleAmmo", 0);
-                }
+            var types = type.equals("All") ? AmmoType.values() : new AmmoType[]{AmmoType.getType(type)};
 
-                if (type == 0 || type == 2) {
-                    capability.handgunAmmo = cap.handgunAmmo + tag.getInt("HandgunAmmo");
-                    tag.putInt("HandgunAmmo", 0);
-                }
+            for (var ammoType : types) {
+                if (ammoType == null) return;
 
-                if (type == 0 || type == 3) {
-                    capability.shotgunAmmo = cap.shotgunAmmo + tag.getInt("ShotgunAmmo");
-                    tag.putInt("ShotgunAmmo", 0);
+                if (player.isCrouching()) {
+                    // 存入弹药
+                    ammoType.setCount(tag, ammoType.getCount(cap) + ammoType.getCount(tag));
+                    ammoType.setCount(cap, 0);
+                } else {
+                    // 取出弹药
+                    ammoType.setCount(cap, ammoType.getCount(cap) + ammoType.getCount(tag));
+                    ammoType.setCount(tag, 0);
                 }
+            }
+            capability.syncPlayerVariables(player);
 
-                if (type == 0 || type == 4) {
-                    capability.sniperAmmo = cap.sniperAmmo + tag.getInt("SniperAmmo");
-                    tag.putInt("SniperAmmo", 0);
-                }
+            if (!level.isClientSide()) {
+                level.playSound(null, player.blockPosition(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 1, 1);
+            }
 
-                if (type == 0 || type == 5) {
-                    capability.heavyAmmo = cap.heavyAmmo + tag.getInt("HeavyAmmo");
-                    tag.putInt("HeavyAmmo", 0);
-                }
-
-                capability.syncPlayerVariables(player);
-
-                if (!level.isClientSide()) {
-                    level.playSound(null, player.blockPosition(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
-                }
-
-                if (tag.getBoolean("IsDrop")) {
-                    stack.shrink(1);
-                }
-            } else {
-                if (type == 0 || type == 1) {
-                    tag.putInt("RifleAmmo", tag.getInt("RifleAmmo") + cap.rifleAmmo);
-                    capability.rifleAmmo = 0;
-                }
-
-                if (type == 0 || type == 2) {
-                    tag.putInt("HandgunAmmo", tag.getInt("HandgunAmmo") + cap.handgunAmmo);
-                    capability.handgunAmmo = 0;
-                }
-
-                if (type == 0 || type == 3) {
-                    tag.putInt("ShotgunAmmo", tag.getInt("ShotgunAmmo") + cap.shotgunAmmo);
-                    capability.shotgunAmmo = 0;
-                }
-
-                if (type == 0 || type == 4) {
-                    tag.putInt("SniperAmmo", tag.getInt("SniperAmmo") + cap.sniperAmmo);
-                    capability.sniperAmmo = 0;
-                }
-
-                if (type == 0 || type == 5) {
-                    tag.putInt("HeavyAmmo", tag.getInt("HeavyAmmo") + cap.heavyAmmo);
-                    capability.heavyAmmo = 0;
-                }
-
-                capability.syncPlayerVariables(player);
-
-                if (!level.isClientSide()) {
-                    level.playSound(null, player.blockPosition(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 1, 1);
-                }
+            // 取出弹药时，若弹药盒为掉落物版本，则移除弹药盒物品
+            if (!player.isCrouching() && tag.getBoolean("IsDrop")) {
+                stack.shrink(1);
             }
         });
         return InteractionResultHolder.consume(stack);
     }
 
+    private static final List<String> ammoTypeList = generateAmmoTypeMap();
+
+    private static List<String> generateAmmoTypeMap() {
+        var list = new ArrayList<String>();
+        list.add("All");
+
+        for (var ammoType : AmmoType.values()) {
+            list.add(ammoType.name);
+        }
+
+        return list;
+    }
+
+
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         if (entity instanceof Player player && player.isCrouching()) {
-            int type = stack.getOrCreateTag().getInt("Type");
-            ++type;
-            type %= 6;
+            var tag = stack.getOrCreateTag();
+            var index = Math.max(0, ammoTypeList.indexOf(tag.getString("Type")));
+            var typeString = ammoTypeList.get((index + 1) % ammoTypeList.size());
 
-            switch (type) {
-                case 0 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.all").withStyle(ChatFormatting.WHITE), true);
-                case 1 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.rifle").withStyle(ChatFormatting.GREEN), true);
-                case 2 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.handgun").withStyle(ChatFormatting.AQUA), true);
-                case 3 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.shotgun").withStyle(ChatFormatting.RED), true);
-                case 4 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.sniper").withStyle(ChatFormatting.GOLD), true);
-                case 5 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.heavy").withStyle(ChatFormatting.LIGHT_PURPLE), true);
+            tag.putString("Type", typeString);
+            entity.playSound(ModSounds.FIRE_RATE.get(), 1f, 1f);
+
+            var type = AmmoType.getType(typeString);
+            if (type == null) {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.all").withStyle(ChatFormatting.WHITE), true);
+                return true;
             }
 
-            entity.playSound(ModSounds.FIRE_RATE.get(), 1f, 1f);
-            stack.getOrCreateTag().putInt("Type", type);
+            switch (type) {
+                case RIFLE ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.rifle").withStyle(ChatFormatting.GREEN), true);
+                case HANDGUN ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.handgun").withStyle(ChatFormatting.AQUA), true);
+                case SHOTGUN ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.shotgun").withStyle(ChatFormatting.RED), true);
+                case SNIPER ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.sniper").withStyle(ChatFormatting.GOLD), true);
+                case HEAVY ->
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.heavy").withStyle(ChatFormatting.LIGHT_PURPLE), true);
+            }
         }
 
-        return super.onEntitySwing(stack, entity);
+        return true;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        int type = stack.getOrCreateTag().getInt("Type");
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
+        var type = AmmoType.getType(stack.getOrCreateTag().getString("Type"));
+        var tag = stack.getOrCreateTag();
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "RifleAmmo", 0)) + ((type == 0 || type == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.handgun").withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "HandgunAmmo", 0)) + ((type == 0 || type == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.HANDGUN.getCount(tag)) + ((type != AmmoType.HANDGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(FormatTool.format0D(AmmoType.RIFLE.getCount(tag)) + ((type != AmmoType.RIFLE) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.shotgun").withStyle(ChatFormatting.RED)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "ShotgunAmmo", 0)) + ((type == 0 || type == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.SHOTGUN.getCount(tag)) + ((type != AmmoType.SHOTGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "SniperAmmo", 0)) + ((type == 0 || type == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.SNIPER.getCount(tag)) + ((type != AmmoType.SNIPER) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.heavy").withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "HeavyAmmo", 0)) + ((type == 0 || type == 5) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.HEAVY.getCount(tag)) + ((type != AmmoType.HEAVY) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
     }
 }
