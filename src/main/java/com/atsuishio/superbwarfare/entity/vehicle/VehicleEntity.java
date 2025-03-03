@@ -470,9 +470,9 @@ public class VehicleEntity extends Entity {
     protected Vec3 getDismountOffset(double vehicleWidth, double passengerWidth) {
         double offset = (vehicleWidth + passengerWidth + (double) 1.0E-5f) / 1.75;
         float yaw = getYRot() + 90.0f;
-        float x = -Mth.sin(yaw * ((float) java.lang.Math.PI / 180));
-        float z = Mth.cos(yaw * ((float) java.lang.Math.PI / 180));
-        float n = java.lang.Math.max(java.lang.Math.abs(x), java.lang.Math.abs(z));
+        float x = -Mth.sin(yaw * ((float) Math.PI / 180));
+        float z = Mth.cos(yaw * ((float) Math.PI / 180));
+        float n = Math.max(Math.abs(x), Math.abs(z));
         return new Vec3((double) x * offset / (double) n, 0.0, (double) z * offset / (double) n);
     }
 

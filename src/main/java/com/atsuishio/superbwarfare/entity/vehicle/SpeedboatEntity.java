@@ -8,10 +8,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -203,10 +200,10 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
-                return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                return AmmoType.HEAVY.get(stack) > 0;
             }
             return false;
-        }).mapToInt(stack -> stack.getOrCreateTag().getInt("HeavyAmmo")).sum()
+        }).mapToInt(AmmoType.HEAVY::get).sum()
                 + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
 
 
@@ -241,7 +238,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 (float) 0.4);
         this.level().addFreshEntity(projectile);
 
-        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
+        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(HEAT)));
 
         if (!player.level().isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
@@ -268,13 +265,13 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         if (!hasCreativeAmmo) {
             ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                 if (stack.is(ModItems.AMMO_BOX.get())) {
-                    return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                    return AmmoType.HEAVY.get(stack) > 0;
                 }
                 return false;
             }).findFirst().orElse(ItemStack.EMPTY);
 
             if (!ammoBox.isEmpty()) {
-                ammoBox.getOrCreateTag().putInt("HeavyAmmo", java.lang.Math.max(0, ammoBox.getOrCreateTag().getInt("HeavyAmmo") - 1));
+                AmmoType.HEAVY.add(ammoBox, -1);
             } else {
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
@@ -403,7 +400,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 }
 
                 double xOffset = (int) -((i - 1) / 2.0 + 1) * 0.95;
-                Vec3 vec3 = (new Vec3(xOffset, 0.0D, zOffset)).yRot(-this.getYRot() * ((float) java.lang.Math.PI / 180F) - ((float) java.lang.Math.PI / 2F));
+                Vec3 vec3 = (new Vec3(xOffset, 0.0D, zOffset)).yRot(-this.getYRot() * ((float) Math.PI / 180F) - ((float) Math.PI / 2F));
                 pCallback.accept(pPassenger, this.getX() + vec3.x, posY, this.getZ() + vec3.z);
             } else {
                 pCallback.accept(pPassenger, this.getX(), posY, this.getZ());

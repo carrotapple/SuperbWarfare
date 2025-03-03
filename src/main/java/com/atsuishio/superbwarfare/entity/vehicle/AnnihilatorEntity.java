@@ -153,7 +153,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         double d0 = pTarget.x - vec3.x;
         double d1 = pTarget.y - vec3.y;
         double d2 = pTarget.z - vec3.z;
-        double d3 = java.lang.Math.sqrt(d0 * d0 + d2 * d2);
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
         entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
     }

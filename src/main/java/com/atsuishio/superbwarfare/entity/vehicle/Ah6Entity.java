@@ -9,10 +9,7 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -211,10 +208,10 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
-                return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                return AmmoType.HEAVY.get(stack) > 0;
             }
             return false;
-        }).mapToInt(stack -> stack.getOrCreateTag().getInt("HeavyAmmo")).sum()
+        }).mapToInt(AmmoType.HEAVY::get).sum()
                 + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
 
         if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
@@ -589,13 +586,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 if (!hasCreativeAmmo) {
                     ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                         if (stack.is(ModItems.AMMO_BOX.get())) {
-                            return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                            return AmmoType.HEAVY.get(stack) > 0;
                         }
                         return false;
                     }).findFirst().orElse(ItemStack.EMPTY);
 
                     if (!ammoBox.isEmpty()) {
-                        ammoBox.getOrCreateTag().putInt("HeavyAmmo", java.lang.Math.max(0, ammoBox.getOrCreateTag().getInt("HeavyAmmo") - 1));
+                        AmmoType.HEAVY.add(ammoBox, -1);
                     } else {
                         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                     }

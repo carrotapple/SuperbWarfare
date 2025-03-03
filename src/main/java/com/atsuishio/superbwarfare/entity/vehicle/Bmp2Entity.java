@@ -9,10 +9,7 @@ import com.atsuishio.superbwarfare.entity.projectile.WgMissileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -274,10 +271,10 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
-                return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+                return AmmoType.RIFLE.get(stack) > 0;
             }
             return false;
-        }).mapToInt(stack -> stack.getOrCreateTag().getInt("RifleAmmo")).sum()
+        }).mapToInt(AmmoType.RIFLE::get).sum()
                 + this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum();
 
         if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0
@@ -330,7 +327,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
             sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
 
-            float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
+            float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(HEAT)));
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -377,13 +374,13 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 if (!hasCreativeAmmo) {
                     ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                         if (stack.is(ModItems.AMMO_BOX.get())) {
-                            return stack.getOrCreateTag().getInt("RifleAmmo") > 0;
+                            return AmmoType.RIFLE.get(stack) > 0;
                         }
                         return false;
                     }).findFirst().orElse(ItemStack.EMPTY);
 
                     if (!ammoBox.isEmpty()) {
-                        ammoBox.getOrCreateTag().putInt("RifleAmmo", Math.max(0, ammoBox.getOrCreateTag().getInt("RifleAmmo") - 1));
+                        AmmoType.RIFLE.add(ammoBox, -1);
                     } else {
                         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                     }

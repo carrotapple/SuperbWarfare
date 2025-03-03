@@ -724,14 +724,14 @@ public class ClientEventHandler {
 
     public static void playVehicleClientSounds(Player player, IArmedVehicleEntity iVehicle) {
         if (iVehicle instanceof SpeedboatEntity speedboat) {
-            float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
+            float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
 
         if (iVehicle instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
             if (iVehicle instanceof Ah6Entity ah6Entity) {
-                float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - ah6Entity.heat));
+                float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - ah6Entity.heat));
                 if (multiWeaponVehicle.getWeaponType() == 0) {
                     ah6Entity.heat += 5;
                     player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
@@ -741,22 +741,22 @@ public class ClientEventHandler {
             }
             if (iVehicle instanceof Lav150Entity lav150) {
                 if (multiWeaponVehicle.getWeaponType() == 0) {
-                    float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(HEAT)));
+                    float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(HEAT)));
                     player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
                     player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
                 } else if (multiWeaponVehicle.getWeaponType() == 1) {
-                    float pitch = lav150.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(COAX_HEAT)));
+                    float pitch = lav150.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(COAX_HEAT)));
                     player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
                 }
 
             }
             if (iVehicle instanceof Bmp2Entity bmp2) {
                 if (multiWeaponVehicle.getWeaponType() == 0) {
-                    float pitch = bmp2.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - bmp2.getEntityData().get(HEAT)));
+                    float pitch = bmp2.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(HEAT)));
                     player.playSound(ModSounds.BMP_CANNON_FIRE_1P.get(), 1f, pitch);
                     player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
                 } else if (multiWeaponVehicle.getWeaponType() == 1) {
-                    float pitch = bmp2.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - bmp2.getEntityData().get(COAX_HEAT)));
+                    float pitch = bmp2.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(COAX_HEAT)));
                     player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
                 } else if (multiWeaponVehicle.getWeaponType() == 2) {
                     player.playSound(ModSounds.BMP_MISSILE_FIRE_1P.get(), 1f, 1);

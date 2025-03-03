@@ -34,36 +34,10 @@ public class AmmoSupplierItem extends Item {
         ItemStack offhandItem = player.getOffhandItem();
 
         if (offhandItem.is(ModItems.AMMO_BOX.get())) {
-            int newAmmoCount = switch (this.type) {
-                case HANDGUN -> offhandItem.getOrCreateTag().getInt("HandgunAmmo");
-                case RIFLE -> offhandItem.getOrCreateTag().getInt("RifleAmmo");
-                case SHOTGUN -> offhandItem.getOrCreateTag().getInt("ShotgunAmmo");
-                case SNIPER -> offhandItem.getOrCreateTag().getInt("SniperAmmo");
-                case HEAVY -> offhandItem.getOrCreateTag().getInt("HeavyAmmo");
-            } + ammoToAdd * count;
-            switch (this.type) {
-                case HANDGUN -> offhandItem.getOrCreateTag().putInt("HandgunAmmo", newAmmoCount);
-                case RIFLE -> offhandItem.getOrCreateTag().putInt("RifleAmmo", newAmmoCount);
-                case SHOTGUN -> offhandItem.getOrCreateTag().putInt("ShotgunAmmo", newAmmoCount);
-                case SNIPER -> offhandItem.getOrCreateTag().putInt("SniperAmmo", newAmmoCount);
-                case HEAVY -> offhandItem.getOrCreateTag().putInt("HeavyAmmo", newAmmoCount);
-            }
+            this.type.add(offhandItem, ammoToAdd * count);
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                int newAmmoCount = switch (this.type) {
-                    case HANDGUN -> capability.handgunAmmo;
-                    case RIFLE -> capability.rifleAmmo;
-                    case SHOTGUN -> capability.shotgunAmmo;
-                    case SNIPER -> capability.sniperAmmo;
-                    case HEAVY -> capability.heavyAmmo;
-                } + ammoToAdd * count;
-                switch (this.type) {
-                    case HANDGUN -> capability.handgunAmmo = newAmmoCount;
-                    case RIFLE -> capability.rifleAmmo = newAmmoCount;
-                    case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
-                    case SNIPER -> capability.sniperAmmo = newAmmoCount;
-                    case HEAVY -> capability.heavyAmmo = newAmmoCount;
-                }
+                this.type.add(capability, ammoToAdd * count);
                 capability.syncPlayerVariables(player);
             });
         }

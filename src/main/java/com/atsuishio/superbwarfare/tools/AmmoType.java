@@ -27,23 +27,35 @@ public enum AmmoType {
         return null;
     }
 
-    public int getCount(ItemStack stack) {
-        return getCount(stack.getOrCreateTag());
+    // ItemStack
+    public int get(ItemStack stack) {
+        return get(stack.getOrCreateTag());
     }
 
-    public void setCount(ItemStack stack, int count) {
-        setCount(stack.getOrCreateTag(), count);
+    public void set(ItemStack stack, int count) {
+        set(stack.getOrCreateTag(), count);
     }
 
-    public int getCount(CompoundTag tag) {
+    public void add(ItemStack stack, int count) {
+        add(stack.getOrCreateTag(), count);
+    }
+
+    // NBTTag
+    public int get(CompoundTag tag) {
         return tag.getInt(this.name);
     }
 
-    public void setCount(CompoundTag tag, int count) {
+    public void set(CompoundTag tag, int count) {
+        if (count < 0) count = 0;
         tag.putInt(this.name, count);
     }
 
-    public int getCount(ModVariables.PlayerVariables variable) {
+    public void add(CompoundTag tag, int count) {
+        set(tag, safeAdd(get(tag), count));
+    }
+
+    // PlayerVariables
+    public int get(ModVariables.PlayerVariables variable) {
         return switch (this) {
             case HANDGUN -> variable.handgunAmmo;
             case RIFLE -> variable.rifleAmmo;
@@ -53,7 +65,9 @@ public enum AmmoType {
         };
     }
 
-    public void setCount(ModVariables.PlayerVariables variable, int count) {
+    public void set(ModVariables.PlayerVariables variable, int count) {
+        if (count < 0) count = 0;
+
         switch (this) {
             case HANDGUN -> variable.handgunAmmo = count;
             case RIFLE -> variable.rifleAmmo = count;
@@ -61,6 +75,22 @@ public enum AmmoType {
             case SNIPER -> variable.sniperAmmo = count;
             case HEAVY -> variable.heavyAmmo = count;
         }
+    }
+
+    public void add(ModVariables.PlayerVariables variable, int count) {
+        set(variable, safeAdd(get(variable), count));
+    }
+
+    private int safeAdd(int a, int b) {
+        var newCount = (long) a + (long) b;
+
+        if (newCount > Integer.MAX_VALUE) {
+            newCount = Integer.MAX_VALUE;
+        } else if (newCount < 0) {
+            newCount = 0;
+        }
+
+        return (int) newCount;
     }
 
     @Override

@@ -266,17 +266,17 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public Vector3f getForwardDirection() {
         return new Vector3f(
-                Mth.sin(-getYRot() * ((float) java.lang.Math.PI / 180)),
+                Mth.sin(-getYRot() * ((float) Math.PI / 180)),
                 0.0f,
-                Mth.cos(getYRot() * ((float) java.lang.Math.PI / 180))
+                Mth.cos(getYRot() * ((float) Math.PI / 180))
         ).normalize();
     }
 
     public Vector3f getRightDirection() {
         return new Vector3f(
-                Mth.cos(-getYRot() * ((float) java.lang.Math.PI / 180)),
+                Mth.cos(-getYRot() * ((float) Math.PI / 180)),
                 0.0f,
-                Mth.sin(getYRot() * ((float) java.lang.Math.PI / 180))
+                Mth.sin(getYRot() * ((float) Math.PI / 180))
         ).normalize();
     }
 

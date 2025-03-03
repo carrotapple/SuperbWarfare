@@ -31,15 +31,7 @@ public class AmmoCommand {
 
                     var type = context.getArgument("type", AmmoType.class);
 
-                    var value = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c ->
-                            switch (type) {
-                                case HANDGUN -> c.handgunAmmo;
-                                case RIFLE -> c.rifleAmmo;
-                                case SHOTGUN -> c.shotgunAmmo;
-                                case SNIPER -> c.sniperAmmo;
-                                case HEAVY -> c.heavyAmmo;
-                            }
-                    ).orElse(0);
+                    var value = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(type::get).orElse(0);
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.get", Component.translatable(type.translatableKey), value), true);
                     return 0;
                 }))))
@@ -50,13 +42,7 @@ public class AmmoCommand {
 
                     for (var player : players) {
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            switch (type) {
-                                case HANDGUN -> capability.handgunAmmo = value;
-                                case RIFLE -> capability.rifleAmmo = value;
-                                case SHOTGUN -> capability.shotgunAmmo = value;
-                                case SNIPER -> capability.sniperAmmo = value;
-                                case HEAVY -> capability.heavyAmmo = value;
-                            }
+                            type.set(capability, value);
                             capability.syncPlayerVariables(player);
                         });
                     }
@@ -71,20 +57,7 @@ public class AmmoCommand {
 
                     for (var player : players) {
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            switch (type) {
-                                case HANDGUN -> capability.handgunAmmo += value;
-                                case RIFLE -> capability.rifleAmmo += value;
-                                case SHOTGUN -> capability.shotgunAmmo += value;
-                                case SNIPER -> capability.sniperAmmo += value;
-                                case HEAVY -> capability.heavyAmmo += value;
-                            }
-                            // 迫真溢出检测
-                            if (capability.handgunAmmo < 0) capability.handgunAmmo = Integer.MAX_VALUE;
-                            if (capability.rifleAmmo < 0) capability.rifleAmmo = Integer.MAX_VALUE;
-                            if (capability.shotgunAmmo < 0) capability.shotgunAmmo = Integer.MAX_VALUE;
-                            if (capability.sniperAmmo < 0) capability.sniperAmmo = Integer.MAX_VALUE;
-                            if (capability.heavyAmmo < 0) capability.heavyAmmo = Integer.MAX_VALUE;
-
+                            type.add(capability, value);
                             capability.syncPlayerVariables(player);
                         });
                     }

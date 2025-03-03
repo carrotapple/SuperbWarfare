@@ -19,10 +19,7 @@ import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.DamageTypeTool;
-import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -715,17 +712,13 @@ public class LivingEventHandler {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    tag.putInt("RifleAmmo", cap.rifleAmmo);
-                    capability.rifleAmmo = 0;
-                    tag.putInt("HandgunAmmo", cap.handgunAmmo);
-                    capability.handgunAmmo = 0;
-                    tag.putInt("ShotgunAmmo", cap.shotgunAmmo);
-                    capability.shotgunAmmo = 0;
-                    tag.putInt("SniperAmmo", cap.sniperAmmo);
-                    capability.sniperAmmo = 0;
-                    tag.putInt("HeavyAmmo", cap.heavyAmmo);
-                    capability.heavyAmmo = 0;
+
+                    for (var type : AmmoType.values()) {
+                        type.set(tag, type.get(cap));
+                        type.set(capability, 0);
+                    }
                     tag.putBoolean("IsDrop", true);
+
                     capability.syncPlayerVariables(player);
                 });
 

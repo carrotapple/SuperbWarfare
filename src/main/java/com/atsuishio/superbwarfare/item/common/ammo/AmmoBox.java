@@ -48,12 +48,12 @@ public class AmmoBox extends Item {
 
                 if (player.isCrouching()) {
                     // 存入弹药
-                    ammoType.setCount(tag, ammoType.getCount(cap) + ammoType.getCount(tag));
-                    ammoType.setCount(cap, 0);
+                    ammoType.add(tag, ammoType.get(cap));
+                    ammoType.set(cap, 0);
                 } else {
                     // 取出弹药
-                    ammoType.setCount(cap, ammoType.getCount(cap) + ammoType.getCount(tag));
-                    ammoType.setCount(tag, 0);
+                    ammoType.add(cap, ammoType.get(tag));
+                    ammoType.set(tag, 0);
                 }
             }
             capability.syncPlayerVariables(player);
@@ -126,22 +126,22 @@ public class AmmoBox extends Item {
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.handgun").withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.HANDGUN.getCount(tag)) + ((type != AmmoType.HANDGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.HANDGUN.get(tag)) + ((type != AmmoType.HANDGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.RIFLE.getCount(tag)) + ((type != AmmoType.RIFLE) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.RIFLE.get(tag)) + ((type != AmmoType.RIFLE) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.shotgun").withStyle(ChatFormatting.RED)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.SHOTGUN.getCount(tag)) + ((type != AmmoType.SHOTGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.SHOTGUN.get(tag)) + ((type != AmmoType.SHOTGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.SNIPER.getCount(tag)) + ((type != AmmoType.SNIPER) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.SNIPER.get(tag)) + ((type != AmmoType.SNIPER) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.heavy").withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.HEAVY.getCount(tag)) + ((type != AmmoType.HEAVY) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(AmmoType.HEAVY.get(tag)) + ((type != AmmoType.HEAVY) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
     }
 }

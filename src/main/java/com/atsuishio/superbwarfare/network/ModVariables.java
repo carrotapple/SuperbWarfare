@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -235,11 +236,11 @@ public class ModVariables {
             CompoundTag nbt = new CompoundTag();
             nbt.putBoolean("Zoom", zoom);
             nbt.putBoolean("HoldFire", holdFire);
-            nbt.putInt("RifleAmmo", rifleAmmo);
-            nbt.putInt("HandgunAmmo", handgunAmmo);
-            nbt.putInt("ShotgunAmmo", shotgunAmmo);
-            nbt.putInt("SniperAmmo", sniperAmmo);
-            nbt.putInt("HeavyAmmo", heavyAmmo);
+
+            for (var type : AmmoType.values()) {
+                type.set(nbt, type.get(this));
+            }
+
             nbt.putBoolean("BowPullHold", bowPullHold);
             nbt.putBoolean("BowPull", bowPull);
             nbt.putBoolean("DoubleJump", playerDoubleJump);
@@ -259,11 +260,11 @@ public class ModVariables {
 
             zoom = nbt.getBoolean("Zoom");
             holdFire = nbt.getBoolean("HoldFire");
-            rifleAmmo = nbt.getInt("RifleAmmo");
-            handgunAmmo = nbt.getInt("HandgunAmmo");
-            shotgunAmmo = nbt.getInt("ShotgunAmmo");
-            sniperAmmo = nbt.getInt("SniperAmmo");
-            heavyAmmo = nbt.getInt("HeavyAmmo");
+
+            for (var type : AmmoType.values()) {
+                type.set(this, type.get(nbt));
+            }
+
             bowPullHold = nbt.getBoolean("BowPullHold");
             bowPull = nbt.getBoolean("BowPull");
             playerDoubleJump = nbt.getBoolean("DoubleJump");

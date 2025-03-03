@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -97,10 +98,10 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, ICannonE
         if (this.getVehicle() instanceof Yx100Entity yx100) {
             int ammoCount = yx100.getItemStacks().stream().filter(stack -> {
                 if (stack.is(ModItems.AMMO_BOX.get())) {
-                    return stack.getOrCreateTag().getInt("HeavyAmmo") > 0;
+                    return AmmoType.HEAVY.get(stack) > 0;
                 }
                 return false;
-            }).mapToInt(stack -> stack.getOrCreateTag().getInt("HeavyAmmo")).sum()
+            }).mapToInt(AmmoType.HEAVY::get).sum()
                     + yx100.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum();
 
 

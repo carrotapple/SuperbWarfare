@@ -114,24 +114,11 @@ public class GunsTool {
             GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
         }
 
-        int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
-            case RIFLE -> c.rifleAmmo;
-            case HANDGUN -> c.handgunAmmo;
-            case SHOTGUN -> c.shotgunAmmo;
-            case SNIPER -> c.sniperAmmo;
-            case HEAVY -> c.heavyAmmo;
-        }).orElse(0);
+        int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(type::get).orElse(0);
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
-            switch (type) {
-                case RIFLE -> capability.rifleAmmo = newAmmoCount;
-                case HANDGUN -> capability.handgunAmmo = newAmmoCount;
-                case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
-                case SNIPER -> capability.sniperAmmo = newAmmoCount;
-                case HEAVY -> capability.heavyAmmo = newAmmoCount;
-            }
-
+            type.set(capability, newAmmoCount);
             capability.syncPlayerVariables(player);
         });
 
