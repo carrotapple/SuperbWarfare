@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.GunInfo;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -15,10 +15,10 @@ import net.minecraft.world.level.Level;
 
 public class AmmoSupplierItem extends Item {
 
-    public final GunInfo.Type type;
+    public final AmmoType type;
     public final int ammoToAdd;
 
-    public AmmoSupplierItem(GunInfo.Type type, int ammoToAdd, Properties properties) {
+    public AmmoSupplierItem(AmmoType type, int ammoToAdd, Properties properties) {
         super(properties);
         this.type = type;
         this.ammoToAdd = ammoToAdd;

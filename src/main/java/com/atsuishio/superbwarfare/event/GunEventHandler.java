@@ -13,7 +13,7 @@ import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunInfo;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
@@ -420,15 +420,15 @@ public class GunEventHandler {
                     + (gunItem.bulletInBarrel(stack) ? 1 : 0));
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, gunItem.bulletInBarrel(stack));
+                GunsTool.reload(player, stack, AmmoType.SHOTGUN, gunItem.bulletInBarrel(stack));
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.SNIPER, true);
+                GunsTool.reload(player, stack, AmmoType.SNIPER, true);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.HANDGUN, true);
+                GunsTool.reload(player, stack, AmmoType.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.RIFLE, gunItem.bulletInBarrel(stack));
+                GunsTool.reload(player, stack, AmmoType.RIFLE, gunItem.bulletInBarrel(stack));
             } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.HEAVY, gunItem.bulletInBarrel(stack));
+                GunsTool.reload(player, stack, AmmoType.HEAVY, gunItem.bulletInBarrel(stack));
             }
         }
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
@@ -445,15 +445,15 @@ public class GunEventHandler {
                     + GunsTool.getGunIntTag(stack, "CustomMagazine", 0));
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
+                GunsTool.reload(player, stack, AmmoType.SHOTGUN);
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
+                GunsTool.reload(player, stack, AmmoType.SNIPER);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
+                GunsTool.reload(player, stack, AmmoType.HANDGUN);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
+                GunsTool.reload(player, stack, AmmoType.RIFLE);
             } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.HEAVY);
+                GunsTool.reload(player, stack, AmmoType.HEAVY);
             } else if (stack.getItem() == ModItems.TASER.get()) {
                 GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());

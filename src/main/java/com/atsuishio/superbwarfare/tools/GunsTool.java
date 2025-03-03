@@ -97,11 +97,11 @@ public class GunsTool {
         initJsonData(event.getServer().getResourceManager());
     }
 
-    public static void reload(Player player, ItemStack stack, GunInfo.Type type) {
+    public static void reload(Player player, ItemStack stack, AmmoType type) {
         reload(player, stack, type, false);
     }
 
-    public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
+    public static void reload(Player player, ItemStack stack, AmmoType type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
         if (!(stack.getItem() instanceof GunItem)) return;
 

@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
-import com.atsuishio.superbwarfare.tools.GunInfo;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.server.level.ServerLevel;
@@ -291,19 +291,19 @@ public class PlayerEventHandler {
                     var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
                     if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && cap.shotgunAmmo > 0) {
-                        GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
+                        GunsTool.reload(player, stack, AmmoType.SHOTGUN);
                     }
                     if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && cap.sniperAmmo > 0) {
-                        GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
+                        GunsTool.reload(player, stack, AmmoType.SNIPER);
                     }
                     if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) && cap.handgunAmmo > 0) {
-                        GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
+                        GunsTool.reload(player, stack, AmmoType.HANDGUN);
                     }
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
-                        GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
+                        GunsTool.reload(player, stack, AmmoType.RIFLE);
                     }
                     if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && cap.heavyAmmo > 0) {
-                        GunsTool.reload(player, stack, GunInfo.Type.HEAVY);
+                        GunsTool.reload(player, stack, AmmoType.HEAVY);
                     }
 
                     if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
