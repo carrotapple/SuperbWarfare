@@ -9,7 +9,7 @@ public class Yx100Model extends GeoModel<Yx100Entity> {
 
     @Override
     public ResourceLocation getAnimationResource(Yx100Entity entity) {
-        return null;
+        return ModUtils.loc("animations/yx_100.animation.json");
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -43,6 +45,10 @@ import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
@@ -59,6 +65,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
 
     public static final float MAX_HEALTH = 400;
     public static final int MAX_ENERGY = 5000000;
@@ -72,6 +79,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public float rightWheelRot;
     public float leftWheelRotO;
     public float rightWheelRotO;
+
+    public double recoilShake;
+    public double recoilShakeO;
     public int reloadCoolDown;
 
     public Yx100Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -93,6 +103,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
+        this.entityData.define(YAW, 0f);
     }
 
     @Override
@@ -125,12 +136,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .immuneTo(DamageTypes.PLAYER_ATTACK)
                 .immuneTo(ModTags.DamageTypes.PROJECTILE)
                 .immuneTo(ModDamageTypes.VEHICLE_STRIKE)
-                .multiply(0.75f, DamageTypes.EXPLOSION)
-                .multiply(0.23f, ModDamageTypes.CUSTOM_EXPLOSION)
-                .multiply(0.23f, ModDamageTypes.PROJECTILE_BOOM)
-                .multiply(0.13f, ModDamageTypes.MINE)
-                .multiply(0.15f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.2f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.6f, DamageTypes.EXPLOSION)
+                .multiply(0.2f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.2f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.1f, ModDamageTypes.MINE)
+                .multiply(0.1f, ModDamageTypes.LUNGE_MINE)
+                .multiply(0.15f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.05f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(9);
     }
@@ -151,8 +162,15 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         turretXRotO = this.getTurretXRot();
         leftWheelRotO = this.getLeftWheelRot();
         rightWheelRotO = this.getRightWheelRot();
+        recoilShakeO = this.getRecoilShake();
+
+        this.setRecoilShake(Math.pow(entityData.get(FIRE_ANIM), 4) * 0.0000007 * Math.sin(0.2 * Math.PI * (entityData.get(FIRE_ANIM) - 2.5)));
 
         super.baseTick();
+
+//        if (this.getFirstPassenger() instanceof Player player) {
+//            player.displayClientMessage(Component.literal(FormatTool.format1D(this.getRecoilShake(), " °")),false);
+//        }
 
         if (this.entityData.get(TRACK_R) < 0) {
             this.entityData.set(TRACK_R, 100f);
@@ -315,9 +333,10 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             }
         }
 
-        this.entityData.set(FIRE_ANIM, 20);
+        this.entityData.set(FIRE_ANIM, 40);
         this.entityData.set(LOADED_AMMO, 0);
         this.consumeEnergy(10000);
+        this.entityData.set(YAW, getTurretYRot());
 
         reloadCoolDown = 80;
 
@@ -478,6 +497,14 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.rightWheelRot = pRightWheelRot;
     }
 
+    public double getRecoilShake() {
+        return this.recoilShake;
+    }
+
+    public void setRecoilShake(double pRecoilShake) {
+        this.recoilShake = pRecoilShake;
+    }
+
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.BMP_ENGINE.get();
@@ -590,21 +617,16 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.clampRotation(entity);
     }
 
-//    private PlayState firePredicate(AnimationState<Yx100Entity> event) {
-//        if (this.entityData.get(FIRE_ANIM) > 1 && entityData.get(WEAPON_TYPE) == 0) {
-//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
-//        }
-//
-//        if (this.entityData.get(FIRE_ANIM) > 0 && entityData.get(WEAPON_TYPE) == 1) {
-//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire2"));
-//        }
-//
-//        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.lav.idle"));
-//    }
+    private PlayState firePredicate(AnimationState<Yx100Entity> event) {
+        if (this.entityData.get(FIRE_ANIM) > 20) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-//        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
+        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
     }
 
     @Override
@@ -659,8 +681,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void changeWeapon(int scroll) {
-        if (entityData.get(LOADED_AMMO) > 0 && this.reloadCoolDown == 0) {
-            this.reloadCoolDown = 80;
+        if (entityData.get(LOADED_AMMO) > 0) {
             if (entityData.get(WEAPON_TYPE) == 0) {
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.AP_5_INCHES.get())).findFirst().ifPresent(stack -> stack.grow(1));
             } else if (entityData.get(WEAPON_TYPE) == 1) {
@@ -668,6 +689,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             }
 
             entityData.set(LOADED_AMMO, 0);
+        }
+
+        this.reloadCoolDown = 80;
+
+        if (this.getFirstPassenger() instanceof ServerPlayer player) {
+            var clientboundstopsoundpacket = new ClientboundStopSoundPacket(ModSounds.YX_100_RELOAD.get().getLocation(), SoundSource.PLAYERS);
+            player.connection.send(clientboundstopsoundpacket);
         }
 
         var type = (entityData.get(WEAPON_TYPE) + scroll + 2) % 2;
@@ -678,7 +706,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             case 1 -> ModSounds.INTO_CANNON.get();
             default -> throw new IllegalStateException("Unexpected type: " + type);
         };
-
         this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
     }
 

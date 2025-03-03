@@ -190,7 +190,10 @@ public class VehicleHudOverlay {
                 && iLand instanceof MobileVehicleEntity mobileVehicle) {
             poseStack.pushPose();
 
-            poseStack.translate(Mth.clamp(-8 * ClientEventHandler.turnRot[1], -10, 10), Mth.clamp(-8 * ClientEventHandler.turnRot[0], -10, 10), 0);
+
+
+            poseStack.translate(Mth.clamp(-8 * ClientEventHandler.turnRot[1], -10, 10), Mth.clamp(-8 * ClientEventHandler.turnRot[0], -10, 10) - 0.3 * ClientEventHandler.shakeTime + 5 * ClientEventHandler.cameraRoll, 0);
+            poseStack.rotateAround(Axis.ZP.rotationDegrees(-0.5f * ClientEventHandler.cameraRoll), w / 2f, h / 2f, 0);
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
@@ -214,12 +217,21 @@ public class VehicleHudOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2f + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
 
                 // 不同武器种类的准星
-                if (multiWeaponVehicle.getWeaponType() == 0) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
-                } else if (multiWeaponVehicle.getWeaponType() == 1) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), k, l, 0, 0.0F, i, j, i, j);
-                } else if (multiWeaponVehicle.getWeaponType() == 2) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                if (multiWeaponVehicle instanceof Yx100Entity) {
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_ap.png"), k, l, 0, 0.0F, i, j, i, j);
+                    } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_he.png"), k, l, 0, 0.0F, i, j, i, j);
+                    }
+
+                } else {
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                    } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                    } else if (multiWeaponVehicle.getWeaponType() == 2) {
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                    }
                 }
 
                 // 指南针

@@ -14,6 +14,8 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.YAW;
+
 public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
 
     public Yx100Renderer(EntityRendererProvider.Context renderManager) {
@@ -71,6 +73,30 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
 
         if (name.equals("leida") && animatable.getEnergy() > 0) {
             bone.setRotY((System.currentTimeMillis() % 36000000) / 300f);
+        }
+
+        if (name.equals("base")) {
+
+            float a = animatable.getEntityData().get(YAW);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            bone.setPosZ(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 1.5f);
+            bone.setRotX(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD);
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            bone.setPosX(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 1f);
+            bone.setRotZ(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 1.75f);
         }
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
