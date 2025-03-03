@@ -676,7 +676,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public void changeWeapon(int scroll) {
         if (entityData.get(LOADED_AMMO) > 0) {
-            this.insertItem(getCurrentAmmoItem(), 1);
+            if (this.getFirstPassenger() instanceof Player player && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                this.insertItem(getCurrentAmmoItem(), 1);
+            }
             entityData.set(LOADED_AMMO, 0);
         }
 
