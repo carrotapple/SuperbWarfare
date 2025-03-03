@@ -70,9 +70,9 @@ public class AmmoBox extends Item {
         return InteractionResultHolder.consume(stack);
     }
 
-    private static final List<String> ammoTypeList = generateAmmoTypeMap();
+    private static final List<String> ammoTypeList = generateAmmoTypeList();
 
-    private static List<String> generateAmmoTypeMap() {
+    private static List<String> generateAmmoTypeList() {
         var list = new ArrayList<String>();
         list.add("All");
 
