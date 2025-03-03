@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -158,10 +159,10 @@ public class ParticleTool {
 
     }
 
-    public static void cannonHitParticles(Level level, Vec3 pos) {
-        double x = pos.x;
-        double y = pos.y;
-        double z = pos.z;
+    public static void cannonHitParticles(Level level, Vec3 pos, Entity entity) {
+        double x = pos.x + 0.5 * entity.getDeltaMovement().x;
+        double y = pos.y + 0.5 * entity.getDeltaMovement().y;
+        double z = pos.z + 0.5 * entity.getDeltaMovement().z;
 
         if (level instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y, z, 2, 0.5, 0.5, 0.5, 1, true);

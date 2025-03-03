@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -69,9 +68,6 @@ public class CustomExplosion extends Explosion {
             if (target instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
-        }
-        if (pLevel instanceof ServerLevel) {
-            pLevel.explode(source == null ? null : source.getEntity(), pToBlowX, pToBlowY, pToBlowZ, 0.5f * pRadius , ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
     }
 

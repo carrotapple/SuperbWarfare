@@ -2867,5 +2867,21 @@
         "stream": false
       }
     ]
+  },
+  "yx_100_reload": {
+    "sounds": [
+      {
+        "name": "superbwarfare:yx100/yx100_reload",
+        "stream": false
+      }
+    ]
+  },
+  "yx_100_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:yx100/yx100_fire_1p",
+        "stream": false
+      }
+    ]
   }
 }

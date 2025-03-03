@@ -139,13 +139,13 @@ public class VehicleEntity extends Entity {
             return InteractionResult.SUCCESS;
         } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
-//                player.setXRot(this.getXRot());
-//                player.setYRot(this.getYRot());
+                player.setXRot(this.getXRot());
+                player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 this.getFirstPassenger().stopRiding();
-//                player.setXRot(this.getXRot());
-//                player.setYRot(this.getYRot());
+                player.setXRot(this.getXRot());
+                player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {
@@ -468,7 +468,7 @@ public class VehicleEntity extends Entity {
     }
 
     protected Vec3 getDismountOffset(double vehicleWidth, double passengerWidth) {
-        double offset = (vehicleWidth + passengerWidth + (double) 1.0E-5f) / 2.0;
+        double offset = (vehicleWidth + passengerWidth + (double) 1.0E-5f) / 1.75;
         float yaw = getYRot() + 90.0f;
         float x = -Mth.sin(yaw * ((float) java.lang.Math.PI / 180));
         float z = Mth.cos(yaw * ((float) java.lang.Math.PI / 180));

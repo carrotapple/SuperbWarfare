@@ -761,7 +761,9 @@ public class ClientEventHandler {
                 } else if (multiWeaponVehicle.getWeaponType() == 2) {
                     player.playSound(ModSounds.BMP_MISSILE_FIRE_1P.get(), 1f, 1);
                 }
-
+            }
+            if (iVehicle instanceof Yx100Entity) {
+                player.playSound(ModSounds.YX_100_FIRE_1P.get(), 1f, 1);
             }
         }
     }

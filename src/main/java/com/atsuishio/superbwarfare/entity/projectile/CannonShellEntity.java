@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.projectile;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
@@ -162,105 +163,78 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
-        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        if (this.level() instanceof ServerLevel) {
+            Entity entity = entityHitResult.getEntity();
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
 
-        if (entity instanceof LivingEntity) {
-            entity.invulnerableTime = 0;
-        }
-
-        if (this.getOwner() instanceof LivingEntity living) {
-            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            if (entity instanceof LivingEntity) {
+                entity.invulnerableTime = 0;
             }
-        }
 
-        ParticleTool.cannonHitParticles(this.level(), this.position());
+            if (this.getOwner() instanceof LivingEntity living) {
+                if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                    living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
 
-        Vec3 vec = this.getDeltaMovement();
-        double vec_x = vec.x;
-        double vec_y = vec.y;
-        double vec_z = vec.z;
-
-        this.setDeltaMovement(vec_x - 0.02 * vec_x, vec_y - 0.02 * vec_y, vec_z - 0.02 * vec_z);
-
-        this.durability -= 2;
-        if (this.durability <= 0) {
-            if (!this.level().isClientSide()) {
-                causeExplode(entity);
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+                }
             }
-            this.discard();
+
+            ParticleTool.cannonHitParticles(this.level(), this.position(), this);
+            causeExplode(entity);
+            if (entity instanceof VehicleEntity) {
+                this.discard();
+            }
+
         }
     }
 
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
-        super.onHitBlock(blockHitResult);
+        if (this.level() instanceof ServerLevel) {
+            int x = blockHitResult.getBlockPos().getX();
+            int y = blockHitResult.getBlockPos().getY();
+            int z = blockHitResult.getBlockPos().getZ();
 
-        int x = blockHitResult.getBlockPos().getX();
-        int y = blockHitResult.getBlockPos().getY();
-        int z = blockHitResult.getBlockPos().getZ();
-
-        BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
-        if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
-            this.discard();
-            causeExplodeBlock(blockHitResult);
-            return;
-        }
-
-        float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
-        this.durability -= (int) hardness;
-
-        if (ExplosionConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
-            BlockPos blockPos = BlockPos.containing(x, y, z);
-            Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
-            this.level().destroyBlock(blockPos, true);
-        }
-
-        Vec3 vec = this.getDeltaMovement();
-        this.setDeltaMovement(vec.multiply(0.4, 0.4, 0.4));
-
-        if (blockState.is(ModBlocks.SANDBAG.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
-            this.durability -= 10;
-        }
-
-        if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(Blocks.COPPER_BLOCK)) {
-            this.durability -= 5;
-        }
-
-        if (blockState.is(Blocks.GOLD_BLOCK)) {
-            this.durability -= 3;
-        }
-
-        if (this.durability <= 0) {
-            if (!this.level().isClientSide()) {
-                causeExplodeBlock(blockHitResult);
+            BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
+            if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
                 this.discard();
+                causeExplodeBlock(blockHitResult);
+                return;
             }
-        } else {
-            if (!this.level().isClientSide()) {
+
+            float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
+            this.durability -= (int) hardness;
+
+            if (ExplosionConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
+                BlockPos blockPos = BlockPos.containing(x, y, z);
+                Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
+                this.level().destroyBlock(blockPos, true);
+            }
+
+            if (blockState.is(ModBlocks.SANDBAG.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
+                this.durability -= 10;
+            }
+
+            if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(Blocks.COPPER_BLOCK)) {
+                this.durability -= 5;
+            }
+
+            if (blockState.is(Blocks.GOLD_BLOCK)) {
+                this.durability -= 3;
+            }
+
+            if (this.durability <= 0) {
+                causeExplodeBlock(blockHitResult);
+            } else {
                 if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
                     if (this.firstHit) {
-                        ParticleTool.cannonHitParticles(this.level(), this.position());
+                        ParticleTool.cannonHitParticles(this.level(), this.position(), this);
                         causeExplodeBlock(blockHitResult);
                         this.firstHit = false;
-                        this.setNoGravity(true);
-                    } else {
-                        apExplode(blockHitResult);
                     }
                 }
+                apExplode(blockHitResult);
             }
-        }
-
-        if (this.durability > 0) {
-            ModUtils.queueServerWork(2, () -> {
-                if (!this.level().isClientSide()) {
-                    causeExplodeBlock(blockHitResult);
-                    this.discard();
-                }
-            });
         }
     }
 
@@ -340,6 +314,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
         }
+        this.discard();
     }
 
     private void apExplode(HitResult result) {
@@ -352,9 +327,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                         this,
                         this.getOwner()),
                 explosionDamage,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
+                result.getLocation().x + 5 * getDeltaMovement().normalize().x,
+                result.getLocation().y + 5 * getDeltaMovement().normalize().y,
+                result.getLocation().z + 5 * getDeltaMovement().normalize().z,
                 radius,
                 ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
@@ -367,6 +342,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
         }
+        this.discard();
     }
 
     private PlayState movementPredicate(AnimationState<CannonShellEntity> event) {

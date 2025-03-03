@@ -38,6 +38,7 @@ import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
+import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.AMMO;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleHudOverlay {
@@ -293,6 +294,14 @@ public class VehicleHudOverlay {
                         guiGraphics.drawString(mc.font, Component.literal("    9M113  " + bmp2.getAmmoCount(player)), w / 2 - 33, h - 65, 0x66FF00, false);
                     }
 
+                }
+
+                if (player.getVehicle() instanceof Yx100Entity yx100) {
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        guiGraphics.drawString(mc.font, Component.literal("AP SHELL  " + yx100.getAmmoCount(player) + " " + yx100.getEntityData().get(AMMO)), w / 2 - 33, h - 65, 0x66FF00, false);
+                    } else {
+                        guiGraphics.drawString(mc.font, Component.literal("HE SHELL  " + yx100.getAmmoCount(player) + " " + yx100.getEntityData().get(AMMO)), w / 2 - 33, h - 65, 0x66FF00, false);
+                    }
                 }
 
                 // 血量
