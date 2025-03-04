@@ -8,13 +8,11 @@ import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.base.MultiSeatVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.*;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -40,7 +38,6 @@ import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -48,7 +45,6 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -61,11 +57,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity, HelicopterEntity, MultiWeaponVehicleEntity, MultiSeatVehicleEntity {
+public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity, HelicopterEntity, MultiWeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.AH_6_HP.get();
@@ -769,96 +764,9 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         return this.entityData.get(DECOY_COUNT);
     }
 
-
-    // 自定义骑乘
-
-    private final List<Entity> orderedPassengers = generatePassengersList();
-
-    @Override
-    public List<Entity> getOrderedPassengers() {
-        return orderedPassengers;
-    }
-
-    private ArrayList<Entity> generatePassengersList() {
-        var list = new ArrayList<Entity>(this.getMaxPassengers());
-        for (int i = 0; i < this.getMaxPassengers(); i++) {
-            list.add(null);
-        }
-        return list;
-    }
-
-    @Override
-    protected void addPassenger(Entity pPassenger) {
-        if (pPassenger.getVehicle() != this) {
-            throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
-        }
-
-        int index = 0;
-        for (Entity passenger : orderedPassengers) {
-            if (passenger == null) {
-                break;
-            }
-            index++;
-        }
-        if (index >= getMaxPassengers()) return;
-
-        orderedPassengers.set(index, pPassenger);
-        this.passengers = ImmutableList.copyOf(orderedPassengers.stream().filter(Objects::nonNull).toList());
-        this.gameEvent(GameEvent.ENTITY_MOUNT, pPassenger);
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getControllingPassenger() {
-        var first = this.orderedPassengers.get(0);
-        if (first instanceof LivingEntity) return (LivingEntity) first;
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public Entity getFirstPassenger() {
-        return orderedPassengers.get(0);
-    }
-
-    @Override
-    protected void removePassenger(@NotNull Entity pPassenger) {
-        super.removePassenger(pPassenger);
-
-        var index = orderedPassengers.indexOf(pPassenger);
-        if (index != -1) {
-            orderedPassengers.set(index, null);
-        }
-    }
-
-
     public int getMaxPassengers() {
         return 2;
     }
-
-    public Entity getNthEntity(int index) {
-        return orderedPassengers.get(index);
-    }
-
-    public boolean changeSeat(Entity entity, int index) {
-        if (index < 0 || index >= getMaxPassengers()) return false;
-        if (orderedPassengers.get(index) != null) return false;
-        if (!orderedPassengers.contains(entity)) return false;
-
-        orderedPassengers.set(orderedPassengers.indexOf(entity), null);
-        orderedPassengers.set(index, entity);
-
-        return true;
-    }
-
-    public int getSeatIndex(Entity entity) {
-        return orderedPassengers.indexOf(entity);
-    }
-
-    public int getSeatCount() {
-        return getMaxPassengers();
-    }
-
 
     @Override
     public void changeWeapon(int index, int scroll) {

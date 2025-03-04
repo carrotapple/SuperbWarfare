@@ -154,20 +154,15 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        // 未按下shift时，为载具切换武器
-        if (player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle && !Screen.hasShiftDown()) {
-            if (player.getVehicle() instanceof MultiSeatVehicleEntity multiSeatVehicle) {
-                // 若该载具有多个座位，且该座位存在武器时，取消滚动并发送武器切换请求
-                if (multiWeaponVehicle.hasWeapon(multiSeatVehicle.getSeatIndex(player))) {
-                    int index = multiSeatVehicle.getSeatIndex(player);
-                    ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll));
-                    event.setCanceled(true);
-                }
-            } else {
-                // 若该载具无多座位，直接发送0号位武器切换请求
-                ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(0, -scroll));
-                event.setCanceled(true);
-            }
+        // 未按下shift时，为有多武器的载具切换武器
+        if (!Screen.hasShiftDown()
+                && player.getVehicle() instanceof VehicleEntity vehicle
+                && vehicle instanceof MultiWeaponVehicleEntity multiWeaponVehicle
+                && multiWeaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
+        ) {
+            int index = vehicle.getSeatIndex(player);
+            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll));
+            event.setCanceled(true);
         }
 
         if (stack.is(ModTags.Items.GUN) && ClientEventHandler.zoom) {
@@ -285,7 +280,7 @@ public class ClickHandler {
             }
 
             // 未按住shift且在可切换座位的载具上时，发送切换座位消息
-            if (!Screen.hasShiftDown() && player.getVehicle() instanceof MultiSeatVehicleEntity vehicle) {
+            if (!Screen.hasShiftDown() && player.getVehicle() instanceof VehicleEntity vehicle) {
                 int index = -1;
                 for (int slot = 0; slot < Minecraft.getInstance().options.keyHotbarSlots.length; ++slot) {
                     KeyMapping keyHotbarSlot = Minecraft.getInstance().options.keyHotbarSlots[slot];
@@ -295,7 +290,7 @@ public class ClickHandler {
                     }
                 }
 
-                if (index != -1 && index < vehicle.getSeatCount() && vehicle.getNthEntity(index) == null) {
+                if (index != -1 && index < vehicle.getMaxPassengers() && vehicle.getNthEntity(index) == null) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
                     vehicle.changeSeat(player, index);
                 }

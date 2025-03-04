@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.VectorTool;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -40,17 +41,20 @@ import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
@@ -72,6 +76,109 @@ public abstract class VehicleEntity extends Entity {
     public int lastHurtTick;
     public int repairCoolDown = maxRepairCoolDown();
     public boolean crash;
+
+    // 自定义骑乘
+
+    private final List<Entity> orderedPassengers = generatePassengersList();
+
+    private ArrayList<Entity> generatePassengersList() {
+        var list = new ArrayList<Entity>(this.getMaxPassengers());
+        for (int i = 0; i < this.getMaxPassengers(); i++) {
+            list.add(null);
+        }
+        return list;
+    }
+
+    /**
+     * 获取按顺序排列的成员列表
+     *
+     * @return 按顺序排列的成员列表
+     */
+    public List<Entity> getOrderedPassengers() {
+        return orderedPassengers;
+    }
+
+    @Override
+    protected void addPassenger(Entity pPassenger) {
+        if (pPassenger.getVehicle() != this) {
+            throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
+        }
+
+        int index = 0;
+        for (Entity passenger : orderedPassengers) {
+            if (passenger == null) {
+                break;
+            }
+            index++;
+        }
+        if (index >= getMaxPassengers()) return;
+
+        orderedPassengers.set(index, pPassenger);
+        this.passengers = ImmutableList.copyOf(orderedPassengers.stream().filter(Objects::nonNull).toList());
+        this.gameEvent(GameEvent.ENTITY_MOUNT, pPassenger);
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getControllingPassenger() {
+        var first = this.orderedPassengers.get(0);
+        if (first instanceof LivingEntity living) return living;
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Entity getFirstPassenger() {
+        return orderedPassengers.get(0);
+    }
+
+    @Override
+    protected void removePassenger(@NotNull Entity pPassenger) {
+        super.removePassenger(pPassenger);
+
+        var index = orderedPassengers.indexOf(pPassenger);
+        if (index != -1) {
+            orderedPassengers.set(index, null);
+        }
+    }
+
+    /**
+     * 获取第index个乘客
+     *
+     * @param index 目标座位
+     * @return 目标座位的乘客
+     */
+    public Entity getNthEntity(int index) {
+        return orderedPassengers.get(index);
+    }
+
+    /**
+     * 尝试切换座位
+     *
+     * @param entity 乘客
+     * @param index  目标座位
+     * @return 是否切换成功
+     */
+    public boolean changeSeat(Entity entity, int index) {
+        if (index < 0 || index >= getMaxPassengers()) return false;
+        if (orderedPassengers.get(index) != null) return false;
+        if (!orderedPassengers.contains(entity)) return false;
+
+        orderedPassengers.set(orderedPassengers.indexOf(entity), null);
+        orderedPassengers.set(index, entity);
+
+        return true;
+    }
+
+    /**
+     * 获取乘客所在座位索引
+     *
+     * @param entity 乘客
+     * @return 座位索引
+     */
+    public int getSeatIndex(Entity entity) {
+        return orderedPassengers.indexOf(entity);
+    }
 
     public float getRoll() {
         return roll;

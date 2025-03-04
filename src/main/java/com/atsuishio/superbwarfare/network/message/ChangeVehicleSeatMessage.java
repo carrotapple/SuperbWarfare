@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.vehicle.base.MultiSeatVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -26,7 +26,7 @@ public class ChangeVehicleSeatMessage {
     public static void handler(ChangeVehicleSeatMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
-            if (player == null || !(player.getVehicle() instanceof MultiSeatVehicleEntity vehicle)) {
+            if (player == null || !(player.getVehicle() instanceof VehicleEntity vehicle)) {
                 return;
             }
 
