@@ -785,7 +785,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public void setWeaponType(int index, int type) {
-        if (type == 0) entityData.set(WEAPON_TYPE, type);
+        if (index == 0) entityData.set(WEAPON_TYPE, type);
     }
 
     @Override
