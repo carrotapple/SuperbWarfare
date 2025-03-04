@@ -2,12 +2,16 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 
 import net.minecraft.world.entity.Entity;
 
+import java.util.List;
+
 public interface MultiSeatVehicleEntity {
-    public Entity getNthEntity(int index);
+    List<Entity> getOrderedPassengers();
 
-    public boolean changeSeat(Entity entity, int index);
+    Entity getNthEntity(int index);
 
-    public int getSeatIndex(Entity entity);
+    boolean changeSeat(Entity entity, int index);
 
-    public int getSeatCount();
+    int getSeatIndex(Entity entity);
+
+    int getSeatCount();
 }

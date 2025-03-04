@@ -154,6 +154,7 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
+        // TODO 实现多座位武器切换适配
         if (player.getVehicle() instanceof MultiWeaponVehicleEntity && !Screen.hasShiftDown()) {
             ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(-scroll));
             event.setCanceled(true);
@@ -284,8 +285,9 @@ public class ClickHandler {
                     }
                 }
 
-                if (index != -1 && index < vehicle.getSeatCount()) {
+                if (index != -1 && index < vehicle.getSeatCount() && vehicle.getNthEntity(index) == null) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
+                    vehicle.changeSeat(player, index);
                 }
             }
 

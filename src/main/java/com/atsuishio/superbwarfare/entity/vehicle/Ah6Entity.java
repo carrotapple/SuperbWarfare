@@ -236,7 +236,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public void releaseDecoy() {
         if (decoyInputDown) {
             if (this.entityData.get(DECOY_COUNT) > 0 && this.level() instanceof ServerLevel) {
-                Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+                Entity passenger = getFirstPassenger();
                 for (int i = 0; i < 4; i++) {
                     FlareDecoyEntity flareDecoyEntity = new FlareDecoyEntity((LivingEntity) passenger, this.level());
                     flareDecoyEntity.setPos(this.getX() + this.getDeltaMovement().x, this.getY() + 0.5 + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
@@ -260,7 +260,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = getFirstPassenger();
         float diffX;
         float diffY;
 
@@ -417,7 +417,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         float z = 1f;
         y += (float) passenger.getMyRidingOffset();
 
-        int i = this.getPassengers().indexOf(passenger);
+        int i = this.getOrderedPassengers().indexOf(passenger);
 
         if (i == 0) {
             Vector4f worldPosition = transformPosition(transform, x, y, z);
@@ -669,7 +669,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
         double ox = getX() + vec3d.x;
-        int i = this.getPassengers().indexOf(passenger);
+        int i = this.getOrderedPassengers().indexOf(passenger);
         if (i == 0 || i == 2) {
             ox = getX() - vec3d.x;
         }
@@ -766,9 +766,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
 
     // 自定义骑乘
-    // TODO 正确实现成员判断
 
     private final List<Entity> orderedPassengers = generatePassengersList();
+
+    @Override
+    public List<Entity> getOrderedPassengers() {
+        return orderedPassengers;
+    }
 
     private ArrayList<Entity> generatePassengersList() {
         var list = new ArrayList<Entity>(this.getMaxPassengers());
