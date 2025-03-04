@@ -76,7 +76,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
 
-    public static final float MAX_HEALTH = 400;
+    public static final float MAX_HEALTH = 500;
     public static final int MAX_ENERGY = 5000000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -145,13 +145,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .immuneTo(DamageTypes.PLAYER_ATTACK)
                 .immuneTo(ModTags.DamageTypes.PROJECTILE)
                 .immuneTo(ModDamageTypes.VEHICLE_STRIKE)
-                .multiply(0.6f, DamageTypes.EXPLOSION)
-                .multiply(0.2f, ModDamageTypes.CUSTOM_EXPLOSION)
-                .multiply(0.2f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.4f, DamageTypes.EXPLOSION)
+                .multiply(0.15f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.15f, ModDamageTypes.PROJECTILE_BOOM)
                 .multiply(0.1f, ModDamageTypes.MINE)
                 .multiply(0.1f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.22f, ModDamageTypes.CANNON_FIRE)
-                .multiply(0.05f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .multiply(0.17f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.03f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(9);
     }
 

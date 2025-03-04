@@ -191,13 +191,13 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                 .immuneTo(DamageTypes.PLAYER_ATTACK)
                 .immuneTo(ModTags.DamageTypes.PROJECTILE)
                 .immuneTo(ModDamageTypes.VEHICLE_STRIKE)
-                .multiply(0.75f, DamageTypes.EXPLOSION)
-                .multiply(0.2f, ModDamageTypes.CUSTOM_EXPLOSION)
-                .multiply(0.2f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.35f, DamageTypes.EXPLOSION)
+                .multiply(0.1f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.1f, ModDamageTypes.PROJECTILE_BOOM)
                 .multiply(0.1f, ModDamageTypes.MINE)
                 .multiply(0.12f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.16f, ModDamageTypes.CANNON_FIRE)
-                .multiply(0.03f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .multiply(0.15f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.02f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(10);
     }
 

@@ -102,7 +102,7 @@ public class ExplosionConfig {
         builder.push("Wire Guide Missile");
 
         builder.comment("The damage of wire guide missile");
-        WIRE_GUIDE_MISSILE_DAMAGE = builder.defineInRange("wire_guide_missile_damage", 500, 1, Integer.MAX_VALUE);
+        WIRE_GUIDE_MISSILE_DAMAGE = builder.defineInRange("wire_guide_missile_damage", 700, 1, Integer.MAX_VALUE);
 
         builder.comment("The explosion damage of wire guide missile");
         WIRE_GUIDE_MISSILE_EXPLOSION_DAMAGE = builder.defineInRange("wire_guide_missile_explosion_damage", 60, 1, Integer.MAX_VALUE);
