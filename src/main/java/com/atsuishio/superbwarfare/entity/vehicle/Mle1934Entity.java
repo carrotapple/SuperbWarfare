@@ -491,11 +491,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 0;
     }

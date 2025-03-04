@@ -160,11 +160,6 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, CannonEn
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 600;
     }

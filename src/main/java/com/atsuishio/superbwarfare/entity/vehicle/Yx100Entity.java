@@ -702,11 +702,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 15;
     }

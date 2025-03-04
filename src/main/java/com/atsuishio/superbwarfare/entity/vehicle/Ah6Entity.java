@@ -700,11 +700,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 360;
     }
@@ -722,11 +717,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
-    }
-
-    @Override
-    public boolean banHand(Player player) {
-        return player == this.getFirstPassenger();
     }
 
     @Override

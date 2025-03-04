@@ -716,11 +716,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         if (getWeaponType(0) == 0) {
             return 250;

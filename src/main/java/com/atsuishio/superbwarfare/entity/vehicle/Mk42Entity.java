@@ -397,11 +397,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 0;
     }
@@ -418,11 +413,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         } else {
             return -1;
         }
-    }
-
-    @Override
-    public boolean banHand(Player player) {
-        return true;
     }
 
     @Override

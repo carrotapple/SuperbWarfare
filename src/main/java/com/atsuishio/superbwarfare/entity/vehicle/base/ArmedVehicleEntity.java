@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public interface ArmedVehicleEntity {
@@ -17,7 +18,12 @@ public interface ArmedVehicleEntity {
      * @param player 玩家
      * @return 是否是驾驶员
      */
-    boolean isDriver(Player player);
+    default boolean isDriver(Player player) {
+        if (this instanceof Entity entity) {
+            return player == entity.getFirstPassenger();
+        }
+        return false;
+    }
 
     /**
      * 主武器射速
@@ -43,12 +49,17 @@ public interface ArmedVehicleEntity {
     int getAmmoCount(Player player);
 
     /**
-     * 是否隐藏玩家手臂
+     * 是否禁用玩家手臂
      *
      * @param player 玩家
-     * @return 是否隐藏
      */
-    boolean banHand(Player player);
+    default boolean banHand(Player player) {
+        // 若玩家所在位置有可用武器，则默认禁用手臂
+        if (this instanceof VehicleEntity vehicle && this instanceof WeaponVehicleEntity weaponVehicle) {
+            return weaponVehicle.hasWeapon(vehicle.getSeatIndex(player));
+        }
+        return false;
+    }
 
     /**
      * 是否隐藏载具上的玩家

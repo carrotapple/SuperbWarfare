@@ -588,11 +588,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 0;
     }
@@ -605,11 +600,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     @Override
     public int getAmmoCount(Player player) {
         return -1;
-    }
-
-    @Override
-    public boolean banHand(Player player) {
-        return true;
     }
 
     @Override

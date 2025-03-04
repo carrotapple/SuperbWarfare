@@ -497,11 +497,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
     public int mainGunRpm() {
         return 500;
     }
@@ -515,11 +510,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
-    }
-
-    @Override
-    public boolean banHand(Player player) {
-        return player == this.getFirstPassenger();
     }
 
     @Override
