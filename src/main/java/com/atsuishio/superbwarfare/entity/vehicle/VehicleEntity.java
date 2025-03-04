@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -300,14 +301,14 @@ public class VehicleEntity extends Entity {
      * 呼吸回血冷却时长(单位:tick)，设为小于0的值以禁用呼吸回血
      */
     public int maxRepairCoolDown() {
-        return 200;
+        return VehicleConfig.REPAIR_COOLDOWN.get();
     }
 
     /**
      * 呼吸回血回血量
      */
     public float repairAmount() {
-        return 0.05F;
+        return VehicleConfig.REPAIR_AMOUNT.get().floatValue();
     }
 
     @Override

@@ -15,6 +15,9 @@ public class VehicleConfig {
     public static final List<? extends String> DEFAULT_COLLISION_ENTITY_BLACKLIST =
             List.of("create:super_glue", "zombieawareness:scent");
 
+    public static ForgeConfigSpec.IntValue REPAIR_COOLDOWN;
+    public static ForgeConfigSpec.DoubleValue REPAIR_AMOUNT;
+
     public static ForgeConfigSpec.IntValue MK42_HP;
     public static ForgeConfigSpec.IntValue MK42_AP_DAMAGE;
     public static ForgeConfigSpec.IntValue MK42_AP_EXPLOSION_DAMAGE;
@@ -82,6 +85,16 @@ public class VehicleConfig {
         COLLISION_ENTITY_BLACKLIST = builder.defineList("collision_entity_blacklist",
                 DEFAULT_COLLISION_ENTITY_BLACKLIST,
                 e -> e instanceof String);
+
+        builder.push("repair");
+
+        builder.comment("The cooldown of vehicle repair. Set a negative value to disable vehicle repair");
+        REPAIR_COOLDOWN = builder.defineInRange("repair_cooldown", 200, -1, 10000000);
+
+        builder.comment("The amount of health restored per tick when a vehicle is self-repairing");
+        REPAIR_AMOUNT = builder.defineInRange("repair_amount", 0.05d, 0, 10000000);
+
+        builder.pop();
 
         builder.push("mk_42");
 
