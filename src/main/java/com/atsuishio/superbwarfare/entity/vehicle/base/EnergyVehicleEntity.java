@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.capability.energy.SyncedEntityEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
-public class EnergyVehicleEntity extends VehicleEntity {
+public abstract class EnergyVehicleEntity extends VehicleEntity {
 
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
 

@@ -1,7 +1,8 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -53,7 +54,7 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class VehicleEntity extends Entity {
+public abstract class VehicleEntity extends Entity {
 
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
@@ -119,7 +120,7 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
@@ -292,7 +293,7 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
-    protected boolean canAddPassenger(Entity pPassenger) {
+    protected boolean canAddPassenger(@NotNull Entity pPassenger) {
         return this.getPassengers().size() < this.getMaxPassengers();
     }
 
@@ -489,7 +490,7 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public @NotNull Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
         double ox = getX() - vec3d.x;
         double oz = getZ() + vec3d.z;

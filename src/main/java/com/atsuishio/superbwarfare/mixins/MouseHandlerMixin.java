@@ -2,6 +2,8 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
@@ -47,7 +49,7 @@ public class MouseHandlerMixin {
             return 0;
         }
 
-        if (player.getVehicle() instanceof ICannonEntity) {
+        if (player.getVehicle() instanceof CannonEntity) {
             return ClientEventHandler.zoomVehicle ? 0.15 : 0.3;
         }
 

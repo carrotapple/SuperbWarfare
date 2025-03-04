@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.block;
 
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;

@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -30,7 +30,7 @@ public class GrenadeLauncherOverlay {
 
         if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
+        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
             return;
         if (!shouldRenderCrossHair(player)) return;
 
@@ -60,7 +60,7 @@ public class GrenadeLauncherOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && (player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.SECONDARY_CATACLYSM.get())
-                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity))
+                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof CannonEntity))
                 && !ClientEventHandler.zoom;
     }
 }

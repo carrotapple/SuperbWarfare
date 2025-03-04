@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.compat.jade;
 import com.atsuishio.superbwarfare.block.ContainerBlock;
 import com.atsuishio.superbwarfare.compat.jade.providers.ContainerEntityProvider;
 import com.atsuishio.superbwarfare.compat.jade.providers.VehicleHealthProvider;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;

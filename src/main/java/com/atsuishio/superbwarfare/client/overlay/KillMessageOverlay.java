@@ -2,8 +2,8 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -178,7 +178,7 @@ public class KillMessageOverlay {
 
         if (player != null && player.getVehicle() instanceof VehicleEntity vehicleEntity) {
             // 载具图标
-            if ((vehicleEntity instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player)) || record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
+            if ((vehicleEntity instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player)) || record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
                 renderItem = true;
 
                 ResourceLocation resourceLocation = vehicleEntity.getVehicleIcon();

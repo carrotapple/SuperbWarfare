@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -28,7 +28,7 @@ public class VehicleFireMessage {
             if (context.getSender() != null) {
                 var player = context.getSender();
 
-                if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle) {
+                if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle) {
                     iVehicle.vehicleShoot(player);
                 }
             }

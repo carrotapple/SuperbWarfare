@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.FormatTool;
@@ -95,7 +96,7 @@ public class VehicleHudOverlay {
         }
         poseStack.popPose();
 
-        if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
+        if (vehicle instanceof ArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
             boolean iCharge = iVehicle instanceof EnergyVehicleEntity;
 
             // 渲染当前弹药量
@@ -104,7 +105,7 @@ public class VehicleHudOverlay {
             float v = h / 1.5f - (iCharge ? 42 : 29) / 1.5f;
 
             if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))
-                    && !(iVehicle instanceof ICannonEntity
+                    && !(iVehicle instanceof CannonEntity
                     || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getWeaponType(0) == 1))
             ) {
                 event.getGuiGraphics().drawString(
@@ -146,11 +147,11 @@ public class VehicleHudOverlay {
         return !player.isSpectator() && (player.getVehicle() != null && player.getVehicle() instanceof VehicleEntity);
     }
 
-    private static String getVehicleAmmoType(ItemStack stack, IArmedVehicleEntity iVehicle) {
-        if (stack.getItem() == ModItems.AP_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
+    private static String getVehicleAmmoType(ItemStack stack, ArmedVehicleEntity iVehicle) {
+        if (stack.getItem() == ModItems.AP_5_INCHES.get() && iVehicle instanceof CannonEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.ap").getString();
         }
-        if (stack.getItem() == ModItems.HE_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
+        if (stack.getItem() == ModItems.HE_5_INCHES.get() && iVehicle instanceof CannonEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.he").getString();
         }
         if (iVehicle instanceof SpeedboatEntity) {
@@ -185,7 +186,7 @@ public class VehicleHudOverlay {
 
         if (player == null) return;
 
-        if (player.getVehicle() instanceof ILandArmorEntity iLand && iLand.isDriver(player)
+        if (player.getVehicle() instanceof LandArmorEntity iLand && iLand.isDriver(player)
                 && iLand instanceof MultiWeaponVehicleEntity multiWeaponVehicle
                 && iLand instanceof MobileVehicleEntity mobileVehicle) {
             poseStack.pushPose();

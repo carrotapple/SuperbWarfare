@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
@@ -29,11 +29,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 
-public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements HasCustomInventoryScreen, ContainerEntity {
+public abstract class ContainerMobileVehicleEntity extends MobileVehicleEntity implements HasCustomInventoryScreen, ContainerEntity {
 
     public static final int CONTAINER_SIZE = 102;
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     public ContainerMobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
@@ -58,7 +58,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
@@ -71,7 +71,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public void remove(RemovalReason pReason) {
+    public void remove(@NotNull RemovalReason pReason) {
         if (!this.level().isClientSide && pReason != RemovalReason.DISCARDED) {
             Containers.dropContents(this.level(), this, this);
         }
@@ -128,7 +128,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public NonNullList<ItemStack> getItemStacks() {
+    public @NotNull NonNullList<ItemStack> getItemStacks() {
         return this.items;
     }
 
@@ -207,17 +207,17 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public ItemStack getItem(int pSlot) {
+    public @NotNull ItemStack getItem(int pSlot) {
         return this.items.get(pSlot);
     }
 
     @Override
-    public ItemStack removeItem(int pSlot, int pAmount) {
+    public @NotNull ItemStack removeItem(int pSlot, int pAmount) {
         return ContainerHelper.removeItem(this.items, pSlot, pAmount);
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
+    public @NotNull ItemStack removeItemNoUpdate(int pSlot) {
         ItemStack itemstack = this.getItemStacks().get(pSlot);
         if (itemstack.isEmpty()) {
             return ItemStack.EMPTY;
@@ -228,7 +228,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public void setItem(int pSlot, ItemStack pStack) {
+    public void setItem(int pSlot, @NotNull ItemStack pStack) {
         this.getItemStacks().set(pSlot, pStack);
         if (!pStack.isEmpty() && pStack.getCount() > this.getMaxStackSize()) {
             pStack.setCount(this.getMaxStackSize());
@@ -240,7 +240,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(@NotNull Player pPlayer) {
         return !this.isRemoved() && this.position().closerThan(pPlayer.position(), 8.0D);
     }
 
@@ -260,7 +260,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
         if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
@@ -280,7 +280,7 @@ public class ContainerMobileVehicleEntity extends MobileVehicleEntity implements
     }
 
     @Override
-    public void stopOpen(Player pPlayer) {
+    public void stopOpen(@NotNull Player pPlayer) {
         this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(pPlayer));
     }
 }

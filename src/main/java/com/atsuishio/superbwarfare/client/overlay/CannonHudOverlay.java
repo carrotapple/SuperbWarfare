@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
@@ -127,6 +127,6 @@ public class CannonHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity));
+                && (player.getVehicle() != null && (player.getVehicle() instanceof CannonEntity));
     }
 }

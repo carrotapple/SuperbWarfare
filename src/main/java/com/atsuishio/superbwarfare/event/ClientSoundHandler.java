@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.PROPELLER_ROT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.DELTA_ROT;
-import static com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity.POWER;
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.POWER;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientSoundHandler {

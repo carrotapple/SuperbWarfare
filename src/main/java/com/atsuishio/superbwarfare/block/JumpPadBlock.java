@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.block;
 
 import com.atsuishio.superbwarfare.entity.TargetEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.core.BlockPos;
@@ -99,7 +99,7 @@ public class JumpPadBlock extends Block {
         super.entityInside(blockstate, level, pos, entity);
 
         // 禁止套娃
-        if (entity instanceof TargetEntity || entity instanceof ICannonEntity) return;
+        if (entity instanceof TargetEntity || entity instanceof CannonEntity) return;
 
         if (entity.isShiftKeyDown()) {
             if (entity.onGround()) {

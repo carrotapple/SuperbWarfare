@@ -1,8 +1,8 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import net.minecraft.world.phys.Vec3;
 
-public interface ILandArmorEntity extends IArmedVehicleEntity {
+public interface LandArmorEntity extends ArmedVehicleEntity {
 
     float turretYRotO();
 

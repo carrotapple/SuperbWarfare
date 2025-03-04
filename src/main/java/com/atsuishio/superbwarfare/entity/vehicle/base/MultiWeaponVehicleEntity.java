@@ -1,6 +1,6 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
-public interface MultiWeaponVehicleEntity extends IArmedVehicleEntity {
+public interface MultiWeaponVehicleEntity extends ArmedVehicleEntity {
     /**
      * 检测该槽位是否有可用武器
      *

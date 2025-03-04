@@ -4,6 +4,10 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.MultiWeaponVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -275,7 +279,7 @@ public class ClientEventHandler {
         if (stack.getItem() instanceof GunItem gunItem) {
             if (gunItem.canUseMelee(stack) && gunMelee == 0 && drawTime < 0.01
                     && ModKeyMappings.MELEE.isDown()
-                    && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
+                    && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                     && !holdFireVehicle
                     && !notInGame()
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
@@ -431,7 +435,7 @@ public class ClientEventHandler {
         }
 
         if ((holdFire || burstFireSize > 0)
-                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
+                && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !holdFireVehicle
                 && (stack.is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
@@ -697,7 +701,7 @@ public class ClientEventHandler {
             holdFireVehicle = false;
         }
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
             int rpm = iVehicle.mainGunRpm();
             if (rpm == 0) {
                 rpm = 240;
@@ -726,7 +730,7 @@ public class ClientEventHandler {
         }
     }
 
-    public static void playVehicleClientSounds(Player player, IArmedVehicleEntity iVehicle) {
+    public static void playVehicleClientSounds(Player player, ArmedVehicleEntity iVehicle) {
         if (iVehicle instanceof SpeedboatEntity speedboat) {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
@@ -778,7 +782,7 @@ public class ClientEventHandler {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger())
+        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger())
             return;
 
         float pose;
@@ -861,7 +865,7 @@ public class ClientEventHandler {
         cameraYaw = event.getYaw();
         cameraRoll = event.getRoll();
 
-        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
+        if (player != null && player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
             return;
         }
 
@@ -927,7 +931,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
             event.setCanceled(true);
         }
     }
@@ -1024,7 +1028,7 @@ public class ClientEventHandler {
         double speed = 1.5 - (0.07 * weight);
 
         if (zoom
-                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
+                && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !notInGame()
                 && drawTime < 0.01
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
@@ -1326,7 +1330,7 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player) && zoomVehicle) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player) && zoomVehicle) {
             event.setFOV(event.getFOV() / iArmedVehicle.zoomFov());
             return;
         }
@@ -1394,7 +1398,7 @@ public class ClientEventHandler {
     public static void setPlayerInvisible(RenderPlayerEvent.Pre event) {
         var otherPlayer = event.getEntity();
 
-        if (otherPlayer.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
+        if (otherPlayer.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
             event.setCanceled(true);
         }
     }
@@ -1421,7 +1425,7 @@ public class ClientEventHandler {
             event.setCanceled(true);
         }
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player)) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player)) {
             event.setCanceled(true);
         }
 

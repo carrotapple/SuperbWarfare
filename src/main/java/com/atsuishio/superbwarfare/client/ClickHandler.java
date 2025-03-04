@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.compat.clothconfig.ClothConfigHelper;
 import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -94,7 +94,7 @@ public class ClickHandler {
         int button = event.getButton();
 
         if (stack.is(ModTags.Items.GUN) || stack.is(ModItems.MONITOR.get()) || stack.is(ModItems.LUNGE_MINE.get()) || player.hasEffect(ModMobEffects.SHOCK.get())
-                || (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))) {
+                || (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }
@@ -106,7 +106,7 @@ public class ClickHandler {
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (stack.is(ModTags.Items.GUN)
-                    || (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && !stack.getItem().isEdible())) {
+                    || (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && !stack.getItem().isEdible())) {
                 event.setCanceled(true);
             }
         }
@@ -120,7 +120,7 @@ public class ClickHandler {
         if (stack.is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
                 || stack.is(ModItems.LUNGE_MINE.get())
-                || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
+                || (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -266,7 +266,7 @@ public class ClickHandler {
 
             if (stack.is(ModTags.Items.GUN)
                     || stack.is(ModItems.MONITOR.get())
-                    || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
+                    || (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
                     || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);
@@ -334,7 +334,7 @@ public class ClickHandler {
         }
 
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
             if (iVehicle.isDriver(player)) {
                 ClientEventHandler.holdFireVehicle = true;
             }
@@ -345,7 +345,7 @@ public class ClickHandler {
             ClientEventHandler.holdFire = true;
         }
 
-        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
+        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null && player.getVehicle() instanceof CannonEntity)) {
             if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && !GunsTool.getGunBooleanTag(stack, "Reloading")
                     && !GunsTool.getGunBooleanTag(stack, "Charging")
@@ -382,7 +382,7 @@ public class ClickHandler {
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
             if (iVehicle.isDriver(player)) {
                 ClientEventHandler.zoomVehicle = true;
             }

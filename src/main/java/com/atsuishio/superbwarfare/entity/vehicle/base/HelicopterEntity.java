@@ -1,6 +1,6 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
-public interface IHelicopterEntity extends IArmedVehicleEntity {
+public interface HelicopterEntity extends ArmedVehicleEntity {
 
     float getRotX(float tickDelta);
 

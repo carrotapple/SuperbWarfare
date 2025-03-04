@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.vehicle;
+package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.C4Entity;
@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Vector3f;
 
-public class MobileVehicleEntity extends EnergyVehicleEntity {
+public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
 
@@ -137,7 +138,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             Entity driver = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_DRIVER_UUID));
 
             if ((verticalCollision)) {
-                if (this instanceof IHelicopterEntity) {
+                if (this instanceof HelicopterEntity) {
                     this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (20 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
                     this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
                 } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.6) {

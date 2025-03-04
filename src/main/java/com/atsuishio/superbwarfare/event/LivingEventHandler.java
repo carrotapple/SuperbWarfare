@@ -7,9 +7,9 @@ import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ContainerMobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -54,7 +54,7 @@ public class LivingEventHandler {
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && event.getEntity().getVehicle() instanceof VehicleEntity vehicle) {
-            if (event.getEntity().getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
+            if (event.getEntity().getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
                 if (!(event.getSource().is(DamageTypes.EXPLOSION)
                         || event.getSource().is(DamageTypes.PLAYER_EXPLOSION)
                         || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
@@ -101,7 +101,7 @@ public class LivingEventHandler {
     private static void handleVehicleHurt(LivingHurtEvent event) {
         var vehicle = event.getEntity().getVehicle();
         if (vehicle instanceof VehicleEntity) {
-            if (vehicle instanceof IArmedVehicleEntity iArmedVehicle) {
+            if (vehicle instanceof ArmedVehicleEntity iArmedVehicle) {
                 if (iArmedVehicle.hidePassenger()) {
                     if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION)) {
                         event.setCanceled(true);
@@ -779,7 +779,7 @@ public class LivingEventHandler {
         Player player = event.getAttackingPlayer();
         if (player == null) return;
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity) {
+        if (player.getVehicle() instanceof ArmedVehicleEntity) {
             player.giveExperiencePoints(event.getDroppedExperience());
             event.setCanceled(true);
             return;
