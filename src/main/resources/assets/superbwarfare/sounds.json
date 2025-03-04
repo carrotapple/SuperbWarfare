@@ -2883,5 +2883,29 @@
         "stream": false
       }
     ]
+  },
+  "yx_100_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:yx100/yx100_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "yx_100_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:yx100/yx100_far",
+        "stream": false
+      }
+    ]
+  },
+  "yx_100_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:yx100/yx100_veryfar",
+        "stream": false
+      }
+    ]
   }
 }

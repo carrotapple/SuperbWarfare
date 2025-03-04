@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.layer.Yx100GlowLayer;
 import com.atsuishio.superbwarfare.client.model.entity.Yx100Model;
 import com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,7 +21,7 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
 
     public Yx100Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Yx100Model());
-//        this.addRenderLayer(new Yx100Layer(this));
+        this.addRenderLayer(new Yx100GlowLayer(this));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
                 r2 = a / 90f;
             } else {
                 if (a < 0) {
-                    r2 = (180f + a) / 90f;
+                    r2 = - (180f + a) / 90f;
                 } else {
                     r2 = (180f - a) / 90f;
                 }

@@ -292,7 +292,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         } else if (getWeaponType() == 1) {
             this.entityData.set(AMMO, ammoCount);
         } else {
-            this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
+            this.entityData.set(AMMO, countItem(ModItems.WIRE_GUIDE_MISSILE.get()));
         }
     }
 

@@ -12,6 +12,8 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -322,9 +324,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         if (!player.level().isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.playSound(ModSounds.BMP_CANNON_FIRE_3P.get(), 4, 1);
-                serverPlayer.playSound(ModSounds.LAV_CANNON_FAR.get(), 12, 1);
-                serverPlayer.playSound(ModSounds.LAV_CANNON_VERYFAR.get(), 24, 1);
+                serverPlayer.playSound(ModSounds.YX_100_FIRE_3P.get(), 8, 1);
+                serverPlayer.playSound(ModSounds.YX_100_FAR.get(), 16, 1);
+                serverPlayer.playSound(ModSounds.YX_100_VERYFAR.get(), 32, 1);
             }
         }
 
@@ -334,6 +336,49 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.entityData.set(YAW, getTurretYRot());
 
         reloadCoolDown = 80;
+
+        if (this.level() instanceof ServerLevel server) {
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 5 * getBarrelVector(1).x,
+                    this.getY() + 0.1,
+                    this.getZ() + 5 * getBarrelVector(1).z,
+                    300, 6, 0.02, 6, 0.005);
+
+            double x = worldPosition.x + 9 * getBarrelVector(1).x;
+            double y = worldPosition.y + 9 * getBarrelVector(1).y;
+            double z = worldPosition.z + 9 * getBarrelVector(1).z;
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
+            server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
+
+            int count = 6;
+
+            for (float i = 9.5f; i < 23; i += .5f) {
+                server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                        worldPosition.x + i * getBarrelVector(1).x,
+                        worldPosition.y + i * getBarrelVector(1).y,
+                        worldPosition.z + i * getBarrelVector(1).z,
+                        Mth.clamp(count--, 1, 5), 0.15, 0.15, 0.15, 0.0025);
+            }
+
+            Vector4f worldPositionL = transformPosition(transform, -0.35f, 0, 0);
+            Vector4f worldPositionR = transformPosition(transform, 0.35f, 0, 0);
+
+            for (float i = 3f; i < 6; i += .5f) {
+                server.sendParticles(ParticleTypes.CLOUD,
+                        worldPositionL.x + i * getBarrelVector(1).x,
+                        worldPositionL.y + i * getBarrelVector(1).y,
+                        worldPositionL.z + i * getBarrelVector(1).z,
+                        1, 0.025, 0.025, 0.025, 0.0015);
+
+                server.sendParticles(ParticleTypes.CLOUD,
+                        worldPositionR.x + i * getBarrelVector(1).x,
+                        worldPositionR.y + i * getBarrelVector(1).y,
+                        worldPositionR.z + i * getBarrelVector(1).z,
+                        1, 0.025, 0.025, 0.025, 0.0015);
+            }
+        }
+
 
         Level level = player.level();
         final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -430,8 +475,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -30f, 4f));
-        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -8, 8));
+        float min = -5 - (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
+        float max = 5 - (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
+
+        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, min, max), -30f, 4f));
+        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, -4.5f, 4.5f));
     }
 
     @Override
@@ -604,6 +652,18 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         float f1 = Mth.clamp(f, -30F, 4F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
+
+        if (entity.level().isClientSide && entity == getFirstPassenger()) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+                entity.setYBodyRot(this.getYRot());
+                float f2 = Mth.wrapDegrees(entity.getYRot() - this.getBarrelYRot(1));
+                float f3 = Mth.clamp(f2, -20.0F, 20.0F);
+                entity.yRotO += f3 - f2;
+                entity.setYRot(entity.getYRot() + f3 - f2);
+                entity.setYBodyRot(this.getYRot());
+            }
+        }
     }
 
     @Override

@@ -60,7 +60,7 @@ public class MouseHandlerMixin {
         }
 
         if (player.getVehicle() instanceof Yx100Entity) {
-            return ClientEventHandler.zoomVehicle ? 0.18 : 0.23;
+            return ClientEventHandler.zoomVehicle ? 0.17 : 0.22;
         }
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {

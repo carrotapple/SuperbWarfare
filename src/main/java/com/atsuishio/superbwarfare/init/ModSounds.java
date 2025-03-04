@@ -419,5 +419,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LASER_TOWER_SHOOT = REGISTRY.register("laser_tower_shoot", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("laser_tower_shoot")));
     public static final RegistryObject<SoundEvent> YX_100_RELOAD = REGISTRY.register("yx_100_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_reload")));
     public static final RegistryObject<SoundEvent> YX_100_FIRE_1P = REGISTRY.register("yx_100_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_fire_1p")));
+    public static final RegistryObject<SoundEvent> YX_100_FIRE_3P = REGISTRY.register("yx_100_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_fire_3p")));
+    public static final RegistryObject<SoundEvent> YX_100_FAR = REGISTRY.register("yx_100_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_far")));
+    public static final RegistryObject<SoundEvent> YX_100_VERYFAR = REGISTRY.register("yx_100_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_veryfar")));
 }
 
