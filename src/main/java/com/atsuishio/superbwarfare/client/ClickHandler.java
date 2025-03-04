@@ -17,6 +17,7 @@ import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -271,6 +272,23 @@ public class ClickHandler {
                     switchZoom = !switchZoom;
                 }
             }
+
+            // 未按住shift且在可切换座位的载具上时，发送切换座位消息
+            if (!Screen.hasShiftDown() && player.getVehicle() instanceof MultiSeatVehicleEntity vehicle) {
+                int index = -1;
+                for (int slot = 0; slot < Minecraft.getInstance().options.keyHotbarSlots.length; ++slot) {
+                    KeyMapping keyHotbarSlot = Minecraft.getInstance().options.keyHotbarSlots[slot];
+                    if (key == keyHotbarSlot.getKey().getValue()) {
+                        index = slot;
+                        break;
+                    }
+                }
+
+                if (index != -1 && index < vehicle.getSeatCount()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
+                }
+            }
+
         } else {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 return;
