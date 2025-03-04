@@ -226,7 +226,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
         }
 
-        if (this.getWeaponType() == 0) {
+        if (this.getWeaponType(0) == 0) {
             this.entityData.set(AMMO, ammoCount);
         } else {
             this.entityData.set(AMMO, this.getEntityData().get(LOADED_ROCKET));
@@ -538,7 +538,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         Vector4f worldPositionRight;
         Vector4f worldPositionLeft;
 
-        if (getWeaponType() == 0) {
+        if (getWeaponType(0) == 0) {
             if (this.cannotFire) return;
 
             x = 1.15f;
@@ -615,7 +615,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                     ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
-        } else if (getWeaponType() == 1 && this.getEntityData().get(LOADED_ROCKET) > 0) {
+        } else if (getWeaponType(0) == 1 && this.getEntityData().get(LOADED_ROCKET) > 0) {
             x = 1.7f;
             y = 0.62f - 1.45f;
             z = 0.8f;
@@ -711,9 +711,9 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public boolean canShoot(Player player) {
-        if (getWeaponType() == 0) {
+        if (getWeaponType(0) == 0) {
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
-        } else if (getWeaponType() == 1) {
+        } else if (getWeaponType(0) == 1) {
             return this.entityData.get(AMMO) > 0;
         }
         return false;
@@ -856,9 +856,11 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
 
     @Override
-    public void changeWeapon(int scroll) {
-        var type = (getWeaponType() + scroll + 2) % 2;
-        setWeaponType(type);
+    public void changeWeapon(int index, int scroll) {
+        if (index != 0) return;
+
+        var type = (getWeaponType(0) + scroll + 2) % 2;
+        setWeaponType(0, type);
 
         var sound = switch (type) {
             case 0 -> ModSounds.INTO_MISSILE.get();
@@ -870,12 +872,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public int getWeaponType() {
-        return entityData.get(WEAPON_TYPE);
+    public int getWeaponType(int index) {
+        if (index == 0) return entityData.get(WEAPON_TYPE);
+        return -1;
     }
 
     @Override
-    public void setWeaponType(int type) {
+    public void setWeaponType(int index, int type) {
         entityData.set(WEAPON_TYPE, type);
     }
 

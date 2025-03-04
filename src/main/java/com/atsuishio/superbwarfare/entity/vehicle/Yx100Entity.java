@@ -116,14 +116,14 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedAmmo", this.entityData.get(LOADED_AMMO));
-        compound.putInt("WeaponType", getWeaponType());
+        compound.putInt("WeaponType", getWeaponType(0));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_AMMO, compound.getInt("LoadedAmmo"));
-        setWeaponType(compound.getInt("WeaponType"));
+        setWeaponType(0, compound.getInt("WeaponType"));
     }
 
     @Override
@@ -247,10 +247,10 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     private Item getCurrentAmmoItem() {
-        return switch (getWeaponType()) {
+        return switch (getWeaponType(0)) {
             case 0 -> ModItems.AP_5_INCHES.get();
             case 1 -> ModItems.HE_5_INCHES.get();
-            default -> throw new IllegalStateException("Unexpected value: " + getWeaponType());
+            default -> throw new IllegalStateException("Unexpected value: " + getWeaponType(0));
         };
     }
 
@@ -293,7 +293,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         int fireTime, durability;
         float v;
 
-        if (getWeaponType() == 0) {
+        if (getWeaponType(0) == 0) {
             hitDamage = 500;
             explosionRadius = 4;
             explosionDamage = 100;
@@ -301,7 +301,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             fireTime = 0;
             durability = 60;
             v = 40;
-        } else if (getWeaponType() == 1) {
+        } else if (getWeaponType(0) == 1) {
             hitDamage = 100;
             explosionRadius = 10;
             explosionDamage = 150;
@@ -310,7 +310,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             durability = 1;
             v = 25;
         } else {
-            throw new IllegalStateException("Unexpected value: " + getWeaponType());
+            throw new IllegalStateException("Unexpected value: " + getWeaponType(0));
         }
 
         Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
@@ -734,7 +734,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public void changeWeapon(int scroll) {
+    public void changeWeapon(int index, int scroll) {
+        if (index != 0) return;
+
         if (entityData.get(LOADED_AMMO) > 0) {
             if (this.getFirstPassenger() instanceof Player player && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                 this.insertItem(getCurrentAmmoItem(), 1);
@@ -749,8 +751,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             player.connection.send(clientboundstopsoundpacket);
         }
 
-        var type = (getWeaponType() + scroll + 2) % 2;
-        setWeaponType(type);
+        var type = (getWeaponType(0) + scroll + 2) % 2;
+        setWeaponType(0, type);
 
         var sound = switch (type) {
             case 0 -> ModSounds.INTO_MISSILE.get();
@@ -761,13 +763,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public int getWeaponType() {
-        return entityData.get(WEAPON_TYPE);
+    public int getWeaponType(int index) {
+        return index == 0 ? entityData.get(WEAPON_TYPE) : -1;
     }
 
     @Override
-    public void setWeaponType(int type) {
-        entityData.set(WEAPON_TYPE, type);
+    public void setWeaponType(int index, int type) {
+        if (index == 0) entityData.set(WEAPON_TYPE, type);
     }
 
     @Override
