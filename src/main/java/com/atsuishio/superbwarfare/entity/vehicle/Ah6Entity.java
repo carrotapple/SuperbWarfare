@@ -269,9 +269,10 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             this.rightInputDown = false;
             this.forwardInputDown = false;
             this.backInputDown = false;
-            this.setZRot(this.roll * 0.8f);
-            this.setXRot(this.getXRot() * 0.8f);
-            this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
+            this.upInputDown = false;
+            this.downInputDown = false;
+            this.setZRot(this.roll * 0.98f);
+            this.setXRot(this.getXRot() * 0.98f);
         } else if (passenger instanceof Player) {
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));

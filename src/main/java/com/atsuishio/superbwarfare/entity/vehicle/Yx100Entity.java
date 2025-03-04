@@ -147,7 +147,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .multiply(0.2f, ModDamageTypes.PROJECTILE_BOOM)
                 .multiply(0.1f, ModDamageTypes.MINE)
                 .multiply(0.1f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.15f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.22f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.05f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(9);
     }

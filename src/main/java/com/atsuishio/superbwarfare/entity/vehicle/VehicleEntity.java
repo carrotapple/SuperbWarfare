@@ -156,6 +156,17 @@ public class VehicleEntity extends Entity {
         return InteractionResult.PASS;
     }
 
+    public double getYRotFromVector(Vec3 vec3) {
+        this.setDeltaMovement(vec3);
+        return Mth.atan2(vec3.x, vec3.z) * (180F / Math.PI);
+    }
+
+    public double getXRotFromVector(Vec3 vec3) {
+        this.setDeltaMovement(vec3);
+        double d0 = vec3.horizontalDistance();
+        return Mth.atan2(vec3.y, d0) * (180F / Math.PI);
+    }
+
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         // 计算减伤后的伤害
