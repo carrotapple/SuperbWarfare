@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base;
 
-public interface MultiWeaponVehicleEntity extends ArmedVehicleEntity {
+/**
+ * 拥有任意武器的载具
+ */
+public interface WeaponVehicleEntity extends ArmedVehicleEntity {
     /**
      * 检测该槽位是否有可用武器
      *
@@ -17,7 +20,8 @@ public interface MultiWeaponVehicleEntity extends ArmedVehicleEntity {
      * @param index  武器槽位
      * @param scroll 滚动值，-1~1之间的整数
      */
-    void changeWeapon(int index, int scroll);
+    default void changeWeapon(int index, int scroll) {
+    }
 
     /**
      * 获取该槽位当前的武器类型，返回-1则表示该位置没有可用武器
@@ -26,7 +30,8 @@ public interface MultiWeaponVehicleEntity extends ArmedVehicleEntity {
      * @return 武器类型
      */
     default int getWeaponType(int index) {
-        return -1;
+        // 默认认为只有第一个位置拥有一个武器
+        return index == 0 ? 0 : -1;
     }
 
     /**
@@ -36,5 +41,6 @@ public interface MultiWeaponVehicleEntity extends ArmedVehicleEntity {
      * @param type  武器类型
      */
 
-    void setWeaponType(int index, int type);
+    default void setWeaponType(int index, int type) {
+    }
 }

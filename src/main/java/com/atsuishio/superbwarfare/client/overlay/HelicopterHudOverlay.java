@@ -5,8 +5,8 @@ import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.base.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -62,7 +62,7 @@ public class HelicopterHudOverlay {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
 
-        if (player.getVehicle() instanceof HelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player) && player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
+        if (player.getVehicle() instanceof HelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player) && player.getVehicle() instanceof WeaponVehicleEntity weaponVehicle) {
             poseStack.pushPose();
 
             poseStack.translate(-6 * ClientEventHandler.turnRot[1], -6 * ClientEventHandler.turnRot[0], 0);
@@ -119,7 +119,7 @@ public class HelicopterHudOverlay {
                         w / 2 - 140, h / 2, 0x66FF00, false);
 
                 if (mobileVehicle instanceof Ah6Entity ah6Entity) {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         double heat = 1 - ah6Entity.heat / 100.0F;
                         guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
@@ -187,7 +187,7 @@ public class HelicopterHudOverlay {
                     poseStack.scale(0.75f, 0.75f, 1);
 
                     if (mobileVehicle instanceof Ah6Entity ah6Entity) {
-                        if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                        if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = ah6Entity.heat / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                         } else {

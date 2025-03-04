@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -38,6 +38,9 @@ public class ZoomMessage {
             ServerPlayer player = context.getSender();
             if (player == null) return;
 
+            var vehicle = player.getVehicle();
+            // 缩放音效播放条件: 载具是武器载具，且该位置有可用武器
+
             if (message.type == 0) {
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.zoom = true;
@@ -45,9 +48,12 @@ public class ZoomMessage {
                     capability.syncPlayerVariables(player);
                 });
 
-                if (player.isPassenger() && player.getVehicle() instanceof ArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
-                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
-                }
+                if (player.isPassenger()
+                        && vehicle instanceof WeaponVehicleEntity weaponEntity
+                        && vehicle instanceof VehicleEntity vehicleEntity
+                        && weaponEntity.hasWeapon(vehicleEntity.getSeatIndex(player))
+                ) SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+
             }
 
             if (message.type == 1) {
@@ -57,9 +63,12 @@ public class ZoomMessage {
                     capability.syncPlayerVariables(player);
                 });
 
-                if (player.isPassenger() && player.getVehicle() instanceof ArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
-                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
-                }
+                if (player.isPassenger()
+                        && vehicle instanceof WeaponVehicleEntity weaponEntity
+                        && vehicle instanceof VehicleEntity vehicleEntity
+                        && weaponEntity.hasWeapon(vehicleEntity.getSeatIndex(player))
+                ) SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+
 
                 if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
                     var handItem = player.getMainHandItem();
@@ -74,4 +83,5 @@ public class ZoomMessage {
         });
         context.setPacketHandled(true);
     }
+
 }

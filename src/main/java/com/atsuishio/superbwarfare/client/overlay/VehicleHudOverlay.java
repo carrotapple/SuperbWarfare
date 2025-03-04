@@ -187,7 +187,7 @@ public class VehicleHudOverlay {
         if (player == null) return;
 
         if (player.getVehicle() instanceof LandArmorEntity iLand && iLand.isDriver(player)
-                && iLand instanceof MultiWeaponVehicleEntity multiWeaponVehicle
+                && iLand instanceof WeaponVehicleEntity weaponVehicle
                 && iLand instanceof MobileVehicleEntity mobileVehicle) {
             poseStack.pushPose();
 
@@ -218,19 +218,19 @@ public class VehicleHudOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2f + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
 
                 // 不同武器种类的准星
-                if (multiWeaponVehicle instanceof Yx100Entity) {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                if (weaponVehicle instanceof Yx100Entity) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_ap.png"), k, l, 0, 0.0F, i, j, i, j);
-                    } else if (multiWeaponVehicle.getWeaponType(0) == 1) {
+                    } else if (weaponVehicle.getWeaponType(0) == 1) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_he.png"), k, l, 0, 0.0F, i, j, i, j);
                     }
 
                 } else {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
-                    } else if (multiWeaponVehicle.getWeaponType(0) == 1) {
+                    } else if (weaponVehicle.getWeaponType(0) == 1) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), k, l, 0, 0.0F, i, j, i, j);
-                    } else if (multiWeaponVehicle.getWeaponType(0) == 2) {
+                    } else if (weaponVehicle.getWeaponType(0) == 2) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                     }
                 }
@@ -288,7 +288,7 @@ public class VehicleHudOverlay {
                 // 武器名称
                 //LAV-150
                 if (player.getVehicle() instanceof Lav150Entity lav) {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         double heat = 1 - lav.getEntityData().get(HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
@@ -299,10 +299,10 @@ public class VehicleHudOverlay {
 
                 //BMP-2
                 if (player.getVehicle() instanceof Bmp2Entity bmp2) {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         double heat = 1 - bmp2.getEntityData().get(HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(" 30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
-                    } else if (multiWeaponVehicle.getWeaponType(0) == 1) {
+                    } else if (weaponVehicle.getWeaponType(0) == 1) {
                         double heat = 1 - bmp2.getEntityData().get(COAX_HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(" 7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
@@ -313,7 +313,7 @@ public class VehicleHudOverlay {
 
                 //YX-100
                 if (player.getVehicle() instanceof Yx100Entity yx100) {
-                    if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle.getWeaponType(0) == 0) {
                         guiGraphics.drawString(mc.font, Component.literal("AP SHELL  " + yx100.getAmmoCount(player) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(AMMO))), w / 2 - 33, h - 65, 0x66FF00, false);
                     } else {
                         guiGraphics.drawString(mc.font, Component.literal("HE SHELL  " + yx100.getAmmoCount(player) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(AMMO))), w / 2 - 33, h - 65, 0x66FF00, false);
@@ -344,8 +344,8 @@ public class VehicleHudOverlay {
                     poseStack.scale(0.75f, 0.75f, 1);
 
                     //LAV-150
-                    if (multiWeaponVehicle instanceof Lav150Entity lav1501) {
-                        if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle instanceof Lav150Entity lav1501) {
+                        if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = lav1501.getEntityData().get(HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav1501.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                         } else {
@@ -354,11 +354,11 @@ public class VehicleHudOverlay {
                         }
                     }
                     //BMP-2
-                    if (multiWeaponVehicle instanceof Bmp2Entity bmp201) {
-                        if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle instanceof Bmp2Entity bmp201) {
+                        if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = bmp201.getEntityData().get(HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
-                        } else if (multiWeaponVehicle.getWeaponType(0) == 1) {
+                        } else if (weaponVehicle.getWeaponType(0) == 1) {
                             double heat2 = bmp201.getEntityData().get(COAX_HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         } else {
@@ -366,8 +366,8 @@ public class VehicleHudOverlay {
                         }
                     }
                     //YX-100
-                    if (multiWeaponVehicle instanceof Yx100Entity yx100) {
-                        if (multiWeaponVehicle.getWeaponType(0) == 0) {
+                    if (weaponVehicle instanceof Yx100Entity yx100) {
+                        if (weaponVehicle.getWeaponType(0) == 0) {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("AP SHELL " + yx100.getAmmoCount(player) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(AMMO))), 30, -9, -1, false);
                         } else {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HE SHELL " + yx100.getAmmoCount(player) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(AMMO))), 30, -9, -1, false);

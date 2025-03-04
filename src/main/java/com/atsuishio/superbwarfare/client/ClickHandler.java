@@ -154,11 +154,11 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        // 未按下shift时，为有多武器的载具切换武器
+        // 未按下shift时，为有武器的载具切换武器
         if (!Screen.hasShiftDown()
                 && player.getVehicle() instanceof VehicleEntity vehicle
-                && vehicle instanceof MultiWeaponVehicleEntity multiWeaponVehicle
-                && multiWeaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
+                && vehicle instanceof WeaponVehicleEntity weaponVehicle
+                && weaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
         ) {
             int index = vehicle.getSeatIndex(player);
             ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll));

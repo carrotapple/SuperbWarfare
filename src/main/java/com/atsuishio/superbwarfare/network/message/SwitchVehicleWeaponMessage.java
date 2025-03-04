@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.vehicle.base.MultiWeaponVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -34,8 +34,8 @@ public class SwitchVehicleWeaponMessage {
                 return;
             }
 
-            if (player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle && multiWeaponVehicle.isDriver(player)) {
-                multiWeaponVehicle.changeWeapon(message.index, Mth.clamp(message.scroll > 0 ? Mth.ceil(message.scroll) : Mth.floor(message.scroll), -1, 1));
+            if (player.getVehicle() instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.isDriver(player)) {
+                weaponVehicle.changeWeapon(message.index, Mth.clamp(message.scroll > 0 ? Mth.ceil(message.scroll) : Mth.floor(message.scroll), -1, 1));
             }
         });
         context.get().setPacketHandled(true);

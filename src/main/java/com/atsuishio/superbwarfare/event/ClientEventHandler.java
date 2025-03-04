@@ -6,8 +6,8 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.base.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -737,7 +737,7 @@ public class ClientEventHandler {
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
 
-        if (iVehicle instanceof MultiWeaponVehicleEntity) {
+        if (iVehicle instanceof WeaponVehicleEntity) {
             if (iVehicle instanceof Ah6Entity ah6Entity) {
                 float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - ah6Entity.heat));
                 if (ah6Entity.getWeaponType(0) == 0) {
