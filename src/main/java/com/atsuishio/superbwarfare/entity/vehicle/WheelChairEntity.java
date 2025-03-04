@@ -150,7 +150,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
 
         float diffY = 0;
 

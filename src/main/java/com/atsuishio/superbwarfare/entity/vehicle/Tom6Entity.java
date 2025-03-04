@@ -147,7 +147,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
 
 //        if (this.getEnergy() <= 0) return;
 
@@ -265,7 +265,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         float z = -0.4f;
         y += (float) passenger.getMyRidingOffset();
 
-        int i = this.getPassengers().indexOf(passenger);
+        int i = this.getSeatIndex(passenger);
 
         if (i == 0) {
             Vector4f worldPosition = transformPosition(transform, x, y, z);

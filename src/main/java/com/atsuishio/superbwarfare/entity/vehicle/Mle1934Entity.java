@@ -439,7 +439,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
         if (passenger != null) {
             entityData.set(YAW, passenger.getYHeadRot());
             entityData.set(PITCH, passenger.getXRot() - 1.2f);

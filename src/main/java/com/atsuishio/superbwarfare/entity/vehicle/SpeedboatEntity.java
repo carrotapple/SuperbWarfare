@@ -281,7 +281,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public void travel() {
-        Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger0 = this.getFirstPassenger();
 
         if (this.getEnergy() <= 0) return;
 
@@ -388,8 +388,8 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 pPassenger.setYHeadRot((float) (pPassenger.getYHeadRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
             }
 
-            if (this.getPassengers().size() > 1) {
-                int i = this.getPassengers().indexOf(pPassenger);
+            if (this.getOrderedPassengers().size() > 1) {
+                int i = this.getSeatIndex(pPassenger);
                 if (i == 0) {
                     pCallback.accept(pPassenger, this.getX(), posY, this.getZ());
                     return;

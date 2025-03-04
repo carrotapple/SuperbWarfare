@@ -361,7 +361,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                     hitResult = entityhitresult;
                 }
                 if (hitResult.getType() == HitResult.Type.ENTITY) {
-                    Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+                    Entity passenger = this.getFirstPassenger();
                     Entity target = ((EntityHitResult) hitResult).getEntity();
 
                     if (passenger != null) {
@@ -384,7 +384,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     private void laserExplosion(Vec3 pos) {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
 
         if (passenger != null) {
             CustomExplosion explosion = new CustomExplosion(this.level(), passenger,
@@ -474,7 +474,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
         if (this.getEnergy() <= 0) return;
 
         if (passenger instanceof LivingEntity entity) {

@@ -437,8 +437,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public void travel() {
-        Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-
+        Entity passenger0 = this.getFirstPassenger();
+        
         if (this.getEnergy() <= 0) return;
 
         if (passenger0 == null) {
@@ -590,7 +590,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         float z = 0.75f;
         y += (float) passenger.getMyRidingOffset();
 
-        int i = this.getPassengers().indexOf(passenger);
+        int i = this.getSeatIndex(passenger);
 
         Vector4f worldPosition;
         if (i == 0) {

@@ -117,7 +117,7 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, CannonEn
 
     @Override
     public void travel() {
-        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger = this.getFirstPassenger();
         float diffY = 0;
         float diffX = 0;
 

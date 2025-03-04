@@ -407,7 +407,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void travel() {
-        Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger0 = this.getFirstPassenger();
 
         if (this.getEnergy() <= 0) return;
 
@@ -569,7 +569,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         float z = 0.6076875f;
         y += (float) passenger.getMyRidingOffset();
 
-        int i = this.getPassengers().indexOf(passenger);
+        int i = this.getSeatIndex(passenger);
 
         Vector4f worldPosition = transformPosition(transform, x, y, z);
 
