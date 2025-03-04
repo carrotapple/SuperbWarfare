@@ -19,7 +19,7 @@ public class SwitchVehicleWeaponMessage {
     }
 
     public static void encode(SwitchVehicleWeaponMessage message, FriendlyByteBuf byteBuf) {
-        byteBuf.writeDouble(message.index);
+        byteBuf.writeInt(message.index);
         byteBuf.writeDouble(message.scroll);
     }
 
