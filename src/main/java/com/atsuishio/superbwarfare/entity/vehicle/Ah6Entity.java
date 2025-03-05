@@ -524,8 +524,8 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                         .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
                         .headShot(2f)
                         .zoom(false)
-                        .heBullet(2)
-                        .bypassArmorRate(0.2f);
+                        .heBullet(1)
+                        .bypassArmorRate(0.1f);
 
                 projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
                 projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
@@ -543,8 +543,8 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                         .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
                         .headShot(2f)
                         .zoom(false)
-                        .heBullet(2)
-                        .bypassArmorRate(0.2f);
+                        .heBullet(1)
+                        .bypassArmorRate(0.1f);
 
                 projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
                 projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,

@@ -127,8 +127,8 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
 
         if (onGround()) {
-            setXRot(getXRot() * 0.7f);
-            setZRot(getRoll() * 0.7f);
+            setXRot(getXRot() * 0.8f);
+            setZRot(getRoll() * 0.8f);
         }
 
         if (this.isInWater() && this.tickCount % 4 == 0) {
@@ -138,6 +138,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             }
         }
 
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.01, 0.0));
         this.refreshDimensions();
     }
 
@@ -168,7 +169,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
             if (forwardInputDown && getEnergy() > 0) {
                 this.consumeEnergy(VehicleConfig.TOM_6_ENERGY_COST.get());
-                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (entityData.get(MELON) ? 0.003f : 0.0022f), entityData.get(MELON) ? 0.12f : 0.15f));
+                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.03f, 0.15f));
             }
 
             if (backInputDown || downInputDown) {
@@ -188,11 +189,11 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
             float roll = Mth.abs(Mth.clamp(getRoll() / 60, -1.5f, 1.5f));
 
-            float addY = Mth.clamp(Math.min((this.onGround() ? 1.5f : 0.9f) * (float) Math.max(getDeltaMovement().length() - 0.06, 0.1), 0.9f) * diffY - 0.5f * this.entityData.get(DELTA_ROT), (entityData.get(MELON) ? -2f : -3f) * (roll + 1), (entityData.get(MELON) ? 2f : 3f) * (roll + 1));
-            float addX = Mth.clamp(Math.min((float) Math.max(getDeltaMovement().length() - 0.1, 0.01), 0.9f) * diffX, (entityData.get(MELON) ? -3f : -4f), (entityData.get(MELON) ? 3f : 4f));
+            float addY = Mth.clamp(Math.min((this.onGround() ? 1.5f : 0.9f) * (float) Math.max(getDeltaMovement().length() - 0.06, 0.1), 0.9f) * diffY - 0.5f * this.entityData.get(DELTA_ROT), -3 * (roll + 1), 3 * (roll + 1));
+            float addX = Mth.clamp(Math.min((float) Math.max(getDeltaMovement().length() - 0.1, 0.01), 0.9f) * diffX, -4, 4);
 
             this.setYRot(this.getYRot() + addY);
-            this.setXRot(Mth.clamp(this.getXRot() + addX, onGround() ? -10 : -120, onGround() ? 2 : 120));
+            this.setXRot(Mth.clamp(this.getXRot() + addX, onGround() ? -12 : -120, onGround() ? 3 : 120));
             this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.01f) * diffY * (float) getDeltaMovement().length());
 
             // 空格投掷西瓜炸弹
@@ -217,9 +218,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
 
         this.setDeltaMovement(this.getDeltaMovement().add(
-                Mth.sin(-this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER),
-                Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * (entityData.get(MELON) ? 0.047f : 0.067f), -0.04, 0.09),
-                Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER)
+                Mth.sin(-this.getYRot() * 0.017453292F) * 0.19 * this.entityData.get(POWER),
+                Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * 0.067, -0.04, 0.09),
+                Mth.cos(this.getYRot() * 0.017453292F) * 0.19 * this.entityData.get(POWER)
         ));
     }
 
