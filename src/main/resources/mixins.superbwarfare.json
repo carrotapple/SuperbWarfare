@@ -18,6 +18,7 @@
     "ItemInHandLayerMixin",
     "KeyMappingMixin",
     "LivingEntityRendererMixin",
+    "MinecraftMixin",
     "MouseHandlerMixin"
   ],
   "minVersion": "0.8",
