@@ -27,18 +27,15 @@ public class MortarInfoOverlay {
             lookingEntity = TraceTool.findLookingEntity(player, 6);
         }
         if (lookingEntity instanceof MortarEntity mortar) {
-
-            player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.pitch").append(FormatTool.format1D(-mortar.getXRot(), "° "))
-                            .append(Component.translatable("tips.superbwarfare.mortar.yaw")).append(FormatTool.format1D(mortar.getYRot(), "° "))
-                            .append(Component.translatable("tips.superbwarfare.mortar.range")).append(FormatTool.format1D((int) RangeHelper.getRange(-mortar.getXRot()))).append("m")
-                    , true);
-
-//            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.yaw")
-//                            .append(Component.literal(FormatTool.format1D(mortar.getYRot(), "°"))),
-//                    w / 2 + 12, h / 2 - 36, -1, false);
-//            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
-//                            .append(Component.literal(FormatTool.format1D(-mortar.getXRot(), "°"))),
-//                    w / 2 + 12, h / 2 - 28, -1, false);
+            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
+                            .append(Component.literal(FormatTool.format1D(-mortar.getXRot(), "°"))),
+                    w / 2 - 90, h / 2 - 26, -1, false);
+            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.yaw")
+                            .append(Component.literal(FormatTool.format1D(mortar.getYRot(), "°"))),
+                    w / 2 - 90, h / 2 - 16, -1, false);
+            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.range")
+                            .append(Component.literal(FormatTool.format1D((int) RangeHelper.getRange(-mortar.getXRot()), "m"))),
+                    w / 2 - 90, h / 2 - 6, -1, false);
         }
     }
 }
