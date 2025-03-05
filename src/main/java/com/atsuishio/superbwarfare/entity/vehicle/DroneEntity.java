@@ -12,6 +12,7 @@ import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.Monitor;
+import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
 import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -43,6 +44,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -79,6 +83,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public int collisionCoolDown;
     public double lastTickSpeed;
     public double lastTickVerticalSpeed;
+    public ItemStack currentItem = ItemStack.EMPTY;
 
     public float pitch;
     public float pitchO;
@@ -156,6 +161,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("Ammo", this.entityData.get(AMMO));
         compound.putInt("KamikazeMode", this.entityData.get(KAMIKAZE_MODE));
+        compound.put("Item", this.currentItem.save(compound));
     }
 
     @Override
@@ -174,6 +180,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             this.entityData.set(AMMO, compound.getInt("Ammo"));
         if (compound.contains("KamikazeMode"))
             this.entityData.set(KAMIKAZE_MODE, compound.getInt("KamikazeMode"));
+        if (compound.contains("Item"))
+            this.currentItem = ItemStack.of(compound.getCompound("Item"));
     }
 
     @Override
@@ -265,12 +273,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             int maxDistance = playerTicketManager.viewDistance;
 
             if (this.position().vectorTo(player.position()).horizontalDistance() > maxDistance * 16) {
-                upInputDown = false;
-                downInputDown = false;
-                forwardInputDown = false;
-                backInputDown = false;
-                leftInputDown = false;
-                rightInputDown = false;
+                this.upInputDown = false;
+                this.downInputDown = false;
+                this.forwardInputDown = false;
+                this.backInputDown = false;
+                this.leftInputDown = false;
+                this.rightInputDown = false;
+
                 Vec3 toVec = position().vectorTo(player.position()).normalize();
                 setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0, toVec.z).scale(0.2)));
             }
@@ -338,20 +347,20 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             }
 
             // 返还神风弹药
-            if (this.entityData.get(KAMIKAZE_MODE) == 1) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELL.get()));
-            } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.C4_BOMB.get()));
+            if (this.entityData.get(KAMIKAZE_MODE) != 0) {
+                ItemHandlerHelper.giveItemToPlayer(player, this.currentItem);
             }
 
             player.getInventory().items.stream().filter(stack_ -> stack_.getItem() == ModItems.MONITOR.get())
-                    .forEach(stack_ -> {
-                        if (stack_.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
-                            Monitor.disLink(stack_, player);
+                    .forEach(itemStack -> {
+                        if (itemStack.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
+                            Monitor.disLink(itemStack, player);
                         }
                     });
 
-            if (!this.level().isClientSide()) this.discard();
+            if (!this.level().isClientSide()) {
+                this.discard();
+            }
         } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && this.entityData.get(KAMIKAZE_MODE) == 0) {
             // 装载普通弹药
             if (this.entityData.get(AMMO) < 6) {
@@ -363,17 +372,24 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
             }
-        } else if (stack.getItem() == ModItems.MORTAR_SHELL.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+        } else if (stack.getItem() instanceof MortarShell && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
             // 迫击炮神风
+            var copy = stack.copy();
+            copy.setCount(1);
+            this.currentItem = copy;
+
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
             this.entityData.set(KAMIKAZE_MODE, 1);
+
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
         } else if (stack.getItem() == ModItems.C4_BOMB.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
             // C4神风
+            this.currentItem = new ItemStack(stack.getItem(), 1);
+
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
@@ -430,10 +446,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         boolean down = this.downInputDown;
 
         if (up) {
-            holdTickY ++;
+            holdTickY++;
             this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.06f * Math.min(holdTickY, 5), 0.9f));
         } else if (down) {
-            holdTickY ++;
+            holdTickY++;
             this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.06f * Math.min(holdTickY, 5), -0.9f));
         } else {
             holdTickY = 0;
@@ -591,11 +607,30 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         explosion.finalizeExplosion(false);
         if (mode == 1) {
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+
+            if (this.currentItem.getItem() instanceof MortarShell) {
+                this.createAreaCloud(PotionUtils.getPotion(this.currentItem), this.level(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get());
+            }
         }
 
         if (mode == 2) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
+    }
+
+    private void createAreaCloud(Potion potion, Level level, int duration, float radius) {
+        if (potion == Potions.EMPTY) return;
+
+        AreaEffectCloud cloud = new AreaEffectCloud(level, this.getX() + 0.75 * getDeltaMovement().x, this.getY() + 0.5 * getBbHeight() + 0.75 * getDeltaMovement().y, this.getZ() + 0.75 * getDeltaMovement().z);
+        cloud.setPotion(potion);
+        cloud.setDuration(duration);
+        cloud.setRadius(radius);
+
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+        if (controller != null) {
+            cloud.setOwner(controller);
+        }
+        level.addFreshEntity(cloud);
     }
 
     @Override
