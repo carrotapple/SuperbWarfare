@@ -58,12 +58,15 @@ public class MinecraftMixin {
             return;
         }
 
+        var seatIndex = vehicle.getSeatIndex(player);
+
         // 数字键 武器切换
         if (vehicle instanceof WeaponVehicleEntity weaponVehicle
                 && !Screen.hasShiftDown()
-                && weaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
+                && weaponVehicle.hasWeapon(seatIndex)
+                && weaponVehicle.getWeaponType(seatIndex) != index
         ) {
-            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(vehicle.getSeatIndex(player), index, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
             ci.cancel();
         }
     }
