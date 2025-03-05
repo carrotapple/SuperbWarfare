@@ -128,7 +128,7 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
             this.entityData.set(FIRE_TIME, 25);
 
             if (!player.isCreative()) {
-                player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELL.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+                stack.shrink(1);
             }
             if (!this.level().isClientSide()) {
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
