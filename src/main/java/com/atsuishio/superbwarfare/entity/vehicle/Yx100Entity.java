@@ -166,7 +166,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .multiply(0.15f, ModDamageTypes.PROJECTILE_BOOM)
                 .multiply(0.1f, ModDamageTypes.MINE)
                 .multiply(0.1f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.17f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.19f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.03f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(9);
     }
@@ -437,7 +437,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             if (this.cannotFire) return;
 
             Matrix4f transform = getGunTransform();
-            Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
+            Vector4f worldPosition = transformPosition(transform, 0, -0.2f, 0);
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)
@@ -445,7 +445,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                     .headShot(2f)
                     .zoom(false);
 
-            projectile.bypassArmorRate(1f);
+            projectile.bypassArmorRate(0.4f);
             projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
             projectile.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.02f);
             this.level().addFreshEntity(projectile);
@@ -461,7 +461,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             }
 
             this.entityData.set(FIRE_TIME, 2);
-            this.entityData.set(MACHINE_GUN_HEAT, this.entityData.get(MACHINE_GUN_HEAT) + 3);
+            this.entityData.set(MACHINE_GUN_HEAT, this.entityData.get(MACHINE_GUN_HEAT) + 4);
 
             Level level = player.level();
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -737,11 +737,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         int i = this.getOrderedPassengers().indexOf(passenger);
 
         if (i == 0) {
-            Vector4f worldPosition = transformPosition(transform, 0.8669625f, 0.2f, 0.6076875f);
+            Vector4f worldPosition = transformPosition(transform, 0.8669625f, -1.3f, 0.6076875f);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         } else if (i == 1) {
-            Vector4f worldPosition = transformPosition(transform, -0.87890625f, 0.5f, -0.6640625f);
+            Vector4f worldPosition = transformPosition(transform, -0.87890625f, -1f, -0.6640625f);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
@@ -894,7 +894,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         if (player == getNthEntity(1)) {
-            return 600;
+            return 500;
         }
         return 15;
     }

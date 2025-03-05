@@ -234,7 +234,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 .headShot(2f)
                 .zoom(false);
 
-        projectile.bypassArmorRate(1f);
+        projectile.bypassArmorRate(0.4f);
         projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
         projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
                 (float) 0.4);
@@ -259,7 +259,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             }
         }
 
-        this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
+        this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
         this.entityData.set(FIRE_ANIM, 3);
 
         boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
