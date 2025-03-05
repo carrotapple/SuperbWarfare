@@ -278,7 +278,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
             int durability;
             boolean salvoShoot = consumed == 2;
 
-            if (getWeaponType(0) == 0) {
+            if (getWeaponType(0) == 1) {
+                // HE
                 hitDamage = VehicleConfig.MLE1934_HE_DAMAGE.get();
                 explosionRadius = VehicleConfig.MLE1934_HE_EXPLOSION_RADIUS.get();
                 explosionDamage = VehicleConfig.MLE1934_HE_EXPLOSION_DAMAGE.get();
@@ -286,6 +287,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
                 fireTime = 5;
                 durability = 1;
             } else {
+                // AP
                 hitDamage = VehicleConfig.MLE1934_AP_DAMAGE.get();
                 explosionRadius = VehicleConfig.MLE1934_AP_EXPLOSION_RADIUS.get();
                 explosionDamage = VehicleConfig.MLE1934_AP_EXPLOSION_DAMAGE.get();
