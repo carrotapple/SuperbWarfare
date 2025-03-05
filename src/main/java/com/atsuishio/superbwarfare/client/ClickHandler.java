@@ -160,7 +160,7 @@ public class ClickHandler {
                 && weaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
         ) {
             int index = vehicle.getSeatIndex(player);
-            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll));
+            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll, true));
             event.setCanceled(true);
         }
 

@@ -2,7 +2,9 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.network.message.ChangeVehicleSeatMessage;
+import com.atsuishio.superbwarfare.network.message.SwitchVehicleWeaponMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
@@ -28,22 +30,41 @@ public class MinecraftMixin {
     public Options options;
 
     /**
-     * 未按住shift且在可切换座位的载具上时，禁用快捷栏切换，发送切换座位消息
+     * 在可切换座位的载具上，按下shift+数字键时切换座位
+     * 在有武器的载具上，按下数字键时切换武器
      */
     @Inject(method = "handleKeybinds()V", at = @At("HEAD"), cancellable = true)
     private void handleKeybinds(CallbackInfo ci) {
-        if (player != null && player.getVehicle() instanceof VehicleEntity vehicle && vehicle.getMaxPassengers() > 1
-                && !Screen.hasShiftDown()) {
-            for (int i = 0; i < 9; ++i) {
-                if (options.keyHotbarSlots[i].consumeClick()) {
-                    ci.cancel();
+        if (player == null || !(player.getVehicle() instanceof VehicleEntity vehicle)) return;
 
-                    if (i < vehicle.getMaxPassengers() && vehicle.getNthEntity(i) == null) {
-                        ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(i));
-                        vehicle.changeSeat(player, i);
-                    }
-                }
+        var index = -1;
+        for (int i = 0; i < 9; ++i) {
+            if (options.keyHotbarSlots[i].consumeClick()) {
+                index = i;
+                break;
             }
+        }
+        if (index == -1) return;
+
+        // shift+数字键 座位更改
+        if (vehicle.getMaxPassengers() > 1
+                && Screen.hasShiftDown()
+                && index < vehicle.getMaxPassengers()
+                && vehicle.getNthEntity(index) == null
+        ) {
+            ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
+            vehicle.changeSeat(player, index);
+            ci.cancel();
+            return;
+        }
+
+        // 数字键 武器切换
+        if (vehicle instanceof WeaponVehicleEntity weaponVehicle
+                && !Screen.hasShiftDown()
+                && weaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
+        ) {
+            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(vehicle.getSeatIndex(player), index, false));
+            ci.cancel();
         }
     }
 }

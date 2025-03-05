@@ -438,7 +438,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void travel() {
         Entity passenger0 = this.getFirstPassenger();
-        
+
         if (this.getEnergy() <= 0) return;
 
         if (passenger0 == null) {
@@ -758,18 +758,19 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     @Override
-    public void changeWeapon(int index, int scroll) {
+    public void changeWeapon(int index, int value, boolean isScroll) {
         if (index != 0) return;
 
-        var type = (getWeaponType(0) + scroll + 3) % 3;
-        setWeaponType(0, type);
+        var type = isScroll ? (value + getWeaponType(0)) % 2 : value;
 
         var sound = switch (type) {
             case 0, 2 -> ModSounds.INTO_MISSILE.get();
             case 1 -> ModSounds.INTO_CANNON.get();
-            default -> throw new IllegalStateException("Unexpected type: " + type);
+            default -> null;
         };
+        if (sound == null) return;
 
+        setWeaponType(0, type);
         this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
     }
 

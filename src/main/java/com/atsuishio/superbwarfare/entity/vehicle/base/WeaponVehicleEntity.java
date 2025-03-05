@@ -17,10 +17,11 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
     /**
      * 切换武器事件
      *
-     * @param index  武器槽位
-     * @param scroll 滚动值，-1~1之间的整数
+     * @param index    武器槽位
+     * @param value    数值（可能为-1~1之间的滚动，或绝对数值）
+     * @param isScroll 是否是滚动事件
      */
-    default void changeWeapon(int index, int scroll) {
+    default void changeWeapon(int index, int value, boolean isScroll) {
     }
 
     /**

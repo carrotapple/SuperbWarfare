@@ -11,20 +11,24 @@ import java.util.function.Supplier;
 public class SwitchVehicleWeaponMessage {
     private final int index;
 
-    private final double scroll;
+    private final double value;
 
-    public SwitchVehicleWeaponMessage(int index, double scroll) {
+    private final boolean isScroll;
+
+    public SwitchVehicleWeaponMessage(int index, double value, boolean isScroll) {
         this.index = index;
-        this.scroll = scroll;
+        this.value = value;
+        this.isScroll = isScroll;
     }
 
     public static void encode(SwitchVehicleWeaponMessage message, FriendlyByteBuf byteBuf) {
         byteBuf.writeInt(message.index);
-        byteBuf.writeDouble(message.scroll);
+        byteBuf.writeDouble(message.value);
+        byteBuf.writeBoolean(message.isScroll);
     }
 
     public static SwitchVehicleWeaponMessage decode(FriendlyByteBuf byteBuf) {
-        return new SwitchVehicleWeaponMessage(byteBuf.readInt(), byteBuf.readDouble());
+        return new SwitchVehicleWeaponMessage(byteBuf.readInt(), byteBuf.readDouble(), byteBuf.readBoolean());
     }
 
     public static void handler(SwitchVehicleWeaponMessage message, Supplier<NetworkEvent.Context> context) {
@@ -35,7 +39,8 @@ public class SwitchVehicleWeaponMessage {
             }
 
             if (player.getVehicle() instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.isDriver(player)) {
-                weaponVehicle.changeWeapon(message.index, Mth.clamp(message.scroll > 0 ? Mth.ceil(message.scroll) : Mth.floor(message.scroll), -1, 1));
+                var value = message.isScroll ? (Mth.clamp(message.value > 0 ? Mth.ceil(message.value) : Mth.floor(message.value), -1, 1)) : message.value;
+                weaponVehicle.changeWeapon(message.index, (int) value, message.isScroll);
             }
         });
         context.get().setPacketHandled(true);
