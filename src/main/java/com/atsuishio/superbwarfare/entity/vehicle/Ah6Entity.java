@@ -155,7 +155,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         propellerRotO = this.getPropellerRot();
         super.baseTick();
 
-        setZRot(getRoll() * 0.99f);
+        setZRot(getRoll() * (backInputDown ? 0.9f : 0.99f));
 
         if (heat > 0) {
             heat--;
@@ -352,14 +352,14 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
         Vector3f direction = getRightDirection().mul(-Math.sin(this.getRoll() * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(backInputDown ? 0.1 : 2.5)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(3)));
 
 //        if (passenger instanceof Player player) {
 //            player.displayClientMessage(Component.literal(this.getRoll() + ""), true);
 //        }
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(backInputDown ? 0.1 : 2)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(3)));
 
         if (this.entityData.get(POWER) > 0.04f) {
             engineStartOver = true;
@@ -527,7 +527,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
         Matrix4f transform = getVehicleTransform();
@@ -700,7 +700,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 360;
     }
 

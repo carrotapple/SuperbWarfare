@@ -29,7 +29,7 @@ public class VehicleFireMessage {
                 var player = context.getSender();
 
                 if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle) {
-                    iVehicle.vehicleShoot(player);
+                    iVehicle.vehicleShoot(player, message.type);
                 }
             }
         });

@@ -94,9 +94,9 @@ public abstract class CameraMixin {
                     setRotation(-Mth.lerp(partialTicks, yx100.turretYRotO - yx100.yRotO, yx100.getTurretYRot() - yx100.getYRot()), Mth.lerp(partialTicks, yx100.turretXRotO - yx100.xRotO, yx100.getTurretXRot() - yx100.getXRot()));
                     setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
                     info.cancel();
-                } else {
-                    setRotation(Mth.lerp(partialTicks, player.yHeadRotO, player.getYHeadRot()), Mth.lerp(partialTicks, player.xRotO, player.getXRot()));
-                    setPosition(Mth.lerp(partialTicks, player.xo, player.getX()) - 6 * player.getViewVector(partialTicks).x, Mth.lerp(partialTicks, player.yo + player.getEyeHeight() + 1, player.getEyeY() + 1) - 6 * player.getViewVector(partialTicks).y, Mth.lerp(partialTicks, player.zo, player.getZ()) - 6 * player.getViewVector(partialTicks).z);
+                } else if (yx100.getNthEntity(1) == player) {
+                    setRotation(-Mth.lerp(partialTicks, yx100.gunYRotO - yx100.yRotO, yx100.getGunYRot() - yx100.getYRot()), Mth.lerp(partialTicks, yx100.gunXRotO - yx100.xRotO, yx100.getGunXRot() - yx100.getXRot()));
+                    setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
                     info.cancel();
                 }
                 return;

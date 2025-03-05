@@ -225,7 +225,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
      * 机枪塔开火
      */
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         if (this.cannotFire) return;
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -497,7 +497,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 500;
     }
 

@@ -126,7 +126,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
         if (stack.is(ModItems.CROWBAR.get()) && !player.isCrouching()) {
             if (this.entityData.get(COOL_DOWN) == 0) {
-                vehicleShoot(player);
+                vehicleShoot(player, 0);
                 entityData.set(SHOOTER_UUID, player.getStringUUID());
             }
             return InteractionResult.SUCCESS;
@@ -442,7 +442,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -588,7 +588,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 0;
     }
 

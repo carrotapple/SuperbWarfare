@@ -277,7 +277,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
         Matrix4f transform = getBarrelTransform();
@@ -662,7 +662,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         if (getWeaponType(0) == 0) {
             return 300;
         } else if (getWeaponType(0) == 1) {

@@ -119,7 +119,7 @@ public class ClickHandler {
         if (stack.is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
                 || stack.is(ModItems.LUNGE_MINE.get())
-                || (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
+                || (player.getVehicle() instanceof ArmedVehicleEntity)
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -310,8 +310,8 @@ public class ClickHandler {
         }
 
 
-        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
-            if (iVehicle.isDriver(player)) {
+        if (player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.banHand(player)) {
+            if (player.getVehicle() instanceof VehicleEntity pVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player))) {
                 ClientEventHandler.holdFireVehicle = true;
             }
             return;

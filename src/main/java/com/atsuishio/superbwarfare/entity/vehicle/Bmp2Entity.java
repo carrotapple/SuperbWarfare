@@ -308,7 +308,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         Matrix4f transform = getBarrelTransform();
         if (getWeaponType(0) == 0) {
             if (this.cannotFire) return;
@@ -716,7 +716,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         if (getWeaponType(0) == 0) {
             return 250;
         } else if (getWeaponType(0) == 1) {

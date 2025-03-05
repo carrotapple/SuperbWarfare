@@ -113,7 +113,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
         if (stack.getItem() instanceof CannonShellItem) {
             if (this.entityData.get(COOL_DOWN) == 0) {
-                vehicleShoot(player);
+                vehicleShoot(player, 0);
             }
             return InteractionResult.SUCCESS;
         }
@@ -265,7 +265,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -491,7 +491,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 0;
     }
 

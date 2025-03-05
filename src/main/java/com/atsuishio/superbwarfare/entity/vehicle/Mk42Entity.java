@@ -108,7 +108,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
         if (stack.getItem() instanceof CannonShellItem) {
             if (this.entityData.get(COOL_DOWN) == 0) {
-                vehicleShoot(player);
+                vehicleShoot(player, 0);
             }
             return InteractionResult.SUCCESS;
         }
@@ -253,7 +253,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -397,7 +397,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 0;
     }
 

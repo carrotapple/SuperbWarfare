@@ -10,7 +10,7 @@ public interface ArmedVehicleEntity {
      *
      * @param player 玩家
      */
-    void vehicleShoot(Player player);
+    void vehicleShoot(Player player, int type);
 
     /**
      * 判断指定玩家是否是载具驾驶员
@@ -30,7 +30,7 @@ public interface ArmedVehicleEntity {
      *
      * @return 射速
      */
-    int mainGunRpm();
+    int mainGunRpm(Player player);
 
     /**
      * 当前情况载具是否可以开火

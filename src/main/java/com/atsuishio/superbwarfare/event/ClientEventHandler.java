@@ -64,6 +64,7 @@ import java.util.function.Supplier;
 
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
+import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.MACHINE_GUN_HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -701,8 +702,8 @@ public class ClientEventHandler {
             holdFireVehicle = false;
         }
 
-        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
-            int rpm = iVehicle.mainGunRpm();
+        if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player)) && iVehicle.canShoot(player)) {
+            int rpm = iVehicle.mainGunRpm(player);
             if (rpm == 0) {
                 rpm = 240;
             }
@@ -718,8 +719,8 @@ public class ClientEventHandler {
                 }
 
                 if (clientTimerVehicle.getProgress() >= cooldown) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
-                    playVehicleClientSounds(player, iVehicle);
+                    ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(pVehicle.getSeatIndex(player)));
+                    playVehicleClientSounds(player, iVehicle, pVehicle.getSeatIndex(player));
                     clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
                 }
             } else if (clientTimerVehicle.getProgress() >= cooldown) {
@@ -730,47 +731,51 @@ public class ClientEventHandler {
         }
     }
 
-    public static void playVehicleClientSounds(Player player, ArmedVehicleEntity iVehicle) {
+    public static void playVehicleClientSounds(Player player, WeaponVehicleEntity iVehicle, int type) {
         if (iVehicle instanceof SpeedboatEntity speedboat) {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
 
-        if (iVehicle instanceof WeaponVehicleEntity) {
-            if (iVehicle instanceof Ah6Entity ah6Entity) {
-                float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - ah6Entity.heat));
-                if (ah6Entity.getWeaponType(0) == 0) {
-                    ah6Entity.heat += 5;
-                    player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
-                } else if (ah6Entity.getWeaponType(0) == 1) {
-                    player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
-                }
+        if (iVehicle instanceof Ah6Entity ah6Entity) {
+            float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - ah6Entity.heat));
+            if (ah6Entity.getWeaponType(0) == 0) {
+                ah6Entity.heat += 5;
+                player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
+            } else if (ah6Entity.getWeaponType(0) == 1) {
+                player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
             }
-            if (iVehicle instanceof Lav150Entity lav150) {
-                if (lav150.getWeaponType(0) == 0) {
-                    float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(HEAT)));
-                    player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
-                    player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
-                } else if (lav150.getWeaponType(0) == 1) {
-                    float pitch = lav150.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(COAX_HEAT)));
-                    player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
-                }
+        }
+        if (iVehicle instanceof Lav150Entity lav150) {
+            if (lav150.getWeaponType(0) == 0) {
+                float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(HEAT)));
+                player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
+                player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+            } else if (lav150.getWeaponType(0) == 1) {
+                float pitch = lav150.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - lav150.getEntityData().get(COAX_HEAT)));
+                player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
+            }
 
+        }
+        if (iVehicle instanceof Bmp2Entity bmp2) {
+            if (bmp2.getWeaponType(0) == 0) {
+                float pitch = bmp2.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(HEAT)));
+                player.playSound(ModSounds.BMP_CANNON_FIRE_1P.get(), 1f, pitch);
+                player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+            } else if (bmp2.getWeaponType(0) == 1) {
+                float pitch = bmp2.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(COAX_HEAT)));
+                player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
+            } else if (bmp2.getWeaponType(0) == 2) {
+                player.playSound(ModSounds.BMP_MISSILE_FIRE_1P.get(), 1f, 1);
             }
-            if (iVehicle instanceof Bmp2Entity bmp2) {
-                if (bmp2.getWeaponType(0) == 0) {
-                    float pitch = bmp2.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(HEAT)));
-                    player.playSound(ModSounds.BMP_CANNON_FIRE_1P.get(), 1f, pitch);
-                    player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
-                } else if (bmp2.getWeaponType(0) == 1) {
-                    float pitch = bmp2.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - bmp2.getEntityData().get(COAX_HEAT)));
-                    player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
-                } else if (bmp2.getWeaponType(0) == 2) {
-                    player.playSound(ModSounds.BMP_MISSILE_FIRE_1P.get(), 1f, 1);
-                }
-            }
-            if (iVehicle instanceof Yx100Entity) {
+        }
+        if (iVehicle instanceof Yx100Entity yx100) {
+            if (type == 1) {
+                float pitch = yx100.getEntityData().get(MACHINE_GUN_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - yx100.getEntityData().get(MACHINE_GUN_HEAT)));
+                player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
+                player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+            } else {
                 player.playSound(ModSounds.YX_100_FIRE_1P.get(), 1f, 1);
             }
         }

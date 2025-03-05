@@ -111,7 +111,7 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, CannonEn
     }
 
     @Override
-    public void vehicleShoot(Player player) {
+    public void vehicleShoot(Player player, int type) {
     }
 
 
@@ -160,7 +160,7 @@ public class Yx100GunEntity extends VehicleEntity implements GeoEntity, CannonEn
     }
 
     @Override
-    public int mainGunRpm() {
+    public int mainGunRpm(Player player) {
         return 600;
     }
 

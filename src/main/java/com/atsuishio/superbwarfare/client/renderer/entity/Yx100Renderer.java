@@ -65,6 +65,13 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
             bone.setRotX(-Mth.lerp(partialTick, animatable.turretXRotO, animatable.getTurretXRot()) * Mth.DEG_TO_RAD);
         }
 
+        if (name.equals("jiqiang")) {
+            bone.setRotY(Mth.lerp(partialTick, animatable.gunYRotO, animatable.getGunYRot()) * Mth.DEG_TO_RAD - (animatable.getNthEntity(1) == null ? 0 : Mth.lerp(partialTick, animatable.turretYRotO, animatable.getTurretYRot()) * Mth.DEG_TO_RAD));
+        }
+        if (name.equals("qiangguan")) {
+            bone.setRotX(-Mth.lerp(partialTick, animatable.gunXRotO, animatable.getGunXRot()) * Mth.DEG_TO_RAD);
+        }
+
         if (name.equals("flare")) {
             bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         }
