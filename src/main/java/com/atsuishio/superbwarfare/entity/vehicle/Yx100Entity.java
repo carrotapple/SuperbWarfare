@@ -11,7 +11,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.mojang.math.Axis;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -33,7 +36,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -60,7 +62,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
-import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
@@ -798,11 +799,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void destroy() {
-        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 80f,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), getAttacker(), getAttacker()), 80f,
                     this.getX(), this.getY(), this.getZ(), 5f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -810,24 +809,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
 
-
-        List<Entity> passengers = this.getPassengers();
-        for (var entity : passengers) {
-            if (entity instanceof LivingEntity living) {
-                var tempAttacker = living == attacker ? null : attacker;
-
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-            }
-        }
-
+        explodePassengers();
         this.discard();
     }
 
@@ -901,15 +883,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public boolean canShoot(Player player) {
-        if (player == getNthEntity(0)) {
-            return this.entityData.get(LOADED_AMMO) > 0;
-        }
-
-        if (player == getNthEntity(1)) {
-            return (this.entityData.get(MG_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
-        }
-
-        return false;
+        return switch (getSeatIndex(player)) {
+            case 0 -> this.entityData.get(LOADED_AMMO) > 0;
+            case 1 ->
+                    (this.entityData.get(MG_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
+            default -> false;
+        };
     }
 
     @Override
@@ -964,18 +943,19 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public int getWeaponType(int index) {
-        if (index == 0) {
-            return entityData.get(WEAPON_TYPE);
-        } else if (index == 1) {
-            return entityData.get(PASSENGER_WEAPON_TYPE);
-        }
-        return -1;
+        return switch (index) {
+            case 0 -> entityData.get(WEAPON_TYPE);
+            case 1 -> entityData.get(PASSENGER_WEAPON_TYPE);
+            default -> -1;
+        };
     }
 
     @Override
     public void setWeaponType(int index, int type) {
-        if (index == 0) entityData.set(WEAPON_TYPE, type);
-        if (index == 1) entityData.set(PASSENGER_WEAPON_TYPE, type);
+        switch (index) {
+            case 0 -> entityData.set(WEAPON_TYPE, type);
+            case 1 -> entityData.set(PASSENGER_WEAPON_TYPE, type);
+        }
     }
 
     @Override

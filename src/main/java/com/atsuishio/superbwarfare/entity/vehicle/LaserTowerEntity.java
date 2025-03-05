@@ -241,13 +241,14 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 10f,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker, attacker), 10f,
                     this.getX(), this.getY(), this.getZ(), 3f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
+
         this.discard();
     }
 

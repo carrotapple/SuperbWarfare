@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -30,7 +29,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
@@ -47,8 +45,6 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.List;
 
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
@@ -301,47 +297,10 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
-        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        if (this.crash) {
-            List<Entity> passengers = this.getPassengers();
-            for (var entity : passengers) {
-                if (entity instanceof LivingEntity living) {
-                    var tempAttacker = living == attacker ? null : attacker;
-
-                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                }
-            }
-        } else {
-            List<Entity> passengers = this.getPassengers();
-            for (var entity : passengers) {
-                if (entity instanceof LivingEntity living) {
-                    var tempAttacker = living == attacker ? null : attacker;
-
-                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                    living.invulnerableTime = 0;
-                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                }
-            }
-        }
-
         if (level() instanceof ServerLevel) {
             if (entityData.get(MELON)) {
                 CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(),
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, getAttacker()), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(),
                         this.getX(), this.getY(), this.getZ(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get().floatValue(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
                 explosion.explode();
                 ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -349,7 +308,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                 ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
             } else {
                 CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 15.0f,
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, getAttacker()), 15.0f,
                         this.getX(), this.getY(), this.getZ(), 2f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
                 explosion.explode();
                 ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -358,6 +317,11 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             }
         }
 
+        if (this.crash) {
+            crashPassengers();
+        } else {
+            explodePassengers();
+        }
         this.discard();
     }
 

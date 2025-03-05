@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,7 +50,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
-import java.util.List;
 
 public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity {
 
@@ -218,11 +216,9 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
     @Override
     public void destroy() {
-        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 100f,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), getAttacker(), getAttacker()), 100f,
                     this.getX(), this.getY(), this.getZ(), 7f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -230,26 +226,8 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
 
-
-        List<Entity> passengers = this.getPassengers();
-        for (var entity : passengers) {
-            if (entity instanceof LivingEntity living) {
-                var tempAttacker = living == attacker ? null : attacker;
-
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-            }
-        }
-
+        explodePassengers();
         this.discard();
-
     }
 
     @Override

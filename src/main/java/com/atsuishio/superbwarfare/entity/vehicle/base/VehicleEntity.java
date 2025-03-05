@@ -532,6 +532,46 @@ public abstract class VehicleEntity extends Entity {
     public void destroy() {
     }
 
+    protected Entity getAttacker() {
+        return EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+    }
+
+    protected void crashPassengers() {
+        for (var entity : this.getPassengers()) {
+            if (entity instanceof LivingEntity living) {
+                var tempAttacker = living == getAttacker() ? null : getAttacker();
+
+                living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+            }
+        }
+    }
+
+    protected void explodePassengers() {
+        for (var entity : this.getPassengers()) {
+            if (entity instanceof LivingEntity living) {
+                var tempAttacker = living == getAttacker() ? null : getAttacker();
+
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+            }
+        }
+    }
+
     public void travel() {
     }
 

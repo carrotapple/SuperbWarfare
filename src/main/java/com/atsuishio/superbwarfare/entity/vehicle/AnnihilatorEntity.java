@@ -56,7 +56,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
-import java.util.List;
 
 public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity, CannonEntity {
 
@@ -408,11 +407,9 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
     @Override
     public void destroy() {
-        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 600f,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), getAttacker(), getAttacker()), 600f,
                     this.getX(), this.getY(), this.getZ(), 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -420,24 +417,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
 
-
-        List<Entity> passengers = this.getPassengers();
-        for (var entity : passengers) {
-            if (entity instanceof LivingEntity living) {
-                var tempAttacker = living == attacker ? null : attacker;
-
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-                living.invulnerableTime = 0;
-                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
-            }
-        }
-
+        explodePassengers();
         this.discard();
     }
 
