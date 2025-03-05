@@ -687,7 +687,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     public void changeWeapon(int index, int value, boolean isScroll) {
         if (index != 0) return;
 
-        int type = isScroll ? (value + getWeaponType(0)) % 2 : value;
+        int type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
 
         var sound = switch (type) {
             case 0 -> ModSounds.INTO_MISSILE.get();

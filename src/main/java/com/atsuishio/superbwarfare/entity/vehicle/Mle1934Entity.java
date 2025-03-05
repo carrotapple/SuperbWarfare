@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -61,6 +62,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.MLE1934_HP.get();
 
+    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
+
     public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MLE_1934.get(), world);
     }
@@ -76,6 +79,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         this.entityData.define(TYPE, 0);
         this.entityData.define(PITCH, 0f);
         this.entityData.define(YAW, 0f);
+        this.entityData.define(WEAPON_TYPE, 0);
     }
 
     @Override
@@ -111,6 +115,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
         if (stack.getItem() instanceof CannonShellItem) {
             if (this.entityData.get(COOL_DOWN) == 0) {
+                var weaponType = stack.is(ModItems.AP_5_INCHES.get()) ? 0 : 1;
+                setWeaponType(0, weaponType);
                 vehicleShoot(player, 0);
             }
             return InteractionResult.SUCCESS;
@@ -246,48 +252,46 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
     @Override
     public void vehicleShoot(Player player, int type) {
-        if (this.entityData.get(COOL_DOWN) > 0) {
-            return;
-        }
+        if (this.entityData.get(COOL_DOWN) > 0) return;
 
         Level level = player.level();
         if (level instanceof ServerLevel server) {
-            ItemStack stack = player.getMainHandItem();
+            var isCreative = player.isCreative() || InventoryTool.countItem(player.getInventory().items, ModItems.CREATIVE_AMMO_BOX.get()) > 0;
 
-            if (!(stack.getItem() instanceof CannonShellItem)) {
-                return;
+            int consumed;
+            if (isCreative) {
+                consumed = 2;
+            } else {
+                var ammo = getWeaponType(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
+                var ammoCount = InventoryTool.countItem(player.getInventory().items, ammo);
+
+                // 尝试消耗两发弹药
+                if (ammoCount <= 0) return;
+                consumed = InventoryTool.consumeItem(player.getInventory().items, ammo, 2);
             }
 
-            float hitDamage = 0;
-            float explosionRadius = 0;
-            float explosionDamage = 0;
-            float fireProbability = 0;
-            int fireTime = 0;
-            int durability = 0;
-            boolean salvoShoot = false;
+            float hitDamage;
+            float explosionRadius;
+            float explosionDamage;
+            float fireProbability;
+            int fireTime;
+            int durability;
+            boolean salvoShoot = consumed == 2;
 
-            if (stack.is(ModItems.HE_5_INCHES.get())) {
+            if (getWeaponType(0) == 0) {
                 hitDamage = VehicleConfig.MLE1934_HE_DAMAGE.get();
                 explosionRadius = VehicleConfig.MLE1934_HE_EXPLOSION_RADIUS.get();
                 explosionDamage = VehicleConfig.MLE1934_HE_EXPLOSION_DAMAGE.get();
                 fireProbability = 0.24F;
                 fireTime = 5;
                 durability = 1;
-                salvoShoot = stack.getCount() > 1 || player.isCreative();
-            }
-
-            if (stack.is(ModItems.AP_5_INCHES.get())) {
+            } else {
                 hitDamage = VehicleConfig.MLE1934_AP_DAMAGE.get();
                 explosionRadius = VehicleConfig.MLE1934_AP_EXPLOSION_RADIUS.get();
                 explosionDamage = VehicleConfig.MLE1934_AP_EXPLOSION_DAMAGE.get();
                 fireProbability = 0;
                 fireTime = 0;
                 durability = 70;
-                salvoShoot = stack.getCount() > 1 || player.isCreative();
-            }
-
-            if (!player.isCreative()) {
-                stack.shrink(salvoShoot ? 2 : 1);
             }
 
             float yRot = this.getYRot();
@@ -392,7 +396,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                ModUtils.queueServerWork(44, () -> SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1));
+                ModUtils.queueServerWork(44, () -> SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_RELOAD.get(), 2, 1));
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
@@ -437,6 +441,32 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         float f1 = Mth.clamp(f, -30.0F, 4.0F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
+    }
+
+    @Override
+    public void setWeaponType(int index, int type) {
+        if (index != 0) return;
+        entityData.set(WEAPON_TYPE, type);
+    }
+
+    @Override
+    public void changeWeapon(int index, int value, boolean isScroll) {
+        if (index != 0) return;
+
+        int type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
+        var sound = switch (type) {
+            case 0, 1 -> ModSounds.CANNON_RELOAD.get();
+            default -> null;
+        };
+        if (sound == null) return;
+
+        setWeaponType(0, type);
+        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
+    }
+
+    @Override
+    public int getWeaponType(int index) {
+        return index == 0 ? entityData.get(WEAPON_TYPE) : -1;
     }
 
     @Override

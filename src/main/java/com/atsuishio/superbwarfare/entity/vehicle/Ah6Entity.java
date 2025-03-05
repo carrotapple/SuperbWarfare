@@ -732,7 +732,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public void changeWeapon(int index, int value, boolean isScroll) {
         if (index != 0) return;
 
-        var type = isScroll ? (value + getWeaponType(0)) % 2 : value;
+        var type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
 
         var sound = switch (type) {
             case 0 -> ModSounds.INTO_MISSILE.get();

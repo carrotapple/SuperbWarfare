@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -139,10 +140,7 @@ public abstract class ContainerMobileVehicleEntity extends MobileVehicleEntity i
      * @return 物品数量
      */
     public int countItem(@NotNull Item item) {
-        return this.getItemStacks().stream()
-                .filter(stack -> stack.is(item))
-                .mapToInt(ItemStack::getCount)
-                .sum();
+        return InventoryTool.countItem(this.getItemStacks(), item);
     }
 
     /**
@@ -153,15 +151,7 @@ public abstract class ContainerMobileVehicleEntity extends MobileVehicleEntity i
      * @return 成功消耗的物品数量
      */
     public int consumeItem(Item item, int count) {
-        int initialCount = count;
-        var items = this.getItemStacks().stream().filter(stack -> stack.is(item)).toList();
-        for (var stack : items) {
-            var countToShrink = Math.min(stack.getCount(), count);
-            stack.shrink(countToShrink);
-            count -= countToShrink;
-            if (count <= 0) break;
-        }
-        return initialCount - count;
+        return InventoryTool.consumeItem(this.getItemStacks(), item, count);
     }
 
     /**
@@ -171,27 +161,10 @@ public abstract class ContainerMobileVehicleEntity extends MobileVehicleEntity i
      * @param count 要插入的数量
      */
     public void insertItem(Item item, int count) {
-        var defaultStack = new ItemStack(item);
-        var maxStackSize = item.getMaxStackSize(defaultStack);
+        var rest = InventoryTool.insertItem(this.getItemStacks(), item, count);
 
-        for (int i = 0; i < this.getItemStacks().size(); i++) {
-            var stack = this.getItemStacks().get(i);
-
-            if (stack.is(item) && stack.getCount() < maxStackSize) {
-                var countToAdd = Math.min(maxStackSize - stack.getCount(), count);
-                stack.grow(countToAdd);
-                count -= countToAdd;
-            } else if (stack.isEmpty()) {
-                var countToAdd = Math.min(maxStackSize, count);
-                this.getItemStacks().set(i, new ItemStack(item, countToAdd));
-                count -= countToAdd;
-            }
-
-            if (count <= 0) break;
-        }
-
-        if (count > 0) {
-            var stackToDrop = new ItemStack(item, count);
+        if (rest > 0) {
+            var stackToDrop = new ItemStack(item, rest);
             this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stackToDrop));
         }
     }

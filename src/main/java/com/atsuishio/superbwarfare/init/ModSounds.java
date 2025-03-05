@@ -342,7 +342,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> MK_42_FIRE_3P = REGISTRY.register("mk_42_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("mk_42_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_42_FAR = REGISTRY.register("mk_42_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("mk_42_far")));
     public static final RegistryObject<SoundEvent> MK_42_VERYFAR = REGISTRY.register("mk_42_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("mk_42_veryfar")));
-    public static final RegistryObject<SoundEvent> MK_42_RELOAD = REGISTRY.register("mk_42_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("mk_42_reload")));
+    public static final RegistryObject<SoundEvent> CANNON_RELOAD = REGISTRY.register("cannon_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("cannon_reload")));
     public static final RegistryObject<SoundEvent> CANNON_ZOOM_IN = REGISTRY.register("cannon_zoom_in", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("cannon_zoom_in")));
     public static final RegistryObject<SoundEvent> CANNON_ZOOM_OUT = REGISTRY.register("cannon_zoom_out", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("cannon_zoom_out")));
 

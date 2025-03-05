@@ -2135,18 +2135,18 @@
       }
     ]
   },
-  "mk_42_reload": {
+  "cannon_reload": {
     "sounds": [
       {
-        "name": "superbwarfare:mk_42/mk_42_reload_01",
+        "name": "superbwarfare:cannon/cannon_reload_01",
         "stream": false
       },
       {
-        "name": "superbwarfare:mk_42/mk_42_reload_02",
+        "name": "superbwarfare:cannon/cannon_reload_02",
         "stream": false
       },
       {
-        "name": "superbwarfare:mk_42/mk_42_reload_03",
+        "name": "superbwarfare:cannon/cannon_reload_03",
         "stream": false
       }
     ]
@@ -2154,7 +2154,7 @@
   "cannon_zoom_in": {
     "sounds": [
       {
-        "name": "superbwarfare:mk_42/cannon_zoom_in",
+        "name": "superbwarfare:cannon/cannon_zoom_in",
         "stream": false
       }
     ]
@@ -2162,7 +2162,7 @@
   "cannon_zoom_out": {
     "sounds": [
       {
-        "name": "superbwarfare:mk_42/cannon_zoom_out",
+        "name": "superbwarfare:cannon/cannon_zoom_out",
         "stream": false
       }
     ]
