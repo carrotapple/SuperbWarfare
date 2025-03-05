@@ -1434,6 +1434,26 @@ public class ClientEventHandler {
         }
     }
 
+    /**
+     * 载具banHand时，禁用快捷栏渲染
+     */
+    @SubscribeEvent
+    public static void handleAvoidRenderingHotbar(RenderGuiOverlayEvent.Pre event) {
+        if (event.getOverlay() != VanillaGuiOverlay.HOTBAR.type()) {
+            return;
+        }
+
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null) {
+            return;
+        }
+
+        if (player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player)) {
+            event.setCanceled(true);
+        }
+    }
+
     public static void handleDrawMessage(boolean draw, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             drawTime = 1;

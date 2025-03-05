@@ -9,10 +9,9 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SwitchVehicleWeaponMessage {
+
     private final int index;
-
     private final double value;
-
     private final boolean isScroll;
 
     public SwitchVehicleWeaponMessage(int index, double value, boolean isScroll) {
@@ -45,5 +44,4 @@ public class SwitchVehicleWeaponMessage {
         });
         context.get().setPacketHandled(true);
     }
-
 }
