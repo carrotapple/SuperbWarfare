@@ -118,6 +118,22 @@ public abstract class VehicleEntity extends Entity {
         this.gameEvent(GameEvent.ENTITY_MOUNT, pPassenger);
     }
 
+    @Override
+    protected void removePassenger(@NotNull Entity pPassenger) {
+        if (pPassenger.getVehicle() == this) {
+            throw new IllegalStateException("Use x.stopRiding(y), not y.removePassenger(x)");
+        }
+
+        var index = getSeatIndex(pPassenger);
+        if (index == -1) return;
+
+        orderedPassengers.set(index, null);
+        this.passengers = ImmutableList.copyOf(orderedPassengers.stream().filter(Objects::nonNull).toList());
+
+        pPassenger.boardingCooldown = 60;
+        this.gameEvent(GameEvent.ENTITY_DISMOUNT, pPassenger);
+    }
+
     @Nullable
     @Override
     public LivingEntity getControllingPassenger() {
@@ -130,16 +146,6 @@ public abstract class VehicleEntity extends Entity {
     @Override
     public Entity getFirstPassenger() {
         return orderedPassengers.get(0);
-    }
-
-    @Override
-    protected void removePassenger(@NotNull Entity pPassenger) {
-        super.removePassenger(pPassenger);
-
-        var index = orderedPassengers.indexOf(pPassenger);
-        if (index != -1) {
-            orderedPassengers.set(index, null);
-        }
     }
 
     /**
