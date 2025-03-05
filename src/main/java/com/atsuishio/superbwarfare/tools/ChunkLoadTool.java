@@ -18,8 +18,10 @@ public class ChunkLoadTool {
     public static void updateLoadedChunks(ServerLevel level, Entity entity, Set<Long> loadedChunks) {
         var x = entity.position().x;
         var z = entity.position().z;
-        var nextX = x + entity.getDeltaMovement().x;
-        var nextZ = z + entity.getDeltaMovement().z;
+
+        float f = entity.isInWater() ? 0.8F : 0.99F;
+        var nextX = x + entity.getDeltaMovement().x * f;
+        var nextZ = z + entity.getDeltaMovement().z * f;
 
         // 加载当前区块和下一tick会进入的区块
         var newChunks = new HashSet<Long>();
