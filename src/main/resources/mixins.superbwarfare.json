@@ -5,6 +5,7 @@
   "refmap": "mixins.superbwarfare.refmap.json",
   "mixins": [
     "ClientboundSetEntityMotionPacketMixin",
+    "ClientboundSetPassengersPacketMixin",
     "EntityMixin",
     "ExplosionMixin",
     "LivingEntityMixin",

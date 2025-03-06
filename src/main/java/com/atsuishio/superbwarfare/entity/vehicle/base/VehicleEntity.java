@@ -55,6 +55,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
@@ -98,24 +99,33 @@ public abstract class VehicleEntity extends Entity {
         return orderedPassengers;
     }
 
+    // 仅在客户端存在的实体顺序获取，用于在客户端正确同步实体座位顺序
+    public Function<Entity, Integer> entityIndexOverride = null;
+
     @Override
-    protected void addPassenger(Entity pPassenger) {
-        if (pPassenger.getVehicle() != this) {
+    protected void addPassenger(@NotNull Entity newPassenger) {
+        if (newPassenger.getVehicle() != this) {
             throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
         }
 
-        int index = 0;
-        for (Entity passenger : orderedPassengers) {
-            if (passenger == null) {
-                break;
-            }
-            index++;
-        }
-        if (index >= getMaxPassengers()) return;
+        int index;
 
-        orderedPassengers.set(index, pPassenger);
+        if (entityIndexOverride != null && entityIndexOverride.apply(newPassenger) != -1) {
+            index = entityIndexOverride.apply(newPassenger);
+        } else {
+            index = 0;
+            for (Entity passenger : orderedPassengers) {
+                if (passenger == null) {
+                    break;
+                }
+                index++;
+            }
+        }
+        if (index >= getMaxPassengers() || index < 0) return;
+
+        orderedPassengers.set(index, newPassenger);
         this.passengers = ImmutableList.copyOf(orderedPassengers.stream().filter(Objects::nonNull).toList());
-        this.gameEvent(GameEvent.ENTITY_MOUNT, pPassenger);
+        this.gameEvent(GameEvent.ENTITY_MOUNT, newPassenger);
     }
 
     @Override

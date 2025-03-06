@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Code based on @Luke100000's ImmersiveAircraft
  */
 @Mixin(ClientPacketListener.class)
-public class ClientPacketListenerMixin {
+public abstract class ClientPacketListenerMixin {
 
     @Shadow
     @Final
@@ -27,6 +28,53 @@ public class ClientPacketListenerMixin {
 
     @Shadow
     private ClientLevel level;
+
+    /**
+     * 正确处理VehicleEntity的带顺序乘客
+     */
+    @Inject(method = "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V", at = @At("HEAD"), cancellable = true)
+    public void vehicleEntityUpdate(ClientboundSetPassengersPacket pPacket, CallbackInfo ci) {
+        PacketUtils.ensureRunningOnSameThread(pPacket, (ClientPacketListener) (Object) this, this.minecraft);
+
+        // 只处理VehicleEntity
+        Entity entity = this.level.getEntity(pPacket.getVehicle());
+        if (!(entity instanceof VehicleEntity vehicle)) return;
+        ci.cancel();
+
+        var player = this.minecraft.player;
+        assert player != null;
+        boolean hasIndirectPassenger = entity.hasIndirectPassenger(player);
+
+        entity.ejectPassengers();
+
+        // 获取排序后的Passengers
+        var passengers = pPacket.getPassengers();
+        vehicle.entityIndexOverride = (e) -> {
+            for (int i = 0; i < passengers.length; i++) {
+                if (passengers[i] == e.getId()) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+
+        for (int i : passengers) {
+            if (i == -1) continue;
+
+            Entity passenger = this.level.getEntity(i);
+            if (passenger != null) {
+                passenger.startRiding(entity, true);
+                if (passenger == player && !hasIndirectPassenger) {
+                    Component component = Component.translatable("mount.onboard", ModKeyMappings.DISMOUNT.getTranslatedKeyMessage());
+                    this.minecraft.gui.setOverlayMessage(component, false);
+                    this.minecraft.getNarrator().sayNow(component);
+                }
+            }
+        }
+
+        vehicle.entityIndexOverride = null;
+    }
+
 
     @Inject(method = "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V", at = @At("TAIL"))
     public void handleSetEntityPassengersPacket(ClientboundSetPassengersPacket pPacket, CallbackInfo ci) {
