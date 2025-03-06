@@ -20,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -182,6 +183,11 @@ public abstract class VehicleEntity extends Entity {
 
         orderedPassengers.set(orderedPassengers.indexOf(entity), null);
         orderedPassengers.set(index, entity);
+
+        // 在服务端运行时，向所有玩家同步载具座位信息
+        if (!this.level().isClientSide) {
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new ClientboundSetPassengersPacket(this));
+        }
 
         return true;
     }
