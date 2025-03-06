@@ -44,6 +44,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -270,16 +271,19 @@ public abstract class VehicleEntity extends Entity {
             return InteractionResult.SUCCESS;
         } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
+                if (player instanceof FakePlayer) return InteractionResult.PASS;
                 player.setXRot(this.getXRot());
                 player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
+                if (player instanceof FakePlayer) return InteractionResult.PASS;
                 this.getFirstPassenger().stopRiding();
                 player.setXRot(this.getXRot());
                 player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {
+                if (player instanceof FakePlayer) return InteractionResult.PASS;
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
         }
