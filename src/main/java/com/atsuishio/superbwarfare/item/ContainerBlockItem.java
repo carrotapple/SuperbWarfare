@@ -91,8 +91,13 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
 
         if (player != null) {
             var tag = BlockItem.getBlockEntityData(stack);
-            if (tag != null && tag.get("Entity") != null && res == InteractionResult.SUCCESS) {
-                player.getInventory().removeItem(stack);
+            if (tag != null && tag.get("Entity") != null) {
+                if (player.level().isClientSide && res == InteractionResult.SUCCESS) {
+                    player.getInventory().removeItem(stack);
+                }
+                if (!player.level().isClientSide && res == InteractionResult.CONSUME) {
+                    player.getInventory().removeItem(stack);
+                }
             }
         }
         return res;
