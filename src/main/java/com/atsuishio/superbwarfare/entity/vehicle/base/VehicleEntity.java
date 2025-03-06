@@ -81,7 +81,6 @@ public abstract class VehicleEntity extends Entity {
     public boolean crash;
 
     // 自定义骑乘
-
     private final List<Entity> orderedPassengers = generatePassengersList();
 
     private ArrayList<Entity> generatePassengersList() {
@@ -144,14 +143,6 @@ public abstract class VehicleEntity extends Entity {
 
         pPassenger.boardingCooldown = 60;
         this.gameEvent(GameEvent.ENTITY_DISMOUNT, pPassenger);
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getControllingPassenger() {
-        var first = this.orderedPassengers.get(0);
-        if (first instanceof LivingEntity living) return living;
-        return null;
     }
 
     @Nullable

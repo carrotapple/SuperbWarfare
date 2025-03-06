@@ -100,6 +100,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
+
     @Override
     public boolean sendFireStarParticleOnHurt() {
         return false;
