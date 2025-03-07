@@ -13,7 +13,7 @@ public class VehicleConfig {
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final List<? extends String> DEFAULT_COLLISION_ENTITY_BLACKLIST =
-            List.of("create:super_glue", "zombieawareness:scent");
+            List.of("create:super_glue", "zombieawareness:scent", "mts:builder_rendering");
 
     public static ForgeConfigSpec.IntValue REPAIR_COOLDOWN;
     public static ForgeConfigSpec.DoubleValue REPAIR_AMOUNT;
