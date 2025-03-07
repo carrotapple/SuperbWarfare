@@ -1371,8 +1371,7 @@ public class ClientEventHandler {
                         ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 16 / zoomFov);
                     }
                     if (entity != null && entity.isAlive()) {
-                        Vec3 targetVec = player.getEyePosition().vectorTo(entity.getEyePosition());
-                        Vec3 toVec = player.getViewVector(1).add(targetVec.scale(1.1f * times));
+                        Vec3 toVec = getVec3(event, player);
                         look(player, toVec);
                     }
                 }
@@ -1385,6 +1384,12 @@ public class ClientEventHandler {
             event.setFOV(event.getFOV() / droneFovLerp);
             fov = event.getFOV();
         }
+    }
+
+    private static Vec3 getVec3(ViewportEvent.ComputeFov event, Player player) {
+        Vec3 targetVec = new Vec3(Mth.lerp(event.getPartialTick(), entity.xo, entity.getX()), Mth.lerp(event.getPartialTick(), entity.yo + entity.getEyeHeight(), entity.getEyeY()), Mth.lerp(event.getPartialTick(), entity.zo, entity.getZ()));
+        Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
+        return playerVec.vectorTo(targetVec);
     }
 
     public static void look(Player player, Vec3 pTarget) {
