@@ -90,8 +90,6 @@ public class ModEntities {
             EntityType.Builder.<LaserTowerEntity>of(LaserTowerEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(LaserTowerEntity::new).fireImmune().sized(0.9f, 1.65f));
     public static final RegistryObject<EntityType<Yx100Entity>> YX_100 = register("yx_100",
             EntityType.Builder.<Yx100Entity>of(Yx100Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Yx100Entity::new).fireImmune().sized(5.5f, 3.25f));
-    public static final RegistryObject<EntityType<Yx100GunEntity>> YX_100_GUN = register("yx_100_gun",
-            EntityType.Builder.<Yx100GunEntity>of(Yx100GunEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Yx100GunEntity::new).fireImmune().sized(0.9f, 0.65f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

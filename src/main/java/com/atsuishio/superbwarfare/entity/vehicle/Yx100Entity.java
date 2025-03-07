@@ -960,6 +960,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/bmp2_icon.png");
+        return ModUtils.loc("textures/vehicle_icon/yx_100_icon.png");
     }
 }
