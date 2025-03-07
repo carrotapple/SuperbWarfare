@@ -177,8 +177,8 @@ public abstract class VehicleEntity extends Entity {
         orderedPassengers.set(index, entity);
 
         // 在服务端运行时，向所有玩家同步载具座位信息
-        if (!this.level().isClientSide) {
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new ClientboundSetPassengersPacket(this));
+        if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.getPlayers(s -> true).forEach(p -> p.connection.send(new ClientboundSetPassengersPacket(this)));
         }
 
         return true;
