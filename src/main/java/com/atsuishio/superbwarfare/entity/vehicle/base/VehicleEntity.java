@@ -263,24 +263,12 @@ public abstract class VehicleEntity extends Entity {
         } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
-                if (this instanceof LandArmorEntity landArmorEntity) {
-                    player.setXRot((float) getXRotFromVector(landArmorEntity.getBarrelVec(1)));
-                    player.setYRot((float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
-                } else {
-                    player.setXRot(this.getXRot());
-                    player.setYRot(this.getYRot());
-                }
+                setDriverAngle(player);
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
                 this.getFirstPassenger().stopRiding();
-                if (this instanceof LandArmorEntity landArmorEntity) {
-                    player.setXRot((float) getXRotFromVector(landArmorEntity.getBarrelVec(1)));
-                    player.setYRot((float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
-                } else {
-                    player.setXRot(this.getXRot());
-                    player.setYRot(this.getYRot());
-                }
+                setDriverAngle(player);
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {
@@ -291,13 +279,28 @@ public abstract class VehicleEntity extends Entity {
         return InteractionResult.PASS;
     }
 
+
+    //将有炮塔的载具驾驶员设置为炮塔角度
+    public void setDriverAngle(Player player) {
+        if (this instanceof LandArmorEntity landArmorEntity) {
+            player.xRotO = -(float) getXRotFromVector(landArmorEntity.getBarrelVec(1));
+            player.setXRot(-(float) getXRotFromVector(landArmorEntity.getBarrelVec(1)));
+            player.yRotO = -(float) getYRotFromVector(landArmorEntity.getBarrelVec(1));
+            player.setYRot(-(float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
+            player.setYHeadRot(-(float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
+        } else {
+            player.xRotO = this.getXRot();
+            player.setXRot(this.getXRot());
+            player.yRotO = this.getYRot();
+            player.setYRot(this.getYRot());
+        }
+    }
+
     public double getYRotFromVector(Vec3 vec3) {
-        this.setDeltaMovement(vec3);
         return Mth.atan2(vec3.x, vec3.z) * (180F / Math.PI);
     }
 
     public double getXRotFromVector(Vec3 vec3) {
-        this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
         return Mth.atan2(vec3.y, d0) * (180F / Math.PI);
     }
