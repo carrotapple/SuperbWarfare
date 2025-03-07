@@ -149,7 +149,7 @@ public class HelicopterHudOverlay {
 
             }
 
-            Matrix4f transform = getVehicleTransform(mobileVehicle);
+            Matrix4f transform = getVehicleTransform(mobileVehicle, event.getPartialTick());
             float x0 = 0f;
             float y0 = 0.65f;
             float z0 = 0.8f;
@@ -244,9 +244,9 @@ public class HelicopterHudOverlay {
         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_driver_angle.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
     }
 
-    public static Matrix4f getVehicleTransform(VehicleEntity vehicle) {
+    public static Matrix4f getVehicleTransform(VehicleEntity vehicle, float partialTicks) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) vehicle.getX(), (float) vehicle.getY() + 1.45f, (float) vehicle.getZ());
+        transform.translate((float) Mth.lerp(partialTicks, vehicle.xo, vehicle.getX()), (float) Mth.lerp(partialTicks, vehicle.yo + 1.45, vehicle.getY() + 1.45), (float) Mth.lerp(partialTicks, vehicle.zo, vehicle.getZ()));
         transform.rotate(Axis.YP.rotationDegrees(-vehicle.getYRot()));
         transform.rotate(Axis.XP.rotationDegrees(vehicle.getXRot()));
         transform.rotate(Axis.ZP.rotationDegrees(vehicle.getRoll()));

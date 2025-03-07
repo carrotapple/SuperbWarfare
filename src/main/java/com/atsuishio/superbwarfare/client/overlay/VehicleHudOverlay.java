@@ -327,7 +327,7 @@ public class VehicleHudOverlay {
                 renderKillIndicator(guiGraphics, w, h);
 
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
-                Vec3 p = RenderHelper.worldToScreen(new Vec3(player.getX(), player.getY(), player.getZ()).add(iLand.getBarrelVec(event.getPartialTick()).scale(192)), cameraPos);
+                Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ())).add(iLand.getBarrelVec(event.getPartialTick()).scale(192)), cameraPos);
                 // 第三人称准星
                 if (p != null) {
                     poseStack.pushPose();
