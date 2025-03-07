@@ -89,9 +89,9 @@ public abstract class ClientPacketListenerMixin {
             Entity passenger = this.level.getEntity(i);
             if (passenger != null && (passenger == this.minecraft.player || hasIndirectPassenger)) {
                 if (entity instanceof VehicleEntity) {
-                    this.minecraft.player.yRotO = entity.getYRot();
-                    this.minecraft.player.setYRot(entity.getYRot());
-                    this.minecraft.player.setYHeadRot(entity.getYRot());
+//                    this.minecraft.player.yRotO = entity.getYRot();
+//                    this.minecraft.player.setYRot(entity.getYRot());
+//                    this.minecraft.player.setYHeadRot(entity.getYRot());
 
                     Component component = Component.translatable("mount.onboard", ModKeyMappings.DISMOUNT.getTranslatedKeyMessage());
                     this.minecraft.gui.setOverlayMessage(component, false);
