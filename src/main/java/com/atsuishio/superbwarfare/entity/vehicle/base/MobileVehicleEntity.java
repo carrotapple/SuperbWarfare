@@ -141,8 +141,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
                 if (this instanceof HelicopterEntity) {
                     this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (20 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
                     this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-                } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.6) {
-                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (48 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.6) * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+                } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.4) {
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (96 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.4) * (lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
                     if (!this.level().isClientSide) {
                         this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                     }
@@ -151,7 +151,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
             }
 
             if (this.horizontalCollision) {
-                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (36 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (126 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
                 this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);

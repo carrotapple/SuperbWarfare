@@ -263,14 +263,24 @@ public abstract class VehicleEntity extends Entity {
         } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
+                if (this instanceof LandArmorEntity landArmorEntity) {
+                    player.setXRot((float) getXRotFromVector(landArmorEntity.getBarrelVec(1)));
+                    player.setYRot((float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
+                } else {
+                    player.setXRot(this.getXRot());
+                    player.setYRot(this.getYRot());
+                }
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
                 this.getFirstPassenger().stopRiding();
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
+                if (this instanceof LandArmorEntity landArmorEntity) {
+                    player.setXRot((float) getXRotFromVector(landArmorEntity.getBarrelVec(1)));
+                    player.setYRot((float) getYRotFromVector(landArmorEntity.getBarrelVec(1)));
+                } else {
+                    player.setXRot(this.getXRot());
+                    player.setYRot(this.getYRot());
+                }
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {
@@ -352,7 +362,7 @@ public abstract class VehicleEntity extends Entity {
                 .immuneTo(DamageTypes.DRAGON_BREATH)
                 .immuneTo(DamageTypes.WITHER)
                 .immuneTo(DamageTypes.WITHER_SKULL)
-                .reduce(8, ModDamageTypes.VEHICLE_STRIKE);
+                .reduce(5, ModDamageTypes.VEHICLE_STRIKE);
     }
 
     public void heal(float pHealAmount) {
