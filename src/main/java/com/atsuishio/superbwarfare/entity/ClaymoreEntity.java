@@ -38,7 +38,7 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity, OwnableEntity {
+public class ClaymoreEntity extends Entity implements GeoEntity, OwnableEntity {
 
     protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
@@ -260,19 +260,6 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     @Override
     public boolean isPushable() {
         return true;
-    }
-
-    @Override
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    @Override
-    public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

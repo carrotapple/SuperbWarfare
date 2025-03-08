@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -45,7 +44,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
+public class MinigunItem extends GunItem implements GeoItem {
 
     private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -189,10 +188,6 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.MINIGUN.get());
         GunsTool.initCreativeGun(stack, ModItems.MINIGUN.getId().getPath());
         return stack;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

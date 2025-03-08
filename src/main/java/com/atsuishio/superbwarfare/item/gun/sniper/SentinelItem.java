@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -50,7 +49,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
+public class SentinelItem extends GunItem implements GeoItem {
 
     private final Supplier<Integer> energyCapacity;
 
@@ -208,10 +207,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.SENTINEL.get());
         GunsTool.initCreativeGun(stack, ModItems.SENTINEL.getId().getPath());
         return stack;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

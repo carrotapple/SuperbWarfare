@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -52,7 +51,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class JavelinMissileEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+public class JavelinMissileEntity extends ThrowableItemProjectile implements GeoEntity {
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> TOP = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Float> TARGET_X = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
@@ -300,10 +299,6 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     }
 
     public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

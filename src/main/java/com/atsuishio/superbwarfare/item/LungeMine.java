@@ -36,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class LungeMine extends Item implements GeoItem, AnimatedItem {
+public class LungeMine extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -111,10 +111,6 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -39,7 +38,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
+public class RpkItem extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -116,10 +115,6 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.RPK.get());
         GunsTool.initCreativeGun(stack, ModItems.RPK.getId().getPath());
         return stack;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

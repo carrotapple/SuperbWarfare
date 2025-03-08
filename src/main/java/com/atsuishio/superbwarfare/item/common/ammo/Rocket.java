@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.client.renderer.item.RocketItemRenderer;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,7 +27,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class Rocket extends Item implements GeoItem, AnimatedItem {
+public class Rocket extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -119,8 +118,4 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
         return super.hurtEnemy(stack, entity, source);
     }
 
-    @Override
-    public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
-    }
 }

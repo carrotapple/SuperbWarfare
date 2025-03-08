@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -45,7 +44,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class M79Item extends GunItem implements GeoItem, AnimatedItem {
+public class M79Item extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -150,10 +149,6 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.M_79.get());
         GunsTool.initCreativeGun(stack, ModItems.M_79.getId().getPath());
         return stack;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

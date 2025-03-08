@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -52,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
+public class TaserItem extends GunItem implements GeoItem {
 
     public static final int MAX_ENERGY = 6000;
 
@@ -229,10 +228,6 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
                 energy -> energy.receiveEnergy(MAX_ENERGY, false)
         );
         return stack;
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

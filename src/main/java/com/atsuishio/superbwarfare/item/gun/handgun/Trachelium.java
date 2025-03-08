@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -45,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
+public class Trachelium extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -293,10 +292,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
 
         GunsTool.setGunBooleanTag(stack, "CanSwitchScope", scopeType == 2);
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

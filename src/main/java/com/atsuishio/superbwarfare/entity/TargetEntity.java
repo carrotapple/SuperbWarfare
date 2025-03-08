@@ -40,7 +40,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 @Mod.EventBusSubscriber
-public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEntity {
+public class TargetEntity extends LivingEntity implements GeoEntity {
 
     public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -249,17 +249,4 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         return this.cache;
     }
 
-    @Override
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    @Override
-    public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
-
-    }
 }

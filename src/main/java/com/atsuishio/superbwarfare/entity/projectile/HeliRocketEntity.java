@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -40,7 +39,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class HeliRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+public class HeliRocketEntity extends ThrowableItemProjectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float damage = 140f;
     private float explosion_damage = 60f;
@@ -172,10 +171,6 @@ public class HeliRocketEntity extends ThrowableItemProjectile implements GeoEnti
     }
 
     public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

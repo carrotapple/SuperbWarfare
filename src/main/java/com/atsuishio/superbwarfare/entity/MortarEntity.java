@@ -47,7 +47,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEntity {
+public class MortarEntity extends VehicleEntity implements GeoEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
@@ -291,10 +291,6 @@ public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEn
     }
 
     public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override

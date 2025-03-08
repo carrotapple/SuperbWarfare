@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
@@ -51,7 +50,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity {
 
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -370,17 +369,8 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         return 0.05F;
     }
 
-    public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
-    }
-
     public void setAnimation(String animation) {
         this.entityData.set(ANIMATION, animation);
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
