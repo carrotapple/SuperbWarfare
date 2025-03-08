@@ -178,22 +178,22 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean canCustom(ItemStack stack) {
+    public boolean isCustomizable(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomBarrel(ItemStack stack) {
+    public boolean hasCustomBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomScope(ItemStack stack) {
+    public boolean hasCustomScope(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomMagazine(ItemStack stack) {
+    public boolean hasCustomMagazine(ItemStack stack) {
         return true;
     }
 
@@ -208,12 +208,12 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean bulletInBarrel(ItemStack stack) {
+    public boolean hasBulletInBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean ejectShell(ItemStack stack) {
+    public boolean canEjectShell(ItemStack stack) {
         return true;
     }
 
@@ -223,7 +223,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

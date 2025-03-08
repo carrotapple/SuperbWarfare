@@ -294,12 +294,12 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
     }
 
     @Override
-    public boolean canUseMelee(ItemStack stack) {
+    public boolean hasMeleeAttack(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

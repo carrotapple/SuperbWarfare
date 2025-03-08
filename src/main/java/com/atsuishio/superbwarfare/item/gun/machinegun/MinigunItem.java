@@ -215,7 +215,7 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean autoWeapon(ItemStack stack) {
+    public boolean isAutoWeapon(ItemStack stack) {
         return true;
     }
 

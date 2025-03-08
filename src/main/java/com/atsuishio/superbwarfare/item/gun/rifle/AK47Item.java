@@ -225,52 +225,52 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean bulletInBarrel(ItemStack stack) {
+    public boolean hasBulletInBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean autoWeapon(ItemStack stack) {
+    public boolean isAutoWeapon(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustom(ItemStack stack) {
+    public boolean isCustomizable(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomBarrel(ItemStack stack) {
+    public boolean hasCustomBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomGrip(ItemStack stack) {
+    public boolean hasCustomGrip(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomMagazine(ItemStack stack) {
+    public boolean hasCustomMagazine(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomScope(ItemStack stack) {
+    public boolean hasCustomScope(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomStock(ItemStack stack) {
+    public boolean hasCustomStock(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean ejectShell(ItemStack stack) {
+    public boolean canEjectShell(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag + FireMode.AUTO.flag;
     }
 }

@@ -163,12 +163,12 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean bulletInBarrel(ItemStack stack) {
+    public boolean hasBulletInBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

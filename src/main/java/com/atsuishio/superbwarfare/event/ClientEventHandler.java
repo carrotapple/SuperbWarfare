@@ -278,7 +278,7 @@ public class ClientEventHandler {
 
     public static void handleGunMelee(Player player, ItemStack stack) {
         if (stack.getItem() instanceof GunItem gunItem) {
-            if (gunItem.canUseMelee(stack) && gunMelee == 0 && drawTime < 0.01
+            if (gunItem.hasMeleeAttack(stack) && gunMelee == 0 && drawTime < 0.01
                     && ModKeyMappings.MELEE.isDown()
                     && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                     && !holdFireVehicle
@@ -677,7 +677,7 @@ public class ClientEventHandler {
                 ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
         ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
-            if (gunItem.ejectShell(stack)) {
+            if (gunItem.canEjectShell(stack)) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     player.playSound(ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
                 } else if (stack.is(ModTags.Items.SNIPER_RIFLE) || stack.is(ModTags.Items.HEAVY_WEAPON)) {
@@ -1170,7 +1170,7 @@ public class ClientEventHandler {
             default -> 2.0;
         };
 
-        if (!gunItem.canCustom(stack)) {
+        if (!gunItem.isCustomizable(stack)) {
             recoil = 1.6;
             gripRecoilX = 0.75;
             gripRecoilY = 1.25;

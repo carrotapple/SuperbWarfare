@@ -320,32 +320,32 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean canCustom(ItemStack stack) {
+    public boolean isCustomizable(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomBarrel(ItemStack stack) {
+    public boolean hasCustomBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomGrip(ItemStack stack) {
+    public boolean hasCustomGrip(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomScope(ItemStack stack) {
+    public boolean hasCustomScope(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canCustomStock(ItemStack stack) {
+    public boolean hasCustomStock(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

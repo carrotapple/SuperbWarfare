@@ -41,7 +41,7 @@ public class EditModeMessage {
             if (!(mainHandItem.getItem() instanceof GunItem gunItem)) return;
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
-            if (gunItem.canCustom(mainHandItem)) {
+            if (gunItem.isCustomizable(mainHandItem)) {
                 if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                     SoundTool.playLocalSound(player, ModSounds.EDIT_MODE.get(), 1f, 1f);
                 }

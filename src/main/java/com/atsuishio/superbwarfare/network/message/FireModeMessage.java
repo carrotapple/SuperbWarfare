@@ -50,7 +50,7 @@ public class FireModeMessage {
 
             CompoundTag tag = stack.getOrCreateTag();
 
-            int mode = gunItem.getFireMode();
+            int mode = gunItem.getAvailableFireModes();
             mode &= 0b111;
 
             if (fireMode == 0) {

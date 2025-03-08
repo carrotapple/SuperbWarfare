@@ -177,7 +177,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

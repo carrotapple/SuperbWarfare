@@ -180,7 +180,7 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
     }
 }

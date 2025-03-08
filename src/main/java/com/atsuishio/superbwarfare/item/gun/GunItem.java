@@ -33,6 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -45,65 +46,57 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
+    @ParametersAreNonnullByDefault
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return false;
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (entity instanceof LivingEntity) {
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
+        if (!(entity instanceof LivingEntity)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
-            if (!(stack.getItem() instanceof GunItem gunItem)) return;
-
-            if (!ItemNBTTool.getBoolean(stack, "init", false)) {
-                GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
-                GunsTool.generateAndSetUUID(stack);
-                ItemNBTTool.setBoolean(stack, "init", true);
-            }
-
-            if (stack.getOrCreateTag().getBoolean("draw")) {
-                stack.getOrCreateTag().putBoolean("draw", false);
-            }
-
-            handleGunPerks(stack);
-            handleGunAttachment(stack);
-
-            if ((gunItem.bulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) >
-                    GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + 1)
-                    || (!gunItem.bulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) >
-                    GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0))
-            ) {
-                int count = GunsTool.getGunIntTag(stack, "Ammo", 0) - GunsTool.getGunIntTag(stack, "Magazine", 0)
-                        + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) - (gunItem.bulletInBarrel(stack) ? 1 : 0);
-                entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
-                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                        capability.shotgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).shotgunAmmo + count;
-                    } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                        capability.sniperAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).sniperAmmo + count;
-                    } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                        capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
-                    } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                        capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
-                    } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                        capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).heavyAmmo + count;
-                    }
-
-                    capability.syncPlayerVariables(entity);
-                });
-
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
-                        + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + (gunItem.bulletInBarrel(stack) ? 1 : 0));
-            }
+        if (!ItemNBTTool.getBoolean(stack, "init", false)) {
+            GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
+            GunsTool.generateAndSetUUID(stack);
+            ItemNBTTool.setBoolean(stack, "init", true);
         }
-    }
 
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return false;
+        if (stack.getOrCreateTag().getBoolean("draw")) {
+            stack.getOrCreateTag().putBoolean("draw", false);
+        }
+
+        handleGunPerks(stack);
+        handleGunAttachment(stack);
+
+        if ((gunItem.hasBulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) >
+                GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + 1)
+                || (!gunItem.hasBulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) >
+                GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0))
+        ) {
+            int count = GunsTool.getGunIntTag(stack, "Ammo", 0) - GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) - (gunItem.hasBulletInBarrel(stack) ? 1 : 0);
+            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                    capability.shotgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).shotgunAmmo + count;
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                    capability.sniperAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).sniperAmmo + count;
+                } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                    capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                    capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
+                } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                    capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).heavyAmmo + count;
+                }
+
+                capability.syncPlayerVariables(entity);
+            });
+
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + (gunItem.hasBulletInBarrel(stack) ? 1 : 0));
+        }
     }
 
     @Override
@@ -143,7 +136,7 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@NotNull ItemStack stack) {
         return false;
     }
 
@@ -156,7 +149,7 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isEnchantable(@NotNull ItemStack stack) {
         return false;
     }
 
@@ -166,7 +159,7 @@ public abstract class GunItem extends Item {
     }
 
     private void handleGunPerks(ItemStack stack) {
-        reducePerkTagTime(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
+        reducePerkTagCoolDown(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
                 "DesperadoTime", "DesperadoTimePost");
 
         if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
@@ -225,7 +218,7 @@ public abstract class GunItem extends Item {
         return true;
     }
 
-    private void reducePerkTagTime(ItemStack stack, String... tag) {
+    private void reducePerkTagCoolDown(ItemStack stack, String... tag) {
         if (!stack.hasTag() || stack.getTag() == null) {
             return;
         }
@@ -243,70 +236,154 @@ public abstract class GunItem extends Item {
         stack.addTagElement("PerkData", compound);
     }
 
+    /**
+     * 是否使用弹匣换弹
+     *
+     * @param stack 武器物品
+     */
     public boolean isMagazineReload(ItemStack stack) {
         return false;
     }
 
+    /**
+     * 是否使用弹夹换弹
+     *
+     * @param stack 武器物品
+     */
     public boolean isClipReload(ItemStack stack) {
         return false;
     }
 
+    /**
+     * 是否是单发装填换弹
+     *
+     * @param stack 武器物品
+     */
     public boolean isIterativeReload(ItemStack stack) {
         return false;
     }
 
+    /**
+     * 开膛待击
+     *
+     * @param stack 武器物品
+     */
     public boolean isOpenBolt(ItemStack stack) {
         return false;
     }
 
-    public boolean bulletInBarrel(ItemStack stack) {
+    /**
+     * 是否允许额外往枪管里塞入一发子弹
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasBulletInBarrel(ItemStack stack) {
         return false;
     }
 
-    public boolean autoWeapon(ItemStack stack) {
+    /**
+     * 武器是否为全自动武器
+     *
+     * @param stack 武器物品
+     */
+    public boolean isAutoWeapon(ItemStack stack) {
         return false;
     }
 
+    /**
+     * 武器是否直接使用背包内的弹药物品进行发射，而不是使用玩家存储的弹药
+     *
+     * @param stack 武器物品
+     */
     public boolean useBackpackAmmo(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustom(ItemStack stack) {
+    /**
+     * 武器是否能进行改装
+     *
+     * @param stack 武器物品
+     */
+    public boolean isCustomizable(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustomBarrel(ItemStack stack) {
+    /**
+     * 武器是否能更换枪管配件
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasCustomBarrel(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustomGrip(ItemStack stack) {
+    /**
+     * 武器是否能更换枪托配件
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasCustomGrip(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustomMagazine(ItemStack stack) {
+    /**
+     * 武器是否能更换弹匣配件
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasCustomMagazine(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustomScope(ItemStack stack) {
+    /**
+     * 武器是否能更换瞄具配件
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasCustomScope(ItemStack stack) {
         return false;
     }
 
-    public boolean canCustomStock(ItemStack stack) {
+    /**
+     * 武器是否能更换枪托配件
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasCustomStock(ItemStack stack) {
         return false;
     }
+
+    /**
+     * 武器是否有脚架
+     *
+     * @param stack 武器物品
+     */
     public boolean hasBipod(ItemStack stack) {
         return false;
     }
 
-    public boolean ejectShell(ItemStack stack) {
+    /**
+     * 武器是否会抛壳
+     *
+     * @param stack 武器物品
+     */
+    public boolean canEjectShell(ItemStack stack) {
         return false;
     }
 
-    public boolean canUseMelee(ItemStack stack) {
+    /**
+     * 武器是否能进行近战攻击
+     *
+     * @param stack 武器物品
+     */
+    public boolean hasMeleeAttack(ItemStack stack) {
         return false;
     }
 
-    public int getFireMode() {
+    /**
+     * 获取武器可用的开火模式
+     */
+    public int getAvailableFireModes() {
         return 0;
     }
 

@@ -163,22 +163,22 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean bulletInBarrel(ItemStack stack) {
+    public boolean hasBulletInBarrel(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean autoWeapon(ItemStack stack) {
+    public boolean isAutoWeapon(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean ejectShell(ItemStack stack) {
+    public boolean canEjectShell(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getFireMode() {
+    public int getAvailableFireModes() {
         return FireMode.SEMI.flag + FireMode.AUTO.flag;
     }
 }

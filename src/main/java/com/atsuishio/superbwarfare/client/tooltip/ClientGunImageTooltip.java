@@ -67,7 +67,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
     protected boolean shouldRenderEditTooltip() {
         if (this.stack.getItem() instanceof GunItem gunItem) {
-            return gunItem.canCustom(stack);
+            return gunItem.isCustomizable(stack);
         }
         return false;
     }
@@ -100,7 +100,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器射速的文本组件
      */
     protected Component getRpmComponent() {
-        if (this.stack.getItem() instanceof GunItem gunItem && gunItem.autoWeapon(this.stack)) {
+        if (this.stack.getItem() instanceof GunItem gunItem && gunItem.isAutoWeapon(this.stack)) {
             return Component.translatable("des.superbwarfare.guns.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(FormatTool.format0D(GunsTool.getGunIntTag(stack, "RPM", 0)))

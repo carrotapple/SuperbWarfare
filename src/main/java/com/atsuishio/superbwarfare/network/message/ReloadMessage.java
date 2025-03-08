@@ -87,7 +87,7 @@ public class ReloadMessage {
                     int magazine = GunsTool.getGunIntTag(stack, "Magazine", 0);
 
                     if (gunItem.isOpenBolt(stack)) {
-                        if (gunItem.bulletInBarrel(stack)) {
+                        if (gunItem.hasBulletInBarrel(stack)) {
                             if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + 1) {
                                 GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
