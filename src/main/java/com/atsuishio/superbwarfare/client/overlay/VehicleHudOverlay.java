@@ -458,8 +458,9 @@ public class VehicleHudOverlay {
             var passenger = passengers.get(i);
 
             int y = h / 2 + 80 - index * 12;
-            guiGraphics.drawString(Minecraft.getInstance().font, passenger == null ? "--" : passenger.getName().getString(),
-                    22, y, 0x66ff00, true);
+            String name = passenger == null ? "---" : passenger.getName().getString();
+            guiGraphics.drawString(Minecraft.getInstance().font, name, 22, y, 0x66ff00, true);
+            guiGraphics.drawString(Minecraft.getInstance().font, "[" + (i + 1) + "]", 80, y, 0x66ff00, true);
 
             // TODO 替换成正确的载具乘员图标
             preciseBlit(guiGraphics, index == passengers.size() - 1 ? ENERGY : ARMOR, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
