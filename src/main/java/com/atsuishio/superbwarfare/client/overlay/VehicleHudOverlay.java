@@ -94,6 +94,10 @@ public class VehicleHudOverlay {
             preciseBlit(guiGraphics, HEALTH_FRAME, 20, h - 12 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
             preciseBlit(guiGraphics, HEALTH, 20, h - 12 - compatHeight, 100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
         }
+
+        renderPassengerInfo(guiGraphics, vehicle, w, h);
+        renderWeaponInfo(guiGraphics, vehicle, w, h);
+
         poseStack.popPose();
 
 //        if (vehicle instanceof ArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
@@ -190,8 +194,6 @@ public class VehicleHudOverlay {
                 && iLand instanceof WeaponVehicleEntity weaponVehicle
                 && iLand instanceof MobileVehicleEntity mobileVehicle) {
             poseStack.pushPose();
-
-
 
             poseStack.translate(Mth.clamp(-8 * ClientEventHandler.turnRot[1], -10, 10), Mth.clamp(-8 * ClientEventHandler.turnRot[0], -10, 10) - 0.3 * ClientEventHandler.shakeTime + 5 * ClientEventHandler.cameraRoll, 0);
             poseStack.rotateAround(Axis.ZP.rotationDegrees(-0.5f * ClientEventHandler.cameraRoll), w / 2f, h / 2f, 0);
@@ -325,7 +327,6 @@ public class VehicleHudOverlay {
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
 
                 renderKillIndicator(guiGraphics, w, h);
-
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
                 Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ())).add(iLand.getBarrelVec(event.getPartialTick()).scale(192)), cameraPos);
                 // 第三人称准星
@@ -343,7 +344,7 @@ public class VehicleHudOverlay {
                     poseStack.translate(x, y, 0);
                     poseStack.scale(0.75f, 0.75f, 1);
 
-                    //LAV-150
+                    // LAV-150
                     if (weaponVehicle instanceof Lav150Entity lav1501) {
                         if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = lav1501.getEntityData().get(HEAT) / 100.0F;
@@ -353,7 +354,7 @@ public class VehicleHudOverlay {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM COAX " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav1501.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         }
                     }
-                    //BMP-2
+                    // BMP-2
                     if (weaponVehicle instanceof Bmp2Entity bmp201) {
                         if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = bmp201.getEntityData().get(HEAT) / 100.0F;
@@ -362,10 +363,10 @@ public class VehicleHudOverlay {
                             double heat2 = bmp201.getEntityData().get(COAX_HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         } else {
-                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("9M113 "  + bmp201.getEntityData().get(LOADED_MISSILE) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, -1, false);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("9M113 " + bmp201.getEntityData().get(LOADED_MISSILE) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, -1, false);
                         }
                     }
-                    //YX-100
+                    // YX-100
                     if (weaponVehicle instanceof Yx100Entity yx100) {
                         if (weaponVehicle.getWeaponType(0) == 0) {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("AP SHELL " + yx100.getAmmoCount(player) + " " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(AMMO))), 30, -9, -1, false);
@@ -446,5 +447,26 @@ public class VehicleHudOverlay {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
         }
+    }
+
+    private static void renderPassengerInfo(GuiGraphics guiGraphics, Entity entity, int w, int h) {
+        if (!(entity instanceof VehicleEntity vehicle)) return;
+        var passengers = vehicle.getOrderedPassengers();
+
+        int index = 0;
+        for (int i = passengers.size() - 1; i >= 0; i--) {
+            var passenger = passengers.get(i);
+
+            int y = h / 2 + 80 - index * 12;
+            guiGraphics.drawString(Minecraft.getInstance().font, passenger == null ? "--" : passenger.getName().getString(),
+                    22, y, 0x66ff00, true);
+
+            // TODO 替换成正确的载具乘员图标
+            preciseBlit(guiGraphics, index == passengers.size() - 1 ? ENERGY : ARMOR, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
+            index++;
+        }
+    }
+
+    private static void renderWeaponInfo(GuiGraphics guiGraphics, Entity vehicle, int w, int h) {
     }
 }

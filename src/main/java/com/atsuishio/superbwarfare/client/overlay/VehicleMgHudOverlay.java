@@ -73,9 +73,10 @@ public class VehicleMgHudOverlay {
                 int l = (h - j) / 2;
                 RenderHelper.preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
                 VehicleHudOverlay.renderKillIndicator(guiGraphics, w, h);
-
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
-                Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ())).add(iLand.getGunVec(event.getPartialTick()).scale(192)), cameraPos);
+                Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()),
+                        Mth.lerp(event.getPartialTick(), player.zo, player.getZ())).add(iLand.getGunVec(event.getPartialTick()).scale(192)), cameraPos);
+
                 // 第三人称准星
                 if (p != null) {
                     poseStack.pushPose();
@@ -91,8 +92,7 @@ public class VehicleMgHudOverlay {
                     poseStack.translate(x, y, 0);
                     poseStack.scale(0.75f, 0.75f, 1);
 
-
-                    //YX-100
+                    // YX-100
                     if (player.getVehicle() instanceof Yx100Entity yx100) {
                         double heat = yx100.getEntityData().get(MACHINE_GUN_HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(MG_AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
@@ -108,7 +108,6 @@ public class VehicleMgHudOverlay {
                     poseStack.popPose();
                 }
             }
-
         }
     }
 
