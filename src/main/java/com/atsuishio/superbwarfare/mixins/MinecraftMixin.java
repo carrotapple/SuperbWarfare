@@ -39,7 +39,7 @@ public class MinecraftMixin {
 
         var index = -1;
         for (int i = 0; i < 9; ++i) {
-            if (options.keyHotbarSlots[i].consumeClick()) {
+            if (options.keyHotbarSlots[i].isDown()) {
                 index = i;
                 break;
             }
@@ -52,9 +52,12 @@ public class MinecraftMixin {
                 && index < vehicle.getMaxPassengers()
                 && vehicle.getNthEntity(index) == null
         ) {
+            ci.cancel();
+            options.keyHotbarSlots[index].consumeClick();
+
             ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
             vehicle.changeSeat(player, index);
-            ci.cancel();
+
             return;
         }
 
@@ -62,6 +65,7 @@ public class MinecraftMixin {
 
         if (vehicle instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.banHand(player)) {
             ci.cancel();
+            options.keyHotbarSlots[index].consumeClick();
 
             // 数字键 武器切换
             if (!Screen.hasShiftDown()
