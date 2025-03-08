@@ -714,23 +714,21 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
         this.xRotO = this.getXRot();
     }
 
-    private void performDamage(Entity entity, float damage, boolean headshot) {
+    private void performDamage(Entity entity, float damage, boolean isHeadshot) {
         float rate = Mth.clamp(this.bypassArmorRate, 0, 1);
 
         float normalDamage = damage * Mth.clamp(1 - rate, 0, 1);
         float absoluteDamage = damage * Mth.clamp(rate, 0, 1);
 
         entity.invulnerableTime = 0;
-        if (headshot) {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), normalDamage * this.headShot);
-            entity.invulnerableTime = 0;
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * this.headShot);
-            entity.invulnerableTime = 0;
 
-        } else {
-            entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), normalDamage);
+        float headShotModifier = isHeadshot ? this.headShot : 1;
+        if (normalDamage > 0) {
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), normalDamage * headShotModifier);
             entity.invulnerableTime = 0;
-            entity.hurt(ModDamageTypes.causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage);
+        }
+        if (absoluteDamage > 0) {
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * headShotModifier);
             entity.invulnerableTime = 0;
 
             //大于1的穿甲对载具造成额外伤害
