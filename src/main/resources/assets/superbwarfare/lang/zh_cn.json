@@ -447,6 +447,9 @@
   "item.minecraft.potion.effect.superbwarfare_long_shock": "电击药水",
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "喷溅型电击药水",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "滞留型电击药水",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_shock": "电击之箭",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_strong_shock": "电击之箭",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_long_shock": "电击之箭",
 
   "commands.ammo.get": "当前%1$s弹药数量: %2$s",
   "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",

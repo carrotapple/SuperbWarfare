@@ -449,6 +449,9 @@
   "item.minecraft.potion.effect.superbwarfare_long_shock": "Potion of Shock",
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "Lingering Potion of Shock",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_shock": "Arrow of Shock",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_strong_shock": "Arrow of Shock",
+  "item.minecraft.tipped_arrow.effect.superbwarfare_long_shock": "Arrow of Shock",
 
   "commands.ammo.get": "Current %1$s ammo: %2$s",
   "commands.ammo.set": "Set %s ammo to %s for %s players",
