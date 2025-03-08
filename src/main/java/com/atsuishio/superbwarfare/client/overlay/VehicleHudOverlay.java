@@ -459,7 +459,7 @@ public class VehicleHudOverlay {
         for (int i = passengers.size() - 1; i >= 0; i--) {
             var passenger = passengers.get(i);
 
-            int y = h / 2 + 80 - index * 12;
+            int y = h - 50 - index * 12;
             String name = passenger == null ? "---" : passenger.getName().getString();
             guiGraphics.drawString(Minecraft.getInstance().font, name, 22, y, 0x66ff00, true);
             guiGraphics.drawString(Minecraft.getInstance().font, "[" + (i + 1) + "]", 80, y, 0x66ff00, true);
