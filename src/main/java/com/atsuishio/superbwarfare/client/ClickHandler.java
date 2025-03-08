@@ -358,10 +358,8 @@ public class ClickHandler {
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
 
-        if (player.getVehicle() instanceof ArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
-            if (iVehicle.isDriver(player)) {
-                ClientEventHandler.zoomVehicle = true;
-            }
+        if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player))) {
+            ClientEventHandler.zoomVehicle = true;
             return;
         }
 

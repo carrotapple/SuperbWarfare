@@ -13,4 +13,6 @@ public interface LandArmorEntity extends ArmedVehicleEntity {
     float turretXRot();
 
     Vec3 getBarrelVec(float ticks);
+
+    Vec3 getGunVec(float ticks);
 }

@@ -178,7 +178,7 @@ public class KillMessageOverlay {
 
         if (player != null && player.getVehicle() instanceof VehicleEntity vehicleEntity) {
             // 载具图标
-            if ((vehicleEntity instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player)) || record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
+            if ((vehicleEntity instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) || record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
                 renderItem = true;
 
                 ResourceLocation resourceLocation = vehicleEntity.getVehicleIcon();

@@ -65,7 +65,7 @@ public class MouseHandlerMixin {
             if (player == yx100.getFirstPassenger()) {
                 return ClientEventHandler.zoomVehicle ? 0.17 : 0.22;
             } else if (player ==yx100.getNthEntity(1)){
-                return ClientEventHandler.zoomVehicle ? 0.27 : 0.35;
+                return ClientEventHandler.zoomVehicle ? 0.25 : 0.35;
             }
         }
 

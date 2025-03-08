@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -50,7 +51,7 @@ public class AmmoBarOverlay {
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() instanceof GunItem gunItem) {
+        if (stack.getItem() instanceof GunItem gunItem &&!(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
             PoseStack poseStack = event.getGuiGraphics().pose();
 
             // 渲染图标

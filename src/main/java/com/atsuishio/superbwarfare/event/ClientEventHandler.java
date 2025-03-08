@@ -1335,8 +1335,8 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand(player) && zoomVehicle) {
-            event.setFOV(event.getFOV() / iArmedVehicle.zoomFov());
+        if (player.getVehicle() instanceof WeaponVehicleEntity iVehicle && zoomVehicle) {
+            event.setFOV(event.getFOV() / iVehicle.zoomFov());
             return;
         }
 
@@ -1435,7 +1435,7 @@ public class ClientEventHandler {
             event.setCanceled(true);
         }
 
-        if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player)) {
+        if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player))) {
             event.setCanceled(true);
         }
 

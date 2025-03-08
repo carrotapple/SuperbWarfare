@@ -96,50 +96,50 @@ public class VehicleHudOverlay {
         }
         poseStack.popPose();
 
-        if (vehicle instanceof ArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
-            boolean iCharge = iVehicle instanceof EnergyVehicleEntity;
-
-            // 渲染当前弹药量
-            poseStack.pushPose();
-            poseStack.scale(1.5f, 1.5f, 1f);
-            float v = h / 1.5f - (iCharge ? 42 : 29) / 1.5f;
-
-            if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))
-                    && !(iVehicle instanceof CannonEntity
-                    || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getWeaponType(0) == 1))
-            ) {
-                event.getGuiGraphics().drawString(
-                        Minecraft.getInstance().font,
-                        "∞",
-                        w / 1.5f - 41 / 1.5f,
-                        v,
-                        0xFFFFFF,
-                        true
-                );
-            } else {
-                event.getGuiGraphics().drawString(
-                        Minecraft.getInstance().font,
-                        iVehicle.getAmmoCount(player) + "",
-                        w / 1.5f - 41 / 1.5f,
-                        v,
-                        0xFFFFFF,
-                        true
-                );
-            }
-
-            poseStack.popPose();
-            ItemStack stack = player.getMainHandItem();
-
-            // 渲染弹药类型
-            event.getGuiGraphics().drawString(
-                    Minecraft.getInstance().font,
-                    getVehicleAmmoType(stack, iVehicle),
-                    w - 90,
-                    h - (iCharge ? 38 : 26),
-                    0xFFFFFF,
-                    true
-            );
-        }
+//        if (vehicle instanceof ArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
+//            boolean iCharge = iVehicle instanceof EnergyVehicleEntity;
+//
+//            // 渲染当前弹药量
+//            poseStack.pushPose();
+//            poseStack.scale(1.5f, 1.5f, 1f);
+//            float v = h / 1.5f - (iCharge ? 42 : 29) / 1.5f;
+//
+//            if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))
+//                    && !(iVehicle instanceof CannonEntity
+//                    || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getWeaponType(0) == 1))
+//            ) {
+//                event.getGuiGraphics().drawString(
+//                        Minecraft.getInstance().font,
+//                        "∞",
+//                        w / 1.5f - 41 / 1.5f,
+//                        v,
+//                        0xFFFFFF,
+//                        true
+//                );
+//            } else {
+//                event.getGuiGraphics().drawString(
+//                        Minecraft.getInstance().font,
+//                        iVehicle.getAmmoCount(player) + "",
+//                        w / 1.5f - 41 / 1.5f,
+//                        v,
+//                        0xFFFFFF,
+//                        true
+//                );
+//            }
+//
+//            poseStack.popPose();
+//            ItemStack stack = player.getMainHandItem();
+//
+//            // 渲染弹药类型
+//            event.getGuiGraphics().drawString(
+//                    Minecraft.getInstance().font,
+//                    getVehicleAmmoType(stack, iVehicle),
+//                    w - 90,
+//                    h - (iCharge ? 38 : 26),
+//                    0xFFFFFF,
+//                    true
+//            );
+//        }
     }
 
     private static boolean shouldRenderHud(Player player) {
@@ -420,7 +420,7 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static void renderKillIndicator3P(GuiGraphics guiGraphics, float posX, float posY) {
+    public static void renderKillIndicator3P(GuiGraphics guiGraphics, float posX, float posY) {
         float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
 
         if (HIT_INDICATOR > 0) {

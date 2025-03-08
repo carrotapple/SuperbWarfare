@@ -539,6 +539,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         return getBarrelVector(ticks);
     }
 
+    @Override
+    public Vec3 getGunVec(float ticks) {
+        return null;
+    }
+
     public float getTurretYRot() {
         return this.turretYRot;
     }

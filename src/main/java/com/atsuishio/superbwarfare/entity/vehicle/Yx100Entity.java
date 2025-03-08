@@ -438,7 +438,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             if (this.cannotFire) return;
 
             Matrix4f transform = getGunTransform();
-            Vector4f worldPosition = transformPosition(transform, 0, -0.2f, 0);
+            Vector4f worldPosition = transformPosition(transform, 0, -0.25f, 0);
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)
@@ -448,7 +448,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
             projectile.bypassArmorRate(0.4f);
             projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            projectile.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.02f);
+            projectile.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.3f);
             this.level().addFreshEntity(projectile);
 
             float pitch = this.entityData.get(MACHINE_GUN_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(MACHINE_GUN_HEAT)));
@@ -469,7 +469,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 4, 8, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
 
@@ -608,8 +608,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
         diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
 
-        this.setGunXRot(Mth.clamp(this.getGunXRot() + Mth.clamp(0.95f * diffX, -10, 10), -50f, 10f));
-        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -18, 18));
+        this.setGunXRot(Mth.clamp(this.getGunXRot() + Mth.clamp(0.95f * diffX, -10, 10), -60f, 12.5f));
+        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -15, 15));
     }
 
     @Override
@@ -651,6 +651,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public Vec3 getBarrelVec(float ticks) {
         return getBarrelVector(ticks);
+    }
+
+    @Override
+    public Vec3 getGunVec(float ticks) {
+        return getGunVector(ticks);
     }
 
     public float getTurretYRot() {
@@ -814,13 +819,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     protected void clampRotation(Entity entity) {
+        Minecraft mc = Minecraft.getInstance();
         if (entity.level().isClientSide && entity == getFirstPassenger()) {
             float f = Mth.wrapDegrees(entity.getXRot());
             float f1 = Mth.clamp(f, -30F, 4F);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
 
-            Minecraft mc = Minecraft.getInstance();
             if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
                 entity.setYBodyRot(this.getYRot());
                 float f2 = Mth.wrapDegrees(entity.getYRot() - this.getBarrelYRot(1));
@@ -831,9 +836,18 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             }
         } else if (entity == getNthEntity(1)) {
             float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -50F, 10F);
+            float f1 = Mth.clamp(f, -60F, 12.5F);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
+
+            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+                entity.setYBodyRot(this.getYRot());
+                float f2 = Mth.wrapDegrees(entity.getYRot() - this.getGunYRot(1));
+                float f3 = Mth.clamp(f2, -150.0F, 150.0F);
+                entity.yRotO += f3 - f2;
+                entity.setYRot(entity.getYRot() + f3 - f2);
+                entity.setYBodyRot(this.getYRot());
+            }
         }
     }
 
@@ -849,9 +863,17 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
     }
 
+    private PlayState gunFirePredicate(AnimationState<Yx100Entity> event) {
+        if (this.entityData.get(FIRE_TIME) > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire2"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
+        data.add(new AnimationController<>(this, "shoot", 0, this::gunFirePredicate));
     }
 
     @Override

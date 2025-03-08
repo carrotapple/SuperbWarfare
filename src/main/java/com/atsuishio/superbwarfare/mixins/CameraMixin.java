@@ -178,8 +178,12 @@ public abstract class CameraMixin {
             move(-getMaxZoom(3), 1, 0.0);
         }
 
-        if (thirdPerson && entity.getVehicle() instanceof Yx100Entity && !ClientEventHandler.zoomVehicle) {
-            move(-getMaxZoom(5), 1.5, 0.0);
+        if (thirdPerson && entity.getVehicle() instanceof Yx100Entity yx100 && !ClientEventHandler.zoomVehicle) {
+            if (yx100.getFirstPassenger() == entity) {
+                move(-getMaxZoom(5), 1.5, -0.8669625f);
+            } else if (yx100.getNthEntity(1) == entity) {
+                move(-getMaxZoom(-0.5), 2, 0);
+            }
         }
     }
 

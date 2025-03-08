@@ -483,6 +483,11 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         return getBarrelVector(ticks);
     }
 
+    @Override
+    public Vec3 getGunVec(float ticks) {
+        return null;
+    }
+
     public float getTurretYRot() {
         return this.turretYRot;
     }
