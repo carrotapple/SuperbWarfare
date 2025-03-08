@@ -464,7 +464,6 @@ public class VehicleHudOverlay {
             guiGraphics.drawString(Minecraft.getInstance().font, name, 22, y, 0x66ff00, true);
             guiGraphics.drawString(Minecraft.getInstance().font, "[" + (i + 1) + "]", 80, y, 0x66ff00, true);
 
-            // TODO 替换成正确的载具乘员图标
             preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
             index++;
         }
