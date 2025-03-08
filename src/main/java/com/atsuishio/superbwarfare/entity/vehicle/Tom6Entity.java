@@ -298,6 +298,13 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
+
+        if (this.crash) {
+            crashPassengers();
+        } else {
+            explodePassengers();
+        }
+
         if (level() instanceof ServerLevel) {
             if (entityData.get(MELON)) {
                 CustomExplosion explosion = new CustomExplosion(this.level(), this,
@@ -318,11 +325,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             }
         }
 
-        if (this.crash) {
-            crashPassengers();
-        } else {
-            explodePassengers();
-        }
         this.discard();
     }
 

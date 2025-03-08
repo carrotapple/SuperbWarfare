@@ -459,6 +459,12 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void destroy() {
+        if (this.crash) {
+            crashPassengers();
+        } else {
+            explodePassengers();
+        }
+
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
                     ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, getAttacker()), 300.0f,
@@ -467,12 +473,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-        }
-
-        if (this.crash) {
-            crashPassengers();
-        } else {
-            explodePassengers();
         }
         this.discard();
     }

@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [
     "aba",
-    "cdc",
+    "cbc",
     " e "
   ],
   "key": {
@@ -11,13 +11,10 @@
       "item": "minecraft:copper_ingot"
     },
     "b": {
-      "item": "minecraft:hopper"
+      "item": "superbwarfare:grain"
     },
     "c": {
       "item": "minecraft:iron_ingot"
-    },
-    "d": {
-      "item": "superbwarfare:grain"
     },
     "e": {
       "item": "minecraft:firework_rocket"

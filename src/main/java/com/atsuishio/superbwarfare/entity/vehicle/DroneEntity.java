@@ -13,7 +13,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.Monitor;
 import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
-import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -198,11 +197,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         setZRot(getRoll() * 0.9f);
 
-        if (this.level() instanceof ServerLevel serverLevel) {
-            // 更新需要加载的区块
-            ChunkLoadTool.updateLoadedChunks(serverLevel, this, this.loadedChunks);
-        }
-
         lastTickSpeed = this.getDeltaMovement().length();
         lastTickVerticalSpeed = this.getDeltaMovement().y;
 
@@ -214,7 +208,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         if (!this.onGround()) {
             if (controller != null) {
-                handleSimulationDistance(controller);
                 ItemStack stack = controller.getMainHandItem();
                 if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
                     if (controller.level().isClientSide) {
@@ -266,25 +259,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         this.refreshDimensions();
     }
 
-    public void handleSimulationDistance(Player player) {
-        if (player.level() instanceof ServerLevel serverLevel && player instanceof ServerPlayer) {
-            var distanceManager = serverLevel.getChunkSource().chunkMap.getDistanceManager();
-            var playerTicketManager = distanceManager.playerTicketManager;
-            int maxDistance = playerTicketManager.viewDistance;
-
-            if (this.position().vectorTo(player.position()).horizontalDistance() > maxDistance * 16) {
-                this.upInputDown = false;
-                this.downInputDown = false;
-                this.forwardInputDown = false;
-                this.backInputDown = false;
-                this.leftInputDown = false;
-                this.rightInputDown = false;
-
-                Vec3 toVec = position().vectorTo(player.position()).normalize();
-                setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0, toVec.z).scale(0.2)));
-            }
-        }
-    }
 
     private void droneDrop(Player player) {
         Level level = player.level();
@@ -645,14 +619,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public void onRemovedFromWorld() {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);
-        }
-        super.onRemovedFromWorld();
     }
 
     @Override

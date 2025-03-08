@@ -1,0 +1,15 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "count": 1,
+    "item": "superbwarfare:iron_powder"
+    }
+  ]
+}
