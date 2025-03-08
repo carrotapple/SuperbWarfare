@@ -38,7 +38,7 @@ import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.KAMIKAZE_MO
 public class DroneUIOverlay {
 
     public static int MAX_DISTANCE = 256;
-    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
+    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {

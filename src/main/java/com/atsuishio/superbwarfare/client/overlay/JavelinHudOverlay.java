@@ -34,9 +34,9 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class JavelinHudOverlay {
 
-    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
-    private static final ResourceLocation FRAME_TARGET = ModUtils.loc("textures/screens/javelin/frame_target.png");
-    private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/javelin/frame_lock.png");
+    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
+    private static final ResourceLocation FRAME_TARGET = ModUtils.loc("textures/screens/frame/frame_target.png");
+    private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/frame/frame_lock.png");
     private static float scopeScale = 1;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

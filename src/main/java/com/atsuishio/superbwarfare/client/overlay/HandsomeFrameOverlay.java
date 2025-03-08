@@ -31,14 +31,13 @@ import java.util.List;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HandsomeFrameOverlay {
 
-    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
-    private static final ResourceLocation FRAME_TARGET = ModUtils.loc("textures/screens/javelin/frame_target.png");
-    private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/javelin/frame_lock.png");
+    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
+    private static final ResourceLocation FRAME_WEAK = ModUtils.loc("textures/screens/frame/frame_weak.png");
+    private static final ResourceLocation FRAME_TARGET = ModUtils.loc("textures/screens/frame/frame_target.png");
+    private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/frame/frame_lock.png");
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
         PoseStack poseStack = event.getGuiGraphics().pose();
 
@@ -50,7 +49,7 @@ public class HandsomeFrameOverlay {
             if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 return;
 
-            if (stack.getItem() instanceof GunItem gunItem && Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
+            if (stack.getItem() instanceof GunItem && Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
                 int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
                 if (level == 0) return;
 
@@ -61,7 +60,9 @@ public class HandsomeFrameOverlay {
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                List<Entity> entities = SeekTool.seekLivingEntitiesThroughWall(player, player.level(), 32 + 8 * (level - 1), 30);
+                List<Entity> allEntities = SeekTool.seekLivingEntitiesThroughWall(player, player.level(), 32 + 8 * (level - 1), 30);
+                List<Entity> visibleEntities = SeekTool.seekLivingEntities(player, player.level(), 32 + 8 * (level - 1), 30);
+
                 Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 30);
                 Entity targetEntity = ClientEventHandler.entity;
 
@@ -74,7 +75,7 @@ public class HandsomeFrameOverlay {
                     zoom = Minecraft.getInstance().options.fov().get() / ClientEventHandler.fov + 0.05 * fovAdjust2;
                 }
 
-                for (var e : entities) {
+                for (var e : allEntities) {
                     Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
                     Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
                     Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(playerVec) * (1 - 1.0 / zoom));
@@ -84,13 +85,28 @@ public class HandsomeFrameOverlay {
                     if (point == null) return;
 
                     boolean lockOn = e == targetEntity;
-                    boolean nearest = e == naerestEntity;
+                    boolean isNearestEntity = e == naerestEntity;
 
                     poseStack.pushPose();
                     float x = (float) point.x;
                     float y = (float) point.y;
 
-                    RenderHelper.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                    var canBeSeen = visibleEntities.contains(e);
+
+                    ResourceLocation icon;
+                    if (lockOn) {
+                        icon = FRAME_LOCK;
+                    } else if (canBeSeen) {
+                        if (isNearestEntity) {
+                            icon = FRAME_TARGET;
+                        } else {
+                            icon = FRAME;
+                        }
+                    } else {
+                        icon = FRAME_WEAK;
+                    }
+
+                    RenderHelper.blit(poseStack, icon, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                     poseStack.popPose();
                 }
             }
