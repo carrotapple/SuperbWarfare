@@ -41,7 +41,6 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
      * @param index 武器槽位
      * @param type  武器类型
      */
-
     default void setWeaponType(int index, int type) {
     }
 }
