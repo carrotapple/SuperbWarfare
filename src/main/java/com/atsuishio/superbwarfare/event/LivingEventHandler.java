@@ -643,13 +643,23 @@ public class LivingEventHandler {
                     int ammoReload = (int) Math.min(mag, mag * rate);
                     int ammoNeed = Math.min(mag - ammo, ammoReload);
 
+                    boolean flag = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
-                        capability.rifleAmmo -= ammoFinal;
+                        if (flag) {
+                            ammoFinal = ammoNeed;
+                        } else {
+                            capability.rifleAmmo -= ammoFinal;
+                        }
                         GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, ammo + ammoFinal));
                     } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                         int ammoFinal = Math.min(capability.handgunAmmo, ammoNeed);
-                        capability.handgunAmmo -= ammoFinal;
+                        if (flag) {
+                            ammoFinal = ammoNeed;
+                        } else {
+                            capability.handgunAmmo -= ammoFinal;
+                        }
                         GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, ammo + ammoFinal));
                     }
                     capability.syncPlayerVariables(player);
