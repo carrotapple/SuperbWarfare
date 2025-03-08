@@ -1363,22 +1363,26 @@ public class ClientEventHandler {
             fov = event.getFOV();
 
             // 智慧芯片
-            if (!player.isShiftKeyDown()
-                    && zoom
+            if (zoom
                     && !notInGame()
                     && drawTime < 0.01
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.edit).orElse(false)) {
-                int intelligentChipLevel = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
+                if (!player.isShiftKeyDown()) {
+                    int intelligentChipLevel = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
 
-                if (intelligentChipLevel > 0) {
-                    if (ClientEventHandler.entity == null || !entity.isAlive()) {
-                        ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (intelligentChipLevel - 1), 16 / zoomFov);
+                    if (intelligentChipLevel > 0) {
+                        if (ClientEventHandler.entity == null || !entity.isAlive()) {
+                            ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (intelligentChipLevel - 1), 16 / zoomFov);
+                        }
+                        if (entity != null && entity.isAlive()) {
+                            Vec3 toVec = getVec3(event, player);
+                            look(player, toVec);
+                        }
                     }
-                    if (entity != null && entity.isAlive()) {
-                        Vec3 toVec = getVec3(event, player);
-                        look(player, toVec);
-                    }
+                } else {
+                    entity = null;
                 }
+
             }
             return;
         }
