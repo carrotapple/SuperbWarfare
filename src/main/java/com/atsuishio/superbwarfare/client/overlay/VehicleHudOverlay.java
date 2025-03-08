@@ -33,6 +33,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Math;
+import top.theillusivec4.curios.api.CuriosApi;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
@@ -460,11 +463,30 @@ public class VehicleHudOverlay {
             var passenger = passengers.get(i);
 
             int y = h - 50 - index * 12;
-            String name = passenger == null ? "---" : passenger.getName().getString();
-            guiGraphics.drawString(Minecraft.getInstance().font, name, 22, y, 0x66ff00, true);
-            guiGraphics.drawString(Minecraft.getInstance().font, "[" + (i + 1) + "]", 80, y, 0x66ff00, true);
+            AtomicReference<String> name = new AtomicReference<>("---");
 
-            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
+            if (passenger != null) {
+                name.set(passenger.getName().getString());
+            }
+
+            if (passenger instanceof Player player) {
+                CuriosApi.getCuriosInventory(player).ifPresent(
+                        c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
+                                s -> {
+                                    if (s.stack().hasCustomHoverName()) {
+                                        name.set(s.stack().getHoverName().getString());
+                                    }
+                                }
+                        )
+                );
+            }
+
+            guiGraphics.drawString(Minecraft.getInstance().font, name.get(), 37, y, 0x66ff00, true);
+
+            String num = "[" + (i + 1) + "]";
+            guiGraphics.drawString(Minecraft.getInstance().font, num, 15 - Minecraft.getInstance().font.width(num), y, 0x66ff00, true);
+
+            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 25, y + 1, 100, 0, 0, 8, 8, 8, 8);
             index++;
         }
     }
