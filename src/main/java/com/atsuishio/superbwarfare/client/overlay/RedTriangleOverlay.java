@@ -7,9 +7,9 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,8 +28,6 @@ public class RedTriangleOverlay {
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
         PoseStack poseStack = event.getGuiGraphics().pose();
 
         Player player = mc.player;
@@ -42,9 +40,10 @@ public class RedTriangleOverlay {
 
         Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
         if (idf == null) return;
-        double distance = idf.position().distanceTo(cameraPos);
-
-        Vec3 point = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
+        Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
+        double distance = idf.position().distanceTo(playerVec);
+        Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), idf.xo, idf.getX()), Mth.lerp(event.getPartialTick(), idf.yo + idf.getEyeHeight() + 0.5 + 0.07 * distance, idf.getEyeY() + 0.5 + 0.07 * distance), Mth.lerp(event.getPartialTick(), idf.zo, idf.getZ()));
+        Vec3 point = RenderHelper.worldToScreen(pos, playerVec);
         if (point == null) return;
 
         poseStack.pushPose();

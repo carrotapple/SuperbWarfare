@@ -11,12 +11,12 @@ import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -135,18 +135,18 @@ public class DroneUIOverlay {
                     }
                 }
 
-                Camera camera = mc.gameRenderer.getMainCamera();
-                Vec3 cameraPos = camera.getPosition();
 
                 List<Entity> entities = SeekTool.seekLivingEntities(entity, entity.level(), 256, 30);
                 float fovAdjust2 = (float) (mc.options.fov().get() / 30) - 1;
                 double zoom = 0.975 * ClientEventHandler.droneFovLerp + 0.06 * fovAdjust2;
 
                 for (var e : entities) {
-                    Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
-                    Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
+                    Vec3 droneVec = new Vec3(Mth.lerp(event.getPartialTick(), entity.xo, entity.getX()), Mth.lerp(event.getPartialTick(), entity.yo + entity.getEyeHeight(), entity.getEyeY()), Mth.lerp(event.getPartialTick(), entity.zo, entity.getZ()));
+                    Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
 
-                    var cPos = cameraPos.add(lookAngle);
+                    Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(droneVec) * (1 - 1.0 / zoom));
+
+                    var cPos = droneVec.add(lookAngle);
                     Vec3 point = RenderHelper.worldToScreen(pos, cPos);
                     if (point != null) {
                         poseStack.pushPose();

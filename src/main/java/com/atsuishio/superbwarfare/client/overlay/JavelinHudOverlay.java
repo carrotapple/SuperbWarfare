@@ -12,7 +12,6 @@ import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -45,9 +44,6 @@ public class JavelinHudOverlay {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
-        Minecraft mc = Minecraft.getInstance();
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
         PoseStack poseStack = event.getGuiGraphics().pose();
 
         if (player != null) {
@@ -103,10 +99,11 @@ public class JavelinHudOverlay {
                 double zoom = Minecraft.getInstance().options.fov().get() / ClientEventHandler.fov + 0.5 * fovAdjust2;
 
                 for (var e : entities) {
-                    Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
-                    Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
+                    Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
+                    Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
+                    Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(playerVec) * (1 - 1.0 / zoom));
 
-                    var cPos = cameraPos.add(lookAngle);
+                    var cPos = playerVec.add(lookAngle);
                     Vec3 point = RenderHelper.worldToScreen(pos, cPos);
                     if (point == null) return;
 
