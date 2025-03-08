@@ -264,15 +264,18 @@ public abstract class VehicleEntity extends Entity {
             if (this.getFirstPassenger() == null) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
                 setDriverAngle(player);
+                player.setSprinting(false);
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
                 this.getFirstPassenger().stopRiding();
                 setDriverAngle(player);
+                player.setSprinting(false);
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.canAddPassenger(player)) {
                 if (player instanceof FakePlayer) return InteractionResult.PASS;
+                player.setSprinting(false);
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
         }
