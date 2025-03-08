@@ -50,6 +50,8 @@ public class VehicleHudOverlay {
     private static final ResourceLocation ENERGY = ModUtils.loc("textures/screens/energy.png");
     private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
     private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
+    private static final ResourceLocation DRIVER = ModUtils.loc("textures/screens/driver.png");
+    private static final ResourceLocation PASSENGER = ModUtils.loc("textures/screens/passenger.png");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -463,7 +465,7 @@ public class VehicleHudOverlay {
             guiGraphics.drawString(Minecraft.getInstance().font, "[" + (i + 1) + "]", 80, y, 0x66ff00, true);
 
             // TODO 替换成正确的载具乘员图标
-            preciseBlit(guiGraphics, index == passengers.size() - 1 ? ENERGY : ARMOR, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 10, y + 1, 100, 0, 0, 8, 8, 8, 8);
             index++;
         }
     }
