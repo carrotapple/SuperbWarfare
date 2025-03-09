@@ -198,7 +198,8 @@ public class VehicleHudOverlay {
 
         if (player.getVehicle() instanceof LandArmorEntity iLand && iLand.isDriver(player)
                 && iLand instanceof WeaponVehicleEntity weaponVehicle
-                && iLand instanceof MobileVehicleEntity mobileVehicle) {
+                && iLand instanceof MobileVehicleEntity mobileVehicle
+                && !(player.getVehicle() instanceof SpeedboatEntity)) {
             poseStack.pushPose();
 
             poseStack.translate(Mth.clamp(-8 * ClientEventHandler.turnRot[1], -10, 10), Mth.clamp(-8 * ClientEventHandler.turnRot[0], -10, 10) - 0.3 * ClientEventHandler.shakeTime + 5 * ClientEventHandler.cameraRoll, 0);

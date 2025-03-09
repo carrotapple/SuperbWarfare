@@ -434,6 +434,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
         float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
 
+        turretTurnSound(diffX, diffY);
+
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.25f, 1.25f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.5f * diffX, -2f, 2f), -30, 4f));
     }

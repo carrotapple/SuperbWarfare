@@ -57,7 +57,7 @@ public abstract class CameraMixin {
                 CameraPos.rotateZ(-boat.getXRot() * Mth.DEG_TO_RAD);
                 CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
-                setRotation(Mth.lerp(partialTicks, player.yBobO, player.yBob), Mth.lerp(partialTicks, player.xBobO, player.xBob));
+                setRotation(-Mth.lerp(partialTicks, boat.turretYRotO - boat.yRotO, boat.getTurretYRot() - boat.getYRot()), Mth.lerp(partialTicks, boat.turretXRotO - boat.xRotO, boat.getTurretXRot() - boat.getXRot()));
                 setPosition(Mth.lerp(partialTicks, boat.xo + CameraPos.x, boat.getX() + CameraPos.x), Mth.lerp(partialTicks, boat.yo + CameraPos.y, boat.getY() + CameraPos.y), Mth.lerp(partialTicks, boat.zo + CameraPos.z, boat.getZ() + CameraPos.z));
                 info.cancel();
                 return;

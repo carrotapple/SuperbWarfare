@@ -589,6 +589,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
+        turretTurnSound(diffX, diffY);
+
         float min = -5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
         float max = 5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
 
@@ -607,6 +609,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
         diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
+
+        turretTurnSound(diffX, diffY);
 
         this.setGunXRot(Mth.clamp(this.getGunXRot() + Mth.clamp(0.95f * diffX, -10, 10), -60f, 12.5f));
         this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -15, 15));
@@ -727,18 +731,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         Matrix4f transform = getTurretTransform();
-
-//        float x = 0.8669625f;
-//        float y = 0.2f;
-//        float z = 0.6076875f;
-//        y += (float) passenger.getMyRidingOffset();
-//
-//
-//        Vector4f worldPosition = transformPosition(transform, x, y, z);
-//
-//        if (passenger instanceof Yx100GunEntity) {
-//            worldPosition = transformPosition(transform, -x, y + 2, z);
-//        }
 
         int i = this.getOrderedPassengers().indexOf(passenger);
 

@@ -491,6 +491,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
         float diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
 
+        turretTurnSound(diffX, diffY);
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -0.6f, 0.6f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f));

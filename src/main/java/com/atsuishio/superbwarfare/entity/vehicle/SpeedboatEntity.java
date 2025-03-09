@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
@@ -15,6 +16,7 @@ import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.mojang.math.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -40,6 +42,8 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -53,7 +57,7 @@ import java.util.Comparator;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class SpeedboatEntity extends ContainerMobileVehicleEntity implements GeoEntity, ArmedVehicleEntity, WeaponVehicleEntity {
+public class SpeedboatEntity extends ContainerMobileVehicleEntity implements GeoEntity, ArmedVehicleEntity, WeaponVehicleEntity, LandArmorEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -228,6 +232,14 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public void vehicleShoot(Player player, int type) {
         if (this.cannotFire) return;
+        Matrix4f transform = getBarrelTransform();
+
+        float x = 0;
+        float y = 0;
+        float z = 0;
+
+        Vector4f worldPosition = transformPosition(transform, x, y, z);
+
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
@@ -236,8 +248,8 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 .zoom(false);
 
         projectile.bypassArmorRate(0.4f);
-        projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
-        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
+        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+        projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 20,
                 (float) 0.4);
         this.level().addFreshEntity(projectile);
 
@@ -337,10 +349,48 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
-        float gunAngle = -Math.clamp(-140f, 140f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
+        float gunAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
 
-        this.setTurretYRot(gunAngle);
-        this.setTurretXRot(driver.getXRot() - this.getXRot());
+        float diffY;
+        float diffX;
+
+        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
+        diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
+
+        turretTurnSound(diffX, diffY);
+
+        this.setTurretXRot(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -40, 40));
+        this.setTurretYRot(Mth.clamp(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -40, 40), -140, 140));
+    }
+
+    public Matrix4f getBarrelTransform() {
+        Matrix4f transformT = getTurretTransform();
+        float x = 0f;
+        float y = 0.5088375f;
+        float z = 0.04173125f;
+        Vector4f worldPosition = transformPosition(transformT, x, y, z);
+
+        Matrix4f transform = new Matrix4f();
+        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
+    }
+
+    public Matrix4f getTurretTransform() {
+        Matrix4f transformT = getVehicleTransform();
+        float x = 0f;
+        float y = 2.4616625f;
+        float z = -0.565625f;
+        Vector4f worldPosition = transformPosition(transformT, x, y, z);
+
+        Matrix4f transform = new Matrix4f();
+        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
     }
 
     public float getTurretYRot() {
@@ -513,5 +563,47 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public int getWeaponType(int index) {
         return index == 0 ? 0 : -1;
+    }
+
+    @Override
+    public float turretYRotO() {
+        return turretYRotO;
+    }
+
+    @Override
+    public float turretYRot() {
+        return turretYRot;
+    }
+
+    @Override
+    public float turretXRotO() {
+        return turretXRotO;
+    }
+
+    @Override
+    public float turretXRot() {
+        return turretXRot;
+    }
+
+    @Override
+    public Vec3 getBarrelVec(float ticks) {
+        return getBarrelVector(ticks);
+    }
+
+    public final Vec3 getBarrelVector(float pPartialTicks) {
+        return this.calculateViewVector(this.getBarrelXRot(pPartialTicks), this.getBarrelYRot(pPartialTicks));
+    }
+
+    public float getBarrelXRot(float pPartialTicks) {
+        return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, getTurretXRot() - this.getXRot());
+    }
+
+    public float getBarrelYRot(float pPartialTick) {
+        return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
+    }
+
+    @Override
+    public Vec3 getGunVec(float ticks) {
+        return getBarrelVector(ticks);
     }
 }

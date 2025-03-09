@@ -2907,5 +2907,13 @@
         "stream": false
       }
     ]
+  },
+  "turret_turn": {
+    "sounds": [
+      {
+        "name": "superbwarfare:turret_turn",
+        "stream": false
+      }
+    ]
   }
 }

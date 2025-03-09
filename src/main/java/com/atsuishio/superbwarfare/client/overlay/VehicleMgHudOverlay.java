@@ -32,6 +32,8 @@ import org.joml.Math;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator3P;
+import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.AMMO;
+import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.MACHINE_GUN_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.MG_AMMO;
 
@@ -98,6 +100,12 @@ public class VehicleMgHudOverlay {
                         guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(MG_AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                     }
 
+                    // 快艇
+                    if (player.getVehicle() instanceof SpeedboatEntity speedboat) {
+                        double heat = speedboat.getEntityData().get(HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : speedboat.getEntityData().get(AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                    }
+
                     double heal = 1 - mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
 
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " +
@@ -114,7 +122,6 @@ public class VehicleMgHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getVehicle() instanceof SpeedboatEntity
-                || player.getVehicle() instanceof Yx100Entity yx100 && yx100.getNthEntity(1) == player);
+                && (player.getVehicle() instanceof SpeedboatEntity || (player.getVehicle() instanceof Yx100Entity yx100 && yx100.getNthEntity(1) == player));
     }
 }
