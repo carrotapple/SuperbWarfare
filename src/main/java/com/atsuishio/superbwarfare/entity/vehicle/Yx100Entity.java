@@ -88,7 +88,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
-
+    public float turretRot;
     public float gunYRot;
     public float gunXRot;
     public float gunYRotO;
@@ -596,24 +596,26 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -30f, 4f));
         this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, min, max));
+        turretRot = Mth.clamp(0.9f * diffY, min, max);
     }
 
     private void gunnerAngle() {
         Entity gunner = this.getNthEntity(1);
-        if (!(gunner instanceof Player)) return;
 
-        float gunAngle = -Mth.wrapDegrees(gunner.getYHeadRot() - this.getYRot());
+        float diffY = 0;
+        float diffX = 0;
+        float speed = 1;
 
-        float diffY;
-        float diffX;
-
-        diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
-        diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
-
-        turretTurnSound(diffX, diffY, 0.95f);
+        if (gunner instanceof Player) {
+            float gunAngle = -Mth.wrapDegrees(gunner.getYHeadRot() - this.getYRot());
+            diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
+            diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
+            turretTurnSound(diffX, diffY, 0.95f);
+            speed = 0;
+        }
 
         this.setGunXRot(Mth.clamp(this.getGunXRot() + Mth.clamp(0.95f * diffX, -10, 10), -60f, 12.5f));
-        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -15, 15));
+        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -15, 15) + speed * turretRot);
     }
 
     @Override
