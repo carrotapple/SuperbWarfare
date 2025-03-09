@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEnt
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
@@ -72,8 +73,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MG_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> PASSENGER_WEAPON_TYPE = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
@@ -114,6 +113,20 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        // TODO 正确实现武器创建
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new VehicleWeapon().sound(ModSounds.INTO_MISSILE.get()),
+                        new VehicleWeapon().sound(ModSounds.INTO_CANNON.get()),
+                },
+                new VehicleWeapon[]{
+                        new VehicleWeapon(),
+                }
+        };
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(AMMO, 0);
@@ -121,8 +134,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.entityData.define(LOADED_AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(DELTA_ROT, 0f);
-        this.entityData.define(WEAPON_TYPE, 0);
-        this.entityData.define(PASSENGER_WEAPON_TYPE, 0);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
         this.entityData.define(YAW, 0f);
@@ -147,7 +158,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -173,7 +184,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    protected void playStepSound(BlockPos pPos, BlockState pState) {
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         this.playSound(ModSounds.BMP_STEP.get(), Mth.abs(this.entityData.get(POWER)) * 8, random.nextFloat() * 0.15f + 1f);
     }
 
@@ -929,17 +940,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void changeWeapon(int index, int value, boolean isScroll) {
+        WeaponVehicleEntity.super.changeWeapon(index, value, isScroll);
         if (index != 0) return;
-
-        var type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
-
-        var sound = switch (type) {
-            case 0 -> ModSounds.INTO_MISSILE.get();
-            case 1 -> ModSounds.INTO_CANNON.get();
-            default -> null;
-        };
-        if (sound == null) return;
-        setWeaponType(0, type);
 
         if (entityData.get(LOADED_AMMO) > 0) {
             if (this.getFirstPassenger() instanceof Player player && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
@@ -953,24 +955,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         if (this.getFirstPassenger() instanceof ServerPlayer player) {
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(ModSounds.YX_100_RELOAD.get().getLocation(), SoundSource.PLAYERS);
             player.connection.send(clientboundstopsoundpacket);
-        }
-        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        return switch (index) {
-            case 0 -> entityData.get(WEAPON_TYPE);
-            case 1 -> entityData.get(PASSENGER_WEAPON_TYPE);
-            default -> -1;
-        };
-    }
-
-    @Override
-    public void setWeaponType(int index, int type) {
-        switch (index) {
-            case 0 -> entityData.set(WEAPON_TYPE, type);
-            case 1 -> entityData.set(PASSENGER_WEAPON_TYPE, type);
         }
     }
 

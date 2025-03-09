@@ -4,10 +4,8 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModParticleTypes;
-import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -16,6 +14,7 @@ import com.atsuishio.superbwarfare.tools.VectorTool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -66,6 +65,10 @@ public abstract class VehicleEntity extends Entity {
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
+
+    protected static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
+
+    public VehicleWeapon[][] availableWeapons;
 
     protected int interpolationSteps;
     protected double x;
@@ -230,6 +233,21 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(HEALTH, this.getMaxHealth());
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(LAST_DRIVER_UUID, "undefined");
+
+        if (this instanceof WeaponVehicleEntity weaponVehicle) {
+            this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
+
+            var weapons = weaponVehicle.getAllWeapons();
+            for (int i = 0; i < weapons.length || i < this.getMaxPassengers(); i++) {
+                this.availableWeapons[i] = weapons[i];
+            }
+
+            var selected = new int[this.getMaxPassengers()];
+            for (int i = 0; i < this.getMaxPassengers(); i++) {
+                selected[i] = weaponVehicle.hasWeapon(i) ? 0 : -1;
+            }
+            this.entityData.define(SELECTED_WEAPON, IntList.of(selected));
+        }
     }
 
     @Override
@@ -237,6 +255,11 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         this.entityData.set(LAST_DRIVER_UUID, compound.getString("LastDriver"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
+
+        if (this instanceof WeaponVehicleEntity) {
+            var selected = compound.getIntArray("SelectedWeapon");
+            this.entityData.set(SELECTED_WEAPON, IntList.of(selected));
+        }
     }
 
     @Override
@@ -244,6 +267,10 @@ public abstract class VehicleEntity extends Entity {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         compound.putString("LastDriver", this.entityData.get(LAST_DRIVER_UUID));
+
+        if (this instanceof WeaponVehicleEntity) {
+            compound.putIntArray("SelectedWeapon", this.entityData.get(SELECTED_WEAPON).toIntArray());
+        }
     }
 
     @Override

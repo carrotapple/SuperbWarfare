@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity.vehicle.weapon;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
 public class VehicleWeapon {
@@ -20,6 +21,8 @@ public class VehicleWeapon {
     public int currentAmmo;
     // 备弹量
     public int backupAmmo;
+
+    public SoundEvent sound;
 
     public VehicleWeapon icon(ResourceLocation icon) {
         this.icon = icon;
@@ -49,13 +52,23 @@ public class VehicleWeapon {
     }
 
     /**
+     * 切换到该武器时的音效
+     *
+     * @param sound 音效
+     */
+    public VehicleWeapon sound(SoundEvent sound) {
+        this.sound = sound;
+        return this;
+    }
+
+    /**
      * 载具武器的装弹类型
      * INDIRECT - 需要先进行上弹，再发射
      * DIRECT - 直接读取载具存储的弹药
      */
     public enum AmmoType {
         INDIRECT,
-        DIRECT
+        DIRECT,
     }
 
     public VehicleWeapon maxAmmo(int maxAmmo) {
