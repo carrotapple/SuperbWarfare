@@ -29,9 +29,9 @@ public class FiringParameters extends Item {
         if (player == null) return InteractionResult.PASS;
 
         if (player.isShiftKeyDown()) {
-            stack.getOrCreateTag().putInt("TargetX", pos.getX());
-            stack.getOrCreateTag().putInt("TargetY", pos.getY());
-            stack.getOrCreateTag().putInt("TargetZ", pos.getZ());
+            stack.getOrCreateTag().putDouble("TargetX", pos.getX());
+            stack.getOrCreateTag().putDouble("TargetY", pos.getY());
+            stack.getOrCreateTag().putDouble("TargetZ", pos.getZ());
         }
 
         return InteractionResult.SUCCESS;

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -25,9 +26,12 @@ public class SpyglassRangeOverlay {
         Player player = Minecraft.getInstance().player;
         if (player != null && (player.getMainHandItem().getItem() == Items.SPYGLASS || player.getOffhandItem().getItem() == Items.SPYGLASS) && player.isUsingItem()) {
             boolean lookAtEntity = false;
-            double blockRange = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(520)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+            Vec3 hitPos = result.getLocation();
+
+            double blockRange = player.getEyePosition(1).distanceTo(hitPos);
 
             double entityRange = 0;
             Entity lookingEntity = TraceTool.findLookingEntity(player, 520);

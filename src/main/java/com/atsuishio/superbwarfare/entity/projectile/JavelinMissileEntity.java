@@ -63,17 +63,22 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private float explosion_damage = 140f;
     private float explosion_radius = 6f;
     private boolean distracted = false;
+    private int guide_type = 0;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
+    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius, int guide_type, Vec3 targetPos) {
         super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
         this.explosion_damage = explosion_damage;
         this.explosion_radius = explosion_radius;
+        this.guide_type = guide_type;
+        this.entityData.set(TARGET_X, (float) targetPos.x);
+        this.entityData.set(TARGET_Y, (float) targetPos.y);
+        this.entityData.set(TARGET_Z, (float) targetPos.z);
     }
 
     public JavelinMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -96,12 +101,6 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
     public void setTargetUuid(String uuid) {
         this.entityData.set(TARGET_UUID, uuid);
-    }
-
-    public void setTargetPosition(Float targetX, Float targetY, Float targetZ) {
-        this.entityData.set(TARGET_X, targetX);
-        this.entityData.set(TARGET_Y, targetY);
-        this.entityData.set(TARGET_Z, targetZ);
     }
 
     public void setAttackMode(boolean mode) {
@@ -191,26 +190,57 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
         }
 
-        if (entity != null) {
-            if (entity.level() instanceof ServerLevel) {
-                this.entityData.set(TARGET_X, (float) entity.getX());
-                this.entityData.set(TARGET_Y, (float) entity.getY() + 0.5f * entity.getBbHeight());
-                this.entityData.set(TARGET_Z, (float) entity.getZ());
-                if ((!entity.getPassengers().isEmpty() || entity instanceof VehicleEntity) && entity.tickCount %((int)Math.max(0.04 * this.distanceTo(entity),2)) == 0) {
-                    entity.level().playSound(null, entity.getOnPos(), entity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.MISSILE_WARNING.get(), SoundSource.PLAYERS, 2, 1f);
+        if (guide_type == 0 || !entityData.get(TARGET_UUID).equals("none")) {
+            if (entity != null) {
+                if (entity.level() instanceof ServerLevel) {
+                    this.entityData.set(TARGET_X, (float) entity.getX());
+                    this.entityData.set(TARGET_Y, (float) entity.getY() + 0.5f * entity.getBbHeight());
+                    this.entityData.set(TARGET_Z, (float) entity.getZ());
+                    if ((!entity.getPassengers().isEmpty() || entity instanceof VehicleEntity) && entity.tickCount %((int)Math.max(0.04 * this.distanceTo(entity),2)) == 0) {
+                        entity.level().playSound(null, entity.getOnPos(), entity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.MISSILE_WARNING.get(), SoundSource.PLAYERS, 2, 1f);
+                    }
                 }
             }
-        }
 
 
-        double px = this.getX();
-        double ex = this.entityData.get(TARGET_X);
-        double pz = this.getZ();
-        double ez = this.entityData.get(TARGET_Z);
-        boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 30;
-        Vec3 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z));
-        if (entity != null) {
-            Vec3 toVec = getEyePosition().vectorTo(targetPos.add(entity.getDeltaMovement().scale(0.5))).normalize();
+            double px = this.getX();
+            double ex = this.entityData.get(TARGET_X);
+            double pz = this.getZ();
+            double ez = this.entityData.get(TARGET_Z);
+            boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 30;
+            Vec3 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z));
+            if (entity != null) {
+                Vec3 toVec = getEyePosition().vectorTo(targetPos.add(entity.getDeltaMovement().scale(0.5))).normalize();
+                if (this.tickCount > 3) {
+                    if (entityData.get(TOP)) {
+                        if (!dir) {
+                            Vec3 targetTopPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(5 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z));
+                            Vec3 toTopVec = getEyePosition().vectorTo(targetTopPos).normalize();
+                            setDeltaMovement(getDeltaMovement().add(toTopVec.scale(0.5)));
+                        } else {
+                            boolean lostTarget = this.getY() < entity.getY();
+                            if (!lostTarget) {
+                                setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                            }
+                        }
+                    } else {
+                        boolean lostTarget = (VectorTool.calculateAngle(getDeltaMovement(), toVec) > 80);
+                        if (!lostTarget) {
+                            setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                        }
+                    }
+                }
+            }
+        } else if (guide_type == 1) {
+
+            double px = this.getX();
+            double ex = this.entityData.get(TARGET_X);
+            double pz = this.getZ();
+            double ez = this.entityData.get(TARGET_Z);
+            boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 30;
+            Vec3 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y), this.entityData.get(TARGET_Z));
+            Vec3 toVec = getEyePosition().vectorTo(targetPos).normalize();
+
             if (this.tickCount > 3) {
                 if (entityData.get(TOP)) {
                     if (!dir) {
@@ -218,7 +248,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                         Vec3 toTopVec = getEyePosition().vectorTo(targetTopPos).normalize();
                         setDeltaMovement(getDeltaMovement().add(toTopVec.scale(0.5)));
                     } else {
-                        boolean lostTarget = this.getY() < entity.getY();
+                        boolean lostTarget = this.getY() < this.entityData.get(TARGET_Y);
                         if (!lostTarget) {
                             setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
                         }
@@ -230,8 +260,8 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     }
                 }
             }
-        }
 
+        }
 
         if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {

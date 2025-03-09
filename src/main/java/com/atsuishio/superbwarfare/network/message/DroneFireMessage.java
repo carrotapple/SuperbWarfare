@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -50,20 +51,23 @@ public class DroneFireMessage {
                             boolean lookAtEntity = false;
 
                             Entity lookingEntity = SeekTool.seekLivingEntity(drone, drone.level(), 512, 2);
-                            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(512)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+
+                            BlockHitResult result = drone.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getViewVector(1).scale(512)),
+                                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, drone));
+                            Vec3 hitPos = result.getLocation();
 
                             if (lookingEntity != null) {
                                 lookAtEntity = true;
                             }
 
                             if (lookAtEntity) {
-                                offStack.getOrCreateTag().putInt("TargetX", (int) lookingEntity.getX());
-                                offStack.getOrCreateTag().putInt("TargetY", (int) lookingEntity.getY());
-                                offStack.getOrCreateTag().putInt("TargetZ", (int) lookingEntity.getZ());
+                                offStack.getOrCreateTag().putDouble("TargetX", lookingEntity.getX());
+                                offStack.getOrCreateTag().putDouble("TargetY", lookingEntity.getY());
+                                offStack.getOrCreateTag().putDouble("TargetZ", lookingEntity.getZ());
                             } else {
-                                offStack.getOrCreateTag().putInt("TargetX", (int) looking.x());
-                                offStack.getOrCreateTag().putInt("TargetY", (int) looking.y());
-                                offStack.getOrCreateTag().putInt("TargetZ", (int) looking.z());
+                                offStack.getOrCreateTag().putDouble("TargetX", hitPos.x());
+                                offStack.getOrCreateTag().putDouble("TargetY", hitPos.y());
+                                offStack.getOrCreateTag().putDouble("TargetZ", hitPos.z());
                             }
 
                             player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)

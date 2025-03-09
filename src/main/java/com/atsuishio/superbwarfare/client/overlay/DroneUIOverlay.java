@@ -21,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -77,9 +78,12 @@ public class DroneUIOverlay {
             if (entity != null) {
                 boolean lookAtEntity = false;
                 double distance = player.distanceTo(entity);
-                double blockRange = entity.position().distanceTo((Vec3.atLowerCornerOf(entity.level().clip(
-                        new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(event.getPartialTick()).scale(520)),
-                                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos())));
+
+                BlockHitResult result = entity.level().clip(new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(player.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity));
+                Vec3 hitPos = result.getLocation();
+
+                double blockRange = player.getEyePosition(1).distanceTo(hitPos);
 
                 double entityRange = 0;
 

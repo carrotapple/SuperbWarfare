@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.gui;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class RangeHelper {
 
@@ -76,18 +76,18 @@ public class RangeHelper {
         return range;
     }
 
-    public static boolean canReachTarget(double initialVelocity, double gravity, double velocityDecay, BlockPos startPos, BlockPos targetPos, double[] angles) {
+    public static boolean canReachTarget(double initialVelocity, double gravity, double velocityDecay, Vec3 startPos, Vec3 targetPos, double[] angles) {
         if (startPos.equals(targetPos)) {
             return false;
         }
 
-        int startX = startPos.getX();
-        int startY = startPos.getY();
-        int startZ = startPos.getZ();
+        double startX = startPos.x;
+        double startY = startPos.y;
+        double startZ = startPos.z;
 
-        int targetX = targetPos.getX();
-        int targetY = targetPos.getY();
-        int targetZ = targetPos.getZ();
+        double targetX = targetPos.x;
+        double targetY = targetPos.y;
+        double targetZ = targetPos.z;
 
         double distanceXZ = Math.sqrt(Math.pow(targetX - startX, 2) + Math.pow(targetZ - startZ, 2));
         if (distanceXZ > MAX_RANGE) {

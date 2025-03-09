@@ -11,7 +11,10 @@ import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -27,7 +30,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
@@ -127,8 +133,21 @@ public class FireMessage {
         if (stack.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
                 .orElse(new ModVariables.PlayerVariables()).zoom && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
-            if (seekingEntity != null) {
+            if (seekingEntity != null && !player.isCrouching()) {
+                tag.putInt("GuideType", 0);
                 tag.putString("TargetEntity", seekingEntity.getStringUUID());
+                tag.putBoolean("Seeking", true);
+                tag.putInt("SeekTime", 0);
+            } else {
+
+                BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+                Vec3 hitPos = result.getLocation();
+
+                tag.putInt("GuideType", 1);
+                tag.putDouble("TargetPosX", hitPos.x);
+                tag.putDouble("TargetPosY", hitPos.y);
+                tag.putDouble("TargetPosZ", hitPos.z);
                 tag.putBoolean("Seeking", true);
                 tag.putInt("SeekTime", 0);
             }
@@ -506,7 +525,9 @@ public class FireMessage {
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
                     (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
                     (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0),
+                    stack.getOrCreateTag().getInt("GuideType"),
+                    new Vec3(stack.getOrCreateTag().getDouble("TargetPosX"), stack.getOrCreateTag().getDouble("TargetPosY"), stack.getOrCreateTag().getDouble("TargetPosZ")));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -514,15 +535,11 @@ public class FireMessage {
                 missileEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
-            Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
-
             missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
             missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
             missileEntity.setTargetUuid(tag.getString("TargetEntity"));
             missileEntity.setAttackMode(tag.getBoolean("TopMode"));
-            if (targetEntity != null) {
-                missileEntity.setTargetPosition((float) targetEntity.getX(), (float) targetEntity.getEyeY(), (float) targetEntity.getZ());
-            }
+
             level.addFreshEntity(missileEntity);
         }
 

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -84,9 +85,12 @@ public class CannonHudOverlay {
         if (ClientEventHandler.zoomVehicle) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
-            double blockRange = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+            Vec3 hitPos = result.getLocation();
+
+            double blockRange = player.getEyePosition(1).distanceTo(hitPos);
 
             double entityRange = 0;
             if (lookingEntity instanceof LivingEntity living) {

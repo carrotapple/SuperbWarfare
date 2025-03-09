@@ -98,25 +98,45 @@ public class JavelinHudOverlay {
 
                 double zoom = Minecraft.getInstance().options.fov().get() / ClientEventHandler.fov + 0.5 * fovAdjust2;
 
-                for (var e : entities) {
-                    Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
-                    Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
+                Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
+
+                if (stack.getOrCreateTag().getInt("GuideType") == 0) {
+                    for (var e : entities) {
+                        Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
+                        Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(playerVec) * (1 - 1.0 / zoom));
+
+                        var cPos = playerVec.add(lookAngle);
+                        Vec3 point = RenderHelper.worldToScreen(pos, cPos);
+                        if (point == null) return;
+
+                        boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && e == targetEntity;
+                        boolean nearest = e == naerestEntity;
+
+                        poseStack.pushPose();
+                        float x = (float) point.x;
+                        float y = (float) point.y;
+
+                        RenderHelper.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        poseStack.popPose();
+                    }
+                } else {
+                    Vec3 pos = new Vec3(stack.getOrCreateTag().getDouble("TargetPosX"), stack.getOrCreateTag().getDouble("TargetPosY"), stack.getOrCreateTag().getDouble("TargetPosZ"));
                     Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(playerVec) * (1 - 1.0 / zoom));
+
+                    boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20;
 
                     var cPos = playerVec.add(lookAngle);
                     Vec3 point = RenderHelper.worldToScreen(pos, cPos);
                     if (point == null) return;
 
-                    boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && e == targetEntity;
-                    boolean nearest = e == naerestEntity;
-
                     poseStack.pushPose();
                     float x = (float) point.x;
                     float y = (float) point.y;
 
-                    RenderHelper.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                    RenderHelper.blit(poseStack, lockOn ? FRAME_LOCK : FRAME_TARGET, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                     poseStack.popPose();
                 }
+
             } else {
                 scopeScale = 1;
             }

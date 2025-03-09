@@ -33,6 +33,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -146,34 +147,61 @@ public class JavelinItem extends GunItem implements GeoItem {
             GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
+
                 List<Entity> decoy = SeekTool.seekLivingEntities(player, player.level(), 512, 8);
-                Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
-                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
                 for (var e : decoy) {
                     if (e instanceof FlareDecoyEntity flareDecoy) {
                         tag.putString("TargetEntity", flareDecoy.getStringUUID());
+                        tag.putDouble("TargetPosX", flareDecoy.getX());
+                        tag.putDouble("TargetPosY", flareDecoy.getEyeY());
+                        tag.putDouble("TargetPosZ", flareDecoy.getZ());
                     }
                 }
 
-                if (seekingEntity != null && seekingEntity == targetEntity) {
-                    tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);
-                    if (tag.getInt("SeekTime") > 0 && (!seekingEntity.getPassengers().isEmpty() || seekingEntity instanceof VehicleEntity) && seekingEntity.tickCount %3 == 0) {
-                        seekingEntity.level().playSound(null, seekingEntity.getOnPos(), seekingEntity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.LOCKING_WARNING.get(), SoundSource.PLAYERS, 1, 1f);
-                    }
-                } else {
-                    tag.putInt("SeekTime", 0);
-                }
+                Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
+                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
 
-                if (tag.getInt("SeekTime") == 1 && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCK.get(), 1, 1);
-                }
 
-                if (seekingEntity != null && tag.getInt("SeekTime") > 20) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 1, 1);
+                if (tag.getInt("GuideType") == 0) {
+                    if (seekingEntity != null && seekingEntity == targetEntity) {
+                        tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);
+                        if (tag.getInt("SeekTime") > 0 && (!seekingEntity.getPassengers().isEmpty() || seekingEntity instanceof VehicleEntity) && seekingEntity.tickCount %3 == 0) {
+                            seekingEntity.level().playSound(null, seekingEntity.getOnPos(), seekingEntity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.LOCKING_WARNING.get(), SoundSource.PLAYERS, 1, 1f);
+                        }
+                    } else {
+                        tag.putInt("SeekTime", 0);
                     }
-                    if ((!seekingEntity.getPassengers().isEmpty() || seekingEntity instanceof VehicleEntity) && seekingEntity.tickCount %2 == 0) {
-                        seekingEntity.level().playSound(null, seekingEntity.getOnPos(), seekingEntity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.LOCKED_WARNING.get(), SoundSource.PLAYERS, 1, 0.95f);
+
+                    if (tag.getInt("SeekTime") == 1 && player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCK.get(), 1, 1);
+                    }
+
+                    if (seekingEntity != null && tag.getInt("SeekTime") > 20) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 1, 1);
+                        }
+                        if ((!seekingEntity.getPassengers().isEmpty() || seekingEntity instanceof VehicleEntity) && seekingEntity.tickCount %2 == 0) {
+                            seekingEntity.level().playSound(null, seekingEntity.getOnPos(), seekingEntity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.LOCKED_WARNING.get(), SoundSource.PLAYERS, 1, 0.95f);
+                        }
+                    }
+
+                } else if (tag.getInt("GuideType") == 1) {
+
+                    Vec3 toVec = player.getEyePosition().vectorTo(new Vec3(tag.getDouble("TargetPosX"), tag.getDouble("TargetPosY"), tag.getDouble("TargetPosZ"))).normalize();
+                    if (VectorTool.calculateAngle(player.getViewVector(1), toVec) < 8) {
+                        tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);
+                    } else {
+                        tag.putInt("SeekTime", 0);
+                    }
+
+                    if (tag.getInt("SeekTime") == 1 && player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCK.get(), 1, 1);
+                    }
+
+                    if (tag.getInt("SeekTime") > 20) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 1, 1);
+                        }
                     }
                 }
             }

@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -181,16 +180,16 @@ public class MortarEntity extends VehicleEntity implements GeoEntity {
     }
 
     public boolean setTarget(ItemStack stack) {
-        int targetX = stack.getOrCreateTag().getInt("TargetX");
-        int targetY = stack.getOrCreateTag().getInt("TargetY");
-        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+        double targetX = stack.getOrCreateTag().getDouble("TargetX");
+        double targetY = stack.getOrCreateTag().getDouble("TargetY");
+        double targetZ = stack.getOrCreateTag().getDouble("TargetZ");
 
         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(targetX, targetY, targetZ));
 
         double[] angles = new double[2];
-        boolean flag = RangeHelper.canReachTarget(11, 0.146, 0.99,
-                new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ()),
-                new BlockPos(targetX, targetY, targetZ),
+        boolean flag = RangeHelper.canReachTarget(11.4, 0.146, 0.99,
+                new Vec3(this.getX(), this.getEyeY(), this.getZ()),
+                new Vec3(targetX, targetY, targetZ),
                 angles);
 
         if (flag) {

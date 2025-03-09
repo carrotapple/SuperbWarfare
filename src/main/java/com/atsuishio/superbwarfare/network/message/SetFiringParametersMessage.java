@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -39,20 +40,22 @@ public class SetFiringParametersMessage {
                 boolean lookAtEntity = false;
                 Entity lookingEntity = TraceTool.findLookingEntity(player, 520);
 
-                Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+                BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+                Vec3 hitPos = result.getLocation();
 
                 if (lookingEntity != null) {
                     lookAtEntity = true;
                 }
 
                 if (lookAtEntity) {
-                    stack.getOrCreateTag().putInt("TargetX", (int) lookingEntity.getX());
-                    stack.getOrCreateTag().putInt("TargetY", (int) lookingEntity.getY());
-                    stack.getOrCreateTag().putInt("TargetZ", (int) lookingEntity.getZ());
+                    stack.getOrCreateTag().putDouble("TargetX", lookingEntity.getX());
+                    stack.getOrCreateTag().putDouble("TargetY", lookingEntity.getY());
+                    stack.getOrCreateTag().putDouble("TargetZ", lookingEntity.getZ());
                 } else {
-                    stack.getOrCreateTag().putInt("TargetX", (int) looking.x());
-                    stack.getOrCreateTag().putInt("TargetY", (int) looking.y());
-                    stack.getOrCreateTag().putInt("TargetZ", (int) looking.z());
+                    stack.getOrCreateTag().putDouble("TargetX", hitPos.x());
+                    stack.getOrCreateTag().putDouble("TargetY", hitPos.y());
+                    stack.getOrCreateTag().putDouble("TargetZ", hitPos.z());
                 }
 
                 player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)

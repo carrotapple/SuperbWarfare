@@ -26,6 +26,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -268,9 +269,12 @@ public class VehicleHudOverlay {
 
                 // 测距
                 boolean lookAtEntity = false;
-                double blockRange = cameraPos.distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                        new ClipContext(player.getEyePosition(), player.getEyePosition().add(iLand.getBarrelVec(event.getPartialTick()).scale(520)),
-                                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+                Vec3 hitPos = result.getLocation();
+
+                double blockRange = player.getEyePosition(1).distanceTo(hitPos);
 
                 double entityRange = 0;
 
@@ -484,9 +488,9 @@ public class VehicleHudOverlay {
             guiGraphics.drawString(Minecraft.getInstance().font, name.get(), 37, y, 0x66ff00, true);
 
             String num = "[" + (i + 1) + "]";
-            guiGraphics.drawString(Minecraft.getInstance().font, num, 15 - Minecraft.getInstance().font.width(num), y, 0x66ff00, true);
+            guiGraphics.drawString(Minecraft.getInstance().font, num, 20 - Minecraft.getInstance().font.width(num), y, 0x66ff00, true);
 
-            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 25, y + 1, 100, 0, 0, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 25, y, 100, 0, 0, 8, 8, 8, 8);
             index++;
         }
     }
