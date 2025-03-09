@@ -43,23 +43,23 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 
 public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
 
     private float damage = 250f;
-    private float explosion_damage = 200f;
-    private float explosion_radius = 10f;
+    private float explosionDamage = 200f;
+    private float explosionRadius = 10f;
 
-    public WgMissileEntity(EntityType<? extends WgMissileEntity> type, Level world) {
-        super(type, world);
+    public WgMissileEntity(EntityType<? extends WgMissileEntity> type, Level level) {
+        super(type, level);
         this.noCulling = true;
     }
 
-    public WgMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
+    public WgMissileEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
         super(ModEntities.WG_MISSILE.get(), entity, level);
         this.damage = damage;
-        this.explosion_damage = explosion_damage;
-        this.explosion_radius = explosion_radius;
+        this.explosionDamage = explosionDamage;
+        this.explosionRadius = explosionRadius;
     }
 
     public WgMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -73,7 +73,7 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.ROCKET.get();
+        return ModItems.WIRE_GUIDE_MISSILE.get();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
             if (this.level() instanceof ServerLevel) {
                 causeMissileExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.explosion_damage, this.explosion_radius);
+                        entity, this.explosionDamage, this.explosionRadius);
             }
         }
     }
@@ -116,7 +116,7 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
         if (this.level() instanceof ServerLevel) {
             causeMissileExplode(this,
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                    this, this.explosion_damage, this.explosion_radius);
+                    this, this.explosionDamage, this.explosionRadius);
         }
     }
 
@@ -146,7 +146,6 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
             double angle = Mth.abs((float) VectorTool.calculateAngle(lookVec, toVec));
             setDeltaMovement(getDeltaMovement().add(addVec.scale(Math.min(0.1 + 0.15 * angle + distanceTo(getOwner()) * 0.003, tickCount < 15 ? 0.04 : 0.4))));
 
-
             // 控制速度
             if (this.getDeltaMovement().length() < 2.8) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
@@ -163,7 +162,7 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
             if (this.level() instanceof ServerLevel) {
                 causeMissileExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius);
+                        this, this.explosionDamage, this.explosionRadius);
             }
             this.discard();
         }
@@ -186,10 +185,6 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
     @Override
     protected float getGravity() {
         return 0;
-    }
-
-    public String getSyncedAnimation() {
-        return null;
     }
 
     public void setAnimation(String animation) {
