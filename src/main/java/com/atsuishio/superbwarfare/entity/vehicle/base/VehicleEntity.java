@@ -214,9 +214,9 @@ public abstract class VehicleEntity extends Entity {
         roll = rot;
     }
 
-    public void turretTurnSound(float diffX, float diffY) {
+    public void turretTurnSound(float diffX, float diffY, float pitch) {
         if (level().isClientSide && java.lang.Math.max(Mth.abs(diffX), Mth.abs(diffY)) > 0) {
-            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.TURRET_TURN.get(), this.getSoundSource(), (float) java.lang.Math.min(0.15 * (java.lang.Math.max(Mth.abs(diffX), Mth.abs(diffY))), 0.75), (random.nextFloat() * 0.05f + 0.95f), false);
+            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.TURRET_TURN.get(), this.getSoundSource(), (float) java.lang.Math.min(0.15 * (java.lang.Math.max(Mth.abs(diffX), Mth.abs(diffY))), 0.75), (random.nextFloat() * 0.05f + pitch), false);
         }
     }
 

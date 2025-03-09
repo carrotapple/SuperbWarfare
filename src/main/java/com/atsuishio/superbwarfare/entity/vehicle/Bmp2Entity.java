@@ -509,7 +509,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-        turretTurnSound(diffX, diffY);
+        turretTurnSound(diffX, diffY, 0.95f);
 
         this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -74f, 7.5f));
         this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -15, 15));

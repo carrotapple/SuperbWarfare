@@ -589,7 +589,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-        turretTurnSound(diffX, diffY);
+        turretTurnSound(diffX, diffY, 0.95f);
 
         float min = -5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
         float max = 5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
@@ -610,7 +610,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
         diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
 
-        turretTurnSound(diffX, diffY);
+        turretTurnSound(diffX, diffY, 0.95f);
 
         this.setGunXRot(Mth.clamp(this.getGunXRot() + Mth.clamp(0.95f * diffX, -10, 10), -60f, 12.5f));
         this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -15, 15));

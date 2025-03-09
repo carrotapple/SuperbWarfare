@@ -288,6 +288,8 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
 
             float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(targetY - this.getYRot()));
 
+            turretTurnSound(0, diffY, 1.1f);
+
             this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -60f, 60f));
             this.setRot(this.getYRot(), this.getXRot());
 

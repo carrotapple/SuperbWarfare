@@ -357,7 +357,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-        turretTurnSound(diffX, diffY);
+        turretTurnSound(diffX, diffY, 0.95f);
 
         this.setTurretXRot(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -40, 40));
         this.setTurretYRot(Mth.clamp(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -40, 40), -140, 140));
