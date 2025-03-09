@@ -590,24 +590,26 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     private void turretAngle() {
         Entity driver = this.getFirstPassenger();
-        if (!(driver instanceof Player)) return;
+        if (driver != null) {
+            float turretAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
 
-        float turretAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
+            float diffY;
+            float diffX;
 
-        float diffY;
-        float diffX;
+            diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
+            diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-        diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
-        diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
+            turretTurnSound(diffX, diffY, 0.95f);
 
-        turretTurnSound(diffX, diffY, 0.95f);
+            float min = -5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
+            float max = 5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
 
-        float min = -5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
-        float max = 5 + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
-
-        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -30f, 4f));
-        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, min, max));
-        turretRot = Mth.clamp(0.9f * diffY, min, max);
+            this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -30f, 4f));
+            this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, min, max));
+            turretRot = Mth.clamp(0.9f * diffY, min, max);
+        } else {
+            turretRot = 0;
+        }
     }
 
     private void gunnerAngle() {
