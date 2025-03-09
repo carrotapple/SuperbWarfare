@@ -54,6 +54,7 @@ public class ModUtils {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModPerks.register(bus);
+        ModSerializers.REGISTRY.register(bus);
         ModSounds.REGISTRY.register(bus);
         ModBlocks.REGISTRY.register(bus);
         ModBlockEntities.REGISTRY.register(bus);
