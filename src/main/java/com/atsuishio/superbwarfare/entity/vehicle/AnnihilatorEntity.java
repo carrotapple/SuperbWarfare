@@ -496,7 +496,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             float offset = (float) VectorTool.calculateAngle(entity.getViewVector(1), barrelLookAt);
 
             entityData.set(YAW, passenger.getYHeadRot());
-            entityData.set(PITCH, passenger.getXRot() - offset);
+            entityData.set(PITCH, Mth.clamp(passenger.getXRot() - offset, -45f , 5f));
         }
 
         float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
