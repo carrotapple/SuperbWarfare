@@ -3,12 +3,13 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -85,6 +86,18 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     public SpeedboatEntity(EntityType<SpeedboatEntity> type, Level world) {
         super(type, world);
+    }
+
+    @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new ProjectileWeapon()
+                                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
+                                .headShot(2)
+                                .zoom(false)
+                }
+        };
     }
 
     @Override
@@ -241,11 +254,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         Vector4f worldPosition = transformPosition(transform, x, y, z);
 
 
-        ProjectileEntity projectile = new ProjectileEntity(player.level())
-                .shooter(player)
-                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
-                .headShot(2f)
-                .zoom(false);
+        var projectile = ((ProjectileWeapon) getWeapon(0)).create(player);
 
         projectile.bypassArmorRate(0.4f);
         projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
@@ -558,11 +567,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/speedboat_icon.png");
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        return index == 0 ? 0 : -1;
     }
 
     @Override

@@ -238,7 +238,7 @@ public abstract class VehicleEntity extends Entity {
             this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
 
             var weapons = weaponVehicle.getAllWeapons();
-            for (int i = 0; i < weapons.length || i < this.getMaxPassengers(); i++) {
+            for (int i = 0; i < weapons.length && i < this.getMaxPassengers(); i++) {
                 this.availableWeapons[i] = weapons[i];
             }
 

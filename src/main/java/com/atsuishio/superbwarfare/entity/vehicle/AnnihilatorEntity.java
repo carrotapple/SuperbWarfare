@@ -6,6 +6,8 @@ import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.EnergyVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.EmptyWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.*;
@@ -80,6 +82,15 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public AnnihilatorEntity(EntityType<AnnihilatorEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
+    }
+
+    @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new EmptyWeapon()
+                }
+        };
     }
 
     @Override

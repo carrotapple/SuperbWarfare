@@ -3,10 +3,11 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.CannonShellWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -62,8 +63,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.MLE1934_HP.get();
 
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
-
     public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MLE_1934.get(), world);
     }
@@ -73,13 +72,34 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new CannonShellWeapon()
+                                .hitDamage(VehicleConfig.MLE1934_AP_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.MLE1934_AP_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.MLE1934_AP_EXPLOSION_RADIUS.get().floatValue())
+                                .durability(70)
+                                .sound(ModSounds.CANNON_RELOAD.get()),
+                        new CannonShellWeapon()
+                                .hitDamage(VehicleConfig.MLE1934_HE_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.MLE1934_HE_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.MLE1934_HE_EXPLOSION_RADIUS.get().floatValue())
+                                .durability(1)
+                                .fireProbability(0.24F)
+                                .fireTime(5)
+                                .sound(ModSounds.CANNON_RELOAD.get()),
+                }
+        };
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
         this.entityData.define(PITCH, 0f);
         this.entityData.define(YAW, 0f);
-        this.entityData.define(WEAPON_TYPE, 0);
     }
 
     @Override
@@ -307,8 +327,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
             leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
             // 左炮管
-            CannonShellEntity entityToSpawnLeft = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
-                    .durability(durability);
+            var entityToSpawnLeft = ((CannonShellWeapon) getWeapon(0)).create(player);
 
             entityToSpawnLeft.setPos(this.getX() + leftPos.x,
                     this.getEyeY() - 0.2 + leftPos.y,
@@ -352,8 +371,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
                 rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                 rightPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
-                CannonShellEntity entityToSpawnRight = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
-                        .durability(durability);
+                var entityToSpawnRight = ((CannonShellWeapon) getWeapon(0)).create(player);
 
                 entityToSpawnRight.setPos(this.getX() + rightPos.x,
                         this.getEyeY() - 0.2 + rightPos.y,
@@ -445,32 +463,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         float f1 = Mth.clamp(f, -30.0F, 4.0F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
-    }
-
-    @Override
-    public void setWeaponType(int index, int type) {
-        if (index != 0) return;
-        entityData.set(WEAPON_TYPE, type);
-    }
-
-    @Override
-    public void changeWeapon(int index, int value, boolean isScroll) {
-        if (index != 0) return;
-
-        int type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
-        var sound = switch (type) {
-            case 0, 1 -> ModSounds.CANNON_RELOAD.get();
-            default -> null;
-        };
-        if (sound == null) return;
-
-        setWeaponType(0, type);
-        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        return index == 0 ? entityData.get(WEAPON_TYPE) : -1;
     }
 
     @Override

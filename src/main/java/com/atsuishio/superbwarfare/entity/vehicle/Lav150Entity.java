@@ -3,12 +3,13 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.SmallCannonShellWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
@@ -69,8 +70,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
 
@@ -98,6 +97,24 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new SmallCannonShellWeapon()
+                                .damage(VehicleConfig.LAV_150_CANNON_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue())
+                                .sound(ModSounds.INTO_MISSILE.get()),
+                        new ProjectileWeapon()
+                                .damage(9.5f)
+                                .headShot(2)
+                                .zoom(false)
+                                .sound(ModSounds.INTO_CANNON.get()),
+                }
+        };
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(AMMO, 0);
@@ -105,7 +122,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(HEAT, 0);
         this.entityData.define(COAX_HEAT, 0);
-        this.entityData.define(WEAPON_TYPE, 0);
     }
 
     @Override
@@ -289,10 +305,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             float z = 4f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
-            SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                    VehicleConfig.LAV_150_CANNON_DAMAGE.get(),
-                    VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get(),
-                    VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue());
+            var smallCannonShell = ((SmallCannonShellWeapon) getWeapon(0)).create(player);
 
             smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
             smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 20,
@@ -333,17 +346,13 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             Vector4f worldPosition = transformPosition(transform, x, y, z);
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
-                ProjectileEntity projectileRight = new ProjectileEntity(player.level())
-                        .shooter(player)
-                        .damage(9.5f)
-                        .headShot(2f)
-                        .zoom(false);
+                var projectile = ((ProjectileWeapon) getWeapon(0)).create(player);
 
-                projectileRight.bypassArmorRate(0.2f);
-                projectileRight.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-                projectileRight.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 36,
+                projectile.bypassArmorRate(0.2f);
+                projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+                projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 36,
                         0.25f);
-                this.level().addFreshEntity(projectileRight);
+                this.level().addFreshEntity(projectile);
 
                 if (!hasCreativeAmmo) {
                     ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
@@ -687,34 +696,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     @Override
     public int zoomFov() {
         return 3;
-    }
-
-    @Override
-    public void changeWeapon(int index, int value, boolean isScroll) {
-        if (index != 0) return;
-
-        int type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
-
-        var sound = switch (type) {
-            case 0 -> ModSounds.INTO_MISSILE.get();
-            case 1 -> ModSounds.INTO_CANNON.get();
-            default -> null;
-        };
-        if (sound == null) return;
-
-        setWeaponType(0, type);
-        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        return index == 0 ? entityData.get(WEAPON_TYPE) : -1;
-    }
-
-    @Override
-    public void setWeaponType(int index, int type) {
-        if (index != 0) return;
-        entityData.set(WEAPON_TYPE, type);
     }
 
     @Override

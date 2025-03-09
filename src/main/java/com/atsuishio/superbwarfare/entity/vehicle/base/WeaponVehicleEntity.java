@@ -54,9 +54,7 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
     /**
      * 获取所有可用武器列表
      */
-    default VehicleWeapon[][] getAllWeapons() {
-        return new VehicleWeapon[0][];
-    }
+    VehicleWeapon[][] getAllWeapons();
 
     /**
      * 获取该槽位可用的武器列表

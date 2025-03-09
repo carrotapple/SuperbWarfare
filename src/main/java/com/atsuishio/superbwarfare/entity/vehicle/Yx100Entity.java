@@ -374,7 +374,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
 
             var cannonShell = (CannonShellWeapon) getWeapon(0);
-            var entityToSpawn = cannonShell.create(player, level());
+            var entityToSpawn = cannonShell.create(player);
 
             entityToSpawn.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
             entityToSpawn.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, cannonShell.velocity, 0.02f);

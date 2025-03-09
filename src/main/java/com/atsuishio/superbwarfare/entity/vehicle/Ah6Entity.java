@@ -4,12 +4,14 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
-import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.HeliRocketWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
@@ -70,7 +72,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
@@ -100,12 +101,30 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new ProjectileWeapon()
+                                .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
+                                .headShot(2)
+                                .zoom(false)
+                                .heBullet(1)
+                                .bypassArmorRate(0.1f)
+                                .sound(ModSounds.INTO_MISSILE.get()),
+                        new HeliRocketWeapon()
+                                .damage(VehicleConfig.AH_6_ROCKET_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.AH_6_ROCKET_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get()),
+                }
+        };
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(AMMO, 0);
         this.entityData.define(LOADED_ROCKET, 0);
         this.entityData.define(DELTA_ROT, 0f);
-        this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(PROPELLER_ROT, 0f);
         this.entityData.define(DECOY_COUNT, 6);
     }
@@ -519,13 +538,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             worldPositionLeft = transformPosition(transform, x, y, z);
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
-                ProjectileEntity projectileRight = new ProjectileEntity(player.level())
-                        .shooter(player)
-                        .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
-                        .headShot(2f)
-                        .zoom(false)
-                        .heBullet(1)
-                        .bypassArmorRate(0.1f);
+                ProjectileEntity projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player);
 
                 projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
                 projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
@@ -538,13 +551,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             }
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
-                ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
-                        .shooter(player)
-                        .damage(VehicleConfig.AH_6_CANNON_DAMAGE.get())
-                        .headShot(2f)
-                        .zoom(false)
-                        .heBullet(1)
-                        .bypassArmorRate(0.1f);
+                ProjectileEntity projectileLeft = ((ProjectileWeapon) getWeapon(0)).create(player);
 
                 projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
                 projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
@@ -593,25 +600,17 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             worldPositionRight = transformPosition(transform, -x, y, z);
             worldPositionLeft = transformPosition(transform, x, y, z);
 
-            if (fireIndex == 0) {
-                HeliRocketEntity heliRocketEntityRight = new HeliRocketEntity(player, player.level(),
-                        VehicleConfig.AH_6_ROCKET_DAMAGE.get(),
-                        VehicleConfig.AH_6_ROCKET_EXPLOSION_DAMAGE.get(),
-                        VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get());
+            var heliRocketEntity = ((HeliRocketWeapon) getWeapon(0)).create(player);
 
-                heliRocketEntityRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-                heliRocketEntityRight.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
-                player.level().addFreshEntity(heliRocketEntityRight);
+            if (fireIndex == 0) {
+                heliRocketEntity.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+                heliRocketEntity.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
+                player.level().addFreshEntity(heliRocketEntity);
                 fireIndex = 1;
             } else if (fireIndex == 1) {
-                HeliRocketEntity heliRocketEntityLeft = new HeliRocketEntity(player, player.level(),
-                        VehicleConfig.AH_6_ROCKET_DAMAGE.get(),
-                        VehicleConfig.AH_6_ROCKET_EXPLOSION_DAMAGE.get(),
-                        VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get());
-
-                heliRocketEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-                heliRocketEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
-                player.level().addFreshEntity(heliRocketEntityLeft);
+                heliRocketEntity.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+                heliRocketEntity.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
+                player.level().addFreshEntity(heliRocketEntity);
                 fireIndex = 0;
             }
 
@@ -726,34 +725,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     public int getMaxPassengers() {
         return 2;
-    }
-
-    @Override
-    public void changeWeapon(int index, int value, boolean isScroll) {
-        if (index != 0) return;
-
-        var type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
-
-        var sound = switch (type) {
-            case 0 -> ModSounds.INTO_MISSILE.get();
-            case 1 -> ModSounds.INTO_CANNON.get();
-            default -> null;
-        };
-        if (sound == null) return;
-
-        setWeaponType(0, type);
-        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        if (index == 0) return entityData.get(WEAPON_TYPE);
-        return -1;
-    }
-
-    @Override
-    public void setWeaponType(int index, int type) {
-        entityData.set(WEAPON_TYPE, type);
     }
 
     @Override

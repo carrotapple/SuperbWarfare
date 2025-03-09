@@ -3,10 +3,11 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.CannonShellWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -60,7 +61,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
 
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
 
     public Mk42Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MK_42.get(), world);
@@ -76,7 +76,28 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(PITCH, 0f);
         this.entityData.define(YAW, 0f);
-        this.entityData.define(WEAPON_TYPE, 0);
+    }
+
+    @Override
+    public VehicleWeapon[][] getAllWeapons() {
+        return new VehicleWeapon[][]{
+                new VehicleWeapon[]{
+                        new CannonShellWeapon()
+                                .hitDamage(VehicleConfig.MK42_AP_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.MK42_AP_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.MK42_AP_EXPLOSION_RADIUS.get().floatValue())
+                                .durability(60)
+                                .sound(ModSounds.CANNON_RELOAD.get()),
+                        new CannonShellWeapon()
+                                .hitDamage(VehicleConfig.MK42_HE_DAMAGE.get())
+                                .explosionDamage(VehicleConfig.MK42_HE_EXPLOSION_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.MK42_HE_EXPLOSION_RADIUS.get().floatValue())
+                                .durability(1)
+                                .fireProbability(0.18F)
+                                .fireTime(2)
+                                .sound(ModSounds.CANNON_RELOAD.get()),
+                }
+        };
     }
 
     @Override
@@ -252,33 +273,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                 InventoryTool.consumeItem(player.getInventory().items, ammo, 1);
             }
 
-            float hitDamage;
-            float explosionRadius;
-            float explosionDamage;
-            float fireProbability;
-            int fireTime;
-            int durability;
-
-            if (getWeaponType(0) == 0) {
-                // AP
-                hitDamage = VehicleConfig.MK42_AP_DAMAGE.get();
-                explosionRadius = VehicleConfig.MK42_AP_EXPLOSION_RADIUS.get();
-                explosionDamage = VehicleConfig.MK42_AP_EXPLOSION_DAMAGE.get();
-                fireProbability = 0;
-                fireTime = 0;
-                durability = 60;
-            } else {
-                // HE
-                hitDamage = VehicleConfig.MK42_HE_DAMAGE.get();
-                explosionRadius = VehicleConfig.MK42_HE_EXPLOSION_RADIUS.get();
-                explosionDamage = VehicleConfig.MK42_HE_EXPLOSION_DAMAGE.get();
-                fireProbability = 0.18F;
-                fireTime = 2;
-                durability = 1;
-            }
-
-            CannonShellEntity entityToSpawn = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
-                    .durability(durability);
+            var entityToSpawn = ((CannonShellWeapon) getWeapon(0)).create(player);
 
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
             entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
@@ -350,32 +345,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         float f1 = Mth.clamp(f, -85.0F, 16.3F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
-    }
-
-    @Override
-    public void setWeaponType(int index, int type) {
-        if (index != 0) return;
-        entityData.set(WEAPON_TYPE, type);
-    }
-
-    @Override
-    public void changeWeapon(int index, int value, boolean isScroll) {
-        if (index != 0) return;
-
-        int type = isScroll ? (value + getWeaponType(0) + 2) % 2 : value;
-        var sound = switch (type) {
-            case 0, 1 -> ModSounds.CANNON_RELOAD.get();
-            default -> null;
-        };
-        if (sound == null) return;
-
-        setWeaponType(0, type);
-        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
-    }
-
-    @Override
-    public int getWeaponType(int index) {
-        return index == 0 ? entityData.get(WEAPON_TYPE) : -1;
     }
 
     @Override
