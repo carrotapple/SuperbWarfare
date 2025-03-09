@@ -234,7 +234,7 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(LAST_DRIVER_UUID, "undefined");
 
-        if (this instanceof WeaponVehicleEntity weaponVehicle) {
+        if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
 
             var weapons = weaponVehicle.getAllWeapons();
@@ -256,7 +256,7 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.set(LAST_DRIVER_UUID, compound.getString("LastDriver"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
 
-        if (this instanceof WeaponVehicleEntity) {
+        if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             var selected = compound.getIntArray("SelectedWeapon");
             this.entityData.set(SELECTED_WEAPON, IntList.of(selected));
         }
@@ -268,7 +268,7 @@ public abstract class VehicleEntity extends Entity {
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         compound.putString("LastDriver", this.entityData.get(LAST_DRIVER_UUID));
 
-        if (this instanceof WeaponVehicleEntity) {
+        if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             compound.putIntArray("SelectedWeapon", this.entityData.get(SELECTED_WEAPON).toIntArray());
         }
     }
