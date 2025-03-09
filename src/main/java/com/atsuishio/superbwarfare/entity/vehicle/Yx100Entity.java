@@ -135,6 +135,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .fireProbability(0.18F)
                                 .fireTime(2)
                                 .durability(1)
+                                .velocity(25)
                                 .sound(ModSounds.INTO_CANNON.get()),
                 },
                 new VehicleWeapon[]{
