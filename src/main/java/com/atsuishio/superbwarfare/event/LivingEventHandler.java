@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
@@ -743,6 +744,7 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
+        if (!VehicleConfig.VEHICLE_ITEM_PICKUP.get()) return;
         if (event.getEntity().getVehicle() instanceof ContainerMobileVehicleEntity containerMobileVehicleEntity) {
             var pickUp = event.getItem();
             if (!containerMobileVehicleEntity.level().isClientSide) {

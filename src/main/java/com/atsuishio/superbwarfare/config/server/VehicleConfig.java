@@ -8,6 +8,7 @@ public class VehicleConfig {
 
     public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_BLOCKS;
     public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_HARD_BLOCKS;
+    public static ForgeConfigSpec.BooleanValue VEHICLE_ITEM_PICKUP;
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> COLLISION_ENTITY_BLACKLIST;
 
@@ -80,6 +81,9 @@ public class VehicleConfig {
 
         builder.comment("Allows vehicles to destroy hard blocks via collision");
         COLLISION_DESTROY_HARD_BLOCKS = builder.define("collision_destroy_hard_blocks", false);
+
+        builder.comment("Allow vehicles to pick up items");
+        VEHICLE_ITEM_PICKUP = builder.define("vehicle_item_pickup", true);
 
         builder.comment("List of entities that cannot be damaged by collision");
         COLLISION_ENTITY_BLACKLIST = builder.defineList("collision_entity_blacklist",
