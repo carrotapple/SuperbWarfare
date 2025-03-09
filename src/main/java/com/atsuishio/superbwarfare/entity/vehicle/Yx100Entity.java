@@ -68,7 +68,7 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
 
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> CANNON_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MG_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
@@ -76,7 +76,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GUN_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MACHINE_GUN_HEAT = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = 500;
@@ -158,12 +158,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.entityData.define(AMMO, 0);
         this.entityData.define(MG_AMMO, 0);
         this.entityData.define(LOADED_AMMO, 0);
-        this.entityData.define(FIRE_ANIM, 0);
+        this.entityData.define(CANNON_FIRE_TIME, 0);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
         this.entityData.define(YAW, 0f);
-        this.entityData.define(FIRE_TIME, 0);
+        this.entityData.define(GUN_FIRE_TIME, 0);
         this.entityData.define(MACHINE_GUN_HEAT, 0);
     }
 
@@ -229,32 +229,32 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         rightWheelRotO = this.getRightWheelRot();
         recoilShakeO = this.getRecoilShake();
 
-        this.setRecoilShake(Math.pow(entityData.get(FIRE_ANIM), 4) * 0.0000007 * Math.sin(0.2 * Math.PI * (entityData.get(FIRE_ANIM) - 2.5)));
+        this.setRecoilShake(Math.pow(entityData.get(CANNON_FIRE_TIME), 4) * 0.0000007 * Math.sin(0.2 * Math.PI * (entityData.get(CANNON_FIRE_TIME) - 2.5)));
 
         super.baseTick();
 
         if (this.entityData.get(TRACK_R) < 0) {
-            this.entityData.set(TRACK_R, 100f);
+            this.entityData.set(TRACK_R, 80f);
         }
 
-        if (this.entityData.get(TRACK_R) > 100) {
+        if (this.entityData.get(TRACK_R) > 80) {
             this.entityData.set(TRACK_R, 0f);
         }
 
         if (this.entityData.get(TRACK_L) < 0) {
-            this.entityData.set(TRACK_L, 100f);
+            this.entityData.set(TRACK_L, 80f);
         }
 
-        if (this.entityData.get(TRACK_L) > 100) {
+        if (this.entityData.get(TRACK_L) > 80) {
             this.entityData.set(TRACK_L, 0f);
         }
 
-        if (this.entityData.get(FIRE_ANIM) > 0) {
-            this.entityData.set(FIRE_ANIM, this.entityData.get(FIRE_ANIM) - 1);
+        if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
+            this.entityData.set(CANNON_FIRE_TIME, this.entityData.get(CANNON_FIRE_TIME) - 1);
         }
 
-        if (this.entityData.get(FIRE_TIME) > 0) {
-            this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
+        if (this.entityData.get(GUN_FIRE_TIME) > 0) {
+            this.entityData.set(GUN_FIRE_TIME, this.entityData.get(GUN_FIRE_TIME) - 1);
         }
 
         if (this.entityData.get(MACHINE_GUN_HEAT) > 0) {
@@ -388,7 +388,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 }
             }
 
-            this.entityData.set(FIRE_ANIM, 40);
+            this.entityData.set(CANNON_FIRE_TIME, 40);
             this.entityData.set(LOADED_AMMO, 0);
             this.consumeEnergy(10000);
             this.entityData.set(YAW, getTurretYRot());
@@ -472,7 +472,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 }
             }
 
-            this.entityData.set(FIRE_TIME, 2);
+            this.entityData.set(GUN_FIRE_TIME, 2);
             this.entityData.set(MACHINE_GUN_HEAT, this.entityData.get(MACHINE_GUN_HEAT) + 4);
 
             Level level = player.level();
@@ -861,24 +861,24 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.clampRotation(entity);
     }
 
-    private PlayState firePredicate(AnimationState<Yx100Entity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 20) {
+    private PlayState cannonShootPredicate(AnimationState<Yx100Entity> event) {
+        if (this.entityData.get(CANNON_FIRE_TIME) > 20) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
     }
 
-    private PlayState gunFirePredicate(AnimationState<Yx100Entity> event) {
-        if (this.entityData.get(FIRE_TIME) > 0) {
+    private PlayState gunShootPredicate(AnimationState<Yx100Entity> event) {
+        if (this.entityData.get(GUN_FIRE_TIME) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire2"));
         }
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle2"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
-        data.add(new AnimationController<>(this, "shoot", 0, this::gunFirePredicate));
+        data.add(new AnimationController<>(this, "cannon", 0, this::cannonShootPredicate));
+        data.add(new AnimationController<>(this, "gun", 0, this::gunShootPredicate));
     }
 
     @Override

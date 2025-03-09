@@ -131,6 +131,15 @@
 				}
 			}
 		},
+		"animation.yx100.idle2": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"flare": {
+					"scale": 0
+				}
+			}
+		},
 		"animation.yx100.fire2": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,

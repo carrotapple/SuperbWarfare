@@ -3,7 +3,13 @@ package com.atsuishio.superbwarfare.client.model.entity;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.TRACK_L;
+import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.TRACK_R;
 
 public class Yx100Model extends GeoModel<Yx100Entity> {
 
@@ -35,91 +41,79 @@ public class Yx100Model extends GeoModel<Yx100Entity> {
         return ModUtils.loc("textures/entity/yx_100.png");
     }
 
-//    @Override
-//    public void setCustomAnimations(Yx100Entity animatable, long instanceId, AnimationState<Yx100Entity> animationState) {
-//        for (int i = 0; i < 50; i++) {
-//            CoreGeoBone trackL = getAnimationProcessor().getBone("trackL" + i);
-//            CoreGeoBone trackLRot = getAnimationProcessor().getBone("trackLRot" + i);
-//            CoreGeoBone trackR = getAnimationProcessor().getBone("trackR" + i);
-//            CoreGeoBone trackRRot = getAnimationProcessor().getBone("trackRRot" + i);
-//
-//            float t = animatable.getEntityData().get(TRACK_L) + 2 * i;
-//
-//            if (t >= 100) {
-//                t -= 100;
-//            }
-//
-//            trackAnimation(trackL, trackLRot, t);
-//
-//            float t2 = animatable.getEntityData().get(TRACK_R) + 2 * i;
-//
-//            if (t2 >= 100) {
-//                t2 -= 100;
-//            }
-//
-//            trackAnimation(trackR, trackRRot, t2);
-//        }
-//    }
-//
-//    public void trackAnimation(CoreGeoBone track, CoreGeoBone trackRot, float t) {
-//        if (t < 37.5) {
-//            track.setPosY(0);
-//            track.setPosZ(3 * t);
-//            trackRot.setRotX(0);
-//        }
-//
-//        if (t >= 37.5 && t < 39.5) {
-//            track.setPosY(-(t - 37.5f) * 3 * 0.7071f);
-//            track.setPosZ(3 * 37.5f + (t - 37.5f) * 3 * 0.7071f);
-//            trackRot.setRotX(45 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 39.5 && t < 41.5) {
-//            track.setPosY(-5.3f - (t - 39.5f) * 3);
-//            track.setPosZ(116);
-//            trackRot.setRotX(90 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 41.5 && t < 43) {
-//            track.setPosY(-11.6f - (t - 41.5f) * 3 * 0.7071f);
-//            track.setPosZ(115 - (t - 41.5f) * 3 * 0.7071f);
-//            trackRot.setRotX(135 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 43 && t < 49.5) {
-//            track.setPosY(-15.6f - (t - 43f) * 3 * 0.45f);
-//            track.setPosZ(109.5f - (t - 43f) * 3 * 0.75f);
-//            trackRot.setRotX(150 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 49.5 && t < 76.5) {
-//            track.setPosY(-23.5f);
-//            track.setPosZ(95f - (t - 49.5f) * 3);
-//            trackRot.setRotX(180 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 76.5 && t < 83.5) {
-//            track.setPosY(-23.5f + (t - 76.5f) * 3 * 0.45f);
-//            track.setPosZ(13.5f - (t - 76.5f) * 3 * 0.75f);
-//            trackRot.setRotX(210 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 83.5 && t < 85.5) {
-//            track.setPosY(-12.7f + (t - 83.5f) * 3 * 0.7071f);
-//            track.setPosZ(-3.5f - (t - 83.5f) * 3 * 0.7071f);
-//            trackRot.setRotX(225 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 85.5 && t < 87) {
-//            track.setPosY(-9.2f + (t - 85.5f) * 3);
-//            track.setPosZ(-6.9f);
-//            trackRot.setRotX(270 * Mth.DEG_TO_RAD);
-//        }
-//
-//        if (t >= 87 && t < 89) {
-//            track.setPosY(-4.3f + (t - 87f) * 3 * 0.7071f);
-//            track.setPosZ(-6.9f + (t - 87f) * 3 * 0.7071f);
-//            trackRot.setRotX(315 * Mth.DEG_TO_RAD);
-//        }
-//    }
+    @Override
+    public void setCustomAnimations(Yx100Entity animatable, long instanceId, AnimationState<Yx100Entity> animationState) {
+        for (int i = 0; i < 40; i++) {
+            CoreGeoBone trackL = getAnimationProcessor().getBone("trackL" + i);
+            CoreGeoBone trackLRot = getAnimationProcessor().getBone("trackLRot" + i);
+            CoreGeoBone trackR = getAnimationProcessor().getBone("trackR" + i);
+            CoreGeoBone trackRRot = getAnimationProcessor().getBone("trackRRot" + i);
+
+            float t = animatable.getEntityData().get(TRACK_L) + 2 * i;
+
+            if (t >= 80) {
+                t -= 80;
+            }
+
+            trackAnimation(trackL, trackLRot, t);
+
+            float t2 = animatable.getEntityData().get(TRACK_R) + 2 * i;
+
+            if (t2 >= 80) {
+                t2 -= 80;
+            }
+
+            trackAnimation(trackR, trackRRot, t2);
+        }
+    }
+
+    public void trackAnimation(CoreGeoBone track, CoreGeoBone trackRot, float t) {
+        if (t < 34.5) {
+            track.setPosY(0);
+            track.setPosZ(4f * t);
+            trackRot.setRotX(0);
+        }
+
+        if (t >= 34.5 && t < 35.75) {
+            track.setPosY(-(t - 34.5f) * 4f * 0.7071f);
+            track.setPosZ(4f * 34.5f + (t - 34.5f) * 4f * 0.7071f);
+            trackRot.setRotX(45 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 35.75 && t < 37.75) {
+            track.setPosY(-4f - (t - 35.75f) * 4f);
+            track.setPosZ(142);
+            trackRot.setRotX(90 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 37.75 && t < 44) {
+            track.setPosY(-11.4f - (t - 37.75f) * 4.5f * 0.42f);
+            track.setPosZ(141f - (t - 37.75f) * 4.5f * 0.75f);
+            trackRot.setRotX(150 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 44 && t < 70.75) {
+            track.setPosY(-21.5f);
+            track.setPosZ(120f - (t - 44f) * 4);
+            trackRot.setRotX(180 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 70.75 && t < 77) {
+            track.setPosY(-21f + (t - 70.75f) * 4.5F * 0.42f);
+            track.setPosZ(11.4f - (t - 70.75f) * 4.5f * 0.75f);
+            trackRot.setRotX(210 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 77 && t < 78.25) {
+            track.setPosY(-7.8f + (t - 77f) * 4f);
+            track.setPosZ(-10.6f);
+            trackRot.setRotX(270 * Mth.DEG_TO_RAD);
+        }
+
+        if (t >= 78.25 && t < 80) {
+            track.setPosY(-2.3f + (t - 78.25f) * 4 * 0.7071f);
+            track.setPosZ(-9.6f + (t - 78.25f) * 4 * 0.7071f);
+            trackRot.setRotX(315 * Mth.DEG_TO_RAD);
+        }
+    }
 }
