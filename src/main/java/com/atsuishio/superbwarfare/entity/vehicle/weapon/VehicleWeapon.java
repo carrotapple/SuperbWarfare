@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
-public class VehicleWeapon {
+public abstract class VehicleWeapon {
 
     // 武器的图标
     public ResourceLocation icon;

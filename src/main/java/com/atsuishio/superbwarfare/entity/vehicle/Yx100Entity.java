@@ -3,12 +3,12 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.CannonShellWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -117,11 +117,33 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         // TODO 正确实现武器创建
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
-                        new VehicleWeapon().sound(ModSounds.INTO_MISSILE.get()),
-                        new VehicleWeapon().sound(ModSounds.INTO_CANNON.get()),
+                        // AP
+                        new CannonShellWeapon()
+                                .hitDamage(500)
+                                .explosionRadius(4)
+                                .explosionDamage(100)
+                                .fireProbability(0)
+                                .fireTime(0)
+                                .durability(60)
+                                .velocity(40)
+                                .sound(ModSounds.INTO_MISSILE.get()),
+                        // HE
+                        new CannonShellWeapon()
+                                .hitDamage(100)
+                                .explosionRadius(10)
+                                .explosionDamage(150)
+                                .fireProbability(0.18F)
+                                .fireTime(2)
+                                .durability(1)
+                                .sound(ModSounds.INTO_CANNON.get()),
                 },
                 new VehicleWeapon[]{
-                        new VehicleWeapon(),
+                        // 机枪
+                        new ProjectileWeapon()
+                                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
+                                .headShot(2)
+                                .zoom(false)
+                                .bypassArmorRate(0.4f),
                 }
         };
     }
@@ -344,37 +366,14 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public void vehicleShoot(Player player, int type) {
         if (reloadCoolDown == 0 && type == 0) {
             Matrix4f transform = getBarrelTransform();
-            float hitDamage, explosionRadius, explosionDamage, fireProbability;
-            int fireTime, durability;
-            float v;
-
-            if (getWeaponType(0) == 0) {
-                hitDamage = 500;
-                explosionRadius = 4;
-                explosionDamage = 100;
-                fireProbability = 0;
-                fireTime = 0;
-                durability = 60;
-                v = 40;
-            } else if (getWeaponType(0) == 1) {
-                hitDamage = 100;
-                explosionRadius = 10;
-                explosionDamage = 150;
-                fireProbability = 0.18F;
-                fireTime = 2;
-                durability = 1;
-                v = 25;
-            } else {
-                throw new IllegalStateException("Unexpected value: " + getWeaponType(0));
-            }
 
             Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(player, level(), hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
-                    .durability(durability);
+            var cannonShell = (CannonShellWeapon) getWeapon(0);
+            var entityToSpawn = cannonShell.create(player, level());
 
             entityToSpawn.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            entityToSpawn.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, v, 0.02f);
+            entityToSpawn.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, cannonShell.velocity, 0.02f);
             level().addFreshEntity(entityToSpawn);
 
             if (!player.level().isClientSide) {
@@ -451,16 +450,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             Matrix4f transform = getGunTransform();
             Vector4f worldPosition = transformPosition(transform, 0, -0.25f, 0);
 
-            ProjectileEntity projectile = new ProjectileEntity(player.level())
-                    .shooter(player)
-                    .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
-                    .headShot(2f)
-                    .zoom(false);
+            var projectile = (ProjectileWeapon) getWeapon(1);
+            var projectileEntity = projectile.create(player);
 
-            projectile.bypassArmorRate(0.4f);
-            projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            projectile.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.3f);
-            this.level().addFreshEntity(projectile);
+            projectileEntity.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+            projectileEntity.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.3f);
+
+            this.level().addFreshEntity(projectileEntity);
 
             float pitch = this.entityData.get(MACHINE_GUN_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(MACHINE_GUN_HEAT)));
 
