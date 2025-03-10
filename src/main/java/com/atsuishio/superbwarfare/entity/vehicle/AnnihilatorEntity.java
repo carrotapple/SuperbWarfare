@@ -41,6 +41,8 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -591,7 +593,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
     @Override
     public int getAmmoCount(Player player) {
-        return -1;
+        return (int) (this.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0) * 100f / (float) this.getMaxEnergy());
     }
 
     @Override

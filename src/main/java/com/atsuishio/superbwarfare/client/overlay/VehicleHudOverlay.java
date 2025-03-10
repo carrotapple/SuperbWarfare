@@ -5,6 +5,8 @@ import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.*;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.HeliRocketWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.LaserWeapon;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.FormatTool;
@@ -58,6 +60,7 @@ public class VehicleHudOverlay {
     private static final ResourceLocation DRIVER = ModUtils.loc("textures/screens/driver.png");
     private static final ResourceLocation PASSENGER = ModUtils.loc("textures/screens/passenger.png");
     private static final ResourceLocation SELECTED = ModUtils.loc("textures/screens/vehicle_weapon/selected.png");
+    private static final ResourceLocation NUMBER = ModUtils.loc("textures/screens/vehicle_weapon/number.png");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -524,10 +527,11 @@ public class VehicleHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        // TODO 实现载具武器HUD
         int frameIndex = 0;
 
         for (int i = weapons.size() - 1; i >= 0 && i < 9; i--) {
+            var weapon = weapons.get(i);
+
             ResourceLocation frame = ModUtils.loc("textures/screens/vehicle_weapon/frame_" + (i + 1) + ".png");
 
             pose.pushPose();
@@ -537,10 +541,16 @@ public class VehicleHudOverlay {
             } else {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 preciseBlit(guiGraphics, SELECTED, w - 95, h - frameIndex * 18 - 16, 100, 0, 0, 8, 8, 8, 8);
+
+                if (InventoryTool.hasCreativeAmmoBox(player) && !(weapon instanceof LaserWeapon) && !(weapon instanceof HeliRocketWeapon)) {
+                    preciseBlit(guiGraphics, NUMBER, w - 28, h - frameIndex * 18 - 15, 100, 58, 0, 10, 7.5f, 75, 7.5f);
+                } else {
+                    renderNumber(guiGraphics, weaponVehicle.getAmmoCount(player), weapon instanceof LaserWeapon,
+                            w - 20, h - frameIndex * 18 - 15.5f, 0.25f);
+                }
             }
 
             preciseBlit(guiGraphics, frame, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
-            var weapon = weapons.get(i);
             preciseBlit(guiGraphics, weapon.icon, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
 
             pose.popPose();
@@ -549,5 +559,28 @@ public class VehicleHudOverlay {
         }
 
         pose.popPose();
+    }
+
+    private static void renderNumber(GuiGraphics guiGraphics, int number, boolean percent, float x, float y, float scale) {
+        float pX = x;
+        if (percent) {
+            pX -= 32 * scale;
+            preciseBlit(guiGraphics, NUMBER, pX + 20 * scale, y, 100,
+                    200 * scale, 0, 32 * scale, 30 * scale, 300 * scale, 30 * scale);
+        }
+
+        int index = 0;
+        if (number == 0) {
+            preciseBlit(guiGraphics, NUMBER, pX, y, 100,
+                    0, 0, 20 * scale, 30 * scale, 300 * scale, 30 * scale);
+        }
+
+        while (number > 0) {
+            int digit = number % 10;
+            preciseBlit(guiGraphics, NUMBER, pX - index * 20 * scale, y, 100,
+                    digit * 20 * scale, 0, 20 * scale, 30 * scale, 300 * scale, 30 * scale);
+            number /= 10;
+            index++;
+        }
     }
 }
