@@ -132,7 +132,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         if (stack.getItem() instanceof CannonShellItem) {
             if (this.entityData.get(COOL_DOWN) == 0) {
                 var weaponType = stack.is(ModItems.AP_5_INCHES.get()) ? 0 : 1;
-                setWeaponType(0, weaponType);
+                setWeaponIndex(0, weaponType);
                 vehicleShoot(player, 0);
             }
             return InteractionResult.SUCCESS;
@@ -266,7 +266,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
             var isCreative = player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
 
             if (!isCreative) {
-                var ammo = getWeaponType(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
+                var ammo = getWeaponIndex(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
                 var ammoCount = InventoryTool.countItem(player.getInventory().items, ammo);
 
                 if (ammoCount <= 0) return;

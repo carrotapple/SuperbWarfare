@@ -166,16 +166,16 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedAmmo", this.entityData.get(LOADED_AMMO));
-        compound.putInt("WeaponType", getWeaponType(0));
-        compound.putInt("PassengerWeaponType", getWeaponType(1));
+        compound.putInt("WeaponType", getWeaponIndex(0));
+        compound.putInt("PassengerWeaponType", getWeaponIndex(1));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_AMMO, compound.getInt("LoadedAmmo"));
-        setWeaponType(0, compound.getInt("WeaponType"));
-        setWeaponType(1, compound.getInt("PassengerWeaponType"));
+        setWeaponIndex(0, compound.getInt("WeaponType"));
+        setWeaponIndex(1, compound.getInt("PassengerWeaponType"));
     }
 
     @Override

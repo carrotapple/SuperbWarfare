@@ -312,9 +312,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
         }
 
-        if (getWeaponType(0) == 0) {
+        if (getWeaponIndex(0) == 0) {
             this.entityData.set(AMMO, countItem(ModItems.SMALL_SHELL.get()));
-        } else if (getWeaponType(0) == 1) {
+        } else if (getWeaponIndex(0) == 1) {
             this.entityData.set(AMMO, ammoCount);
         } else {
             this.entityData.set(AMMO, countItem(ModItems.WIRE_GUIDE_MISSILE.get()));
@@ -332,7 +332,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void vehicleShoot(Player player, int type) {
         Matrix4f transform = getBarrelTransform();
-        if (getWeaponType(0) == 0) {
+        if (getWeaponIndex(0) == 0) {
             if (this.cannotFire) return;
             float x = -0.1125f;
             float y = 0.174025f;
@@ -370,7 +370,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-        } else if (getWeaponType(0) == 1) {
+        } else if (getWeaponIndex(0) == 1) {
             if (this.cannotFireCoax) return;
             float x = 0.1125f;
             float y = 0.174025f;
@@ -414,7 +414,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                     serverPlayer.playSound(ModSounds.M_60_VERYFAR.get(), 12, 1);
                 }
             }
-        } else if (getWeaponType(0) == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
+        } else if (getWeaponIndex(0) == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
             Matrix4f transformT = getBarrelTransform();
             Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
 
@@ -683,11 +683,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     private PlayState firePredicate(AnimationState<Bmp2Entity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 1 && getWeaponType(0) == 0) {
+        if (this.entityData.get(FIRE_ANIM) > 1 && getWeaponIndex(0) == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
         }
 
-        if (this.entityData.get(FIRE_ANIM) > 0 && getWeaponType(0) == 1) {
+        if (this.entityData.get(FIRE_ANIM) > 0 && getWeaponIndex(0) == 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire2"));
         }
 
@@ -716,9 +716,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public int mainGunRpm(Player player) {
-        if (getWeaponType(0) == 0) {
+        if (getWeaponIndex(0) == 0) {
             return 250;
-        } else if (getWeaponType(0) == 1) {
+        } else if (getWeaponIndex(0) == 1) {
             return 750;
         }
         return 250;
@@ -726,11 +726,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public boolean canShoot(Player player) {
-        if (getWeaponType(0) == 0) {
+        if (getWeaponIndex(0) == 0) {
             return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
-        } else if (getWeaponType(0) == 1) {
+        } else if (getWeaponIndex(0) == 1) {
             return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFireCoax;
-        } else if (getWeaponType(0) == 2) {
+        } else if (getWeaponIndex(0) == 2) {
             return (this.entityData.get(LOADED_MISSILE) > 0);
         }
         return false;

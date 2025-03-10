@@ -136,7 +136,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         if (stack.getItem() instanceof CannonShellItem) {
             if (this.entityData.get(COOL_DOWN) == 0) {
                 var weaponType = stack.is(ModItems.AP_5_INCHES.get()) ? 0 : 1;
-                setWeaponType(0, weaponType);
+                setWeaponIndex(0, weaponType);
                 vehicleShoot(player, 0);
             }
             return InteractionResult.SUCCESS;
@@ -282,7 +282,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
             if (isCreative) {
                 consumed = 2;
             } else {
-                var ammo = getWeaponType(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
+                var ammo = getWeaponIndex(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
                 var ammoCount = InventoryTool.countItem(player.getInventory().items, ammo);
 
                 // 尝试消耗两发弹药
@@ -298,7 +298,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
             int durability;
             boolean salvoShoot = consumed == 2;
 
-            if (getWeaponType(0) == 1) {
+            if (getWeaponIndex(0) == 1) {
                 // HE
                 hitDamage = VehicleConfig.MLE1934_HE_DAMAGE.get();
                 explosionRadius = VehicleConfig.MLE1934_HE_EXPLOSION_RADIUS.get();

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.weapon;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -8,7 +9,7 @@ import net.minecraft.world.item.Item;
 public abstract class VehicleWeapon {
 
     // 武器的图标
-    public ResourceLocation icon;
+    public ResourceLocation icon = ModUtils.loc("textures/screens/vehicle_weapon/empty.png");
     // 武器的名称
     public Component name;
     // 武器使用的弹药类型

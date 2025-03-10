@@ -38,11 +38,11 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
         if (weapons.isEmpty()) return;
         var count = weapons.size();
 
-        var typeIndex = isScroll ? (value + getWeaponType(index) + count) % count : value;
+        var typeIndex = isScroll ? (value + getWeaponIndex(index) + count) % count : value;
         var weapon = weapons.get(typeIndex);
 
         // 修改该槽位选择的武器
-        setWeaponType(index, typeIndex);
+        setWeaponIndex(index, typeIndex);
 
         // 播放武器切换音效
         var sound = weapon.sound;
@@ -92,19 +92,19 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
         var weapons = getAvailableWeapons(index);
         if (weapons.isEmpty()) return null;
 
-        var type = getWeaponType(index);
+        var type = getWeaponIndex(index);
         if (type < 0 || type >= weapons.size()) return null;
 
         return weapons.get(type);
     }
 
     /**
-     * 获取该槽位当前的武器类型，返回-1则表示该位置没有可用武器
+     * 获取该槽位当前的武器编号，返回-1则表示该位置没有可用武器
      *
      * @param index 武器槽位
      * @return 武器类型
      */
-    default int getWeaponType(int index) {
+    default int getWeaponIndex(int index) {
         if (!(this instanceof VehicleEntity vehicle)) return -1;
 
         var selectedWeapons = vehicle.getEntityData().get(VehicleEntity.SELECTED_WEAPON);
@@ -114,12 +114,12 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
     }
 
     /**
-     * 设置该槽位当前的武器类型
+     * 设置该槽位当前的武器编号
      *
      * @param index 武器槽位
      * @param type  武器类型
      */
-    default void setWeaponType(int index, int type) {
+    default void setWeaponIndex(int index, int type) {
         if (!(this instanceof VehicleEntity vehicle)) return;
 
         var selectedWeapons = vehicle.getEntityData().get(VehicleEntity.SELECTED_WEAPON).toIntArray();

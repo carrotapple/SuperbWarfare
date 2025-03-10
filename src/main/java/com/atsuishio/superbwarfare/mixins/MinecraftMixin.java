@@ -70,7 +70,7 @@ public class MinecraftMixin {
             // 数字键 武器切换
             if (!Screen.hasShiftDown()
                     && weaponVehicle.hasWeapon(seatIndex)
-                    && weaponVehicle.getWeaponType(seatIndex) != index) {
+                    && weaponVehicle.getWeaponIndex(seatIndex) != index) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
             }
         }
