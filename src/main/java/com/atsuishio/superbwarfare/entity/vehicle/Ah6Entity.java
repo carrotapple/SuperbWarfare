@@ -107,13 +107,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                                 .zoom(false)
                                 .heBullet(1)
                                 .bypassArmorRate(0.1f)
-                                .sound(ModSounds.INTO_CANNON.get()),
+                                .sound(ModSounds.INTO_CANNON.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/cannon_20mm.png")),
                         new HeliRocketWeapon()
                                 .damage(VehicleConfig.AH_6_ROCKET_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.AH_6_ROCKET_EXPLOSION_DAMAGE.get())
                                 .explosionRadius(VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get())
                                 .sound(ModSounds.INTO_MISSILE.get()),
-
                 }
         };
     }

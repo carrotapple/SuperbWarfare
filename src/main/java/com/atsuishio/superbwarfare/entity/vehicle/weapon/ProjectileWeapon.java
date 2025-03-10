@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ProjectileWeapon extends VehicleWeapon {
+
     public float headShot, damage, bypassArmorRate;
     public boolean zoom;
     public int jhpLevel, heLevel;

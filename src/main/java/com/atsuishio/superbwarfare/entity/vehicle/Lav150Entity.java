@@ -101,12 +101,14 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                                 .damage(VehicleConfig.LAV_150_CANNON_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get())
                                 .explosionRadius(VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue())
-                                .sound(ModSounds.INTO_MISSILE.get()),
+                                .sound(ModSounds.INTO_MISSILE.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/cannon_20mm.png")),
                         new ProjectileWeapon()
                                 .damage(9.5f)
                                 .headShot(2)
                                 .zoom(false)
-                                .sound(ModSounds.INTO_CANNON.get()),
+                                .sound(ModSounds.INTO_CANNON.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_7_62mm.png")),
                 }
         };
     }

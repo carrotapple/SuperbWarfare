@@ -144,7 +144,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .headShot(2)
                                 .zoom(false)
                                 .bypassArmorRate(0.4f)
-                                .ammo(ModItems.HEAVY_AMMO.get()),
+                                .ammo(ModItems.HEAVY_AMMO.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
                 }
         };
     }

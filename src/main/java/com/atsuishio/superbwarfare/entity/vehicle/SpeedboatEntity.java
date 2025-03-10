@@ -93,6 +93,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                                 .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
                                 .headShot(2)
                                 .zoom(false)
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png"))
                 }
         };
     }

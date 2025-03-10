@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class SmallCannonShellWeapon extends VehicleWeapon {
+
     public float damage = 40, explosionDamage = 80, explosionRadius = 5;
 
     public SmallCannonShellWeapon damage(float damage) {

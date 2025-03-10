@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.EnergyVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
-import com.atsuishio.superbwarfare.entity.vehicle.weapon.EmptyWeapon;
+import com.atsuishio.superbwarfare.entity.vehicle.weapon.LaserWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -88,7 +88,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public VehicleWeapon[][] getAllWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
-                        new EmptyWeapon()
+                        new LaserWeapon()
                 }
         };
     }
@@ -496,7 +496,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             float offset = (float) VectorTool.calculateAngle(entity.getViewVector(1), barrelLookAt);
 
             entityData.set(YAW, passenger.getYHeadRot());
-            entityData.set(PITCH, Mth.clamp(passenger.getXRot() - offset, -45f , 5f));
+            entityData.set(PITCH, Mth.clamp(passenger.getXRot() - offset, -45f, 5f));
         }
 
         float diffY = Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());

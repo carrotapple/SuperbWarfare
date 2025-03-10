@@ -1,10 +1,16 @@
 package com.atsuishio.superbwarfare.entity.vehicle.weapon;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class HeliRocketWeapon extends VehicleWeapon {
+
     public float damage = 140, explosionDamage = 60, explosionRadius = 5;
+
+    public HeliRocketWeapon() {
+        this.icon = ModUtils.loc("textures/screens/vehicle_weapon/rocket_70mm.png");
+    }
 
     public HeliRocketWeapon damage(float damage) {
         this.damage = damage;
