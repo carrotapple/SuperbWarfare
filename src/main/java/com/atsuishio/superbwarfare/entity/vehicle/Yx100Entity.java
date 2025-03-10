@@ -14,11 +14,13 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -77,6 +79,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     public static final float MAX_HEALTH = 500;
     public static final int MAX_ENERGY = 5000000;
+    public static final int SHOOT_COST = 10000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -140,7 +143,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 new VehicleWeapon[]{
                         // 机枪
                         new ProjectileWeapon()
-                                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
+                                .damage(VehicleConfig.HEAVY_MACHINE_GUN_DAMAGE.get())
                                 .headShot(2)
                                 .zoom(false)
                                 .bypassArmorRate(0.4f)
@@ -355,8 +358,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public void vehicleShoot(Player player, int type) {
         if (reloadCoolDown == 0 && type == 0) {
-            Matrix4f transform = getBarrelTransform();
 
+            if (!this.canConsume(SHOOT_COST)) {
+                player.displayClientMessage(Component.translatable("tips.superbwarfare.annihilator.energy_not_enough").withStyle(ChatFormatting.RED), true);
+                return;
+            }
+
+            Matrix4f transform = getBarrelTransform();
             Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
 
             var cannonShell = (CannonShellWeapon) getWeapon(0);

@@ -35,6 +35,8 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_RADIUS;
 
+    public static ForgeConfigSpec.IntValue HEAVY_MACHINE_GUN_DAMAGE;
+
     public static ForgeConfigSpec.IntValue ANNIHILATOR_HP;
     public static ForgeConfigSpec.IntValue ANNIHILATOR_SHOOT_COST;
     public static ForgeConfigSpec.IntValue ANNIHILATOR_MAX_ENERGY;
@@ -42,7 +44,6 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue SPEEDBOAT_HP;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_ENERGY_COST;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_MAX_ENERGY;
-    public static ForgeConfigSpec.IntValue SPEEDBOAT_GUN_DAMAGE;
 
     public static ForgeConfigSpec.IntValue AH_6_HP;
     public static ForgeConfigSpec.IntValue AH_6_MIN_ENERGY_COST;
@@ -150,6 +151,13 @@ public class VehicleConfig {
 
         builder.pop();
 
+        builder.push("HeavyMachineGun");
+
+        builder.comment("The gun damage of 12.7mm HMG");
+        HEAVY_MACHINE_GUN_DAMAGE = builder.defineInRange("heavy_machine_gun_damage", 25, 1, 10000000);
+
+        builder.pop();
+
         builder.push("annihilator");
 
         builder.comment("The HealthPoint of Annihilator");
@@ -173,9 +181,6 @@ public class VehicleConfig {
 
         builder.comment("The max energy storage of Speedboat");
         SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 1000000, 0, 2147483647);
-
-        builder.comment("The gun damage of Speedboat");
-        SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 25, 1, 10000000);
 
         builder.pop();
 
