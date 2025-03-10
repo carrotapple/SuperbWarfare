@@ -107,11 +107,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                                 .zoom(false)
                                 .heBullet(1)
                                 .bypassArmorRate(0.1f)
-                                .sound(ModSounds.INTO_MISSILE.get()),
+                                .sound(ModSounds.INTO_CANNON.get()),
                         new HeliRocketWeapon()
                                 .damage(VehicleConfig.AH_6_ROCKET_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.AH_6_ROCKET_EXPLOSION_DAMAGE.get())
-                                .explosionRadius(VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get()),
+                                .explosionRadius(VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get())
+                                .sound(ModSounds.INTO_MISSILE.get()),
+
                 }
         };
     }
@@ -278,8 +280,12 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     public void travel() {
         Entity passenger = getFirstPassenger();
+        Entity passenger2 = getNthEntity(1);
+        Entity passenger3 = getNthEntity(2);
+        Entity passenger4 = getNthEntity(3);
         float diffX;
         float diffY;
+
 
         if (passenger == null) {
             this.leftInputDown = false;
@@ -290,6 +296,9 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             this.downInputDown = false;
             this.setZRot(this.roll * 0.98f);
             this.setXRot(this.getXRot() * 0.98f);
+            if (passenger2 == null && passenger3 == null && passenger4 == null) {
+                this.entityData.set(POWER, this.entityData.get(POWER) * 0.99f);
+            }
         } else if (passenger instanceof Player) {
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
@@ -403,17 +412,30 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     protected void clampRotation(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -80.0F, 80F);
-        entity.xRotO += f1 - f;
-        entity.setXRot(entity.getXRot() + f1 - f);
+        if (entity == getNthEntity(0) || entity == getNthEntity(1)) {
+            float f = Mth.wrapDegrees(entity.getXRot());
+            float f1 = Mth.clamp(f, -80.0F, 80F);
+            entity.xRotO += f1 - f;
+            entity.setXRot(entity.getXRot() + f1 - f);
 
-        entity.setYBodyRot(this.getYRot());
-        float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f3 = Mth.clamp(f2, -80.0F, 80.0F);
-        entity.yRotO += f3 - f2;
-        entity.setYRot(entity.getYRot() + f3 - f2);
-        entity.setYBodyRot(this.getYRot());
+            float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+            float f3 = Mth.clamp(f2, -80.0F, 80.0F);
+            entity.yRotO += f3 - f2;
+            entity.setYRot(entity.getYRot() + f3 - f2);
+            entity.setYBodyRot(this.getYRot());
+        } else if (entity == getNthEntity(2)) {
+            float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+            float f3 = Mth.clamp(f2, 10.0F, 170.0F);
+            entity.yRotO += f3 - f2;
+            entity.setYRot(entity.getYRot() + f3 - f2);
+            entity.setYBodyRot(getYRot() + 90);
+        } else if (entity == getNthEntity(3)) {
+            float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+            float f3 = Mth.clamp(f2, -170.0F, -10.0F);
+            entity.yRotO += f3 - f2;
+            entity.setYRot(entity.getYRot() + f3 - f2);
+            entity.setYBodyRot(getYRot() - 90);
+        }
     }
 
     @Override
@@ -445,6 +467,14 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             Vector4f worldPosition = transformPosition(transform, -x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 2) {
+            Vector4f worldPosition = transformPosition(transform, -1.4f, -1.05f, 0);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 3) {
+            Vector4f worldPosition = transformPosition(transform, 1.4f, -1.05f, 0);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
 
         if (passenger != this.getFirstPassenger()) {
@@ -455,12 +485,28 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     public void copyEntityData(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
-        float g = Mth.clamp(f, -105.0f, 105.0f);
-        entity.yRotO += g - f;
-        entity.setYRot(entity.getYRot() + g - f);
-        entity.setYHeadRot(entity.getYRot());
-        entity.setYBodyRot(getYRot());
+        if (entity == getNthEntity(0) || entity == getNthEntity(1)) {
+            float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
+            float g = Mth.clamp(f, -105.0f, 105.0f);
+            entity.yRotO += g - f;
+            entity.setYRot(entity.getYRot() + g - f);
+            entity.setYHeadRot(entity.getYRot());
+            entity.setYBodyRot(getYRot());
+        } else if (entity == getNthEntity(2)) {
+            float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
+            float g = Mth.clamp(f, 10.0f, 170.0f);
+            entity.yRotO += g - f;
+            entity.setYRot(entity.getYRot() + g - f);
+            entity.setYHeadRot(entity.getYRot());
+            entity.setYBodyRot(getYRot() + 90);
+        } else if (entity == getNthEntity(3)) {
+            float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
+            float g = Mth.clamp(f, -170.0f, -10.0f);
+            entity.yRotO += g - f;
+            entity.setYRot(entity.getYRot() + g - f);
+            entity.setYHeadRot(entity.getYRot());
+            entity.setYBodyRot(getYRot() - 90);
+        }
     }
 
     @Override
@@ -636,7 +682,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
         double ox = getX() + vec3d.x;
         int i = this.getOrderedPassengers().indexOf(passenger);
-        if (i == 0 || i == 2) {
+        if (i == 0 || i == 2 || i == 3 || i == 4) {
             ox = getX() - vec3d.x;
         }
 
@@ -721,7 +767,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     public int getMaxPassengers() {
-        return 2;
+        return 4;
     }
 
     @Override

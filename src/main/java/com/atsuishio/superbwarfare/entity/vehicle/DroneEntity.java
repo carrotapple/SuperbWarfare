@@ -64,7 +64,9 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.UUID;
 
 public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
@@ -90,7 +92,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public int holdTickX;
     public int holdTickY;
     public int holdTickZ;
-    public Set<Long> loadedChunks = new HashSet<>();
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);

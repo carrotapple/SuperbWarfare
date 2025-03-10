@@ -298,9 +298,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                         this,
                         this.getOwner()),
                 explosionDamage,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
+                this.getX(),
+                this.getY() + 0.5 * this.getBbHeight(),
+                this.getZ(),
                 radius,
                 ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);

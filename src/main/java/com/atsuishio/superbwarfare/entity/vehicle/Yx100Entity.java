@@ -850,7 +850,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     private PlayState cannonShootPredicate(AnimationState<Yx100Entity> event) {
-        if (this.entityData.get(CANNON_FIRE_TIME) > 20) {
+        if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
