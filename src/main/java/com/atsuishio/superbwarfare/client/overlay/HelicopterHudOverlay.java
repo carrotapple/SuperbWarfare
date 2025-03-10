@@ -82,7 +82,7 @@ public class HelicopterHudOverlay {
 
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
-                renderDriverAngle(guiGraphics, player, mobileVehicle, k, l, i, j);
+                renderDriverAngle(guiGraphics, player, mobileVehicle, k, l, i, j, event.getPartialTick());
 
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
 
@@ -212,9 +212,9 @@ public class HelicopterHudOverlay {
         VehicleHudOverlay.renderKillIndicator3P(guiGraphics, posX, posY);
     }
 
-    private static void renderDriverAngle(GuiGraphics guiGraphics, Player player, Entity heli, float k, float l, float i, float j) {
-        float diffY = Mth.wrapDegrees(player.getYHeadRot() - heli.getYRot()) * 0.35f;
-        float diffX = Mth.wrapDegrees(player.getXRot() - heli.getXRot()) * 0.072f;
+    private static void renderDriverAngle(GuiGraphics guiGraphics, Player player, Entity heli, float k, float l, float i, float j, float ticks) {
+        float diffY = Mth.wrapDegrees(Mth.lerp(ticks, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(ticks, heli.yRotO, heli.getYRot())) * 0.35f;
+        float diffX = Mth.wrapDegrees(Mth.lerp(ticks, player.xRotO, player.getXRot()) - Mth.lerp(ticks, heli.xRotO, heli.getXRot())) * 0.072f;
 
         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_driver_angle.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
     }
