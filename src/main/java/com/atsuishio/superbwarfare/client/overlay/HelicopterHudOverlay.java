@@ -8,9 +8,9 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.FormatTool;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -36,7 +36,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
-import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HelicopterHudOverlay {
@@ -121,7 +120,7 @@ public class HelicopterHudOverlay {
                 if (mobileVehicle instanceof Ah6Entity ah6Entity) {
                     if (weaponVehicle.getWeaponType(0) == 0) {
                         double heat = 1 - ah6Entity.heat / 100.0F;
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
                         guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
                     }
@@ -189,7 +188,7 @@ public class HelicopterHudOverlay {
                     if (mobileVehicle instanceof Ah6Entity ah6Entity) {
                         if (weaponVehicle.getWeaponType(0) == 0) {
                             double heat = ah6Entity.heat / 100.0F;
-                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                         } else {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), 25, -9, -1, false);
                         }
@@ -210,31 +209,7 @@ public class HelicopterHudOverlay {
     }
 
     private static void renderKillIndicator(GuiGraphics guiGraphics, float posX, float posY) {
-        float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
-
-        if (HIT_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
-        }
-
-        if (VEHICLE_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX, posY, 0, 0, 16, 16, 16, 16);
-        }
-
-        if (HEAD_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX, posY, 0, 0, 16, 16, 16, 16);
-        }
-
-        if (KILL_INDICATOR > 0) {
-            float posX1 = posX - 2 + rate;
-            float posY1 = posY - 2 + rate;
-            float posX2 = posX + 2 - rate;
-            float posY2 = posY + 2 - rate;
-
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
-        }
+        VehicleHudOverlay.renderKillIndicator3P(guiGraphics, posX, posY);
     }
 
     private static void renderDriverAngle(GuiGraphics guiGraphics, Player player, Entity heli, float k, float l, float i, float j) {

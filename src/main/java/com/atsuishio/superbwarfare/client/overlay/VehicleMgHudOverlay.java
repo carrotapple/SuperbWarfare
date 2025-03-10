@@ -8,8 +8,8 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.FormatTool;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -97,13 +97,13 @@ public class VehicleMgHudOverlay {
                     // YX-100
                     if (player.getVehicle() instanceof Yx100Entity yx100) {
                         double heat = yx100.getEntityData().get(MACHINE_GUN_HEAT) / 100.0F;
-                        guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : yx100.getEntityData().get(MG_AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(MG_AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                     }
 
                     // 快艇
                     if (player.getVehicle() instanceof SpeedboatEntity speedboat) {
                         double heat = speedboat.getEntityData().get(HEAT) / 100.0F;
-                        guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : speedboat.getEntityData().get(AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : speedboat.getEntityData().get(AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                     }
 
                     double heal = 1 - mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();

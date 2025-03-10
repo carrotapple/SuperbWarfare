@@ -13,10 +13,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.WgMissileWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -304,12 +301,12 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             return false;
         }).mapToInt(AmmoType.RIFLE::get).sum() + countItem(ModItems.RIFLE_AMMO.get());
 
-        if ((countItem(ModItems.WIRE_GUIDE_MISSILE.get()) > 0
-                || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+        if ((hasItem(ModItems.WIRE_GUIDE_MISSILE.get())
+                || InventoryTool.hasCreativeAmmoBox(player))
                 && this.reloadCoolDown <= 0 && this.getEntityData().get(LOADED_MISSILE) < 1) {
             this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) + 1);
             this.reloadCoolDown = 160;
-            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (!InventoryTool.hasCreativeAmmoBox(player)) {
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
             this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
@@ -380,7 +377,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             float z = 2f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
-            boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+            boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 var projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player);
@@ -730,9 +727,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public boolean canShoot(Player player) {
         if (getWeaponType(0) == 0) {
-            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
+            return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
         } else if (getWeaponType(0) == 1) {
-            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
+            return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFireCoax;
         } else if (getWeaponType(0) == 2) {
             return (this.entityData.get(LOADED_MISSILE) > 0);
         }

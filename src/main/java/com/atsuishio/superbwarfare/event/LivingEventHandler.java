@@ -644,7 +644,7 @@ public class LivingEventHandler {
                     int ammoReload = (int) Math.min(mag, mag * rate);
                     int ammoNeed = Math.min(mag - ammo, ammoReload);
 
-                    boolean flag = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+            boolean flag = InventoryTool.hasCreativeAmmoBox(player);
 
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);

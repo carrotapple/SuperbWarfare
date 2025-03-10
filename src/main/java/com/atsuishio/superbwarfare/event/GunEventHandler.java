@@ -15,6 +15,7 @@ import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -584,7 +585,7 @@ public class GunEventHandler {
 
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
-            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (!InventoryTool.hasCreativeAmmoBox(player)) {
                 var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     tag.putBoolean("force_stage3_start", true);
@@ -666,7 +667,7 @@ public class GunEventHandler {
             }
 
             // 备弹耗尽结束
-            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (!InventoryTool.hasCreativeAmmoBox(player)) {
                 var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     tag.putInt("reload_stage", 3);
@@ -721,7 +722,7 @@ public class GunEventHandler {
 
         GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) + 1);
 
-        if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+        if (!InventoryTool.hasCreativeAmmoBox(player)) {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.shotgunAmmo -= 1;

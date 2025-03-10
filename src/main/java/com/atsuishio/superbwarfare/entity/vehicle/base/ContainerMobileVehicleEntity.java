@@ -144,6 +144,15 @@ public abstract class ContainerMobileVehicleEntity extends MobileVehicleEntity i
     }
 
     /**
+     * 判断载具内是否包含指定物品
+     *
+     * @param item 物品类型
+     */
+    public boolean hasItem(Item item) {
+        return countItem(item) > 0;
+    }
+
+    /**
      * 消耗载具内指定物品
      *
      * @param item  物品类型

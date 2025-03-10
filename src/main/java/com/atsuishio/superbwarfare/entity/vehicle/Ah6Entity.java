@@ -14,10 +14,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -237,10 +234,10 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             return false;
         }).mapToInt(AmmoType.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
 
-        if ((countItem(ModItems.ROCKET_70.get()) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
+        if ((hasItem(ModItems.ROCKET_70.get()) || InventoryTool.hasCreativeAmmoBox(player)) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
             this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
             reloadCoolDown = 25;
-            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            if (!InventoryTool.hasCreativeAmmoBox(player)) {
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
             this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
@@ -517,7 +514,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void vehicleShoot(Player player, int type) {
-        boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+        boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
 
         Matrix4f transform = getVehicleTransform();
         float x;
@@ -545,7 +542,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                         (float) 0.2);
                 this.level().addFreshEntity(projectileRight);
                 sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
-                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                if (!InventoryTool.hasCreativeAmmoBox(player)) {
                     this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                 }
             }
@@ -676,7 +673,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     public boolean canShoot(Player player) {
         if (getWeaponType(0) == 0) {
-            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
+            return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
         } else if (getWeaponType(0) == 1) {
             return this.entityData.get(AMMO) > 0;
         }

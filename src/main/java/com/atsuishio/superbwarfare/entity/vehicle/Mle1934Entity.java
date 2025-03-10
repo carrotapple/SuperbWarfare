@@ -276,7 +276,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
         Level level = player.level();
         if (level instanceof ServerLevel server) {
-            var isCreative = player.isCreative() || InventoryTool.countItem(player.getInventory().items, ModItems.CREATIVE_AMMO_BOX.get()) > 0;
+            var isCreative = player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
 
             int consumed;
             if (isCreative) {

@@ -13,10 +13,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -284,7 +281,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
         this.entityData.set(FIRE_ANIM, 3);
 
-        boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+        boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
 
         if (!hasCreativeAmmo) {
             ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
@@ -545,7 +542,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public boolean canShoot(Player player) {
-        return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+        return (this.entityData.get(AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player))
                 && !cannotFire;
     }
 

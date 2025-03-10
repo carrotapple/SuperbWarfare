@@ -454,7 +454,7 @@ public class ClientEventHandler {
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
-                && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+                && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || InventoryTool.hasCreativeAmmoBox(player))
         ))) {
             if (mode == 0) {
                 if (clientTimer.getProgress() == 0) {
@@ -570,7 +570,7 @@ public class ClientEventHandler {
             var tag = stack.getOrCreateTag();
 
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
-                    || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                    || InventoryTool.hasCreativeAmmoBox(player)) {
 
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));

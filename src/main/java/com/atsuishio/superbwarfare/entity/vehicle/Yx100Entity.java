@@ -12,10 +12,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -39,7 +36,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -114,7 +110,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public VehicleWeapon[][] getAllWeapons() {
-        // TODO 正确实现武器创建
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         // AP
@@ -212,11 +207,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         this.playSound(ModSounds.BMP_STEP.get(), Mth.abs(this.entityData.get(POWER)) * 8, random.nextFloat() * 0.15f + 1f);
-    }
-
-    @Override
-    public double getSubmergedHeight(Entity entity) {
-        return super.getSubmergedHeight(entity);
     }
 
     @Override
@@ -324,36 +314,29 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.refreshDimensions();
     }
 
-    private Item getCurrentAmmoItem() {
-        return switch (getWeaponType(0)) {
-            case 0 -> ModItems.AP_5_INCHES.get();
-            case 1 -> ModItems.HE_5_INCHES.get();
-            default -> throw new IllegalStateException("Unexpected value: " + getWeaponType(0));
-        };
-    }
 
     private void handleAmmo() {
         boolean hasCreativeAmmo = false;
 
         if (this.getFirstPassenger() instanceof Player player) {
-            hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+            hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
         }
 
         if (hasCreativeAmmo) {
             this.entityData.set(AMMO, 9999);
             this.entityData.set(MG_AMMO, 9999);
         } else {
-            this.entityData.set(AMMO, countItem(getCurrentAmmoItem()));
-            this.entityData.set(MG_AMMO, countItem(ModItems.HEAVY_AMMO.get()));
+            this.entityData.set(AMMO, countItem(getWeapon(0).ammo));
+            this.entityData.set(MG_AMMO, countItem(getWeapon(1).ammo));
         }
 
         if (this.getEntityData().get(LOADED_AMMO) == 0
                 && reloadCoolDown <= 0
-                && (hasCreativeAmmo || countItem(getCurrentAmmoItem()) > 0)
+                && (hasCreativeAmmo || hasItem(getWeapon(0).ammo))
         ) {
             this.entityData.set(LOADED_AMMO, 1);
             if (!hasCreativeAmmo) {
-                consumeItem(getCurrentAmmoItem(), 1);
+                consumeItem(getWeapon(0).ammo, 1);
             }
         }
     }
@@ -484,21 +467,19 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 }
             }
 
-            boolean hasCreativeAmmo = player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+            if (hasItem(ModItems.CREATIVE_AMMO_BOX.get())) return;
 
-            if (!hasCreativeAmmo) {
-                ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
-                    if (stack.is(ModItems.AMMO_BOX.get())) {
-                        return AmmoType.HEAVY.get(stack) > 0;
-                    }
-                    return false;
-                }).findFirst().orElse(ItemStack.EMPTY);
-
-                if (!ammoBox.isEmpty()) {
-                    AmmoType.HEAVY.add(ammoBox, -1);
-                } else {
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+            ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
+                if (stack.is(ModItems.AMMO_BOX.get())) {
+                    return AmmoType.HEAVY.get(stack) > 0;
                 }
+                return false;
+            }).findFirst().orElse(ItemStack.EMPTY);
+
+            if (!ammoBox.isEmpty()) {
+                AmmoType.HEAVY.add(ammoBox, -1);
+            } else {
+                consumeItem(getWeapon(1).ammo, 1);
             }
         }
     }
@@ -749,19 +730,15 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         int i = this.getOrderedPassengers().indexOf(passenger);
 
-        if (i == 0) {
-            Vector4f worldPosition = transformPosition(transform, 0.8669625f, -1.3f, 0.6076875f);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
-        } else if (i == 1) {
-            Vector4f worldPosition = transformPosition(transform, -0.87890625f, -1f, -0.6640625f);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
-        } else if (i == 2) {
-            Vector4f worldPosition = transformPosition(transform, 1f, 0.15f, -0.6640625f);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
-        }
+        var worldPosition = switch (i) {
+            case 0 -> transformPosition(transform, 0.8669625f, -1.3f, 0.6076875f);
+            case 1 -> transformPosition(transform, -0.87890625f, -1f, -0.6640625f);
+            case 2 -> transformPosition(transform, 1f, 0.15f, -0.6640625f);
+            default -> throw new IllegalStateException("Unexpected value: " + i);
+        };
+
+        passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+        callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
     }
 
     public int getMaxPassengers() {
@@ -868,7 +845,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public void onPassengerTurned(Entity entity) {
+    public void onPassengerTurned(@NotNull Entity entity) {
         this.clampRotation(entity);
     }
 
@@ -923,8 +900,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public boolean canShoot(Player player) {
         return switch (getSeatIndex(player)) {
             case 0 -> this.entityData.get(LOADED_AMMO) > 0;
-            case 1 ->
-                    (this.entityData.get(MG_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
+            case 1 -> (this.entityData.get(MG_AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
             default -> false;
         };
     }
@@ -936,22 +912,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public boolean banHand(Player player) {
-        if (player == getNthEntity(0) || player == getNthEntity(1)) {
-            return true;
-        } else if (player == getNthEntity(2)) {
-            return false;
-        }
-        return false;
+        return hidePassenger(player);
     }
 
     @Override
     public boolean hidePassenger(Entity entity) {
-        if (entity == getNthEntity(0) || entity == getNthEntity(1)) {
-            return true;
-        } else if (entity == getNthEntity(2)) {
-            return false;
-        }
-        return false;
+        return entity == getNthEntity(0) || entity == getNthEntity(1);
     }
 
     @Override
@@ -965,8 +931,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         if (index != 0) return;
 
         if (entityData.get(LOADED_AMMO) > 0) {
-            if (this.getFirstPassenger() instanceof Player player && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                this.insertItem(getCurrentAmmoItem(), 1);
+            if (this.getFirstPassenger() instanceof Player player && !InventoryTool.hasCreativeAmmoBox(player)) {
+                this.insertItem(getWeapon(0).ammo, 1);
             }
             entityData.set(LOADED_AMMO, 0);
         }

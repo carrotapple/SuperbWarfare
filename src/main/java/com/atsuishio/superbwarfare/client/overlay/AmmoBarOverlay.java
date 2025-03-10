@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,7 @@ public class AmmoBarOverlay {
     private static boolean hasCreativeAmmo() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return false;
-        return player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+        return InventoryTool.hasCreativeAmmoBox(player);
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
