@@ -102,7 +102,6 @@ public class HuntingRifleItem extends GunItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-
     }
 
     public static ItemStack getGunInstance() {

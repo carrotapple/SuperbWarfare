@@ -175,7 +175,7 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.LAUNCHER_PERKS.test(perk);
+        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get();
     }
 
     @Override

@@ -275,7 +275,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.LAUNCHER_PERKS.test(perk);
+        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get();
     }
 
     @Override

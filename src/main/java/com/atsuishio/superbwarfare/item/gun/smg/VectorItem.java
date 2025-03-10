@@ -173,7 +173,7 @@ public class VectorItem extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/vector_icon.png");
+        return ModUtils.loc("textures/gun_icon/vector_icon.png");
     }
 
     @Override
