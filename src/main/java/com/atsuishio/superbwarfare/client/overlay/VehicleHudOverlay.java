@@ -69,7 +69,7 @@ public class VehicleHudOverlay {
     private static final long[] weaponSlotUpdateTime = new long[9];
     private static boolean lastTimeRenderingWeapons = false;
     private static int lastTimeWeaponIndex = -1;
-    private static int renderLastTimeWeaponIndex = -1;
+    private static int lastTimeRenderWeaponIndex = -1;
     private static long weaponIndexUpdateTime = 0;
 
     public static final int ANIMATION_TIME = 300;
@@ -472,6 +472,7 @@ public class VehicleHudOverlay {
         // 若上一帧未在渲染武器信息，则初始化动画相关变量
         if (!lastTimeRenderingWeapons) {
             lastTimeWeaponIndex = weaponIndex;
+            lastTimeRenderWeaponIndex = weaponIndex;
 
             weaponSlotUpdateTime[weaponIndex] = currentTime;
             weaponIndexUpdateTime = currentTime;
@@ -482,7 +483,7 @@ public class VehicleHudOverlay {
             weaponSlotUpdateTime[weaponIndex] = currentTime;
             weaponSlotUpdateTime[lastTimeWeaponIndex] = currentTime;
 
-            renderLastTimeWeaponIndex = lastTimeWeaponIndex;
+            lastTimeRenderWeaponIndex = lastTimeWeaponIndex;
             lastTimeWeaponIndex = weaponIndex;
             weaponIndexUpdateTime = currentTime;
         }
@@ -526,7 +527,7 @@ public class VehicleHudOverlay {
 
                 startXDiff = Mth.lerp(progress, xDiff, 0);
                 var startY = Mth.lerp(progress,
-                        h - (weapons.size() - 1 - renderLastTimeWeaponIndex) * 18 - 16,
+                        h - (weapons.size() - 1 - lastTimeRenderWeaponIndex) * 18 - 16,
                         h - (weapons.size() - 1 - weaponIndex) * 18 - 16
                 );
 
@@ -551,8 +552,8 @@ public class VehicleHudOverlay {
         pose.popPose();
 
         // 切换武器光标动画播放结束后，更新上次选择槽位
-        if (lastTimeWeaponIndex != renderLastTimeWeaponIndex && currentTime - weaponIndexUpdateTime > ANIMATION_TIME) {
-            renderLastTimeWeaponIndex = lastTimeWeaponIndex;
+        if (lastTimeWeaponIndex != lastTimeRenderWeaponIndex && currentTime - weaponIndexUpdateTime > ANIMATION_TIME) {
+            lastTimeRenderWeaponIndex = lastTimeWeaponIndex;
         }
         lastTimeRenderingWeapons = true;
     }
