@@ -328,6 +328,8 @@
   "des.superbwarfare.desperado": "Reload after a precision final blow increases your rate of fire",
   "item.superbwarfare.vorpal_weapon": "Vorpal Weapon",
   "des.superbwarfare.vorpal_weapon": "Increases damage against bosses",
+  "item.superbwarfare.micro_missile": "Micro Missile",
+  "des.superbwarfare.micro_missile": "Fires a high-speed projectile without gravity",
 
   "item.superbwarfare.empty_perk": "Empty Perk",
   "item.superbwarfare.shortcut_pack": "Shortcut Pack",

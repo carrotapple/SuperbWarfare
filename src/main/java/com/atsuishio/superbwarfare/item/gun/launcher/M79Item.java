@@ -4,20 +4,31 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.M79ItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.LauncherImageComponent;
+import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -44,7 +56,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class M79Item extends GunItem implements GeoItem {
+public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -174,5 +186,52 @@ public class M79Item extends GunItem implements GeoItem {
     @Override
     public boolean isMagazineReload(ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public void fireOnPress(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (GunsTool.getGunBooleanTag(stack, "Reloading")) return;
+        if (player.getCooldowns().isOnCooldown(stack.getItem()) || GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0) return;
+
+        boolean zooming = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
+        double spread = GunsTool.getGunDoubleTag(stack, "Spread");
+
+        if (player.level() instanceof ServerLevel serverLevel) {
+            GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, serverLevel,
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+
+            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+            if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+            }
+
+            gunGrenadeEntity.setNoGravity(PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
+
+            gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+            gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+                    (float) (zooming ? 0.1 : spread));
+            serverLevel.addFreshEntity(gunGrenadeEntity);
+
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
+                    player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                    player.getZ() + 1.8 * player.getLookAngle().z,
+                    4, 0.1, 0.1, 0.1, 0.002, true);
+
+            var serverPlayer = (ServerPlayer) player;
+
+            SoundTool.playLocalSound(serverPlayer, ModSounds.M_79_FIRE_1P.get(), 2, 1);
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FIRE_3P.get(), SoundSource.PLAYERS, 2, 1);
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FAR.get(), SoundSource.PLAYERS, 5, 1);
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
+
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+        }
+
+        player.getCooldowns().addCooldown(stack.getItem(), 2);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
     }
 }

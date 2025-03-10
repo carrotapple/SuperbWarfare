@@ -1,46 +1,23 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.projectile.*;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.event.GunEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SeekTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
-import org.joml.Vector3d;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class FireMessage {
@@ -70,13 +47,22 @@ public class FireMessage {
     }
 
     public static void pressAction(Player player, int type) {
+        if (player.isSpectator()) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
         handleGunBolt(player, stack);
 
         if (type == 0) {
-            handlePlayerShoot(player);
+            // 按下开火
+            if (!(stack.getItem() instanceof SpecialFireWeapon specialFireWeapon)) return;
+            specialFireWeapon.fireOnPress(player);
+
+            var tag = stack.getOrCreateTag();
+            if (tag.getDouble("prepare") == 0 && GunsTool.getGunBooleanTag(stack, "Reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+                tag.putDouble("force_stop", 1);
+            }
+
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.edit = false;
                 capability.holdFire = true;
@@ -89,88 +75,21 @@ public class FireMessage {
                 capability.syncPlayerVariables(player);
             });
 
-            if (stack.getItem() == ModItems.BOCEK.get()) {
-                handleBowShoot(player);
+            // 松开开火
+            if (stack.getItem() instanceof SpecialFireWeapon specialFireWeapon) {
+                specialFireWeapon.fireOnRelease(player);
             }
-
-            if (stack.getItem() == ModItems.JAVELIN.get()) {
-                var tag = stack.getOrCreateTag();
-                handleJavelinFire(player);
-                tag.putBoolean("Seeking", false);
-                tag.putInt("SeekTime", 0);
-                tag.putString("TargetEntity", "none");
-                if (player instanceof ServerPlayer serverPlayer) {
-                    var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
-                    serverPlayer.connection.send(clientboundstopsoundpacket);
-                }
-            }
-        }
-    }
-
-    private static void handlePlayerShoot(Player player) {
-        var stack = player.getMainHandItem();
-
-        if (!stack.is(ModTags.Items.GUN)) return;
-
-        var tag = stack.getOrCreateTag();
-
-        if (stack.getItem() == ModItems.TASER.get()) {
-            handleTaserFire(player);
-        }
-
-        if (stack.getItem() == ModItems.M_79.get()) {
-            handleM79Fire(player);
-        }
-
-        if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
-            handleSecondaryCataclysmFire(player);
-        }
-
-        if (stack.getItem() == ModItems.RPG.get()) {
-            handleRpgFire(player);
-        }
-
-        if (stack.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
-                .orElse(new ModVariables.PlayerVariables()).zoom && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
-            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
-            if (seekingEntity != null && !player.isCrouching()) {
-                tag.putInt("GuideType", 0);
-                tag.putString("TargetEntity", seekingEntity.getStringUUID());
-                tag.putBoolean("Seeking", true);
-                tag.putInt("SeekTime", 0);
-            } else {
-
-                BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getViewVector(1).scale(512)),
-                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-                Vec3 hitPos = result.getLocation();
-
-                tag.putInt("GuideType", 1);
-                tag.putDouble("TargetPosX", hitPos.x);
-                tag.putDouble("TargetPosY", hitPos.y);
-                tag.putDouble("TargetPosZ", hitPos.z);
-                tag.putBoolean("Seeking", true);
-                tag.putInt("SeekTime", 0);
-            }
-        }
-
-        if (tag.getDouble("prepare") == 0 && GunsTool.getGunBooleanTag(stack, "Reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
-            tag.putDouble("force_stop", 1);
-        }
-
-        if (stack.getItem() == ModItems.BOCEK.get()) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.bowPullHold = true;
-                capability.syncPlayerVariables(player);
-            });
         }
     }
 
     private static void handleGunBolt(Player player, ItemStack stack) {
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
+        if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0
+                && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
                 && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading")
+                || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !GunsTool.getGunBooleanTag(stack, "Reloading")
                 && !GunsTool.getGunBooleanTag(stack, "Charging")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
@@ -196,62 +115,7 @@ public class FireMessage {
         return 1;
     }
 
-    private static void handleBowShoot(Player player) {
-        if (player.level().isClientSide()) return;
-
-        ItemStack stack = player.getMainHandItem();
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
-        }
-
-        if (GunsTool.getGunDoubleTag(stack, "Power") >= 6) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                spawnBullet(player);
-
-                SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
-                player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
-            } else {
-                for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 10); index0++) {
-                    spawnBullet(player);
-                }
-
-                SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
-                player.playSound(ModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
-            }
-
-            if (perk == ModPerks.BEAST_BULLET.get()) {
-                player.playSound(ModSounds.HENG.get(), 4f, 1f);
-
-                if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, 1f);
-                }
-            }
-
-            player.getCooldowns().addCooldown(stack.getItem(), 7);
-            GunsTool.setGunIntTag(stack, "ArrowEmpty", 7);
-            GunsTool.setGunDoubleTag(stack, "Power", 0);
-
-            int count = 0;
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                    count++;
-                }
-            }
-
-            if (count == 0 && !player.isCreative()) {
-                player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-            }
-
-            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-            }
-        }
-    }
-
-    private static void spawnBullet(Player player) {
+    public static void spawnBullet(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
 
@@ -334,311 +198,10 @@ public class FireMessage {
         }
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-
         projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (!zoom && perk == ModPerks.INCENDIARY_BULLET.get() ? 0.2f : 1) * velocity, spread);
-
         projectile.damage((float) damage);
 
         player.level().addFreshEntity(projectile);
     }
 
-    private static void handleTaserFire(Player player) {
-        if (player.isSpectator()) return;
-
-        ItemStack stack = player.getMainHandItem();
-        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
-            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
-            AtomicBoolean flag = new AtomicBoolean(false);
-            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                    iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 400 + 100 * perkLevel)
-            );
-
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0 && flag.get()) {
-                player.getCooldowns().addCooldown(stack.getItem(), 5);
-
-                if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.TASER_FIRE_1P.get(), 1, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
-                }
-
-                int volt = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
-                int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
-
-                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
-
-                Level level = player.level();
-                if (!level.isClientSide()) {
-                    TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level,
-                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), volt, wireLength);
-
-                    taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
-                            (float) (zoom ? 0.1 : spread));
-                    level.addFreshEntity(taserBulletProjectile);
-                }
-
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-
-                stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                        energy -> energy.extractEnergy(400 + 100 * perkLevel, false)
-                );
-
-                stack.getOrCreateTag().putBoolean("shoot", true);
-                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-                }
-            }
-        }
-    }
-
-    private static void handleM79Fire(Player player) {
-        if (player.isSpectator()) return;
-
-        ItemStack stack = player.getMainHandItem();
-        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
-                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
-
-                Level level = player.level();
-                if (!level.isClientSide()) {
-                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
-                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
-
-                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
-                        gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
-                    }
-
-                    gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
-                            (float) (zoom ? 0.1 : spread));
-                    level.addFreshEntity(gunGrenadeEntity);
-                }
-
-                if (player.level() instanceof ServerLevel serverLevel) {
-                    ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
-                            player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
-                            player.getZ() + 1.8 * player.getLookAngle().z,
-                            4, 0.1, 0.1, 0.1, 0.002, true);
-                }
-                player.getCooldowns().addCooldown(stack.getItem(), 2);
-
-                if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.M_79_FIRE_1P.get(), 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FIRE_3P.get(), SoundSource.PLAYERS, 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FAR.get(), SoundSource.PLAYERS, 5, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
-                }
-
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-
-                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-                }
-            }
-        }
-    }
-
-    private static void handleRpgFire(Player player) {
-        if (player.isSpectator()) return;
-
-        Level level = player.level();
-        ItemStack stack = player.getMainHandItem();
-        CompoundTag tag = stack.getOrCreateTag();
-
-        if (!GunsTool.getGunBooleanTag(stack, "Reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
-            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-            double spread = GunsTool.getGunDoubleTag(stack, "Spread");
-
-            if (!level.isClientSide()) {
-                RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
-                        (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                        (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                        (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
-
-                var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-                if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                    int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
-                    rocketEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
-                }
-
-                rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
-                        (float) (zoom ? 0.1 : spread));
-                level.addFreshEntity(rocketEntity);
-            }
-
-            if (player.level() instanceof ServerLevel serverLevel) {
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
-                        player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
-                        player.getZ() + 1.8 * player.getLookAngle().z,
-                        30, 0.4, 0.4, 0.4, 0.005, true);
-            }
-
-            if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
-                tag.putBoolean("empty", true);
-                GunsTool.setGunBooleanTag(stack, "CloseHammer", true);
-            }
-
-            player.getCooldowns().addCooldown(stack.getItem(), 10);
-
-            if (player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, ModSounds.RPG_FIRE_1P.get(), 2, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_FIRE_3P.get(), SoundSource.PLAYERS, 2, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_FAR.get(), SoundSource.PLAYERS, 5, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
-            }
-
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-
-            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-            }
-        }
-    }
-
-    private static void handleJavelinFire(Player player) {
-        if (player.isSpectator()) return;
-
-        Level level = player.level();
-        ItemStack stack = player.getMainHandItem();
-        CompoundTag tag = stack.getOrCreateTag();
-
-        if (tag.getInt("SeekTime") < 20) return;
-
-        float yRot = player.getYRot();
-        if (yRot < 0) {
-            yRot += 360;
-        }
-        yRot = yRot + 90 % 360;
-
-        var firePos = new Vector3d(0, -0.2, 0.15);
-        firePos.rotateZ(-player.getXRot() * Mth.DEG_TO_RAD);
-        firePos.rotateY(-yRot * Mth.DEG_TO_RAD);
-
-        if (!level.isClientSide()) {
-            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0),
-                    stack.getOrCreateTag().getInt("GuideType"),
-                    new Vec3(stack.getOrCreateTag().getDouble("TargetPosX"), stack.getOrCreateTag().getDouble("TargetPosY"), stack.getOrCreateTag().getDouble("TargetPosZ")));
-
-            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-            if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
-                missileEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
-            }
-
-            missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
-            missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
-            missileEntity.setTargetUuid(tag.getString("TargetEntity"));
-            missileEntity.setAttackMode(tag.getBoolean("TopMode"));
-
-            level.addFreshEntity(missileEntity);
-        }
-
-        if (player.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
-                    player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
-                    player.getZ() + 1.8 * player.getLookAngle().z,
-                    30, 0.4, 0.4, 0.4, 0.005, true);
-        }
-
-        player.getCooldowns().addCooldown(stack.getItem(), 10);
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_FIRE_1P.get(), 2, 1);
-            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
-            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FAR.get(), SoundSource.PLAYERS, 10, 1);
-        }
-
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-
-        if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-        }
-    }
-
-    private static void handleSecondaryCataclysmFire(Player player) {
-        if (player.isSpectator()) return;
-
-        ItemStack stack = player.getMainHandItem();
-        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
-                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
-
-                AtomicBoolean flag = new AtomicBoolean(false);
-                stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                        iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 3000)
-                );
-
-                boolean chargeFire = zoom && flag.get();
-
-                Level level = player.level();
-                if (!level.isClientSide()) {
-                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
-                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
-
-                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
-                        gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
-                    }
-
-                    if (chargeFire) {
-                        gunGrenadeEntity.charged(true);
-                    }
-
-                    gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (chargeFire ? 4 : 1) * (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
-                            (float) (zoom ? 0.1 : spread));
-                    level.addFreshEntity(gunGrenadeEntity);
-                }
-
-                if (player.level() instanceof ServerLevel serverLevel) {
-                    ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
-                            player.getEyeY() - 0.35 + 1.8 * player.getLookAngle().y,
-                            player.getZ() + 1.8 * player.getLookAngle().z,
-                            4, 0.1, 0.1, 0.1, 0.002, true);
-                }
-                player.getCooldowns().addCooldown(stack.getItem(), 2);
-
-                if (chargeFire) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P_CHARGE.get(), 1, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P_CHARGE.get(), SoundSource.PLAYERS, 3, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR_CHARGE.get(), SoundSource.PLAYERS, 5, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR_CHARGE.get(), SoundSource.PLAYERS, 10, 1);
-                    }
-                    stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                            energy -> energy.extractEnergy(3000, false)
-                    );
-                } else {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P.get(), 1, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P.get(), SoundSource.PLAYERS, 3, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR.get(), SoundSource.PLAYERS, 5, 1);
-                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
-                    }
-                }
-
-
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-                player.getCooldowns().addCooldown(stack.getItem(), 6);
-
-                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-                }
-            }
-        }
-    }
 }

@@ -6,15 +6,25 @@ import com.atsuishio.superbwarfare.client.tooltip.component.BocekImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
+import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -24,6 +34,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -37,7 +48,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class BocekItem extends GunItem implements GeoItem {
+import static com.atsuishio.superbwarfare.network.message.FireMessage.spawnBullet;
+
+public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -166,5 +179,61 @@ public class BocekItem extends GunItem implements GeoItem {
     @Override
     public boolean useBackpackAmmo(ItemStack stack) {
         return true;
+    }
+
+
+    @Override
+    public void fireOnRelease(Player player) {
+        if (player.level().isClientSide()) return;
+
+        ItemStack stack = player.getMainHandItem();
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
+
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+        }
+
+        if (GunsTool.getGunDoubleTag(stack, "Power") >= 6) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false))) {
+                spawnBullet(player);
+
+                SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
+                player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
+            } else {
+                for (int i = 0; i < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 10); i++) {
+                    spawnBullet(player);
+                }
+
+                SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
+                player.playSound(ModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
+            }
+
+            if (perk == ModPerks.BEAST_BULLET.get()) {
+                player.playSound(ModSounds.HENG.get(), 4f, 1f);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, 1f);
+                }
+            }
+
+            player.getCooldowns().addCooldown(stack.getItem(), 7);
+            GunsTool.setGunIntTag(stack, "ArrowEmpty", 7);
+            GunsTool.setGunDoubleTag(stack, "Power", 0);
+
+            if (!InventoryTool.hasCreativeAmmoBox(player) && !player.isCreative()) {
+                player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+            }
+        }
+    }
+
+    @Override
+    public void fireOnPress(Player player) {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.bowPullHold = true;
+            capability.syncPlayerVariables(player);
+        });
     }
 }

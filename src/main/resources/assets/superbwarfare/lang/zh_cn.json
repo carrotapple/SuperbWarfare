@@ -326,6 +326,8 @@
   "des.superbwarfare.desperado": "精准击杀后进行换弹，可暂时提升射速",
   "item.superbwarfare.vorpal_weapon": "斩首武器",
   "des.superbwarfare.vorpal_weapon": "提升对强大敌人造成的伤害",
+  "item.superbwarfare.micro_missile": "微型导弹",
+  "des.superbwarfare.micro_missile": "使武器发射无视重力前进的高速弹药",
 
   "item.superbwarfare.empty_perk": "空白模组",
   "item.superbwarfare.shortcut_pack": "捷径包",

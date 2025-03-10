@@ -45,6 +45,10 @@ public class ModPerks {
     public static final RegistryObject<Perk> INCENDIARY_BULLET = AMMO_PERKS.register("incendiary_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("incendiary_bullet", Perk.Type.AMMO).bypassArmorRate(-0.4f).damageRate(0.7f).speedRate(0.75f).slug(false).rgb(230, 131, 65)));
 
+    public static final RegistryObject<Perk> MICRO_MISSILE = AMMO_PERKS.register("micro_missile",
+            () -> new AmmoPerk(new AmmoPerk.Builder("micro_missile", Perk.Type.AMMO).damageRate(1.25f).speedRate(1.2f)));
+
+
     /**
      * Functional Perks
      */
