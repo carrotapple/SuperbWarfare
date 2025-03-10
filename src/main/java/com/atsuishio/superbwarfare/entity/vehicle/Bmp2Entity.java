@@ -66,7 +66,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_MISSILE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> MISSILE_COUNT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
 
@@ -129,6 +129,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         this.entityData.define(HEAT, 0);
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(LOADED_MISSILE, 0);
+        this.entityData.define(MISSILE_COUNT, 0);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
     }
@@ -318,8 +319,10 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         } else if (getWeaponIndex(0) == 1) {
             this.entityData.set(AMMO, ammoCount);
         } else {
-            this.entityData.set(AMMO, countItem(ModItems.WIRE_GUIDE_MISSILE.get()));
+            this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
         }
+
+        this.entityData.set(MISSILE_COUNT, countItem(ModItems.WIRE_GUIDE_MISSILE.get()));
     }
 
     @Override

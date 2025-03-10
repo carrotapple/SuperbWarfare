@@ -63,7 +63,7 @@ public class VehicleMgHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (player.getVehicle() instanceof LandArmorEntity iLand && iLand instanceof WeaponVehicleEntity && iLand instanceof MobileVehicleEntity mobileVehicle) {
+        if (player.getVehicle() instanceof LandArmorEntity iLand && iLand instanceof WeaponVehicleEntity weaponVehicle && iLand instanceof MobileVehicleEntity mobileVehicle && weaponVehicle.hasWeapon(mobileVehicle.getSeatIndex(player))) {
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle) {
                 float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
 

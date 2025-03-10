@@ -910,7 +910,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public boolean canShoot(Player player) {
         return switch (getSeatIndex(player)) {
-            case 0 -> this.entityData.get(LOADED_AMMO) > 0;
+            case 0 -> this.entityData.get(LOADED_AMMO) > 0 && getEnergy() > 10000;
             case 1 -> (this.entityData.get(MG_AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
             default -> false;
         };
@@ -918,7 +918,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public int getAmmoCount(Player player) {
-        return this.entityData.get(LOADED_AMMO);
+        if (player == getNthEntity(0)) {
+            return this.entityData.get(LOADED_AMMO);
+        }
+        if (player == getNthEntity(1)) {
+            return this.entityData.get(MG_AMMO);
+        }
+        return 0;
     }
 
     @Override

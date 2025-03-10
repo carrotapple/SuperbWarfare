@@ -47,6 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.LOADED_MISSILE;
+import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.MISSILE_COUNT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.AMMO;
@@ -259,7 +260,7 @@ public class VehicleHudOverlay {
                         double heat = 1 - bmp2.getEntityData().get(COAX_HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(" 7.62MM ПКТ " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
-                        guiGraphics.drawString(mc.font, Component.literal("    9M113  " + bmp2.getEntityData().get(LOADED_MISSILE) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, 0x66FF00, false);
+                        guiGraphics.drawString(mc.font, Component.literal("    9M113  " + bmp2.getEntityData().get(LOADED_MISSILE) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp2.getEntityData().get(MISSILE_COUNT))), w / 2 - 33, h - 65, 0x66FF00, false);
                     }
 
                 }
@@ -314,7 +315,7 @@ public class VehicleHudOverlay {
                             double heat2 = bmp201.getEntityData().get(COAX_HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM ПКТ " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         } else {
-                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("9M113 " + bmp201.getEntityData().get(LOADED_MISSILE) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, -1, false);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("9M113 " + bmp201.getEntityData().get(LOADED_MISSILE) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : bmp201.getEntityData().get(MISSILE_COUNT))), 30, -9, -1, false);
                         }
                     }
                     // YX-100
