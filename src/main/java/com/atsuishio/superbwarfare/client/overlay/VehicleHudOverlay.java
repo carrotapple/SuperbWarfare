@@ -66,16 +66,27 @@ public class VehicleHudOverlay {
     private static final ResourceLocation SELECTED = ModUtils.loc("textures/screens/vehicle_weapon/selected.png");
     private static final ResourceLocation NUMBER = ModUtils.loc("textures/screens/vehicle_weapon/number.png");
 
+    private static final long[] weaponSlotUpdateTime = new long[9];
+    private static boolean lastTimeRenderingWeapons = false;
+    private static int lastTimeWeaponIndex = -1;
+    private static int renderLastTimeWeaponIndex = -1;
+    private static long weaponIndexUpdateTime = 0;
+
+    public static final int ANIMATION_TIME = 300;
+
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
 
-        if (!shouldRenderHud(player)) return;
+        if (!shouldRenderHud(player)) {
+            lastTimeRenderingWeapons = false;
+            return;
+        }
 
         Entity vehicle = player.getVehicle();
-        if (vehicle == null) return;
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
         PoseStack poseStack = guiGraphics.pose();
@@ -108,10 +119,10 @@ public class VehicleHudOverlay {
             preciseBlit(guiGraphics, ARMOR, 10, h - 13 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
             preciseBlit(guiGraphics, HEALTH_FRAME, 20, h - 12 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
             preciseBlit(guiGraphics, HEALTH, 20, h - 12 - compatHeight, 100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
-        }
 
-        renderPassengerInfo(guiGraphics, vehicle, w, h);
-        renderWeaponInfo(guiGraphics, vehicle, w, h);
+            renderWeaponInfo(guiGraphics, pVehicle, w, h);
+            renderPassengerInfo(guiGraphics, pVehicle, w, h);
+        }
 
         poseStack.popPose();
     }
@@ -137,7 +148,7 @@ public class VehicleHudOverlay {
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
 
-        if (player == null) return;
+        assert player != null;
 
         if (player.getVehicle() instanceof LandArmorEntity iLand && iLand.isDriver(player)
                 && iLand instanceof WeaponVehicleEntity weaponVehicle
@@ -401,8 +412,7 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static void renderPassengerInfo(GuiGraphics guiGraphics, Entity entity, int w, int h) {
-        if (!(entity instanceof VehicleEntity vehicle)) return;
+    private static void renderPassengerInfo(GuiGraphics guiGraphics, VehicleEntity vehicle, int w, int h) {
         var passengers = vehicle.getOrderedPassengers();
 
         int index = 0;
@@ -438,12 +448,14 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static void renderWeaponInfo(GuiGraphics guiGraphics, Entity entity, int w, int h) {
-        if (!(entity instanceof WeaponVehicleEntity weaponVehicle)) return;
-        if (!(weaponVehicle instanceof VehicleEntity vehicle)) return;
+    private static void renderWeaponInfo(GuiGraphics guiGraphics, VehicleEntity vehicle, int w, int h) {
+        if (!(vehicle instanceof WeaponVehicleEntity weaponVehicle)) return;
+
+        var temp = lastTimeRenderingWeapons;
+        lastTimeRenderingWeapons = false;
 
         Player player = Minecraft.getInstance().player;
-        if (player == null) return;
+        assert player != null;
 
         int index = vehicle.getSeatIndex(player);
         if (index == -1) return;
@@ -453,6 +465,27 @@ public class VehicleHudOverlay {
 
         int weaponIndex = weaponVehicle.getWeaponIndex(index);
         if (weaponIndex == -1) return;
+
+        lastTimeRenderingWeapons = temp;
+
+        var currentTime = System.currentTimeMillis();
+        // 若上一帧未在渲染武器信息，则初始化动画相关变量
+        if (!lastTimeRenderingWeapons) {
+            lastTimeWeaponIndex = weaponIndex;
+
+            weaponSlotUpdateTime[weaponIndex] = currentTime;
+            weaponIndexUpdateTime = currentTime;
+        }
+
+        // 切换武器时，更新上一个武器槽位和当前武器槽位的动画信息
+        if (weaponIndex != lastTimeWeaponIndex) {
+            weaponSlotUpdateTime[weaponIndex] = currentTime;
+            weaponSlotUpdateTime[lastTimeWeaponIndex] = currentTime;
+
+            renderLastTimeWeaponIndex = lastTimeWeaponIndex;
+            lastTimeWeaponIndex = weaponIndex;
+            weaponIndexUpdateTime = currentTime;
+        }
 
         var pose = guiGraphics.pose();
 
@@ -471,32 +504,68 @@ public class VehicleHudOverlay {
             var weapon = weapons.get(i);
 
             ResourceLocation frame = ModUtils.loc("textures/screens/vehicle_weapon/frame_" + (i + 1) + ".png");
-
             pose.pushPose();
 
-            if (weaponIndex != i) {
-                RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-            } else {
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                preciseBlit(guiGraphics, SELECTED, w - 95, h - frameIndex * 18 - 16, 100, 0, 0, 8, 8, 8, 8);
+            // 相对于最左边的偏移量
+            float startXDiff;
+            // 向右偏移的最长长度
+            var xDiff = 35;
 
+            var currentWeaponUpdateTime = weaponSlotUpdateTime[i];
+            var progress = easeOutCirc(currentWeaponUpdateTime, currentWeaponUpdateTime + ANIMATION_TIME, currentTime);
+
+            if (weaponIndex != i) {
+                // 未选中
+                RenderSystem.setShaderColor(1, 1, 1,
+                        Mth.lerp(progress, 1, 0.2f)
+                );
+                startXDiff = Mth.lerp(progress, 0, xDiff);
+            } else {
+                // 选中
+                RenderSystem.setShaderColor(1, 1, 1, Mth.lerp(progress, 0.2f, 1));
+
+                startXDiff = Mth.lerp(progress, xDiff, 0);
+                var startY = Mth.lerp(progress,
+                        h - (weapons.size() - 1 - renderLastTimeWeaponIndex) * 18 - 16,
+                        h - (weapons.size() - 1 - weaponIndex) * 18 - 16
+                );
+
+                preciseBlit(guiGraphics, SELECTED, w - 95, startY, 100, 0, 0, 8, 8, 8, 8);
                 if (InventoryTool.hasCreativeAmmoBox(player) && !(weapon instanceof LaserWeapon) && !(weapon instanceof HeliRocketWeapon)) {
-                    preciseBlit(guiGraphics, NUMBER, w - 28, h - frameIndex * 18 - 15, 100, 58, 0, 10, 7.5f, 75, 7.5f);
+                    preciseBlit(guiGraphics, NUMBER, w - 28 + startXDiff, h - frameIndex * 18 - 15, 100, 58, 0, 10, 7.5f, 75, 7.5f);
                 } else {
                     renderNumber(guiGraphics, weaponVehicle.getAmmoCount(player), weapon instanceof LaserWeapon,
-                            w - 20, h - frameIndex * 18 - 15.5f, 0.25f);
+                            w - 20 + startXDiff, h - frameIndex * 18 - 15.5f, 0.25f);
                 }
             }
 
-            preciseBlit(guiGraphics, frame, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
-            preciseBlit(guiGraphics, weapon.icon, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
+            preciseBlit(guiGraphics, frame, w - 85 + startXDiff, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
+            preciseBlit(guiGraphics, weapon.icon, w - 85 + startXDiff, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
 
             pose.popPose();
 
             frameIndex++;
         }
 
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         pose.popPose();
+
+        // 切换武器光标动画播放结束后，更新上次选择槽位
+        if (lastTimeWeaponIndex != renderLastTimeWeaponIndex && currentTime - weaponIndexUpdateTime > ANIMATION_TIME) {
+            renderLastTimeWeaponIndex = lastTimeWeaponIndex;
+        }
+        lastTimeRenderingWeapons = true;
+    }
+
+    private static float easeOutCirc(long start, long end, long current) {
+        double t = (double) (current - start) / (double) (end - start);
+
+        if (t < 0) {
+            return 0;
+        } else if (t > 1) {
+            return 1;
+        }
+        return (float) Math.sqrt(1 - java.lang.Math.pow(t - 1, 2d));
     }
 
     private static void renderNumber(GuiGraphics guiGraphics, int number, boolean percent, float x, float y, float scale) {
