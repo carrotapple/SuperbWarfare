@@ -37,7 +37,7 @@ public class VehicleMovementMessage {
 
                 var vehicle = player.getVehicle();
                 ItemStack stack = player.getMainHandItem();
-                if (vehicle instanceof MobileVehicleEntity mobileVehicleEntity) {
+                if (vehicle instanceof MobileVehicleEntity mobileVehicleEntity && mobileVehicleEntity.getFirstPassenger() == player) {
                     switch (message.direction) {
                         case 0:
                             mobileVehicleEntity.leftInputDown = message.clicked;

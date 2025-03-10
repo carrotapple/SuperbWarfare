@@ -757,11 +757,15 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             Vector4f worldPosition = transformPosition(transform, -0.87890625f, -1f, -0.6640625f);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 2) {
+            Vector4f worldPosition = transformPosition(transform, 1f, 0.15f, -0.6640625f);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
     }
 
     public int getMaxPassengers() {
-        return 2;
+        return 3;
     }
 
     public Matrix4f getBarrelTransform() {
@@ -855,6 +859,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 entity.setYRot(entity.getYRot() + f3 - f2);
                 entity.setYBodyRot(this.getYRot());
             }
+        } else if (entity == getNthEntity(2)) {
+            float f = Mth.wrapDegrees(entity.getXRot());
+            float f1 = Mth.clamp(f, -90F, 22.5F);
+            entity.xRotO += f1 - f;
+            entity.setXRot(entity.getXRot() + f1 - f);
         }
     }
 
@@ -927,12 +936,22 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public boolean banHand(Player player) {
-        return true;
+        if (player == getNthEntity(0) || player == getNthEntity(1)) {
+            return true;
+        } else if (player == getNthEntity(2)) {
+            return false;
+        }
+        return false;
     }
 
     @Override
-    public boolean hidePassenger() {
-        return true;
+    public boolean hidePassenger(Entity entity) {
+        if (entity == getNthEntity(0) || entity == getNthEntity(1)) {
+            return true;
+        } else if (entity == getNthEntity(2)) {
+            return false;
+        }
+        return false;
     }
 
     @Override

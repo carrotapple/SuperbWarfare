@@ -47,6 +47,23 @@ public abstract class CameraMixin {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
+            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+                DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+                if (drone != null) {
+                    Matrix4f transform = superbWarfare$getVehicleTransform(drone, partialTicks);
+                    float x0 = 0f;
+                    float y0 = 0.075f;
+                    float z0 = 0.18f;
+
+                    Vector4f worldPosition = superbWarfare$transformPosition(transform, x0, y0, z0);
+
+                    setRotation(drone.getYaw(partialTicks), drone.getPitch(partialTicks));
+                    setPosition(worldPosition.x, worldPosition.y, worldPosition.z);
+                    info.cancel();
+                }
+                return;
+            }
+
             if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoomVehicle) {
                 float yRot = boat.getYRot();
                 if (yRot < 0) {
@@ -100,22 +117,6 @@ public abstract class CameraMixin {
                     info.cancel();
                 }
                 return;
-            }
-
-            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-                DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
-                if (drone != null) {
-                    Matrix4f transform = superbWarfare$getVehicleTransform(drone, partialTicks);
-                    float x0 = 0f;
-                    float y0 = 0.075f;
-                    float z0 = 0.18f;
-
-                    Vector4f worldPosition = superbWarfare$transformPosition(transform, x0, y0, z0);
-
-                    setRotation(drone.getYaw(partialTicks), drone.getPitch(partialTicks));
-                    setPosition(worldPosition.x, worldPosition.y, worldPosition.z);
-                    info.cancel();
-                }
             }
         }
     }

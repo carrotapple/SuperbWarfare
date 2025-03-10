@@ -750,7 +750,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     }
 
     @Override
-    public boolean hidePassenger() {
+    public boolean hidePassenger(Entity entity) {
         return true;
     }
 

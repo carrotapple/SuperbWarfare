@@ -555,7 +555,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public boolean hidePassenger() {
+    public boolean hidePassenger(Entity entity) {
         return false;
     }
 

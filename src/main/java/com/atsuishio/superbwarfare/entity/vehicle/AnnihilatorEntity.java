@@ -595,7 +595,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public boolean hidePassenger() {
+    public boolean hidePassenger(Entity entity) {
         return true;
     }
 

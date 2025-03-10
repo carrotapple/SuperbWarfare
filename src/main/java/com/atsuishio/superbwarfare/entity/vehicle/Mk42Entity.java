@@ -394,7 +394,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
-    public boolean hidePassenger() {
+    public boolean hidePassenger(Entity entity) {
         return true;
     }
 

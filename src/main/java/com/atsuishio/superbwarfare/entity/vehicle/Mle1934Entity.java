@@ -521,7 +521,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
-    public boolean hidePassenger() {
+    public boolean hidePassenger(Entity entity) {
         return true;
     }
 

@@ -66,7 +66,7 @@ public interface ArmedVehicleEntity {
      *
      * @return 是否隐藏
      */
-    boolean hidePassenger();
+    boolean hidePassenger(Entity entity);
 
     /**
      * 瞄准时的放大倍率

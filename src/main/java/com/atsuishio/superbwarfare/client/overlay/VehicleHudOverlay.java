@@ -467,7 +467,7 @@ public class VehicleHudOverlay {
         for (int i = passengers.size() - 1; i >= 0; i--) {
             var passenger = passengers.get(i);
 
-            int y = h - 50 - index * 12;
+            int y = h - 35 - index * 12;
             AtomicReference<String> name = new AtomicReference<>("---");
 
             if (passenger != null) {
@@ -486,12 +486,12 @@ public class VehicleHudOverlay {
                 );
             }
 
-            guiGraphics.drawString(Minecraft.getInstance().font, name.get(), 37, y, 0x66ff00, true);
+            guiGraphics.drawString(Minecraft.getInstance().font, name.get(), 42, y, 0x66ff00, true);
 
             String num = "[" + (i + 1) + "]";
-            guiGraphics.drawString(Minecraft.getInstance().font, num, 20 - Minecraft.getInstance().font.width(num), y, 0x66ff00, true);
+            guiGraphics.drawString(Minecraft.getInstance().font, num, 25 - Minecraft.getInstance().font.width(num), y, 0x66ff00, true);
 
-            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 25, y, 100, 0, 0, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, index == passengers.size() - 1 ? DRIVER : PASSENGER, 30, y, 100, 0, 0, 8, 8, 8, 8);
             index++;
         }
     }
