@@ -122,7 +122,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .durability(60)
                                 .velocity(40)
                                 .sound(ModSounds.INTO_MISSILE.get())
-                                .ammo(ModItems.AP_5_INCHES.get()),
+                                .ammo(ModItems.AP_5_INCHES.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         // HE
                         new CannonShellWeapon()
                                 .hitDamage(100)
@@ -133,7 +134,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .durability(1)
                                 .velocity(25)
                                 .sound(ModSounds.INTO_CANNON.get())
-                                .ammo(ModItems.HE_5_INCHES.get()),
+                                .ammo(ModItems.HE_5_INCHES.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/he_shell.png")),
                 },
                 new VehicleWeapon[]{
                         // 机枪

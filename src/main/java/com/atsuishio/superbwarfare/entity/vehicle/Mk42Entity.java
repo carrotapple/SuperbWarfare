@@ -87,7 +87,8 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                                 .explosionDamage(VehicleConfig.MK42_AP_EXPLOSION_DAMAGE.get())
                                 .explosionRadius(VehicleConfig.MK42_AP_EXPLOSION_RADIUS.get().floatValue())
                                 .durability(60)
-                                .sound(ModSounds.CANNON_RELOAD.get()),
+                                .sound(ModSounds.CANNON_RELOAD.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         new CannonShellWeapon()
                                 .hitDamage(VehicleConfig.MK42_HE_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.MK42_HE_EXPLOSION_DAMAGE.get())
@@ -95,7 +96,8 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                                 .durability(1)
                                 .fireProbability(0.18F)
                                 .fireTime(2)
-                                .sound(ModSounds.CANNON_RELOAD.get()),
+                                .sound(ModSounds.CANNON_RELOAD.get())
+                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/he_shell.png")),
                 }
         };
     }

@@ -57,6 +57,7 @@ public class VehicleHudOverlay {
     private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
     private static final ResourceLocation DRIVER = ModUtils.loc("textures/screens/driver.png");
     private static final ResourceLocation PASSENGER = ModUtils.loc("textures/screens/passenger.png");
+    private static final ResourceLocation SELECTED = ModUtils.loc("textures/screens/vehicle_weapon/selected.png");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -509,8 +510,8 @@ public class VehicleHudOverlay {
         var weapons = weaponVehicle.getAvailableWeapons(index);
         if (weapons.isEmpty()) return;
 
-        int weaponType = weaponVehicle.getWeaponIndex(index);
-        if (weaponType == -1) return;
+        int weaponIndex = weaponVehicle.getWeaponIndex(index);
+        if (weaponIndex == -1) return;
 
         var pose = guiGraphics.pose();
 
@@ -531,7 +532,16 @@ public class VehicleHudOverlay {
 
             pose.pushPose();
 
+            if (weaponIndex != i) {
+                RenderSystem.setShaderColor(1, 1, 1, 0.5f);
+            } else {
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                preciseBlit(guiGraphics, SELECTED, w - 95, h - frameIndex * 18 - 16, 100, 0, 0, 8, 8, 8, 8);
+            }
+
             preciseBlit(guiGraphics, frame, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
+            var weapon = weapons.get(i);
+            preciseBlit(guiGraphics, weapon.icon, w - 85, h - frameIndex * 18 - 20, 100, 0, 0, 75, 16, 75, 16);
 
             pose.popPose();
 
