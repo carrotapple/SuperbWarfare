@@ -497,6 +497,19 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static void renderWeaponInfo(GuiGraphics guiGraphics, Entity vehicle, int w, int h) {
+    private static void renderWeaponInfo(GuiGraphics guiGraphics, Entity entity, int w, int h) {
+        if (!(entity instanceof WeaponVehicleEntity weaponVehicle)) return;
+        if (!(weaponVehicle instanceof VehicleEntity vehicle)) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        int index = vehicle.getSeatIndex(player);
+        if (index == -1) return;
+
+        var weapons = weaponVehicle.getAvailableWeapons(index);
+        if (weapons.isEmpty()) return;
+
+        // TODO 实现载具武器HUD
     }
 }
