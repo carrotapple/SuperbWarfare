@@ -185,7 +185,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.LAUNCHER_PERKS.test(perk);
+        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get();
     }
 
     @Override
@@ -213,7 +213,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
         double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
         if (player.level() instanceof ServerLevel serverLevel) {
-            RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
+            RpgRocketEntity rocket = new RpgRocketEntity(player, level,
                     (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
                     (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
                     (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
@@ -221,17 +221,26 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
                 int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
-                rocketEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+                rocket.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
+
+            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0);
 
             if (PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get()) {
-                rocketEntity.setNoGravity(true);
+                rocket.setNoGravity(true);
+
+                int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
+                if (perkLevel > 0) {
+                    rocket.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0) * 0.5f);
+                    rocket.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage", 0) * (1.1f + perkLevel * 0.1f));
+                    velocity *= 1.2f;
+                }
             }
 
-            rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-            rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+            rocket.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+            rocket.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity,
                     (float) (zoom ? 0.1 : spread));
-            level.addFreshEntity(rocketEntity);
+            level.addFreshEntity(rocket);
 
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
                     player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,

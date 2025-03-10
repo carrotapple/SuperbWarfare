@@ -246,7 +246,6 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        if (perk == ModPerks.MICRO_MISSILE.get()) return false;
         return PerkHelper.LAUNCHER_PERKS.test(perk);
     }
 

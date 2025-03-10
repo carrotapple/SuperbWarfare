@@ -42,6 +42,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity {
+
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -49,23 +50,35 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     private float monsterMultiplier = 0.0f;
     private float damage = 250f;
-    private float explosion_damage = 200f;
-    private float explosion_radius = 10f;
+    private float explosionDamage = 200f;
+    private float explosionRadius = 10f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public RpgRocketEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
         super(ModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
-        this.explosion_damage = explosion_damage;
-        this.explosion_radius = explosion_radius;
+        this.explosionDamage = explosionDamage;
+        this.explosionRadius = explosionRadius;
     }
 
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.RPG_ROCKET.get(), level);
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    public void setExplosionDamage(float explosionDamage) {
+        this.explosionDamage = explosionDamage;
+    }
+
+    public void setExplosionRadius(float explosionRadius) {
+        this.explosionRadius = explosionRadius;
     }
 
     public void setMonsterMultiplier(float monsterMultiplier) {
@@ -112,7 +125,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
         }
 
@@ -131,7 +144,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
         }
 
@@ -158,7 +171,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 100 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
             this.discard();
         }

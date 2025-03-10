@@ -340,8 +340,16 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
             gunGrenadeEntity.setNoGravity(PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
             gunGrenadeEntity.charged(isChargedFire);
 
+            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0);
+            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
+            if (perkLevel > 0) {
+                gunGrenadeEntity.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0) * 0.5f);
+                gunGrenadeEntity.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage", 0) * (1.1f + perkLevel * 0.1f));
+                velocity *= 1.2f;
+            }
+
             gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-            gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (isChargedFire ? 4 : 1) * (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+            gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (isChargedFire ? 4 : 1) * velocity,
                     (float) (zooming ? 0.1 : spread));
             serverLevel.addFreshEntity(gunGrenadeEntity);
 

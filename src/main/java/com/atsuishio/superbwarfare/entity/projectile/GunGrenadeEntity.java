@@ -59,6 +59,22 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         this(ModEntities.GUN_GRENADE.get(), level);
     }
 
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    public void setExplosionDamage(float explosionDamage) {
+        this.explosionDamage = explosionDamage;
+    }
+
+    public void setExplosionRadius(float explosionRadius) {
+        this.explosionRadius = explosionRadius;
+    }
+
+    public void setCharged(boolean charged) {
+        this.charged = charged;
+    }
+
     public void setMonsterMultiplier(float monsterMultiplier) {
         this.monsterMultiplier = monsterMultiplier;
     }
