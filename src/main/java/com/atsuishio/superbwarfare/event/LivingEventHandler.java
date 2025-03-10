@@ -8,9 +8,11 @@ import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.LaserTowerEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.event.modevent.PreKillEvent;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -41,6 +43,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,7 +91,7 @@ public class LivingEventHandler {
             return;
         }
 
-        killIndication(event.getSource());
+        killIndication(event);
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
         handlePlayerDeathDropAmmo(event.getEntity());
@@ -286,7 +289,9 @@ public class LivingEventHandler {
         }
     }
 
-    private static void killIndication(DamageSource source) {
+    private static void killIndication(LivingDeathEvent event) {
+        DamageSource source = event.getSource();
+
         var sourceEntity = source.getEntity();
         if (sourceEntity == null) {
             return;
@@ -298,6 +303,10 @@ public class LivingEventHandler {
         }
 
         if (!sourceEntity.level().isClientSide() && sourceEntity instanceof ServerPlayer player) {
+            if (MinecraftForge.EVENT_BUS.post(new PreKillEvent.Indicator(player, source, event.getEntity()))) {
+                return;
+            }
+
             SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 3f, 1f);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(2, 8));
@@ -457,6 +466,10 @@ public class LivingEventHandler {
         }
         if (source.getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof ServerPlayer player) {
             attacker = player;
+        }
+
+        if (MinecraftForge.EVENT_BUS.post(new PreKillEvent.SendKillMessage(attacker, source, entity))) {
+            return;
         }
 
         if (attacker != null) {
@@ -644,7 +657,7 @@ public class LivingEventHandler {
                     int ammoReload = (int) Math.min(mag, mag * rate);
                     int ammoNeed = Math.min(mag - ammo, ammoReload);
 
-            boolean flag = InventoryTool.hasCreativeAmmoBox(player);
+                    boolean flag = InventoryTool.hasCreativeAmmoBox(player);
 
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
@@ -833,6 +846,20 @@ public class LivingEventHandler {
     public static void onEntityFall(LivingFallEvent event) {
         LivingEntity living = event.getEntity();
         if (living.getVehicle() instanceof VehicleEntity) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPreSendKillMessage(PreKillEvent.SendKillMessage event) {
+        if (event.getSource().getDirectEntity() instanceof LaserTowerEntity && !(event.getTarget() instanceof Player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPreIndicator(PreKillEvent.Indicator event) {
+        if (event.getSource().getDirectEntity() instanceof LaserTowerEntity && !(event.getTarget() instanceof Player)) {
             event.setCanceled(true);
         }
     }
