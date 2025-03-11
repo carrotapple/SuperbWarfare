@@ -41,6 +41,10 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue ANNIHILATOR_SHOOT_COST;
     public static ForgeConfigSpec.IntValue ANNIHILATOR_MAX_ENERGY;
 
+    public static ForgeConfigSpec.IntValue LASER_TOWER_HP;
+    public static ForgeConfigSpec.IntValue LASER_TOWER_SHOOT_COST;
+    public static ForgeConfigSpec.IntValue LASER_TOWER_MAX_ENERGY;
+
     public static ForgeConfigSpec.IntValue SPEEDBOAT_HP;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_ENERGY_COST;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_MAX_ENERGY;
@@ -73,6 +77,17 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue BMP_2_CANNON_DAMAGE;
     public static ForgeConfigSpec.IntValue BMP_2_CANNON_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.DoubleValue BMP_2_CANNON_EXPLOSION_RADIUS;
+
+    public static ForgeConfigSpec.IntValue YX_100_HP;
+    public static ForgeConfigSpec.IntValue YX_100_SHOOT_COST;
+    public static ForgeConfigSpec.IntValue YX_100_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue YX_100_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue YX_100_AP_CANNON_DAMAGE;
+    public static ForgeConfigSpec.IntValue YX_100_AP_CANNON_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.DoubleValue YX_100_AP_CANNON_EXPLOSION_RADIUS;
+    public static ForgeConfigSpec.IntValue YX_100_HE_CANNON_DAMAGE;
+    public static ForgeConfigSpec.IntValue YX_100_HE_CANNON_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.DoubleValue YX_100_HE_CANNON_EXPLOSION_RADIUS;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("vehicle");
@@ -171,6 +186,19 @@ public class VehicleConfig {
 
         builder.pop();
 
+        builder.push("laser_tower");
+
+        builder.comment("The HealthPoint of Laser_Tower");
+        LASER_TOWER_HP = builder.defineInRange("laser_tower_hp", 100, 1, 10000000);
+
+        builder.comment("The energy cost of Laser_Tower per shoot");
+        LASER_TOWER_SHOOT_COST = builder.defineInRange("laser_tower_shoot_cost", 5000, 0, 2147483647);
+
+        builder.comment("The max energy storage of Laser_Tower");
+        LASER_TOWER_MAX_ENERGY = builder.defineInRange("laser_tower_max_energy", 500000, 0, 2147483647);
+
+        builder.pop();
+
         builder.push("speedboat");
 
         builder.comment("The HealthPoint of Speedboat");
@@ -180,7 +208,7 @@ public class VehicleConfig {
         SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 16, 0, 2147483647);
 
         builder.comment("The max energy storage of Speedboat");
-        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 1000000, 0, 2147483647);
+        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 500000, 0, 2147483647);
 
         builder.pop();
 
@@ -196,7 +224,7 @@ public class VehicleConfig {
         AH_6_MAX_ENERGY_COST = builder.defineInRange("ah_6_max_energy_cost", 128, 0, 2147483647);
 
         builder.comment("The max energy storage of AH-6");
-        AH_6_MAX_ENERGY = builder.defineInRange("ah_6_max_energy", 4000000, 0, 2147483647);
+        AH_6_MAX_ENERGY = builder.defineInRange("ah_6_max_energy", 5000000, 0, 2147483647);
 
         builder.comment("The cannon damage of AH-6");
         AH_6_CANNON_DAMAGE = builder.defineInRange("ah_6_cannon_damage", 20, 1, 10000000);
@@ -221,7 +249,7 @@ public class VehicleConfig {
         LAV_150_ENERGY_COST = builder.defineInRange("lav_150_energy_cost", 64, 0, 2147483647);
 
         builder.comment("The max energy storage of Lav_150");
-        LAV_150_MAX_ENERGY = builder.defineInRange("lav_150_max_energy", 3000000, 0, 2147483647);
+        LAV_150_MAX_ENERGY = builder.defineInRange("lav_150_max_energy", 5000000, 0, 2147483647);
 
         builder.comment("The cannon damage of Lav_150");
         LAV_150_CANNON_DAMAGE = builder.defineInRange("lav_150_cannon_damage", 45, 1, 10000000);
@@ -243,7 +271,7 @@ public class VehicleConfig {
         TOM_6_ENERGY_COST = builder.defineInRange("tom_6_energy_cost", 16, 0, 2147483647);
 
         builder.comment("The max energy storage of Tom_6");
-        TOM_6_MAX_ENERGY = builder.defineInRange("tom_6_max_energy", 160000, 0, 2147483647);
+        TOM_6_MAX_ENERGY = builder.defineInRange("tom_6_max_energy", 100000, 0, 2147483647);
 
         builder.comment("The Melon Bomb explosion damage of Tom_6");
         TOM_6_BOMB_EXPLOSION_DAMAGE = builder.defineInRange("tom_6_bomb_explosion_damage", 500, 1, 10000000);
@@ -262,7 +290,7 @@ public class VehicleConfig {
         BMP_2_ENERGY_COST = builder.defineInRange("bmp_2_energy_cost", 64, 0, 2147483647);
 
         builder.comment("The max energy storage of Bmp_2");
-        BMP_2_MAX_ENERGY = builder.defineInRange("bmp_2_max_energy", 3000000, 0, 2147483647);
+        BMP_2_MAX_ENERGY = builder.defineInRange("bmp_2_max_energy", 5000000, 0, 2147483647);
 
         builder.comment("The cannon damage of Bmp_2");
         BMP_2_CANNON_DAMAGE = builder.defineInRange("bmp_2_cannon_damage", 55, 1, 10000000);
@@ -272,6 +300,40 @@ public class VehicleConfig {
 
         builder.comment("The cannon explosion radius of Bmp_2");
         BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 3.2d, 1d, 10000000d);
+
+        builder.pop();
+
+        builder.push("yx_100");
+
+        builder.comment("The HealthPoint of Yx_100");
+        YX_100_HP = builder.defineInRange("yx_100_hp", 500, 1, 10000000);
+
+        builder.comment("The energy cost of Yx_100 per tick");
+        YX_100_ENERGY_COST = builder.defineInRange("yx_100_energy_cost", 128, 0, 2147483647);
+
+        builder.comment("The energy cost of Yx_100 per shoot");
+        YX_100_SHOOT_COST = builder.defineInRange("yx_100_shoot_cost", 24000, 0, 2147483647);
+
+        builder.comment("The max energy storage of Yx_100");
+        YX_100_MAX_ENERGY = builder.defineInRange("yx_100_max_energy", 20000000, 0, 2147483647);
+
+        builder.comment("The cannon damage of Yx_100");
+        YX_100_AP_CANNON_DAMAGE = builder.defineInRange("yx_100_ap_cannon_damage", 500, 1, 10000000);
+
+        builder.comment("The cannon explosion damage of Yx_100");
+        YX_100_AP_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("yx_100_ap_cannon_explosion_damage", 100, 1, 10000000);
+
+        builder.comment("The cannon explosion radius of Yx_100");
+        YX_100_AP_CANNON_EXPLOSION_RADIUS = builder.defineInRange("yx_100_ap_cannon_explosion_radius", 4d, 1d, 10000000d);
+
+        builder.comment("The cannon damage of Yx_100");
+        YX_100_HE_CANNON_DAMAGE = builder.defineInRange("yx_100_he_cannon_damage", 150, 1, 10000000);
+
+        builder.comment("The cannon explosion damage of Yx_100");
+        YX_100_HE_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("yx_100_he_cannon_explosion_damage", 150, 1, 10000000);
+
+        builder.comment("The cannon explosion radius of Yx_100");
+        YX_100_HE_CANNON_EXPLOSION_RADIUS = builder.defineInRange("yx_100_he_cannon_explosion_radius", 10d, 1d, 10000000d);
 
         builder.pop();
 

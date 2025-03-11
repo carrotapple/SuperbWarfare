@@ -4,7 +4,7 @@
   "pattern": [
     "aaa",
     "bbb",
-    "dcd"
+    "dce"
   ],
   "key": {
     "a": {
@@ -18,6 +18,9 @@
     },
     "d": {
       "item": "minecraft:netherite_block"
+    },
+    "e": {
+      "item": "superbwarfare:large_battery_pack"
     }
   },
   "result": {

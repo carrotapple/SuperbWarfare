@@ -36,6 +36,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.DRONE);
         simpleItem(ModItems.LIGHT_ARMAMENT_MODULE);
         simpleItem(ModItems.MEDIUM_ARMAMENT_MODULE);
+        simpleItem(ModItems.HEAVY_ARMAMENT_MODULE);
 
         simpleItem(ModItems.TARGET_DEPLOYER);
         simpleItem(ModItems.MORTAR_DEPLOYER);

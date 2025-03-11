@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.EnergyVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
@@ -64,9 +65,9 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     public static final EntityDataAccessor<Float> LASER_LENGTH = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public static final float MAX_HEALTH = 100;
-    public static final int MAX_ENERGY = 500000;
-    public static final int SHOOT_COST = 5000;
+    public static final float MAX_HEALTH = VehicleConfig.LASER_TOWER_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.LASER_TOWER_MAX_ENERGY.get();
+    public static final int SHOOT_COST = VehicleConfig.LASER_TOWER_SHOOT_COST.get();
     public int changeTargetTimer = 5000;
 
     public LaserTowerEntity(PlayMessages.SpawnEntity packet, Level world) {

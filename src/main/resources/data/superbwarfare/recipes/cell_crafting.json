@@ -2,22 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " b ",
-    "cdc",
-    " e "
+    "b  ",
+    "d  ",
+    "e  "
   ],
   "key": {
     "b": {
-      "tag": "forge:plates/copper"
-    },
-    "c": {
-      "tag": "forge:glass_panes"
+      "item": "minecraft:gold_nugget"
     },
     "d": {
       "item": "minecraft:redstone"
     },
     "e": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:iron_nugget"
     }
   },
   "result": {

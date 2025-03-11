@@ -77,9 +77,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Integer> GUN_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MACHINE_GUN_HEAT = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
 
-    public static final float MAX_HEALTH = 500;
-    public static final int MAX_ENERGY = 5000000;
-    public static final int SHOOT_COST = 10000;
+    public static final float MAX_HEALTH = VehicleConfig.YX_100_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.YX_100_MAX_ENERGY.get();
+    public static final int SHOOT_COST = VehicleConfig.YX_100_SHOOT_COST.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -117,9 +117,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 new VehicleWeapon[]{
                         // AP
                         new CannonShellWeapon()
-                                .hitDamage(500)
-                                .explosionRadius(4)
-                                .explosionDamage(100)
+                                .hitDamage(VehicleConfig.YX_100_AP_CANNON_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.YX_100_AP_CANNON_EXPLOSION_RADIUS.get().floatValue())
+                                .explosionDamage(VehicleConfig.YX_100_AP_CANNON_EXPLOSION_DAMAGE.get())
                                 .fireProbability(0)
                                 .fireTime(0)
                                 .durability(60)
@@ -129,9 +129,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         // HE
                         new CannonShellWeapon()
-                                .hitDamage(100)
-                                .explosionRadius(10)
-                                .explosionDamage(150)
+                                .hitDamage(VehicleConfig.YX_100_HE_CANNON_DAMAGE.get())
+                                .explosionRadius(VehicleConfig.YX_100_HE_CANNON_EXPLOSION_RADIUS.get().floatValue())
+                                .explosionDamage(VehicleConfig.YX_100_HE_CANNON_EXPLOSION_DAMAGE.get())
                                 .fireProbability(0.18F)
                                 .fireTime(2)
                                 .durability(1)
@@ -910,7 +910,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public boolean canShoot(Player player) {
         return switch (getSeatIndex(player)) {
-            case 0 -> this.entityData.get(LOADED_AMMO) > 0 && getEnergy() > 10000;
+            case 0 -> this.entityData.get(LOADED_AMMO) > 0 && getEnergy() > SHOOT_COST;
             case 1 -> (this.entityData.get(MG_AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
             default -> false;
         };
