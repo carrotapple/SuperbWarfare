@@ -20,7 +20,7 @@ public class TooltipTool {
     }
 
     public static void addDevelopingText(List<Component> tooltip) {
-        tooltip.add(Component.literal("本物品还在开发中").withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD));
+        tooltip.add(Component.translatable("des.superbwarfare.developing").withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     public static double perkDamage(ItemStack stack) {

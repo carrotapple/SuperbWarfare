@@ -531,6 +531,8 @@
   "des.superbwarfare.revolver.da": "DA",
   "des.superbwarfare.revolver.sa": "SA",
 
+  "des.superbwarfare.developing": "This item is still under development",
+
   "jei.superbwarfare.ancient_cpu": "Mysterious ancient technology, can be found at ancient cities.",
   "jei.superbwarfare.charging_station": "Generates power by consuming fuel or food, and can also accept FE energy input. This block supplies FE energy to adjacent blocks, and can also charge rechargeable vehicles within range.",
 
