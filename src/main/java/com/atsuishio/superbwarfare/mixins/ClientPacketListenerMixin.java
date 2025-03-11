@@ -62,7 +62,7 @@ public abstract class ClientPacketListenerMixin {
             if (passenger != null) {
                 passenger.startRiding(entity, true);
 
-                if (passenger == player && !hasIndirectPassenger) {
+                if (passenger == player || hasIndirectPassenger) {
                     Component component = Component.translatable("mount.onboard", ModKeyMappings.DISMOUNT.getTranslatedKeyMessage());
                     this.minecraft.gui.setOverlayMessage(component, false);
                     this.minecraft.getNarrator().sayNow(component);
