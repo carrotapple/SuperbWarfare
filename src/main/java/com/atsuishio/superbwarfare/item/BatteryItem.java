@@ -8,10 +8,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class BatteryItem extends Item {
@@ -27,25 +27,18 @@ public class BatteryItem extends Item {
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        if (!pStack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
-            return false;
-        }
-
-        AtomicInteger energy = new AtomicInteger(0);
-        pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                e -> energy.set(e.getEnergyStored())
-        );
-        return energy.get() != maxEnergy;
+        return pStack.getCapability(ForgeCapabilities.ENERGY)
+                .map(IEnergyStorage::getEnergyStored)
+                .orElse(0) != maxEnergy;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        AtomicInteger energy = new AtomicInteger(0);
-        pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                e -> energy.set(e.getEnergyStored())
-        );
+        var energy = pStack.getCapability(ForgeCapabilities.ENERGY)
+                .map(IEnergyStorage::getEnergyStored)
+                .orElse(0);
 
-        return Math.round((float) energy.get() * 13.0F / maxEnergy);
+        return Math.round((float) energy * 13.0F / maxEnergy);
     }
 
     @Override
@@ -54,7 +47,7 @@ public class BatteryItem extends Item {
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(@NotNull ItemStack pStack) {
         return 0xFFFF00;
     }
 
