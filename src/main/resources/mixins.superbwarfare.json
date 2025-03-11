@@ -6,7 +6,6 @@
   "mixins": [
     "ClientboundSetEntityMotionPacketMixin",
     "ClientboundSetPassengersPacketMixin",
-    "EntityMixin",
     "ExplosionMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin"

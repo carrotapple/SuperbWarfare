@@ -1,10 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import net.minecraft.world.entity.Entity;
-import org.spongepowered.asm.mixin.Mixin;
-
-@Mixin(Entity.class)
-public class EntityMixin {
+//@Mixin(Entity.class)
+//public class EntityMixin {
 
     // TODO 优化后续逻辑
 //    @Redirect(method = "turn(DD)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setXRot(F)V", ordinal = 1))
@@ -21,4 +18,4 @@ public class EntityMixin {
 //            instance.setXRot(Mth.clamp(instance.getXRot(), -90.0F, 90.0F));
 //        }
 //    }
-}
+//}
