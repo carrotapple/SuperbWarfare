@@ -20,5 +20,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
         SpecialRecipeBuilder.special(ModRecipes.POTION_MORTAR_SHELL_SERIALIZER.get()).save(pWriter, "potion_mortar_shell");
         SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_ADD_AMMO_SERIALIZER.get()).save(pWriter, "ammo_box_add_ammo");
+        SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_EXTRACT_AMMO_SERIALIZER.get()).save(pWriter, "ammo_box_extract_ammo");
     }
 }

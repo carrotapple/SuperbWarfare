@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.recipe.AmmoBoxAddAmmoRecipe;
+import com.atsuishio.superbwarfare.recipe.AmmoBoxExtractAmmoRecipe;
 import com.atsuishio.superbwarfare.recipe.PotionMortarShellRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
@@ -18,4 +19,7 @@ public class ModRecipes {
 
     public static final RegistryObject<RecipeSerializer<AmmoBoxAddAmmoRecipe>> AMMO_BOX_ADD_AMMO_SERIALIZER =
             RECIPE_SERIALIZERS.register("ammo_box_add_ammo", () -> new SimpleCraftingRecipeSerializer<>(AmmoBoxAddAmmoRecipe::new));
+    public static final RegistryObject<RecipeSerializer<AmmoBoxExtractAmmoRecipe>> AMMO_BOX_EXTRACT_AMMO_SERIALIZER =
+            RECIPE_SERIALIZERS.register("ammo_box_extract_ammo", () -> new SimpleCraftingRecipeSerializer<>(AmmoBoxExtractAmmoRecipe::new));
+
 }
