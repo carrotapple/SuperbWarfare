@@ -19,5 +19,11 @@
       "item": "superbwarfare:high_energy_explosives",
       "count": 3
     }
+  ],
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
   ]
 }
