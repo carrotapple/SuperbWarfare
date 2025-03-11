@@ -357,6 +357,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void vehicleShoot(Player player, int type) {
+        boolean hasCreativeAmmo = false;
+        for (int i = 0; i < getMaxPassengers() - 1; i++) {
+            if (getNthEntity(i) instanceof Player pPlayer && InventoryTool.hasCreativeAmmoBox(pPlayer)) {
+                hasCreativeAmmo = true;
+            }
+        }
         if (reloadCoolDown == 0 && type == 0) {
 
             if (!this.canConsume(SHOOT_COST)) {
@@ -478,7 +484,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 }
             }
 
-            if (hasItem(ModItems.CREATIVE_AMMO_BOX.get())) return;
+            if (hasCreativeAmmo) return;
 
             ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                 if (stack.is(ModItems.AMMO_BOX.get())) {

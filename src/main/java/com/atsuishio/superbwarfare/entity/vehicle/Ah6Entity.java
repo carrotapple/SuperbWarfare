@@ -560,7 +560,12 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void vehicleShoot(Player player, int type) {
-        boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
+        boolean hasCreativeAmmo = false;
+        for (int i = 0; i < getMaxPassengers() - 1; i++) {
+            if (getNthEntity(i) instanceof Player pPlayer && InventoryTool.hasCreativeAmmoBox(pPlayer)) {
+                hasCreativeAmmo = true;
+            }
+        }
 
         Matrix4f transform = getVehicleTransform();
         float x;

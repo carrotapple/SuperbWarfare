@@ -294,7 +294,12 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public void vehicleShoot(Player player, int type) {
-        boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
+        boolean hasCreativeAmmo = false;
+        for (int i = 0; i < getMaxPassengers() - 1; i++) {
+            if (getNthEntity(i) instanceof Player pPlayer && InventoryTool.hasCreativeAmmoBox(pPlayer)) {
+                hasCreativeAmmo = true;
+            }
+        }
 
         Matrix4f transform = getBarrelTransform();
         if (getWeaponIndex(0) == 0) {
@@ -334,6 +339,9 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
+
+            if (hasCreativeAmmo) return;
+
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
 
         } else if (getWeaponIndex(0) == 1) {

@@ -335,6 +335,13 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public void vehicleShoot(Player player, int type) {
+        boolean hasCreativeAmmo = false;
+        for (int i = 0; i < getMaxPassengers() - 1; i++) {
+            if (getNthEntity(i) instanceof Player pPlayer && InventoryTool.hasCreativeAmmoBox(pPlayer)) {
+                hasCreativeAmmo = true;
+            }
+        }
+
         Matrix4f transform = getBarrelTransform();
         if (getWeaponIndex(0) == 0) {
             if (this.cannotFire) return;
@@ -373,6 +380,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
+
+            if (hasCreativeAmmo) return;
+
             this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
         } else if (getWeaponIndex(0) == 1) {
             if (this.cannotFireCoax) return;
@@ -381,7 +391,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             float z = 2f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
-            boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
                 var projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player);

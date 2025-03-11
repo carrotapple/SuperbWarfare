@@ -282,7 +282,12 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
         this.entityData.set(FIRE_ANIM, 3);
 
-        boolean hasCreativeAmmo = InventoryTool.hasCreativeAmmoBox(player);
+        boolean hasCreativeAmmo = false;
+        for (int i = 0; i < getMaxPassengers() - 1; i++) {
+            if (getNthEntity(i) instanceof Player pPlayer && InventoryTool.hasCreativeAmmoBox(pPlayer)) {
+                hasCreativeAmmo = true;
+            }
+        }
 
         if (!hasCreativeAmmo) {
             ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
