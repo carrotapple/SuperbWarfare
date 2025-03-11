@@ -388,11 +388,8 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
     @Override
     public int getAmmoCount(Player player) {
-        if (player.getMainHandItem().getItem() instanceof CannonShellItem) {
-            return player.getMainHandItem().getCount();
-        } else {
-            return -1;
-        }
+        var ammo = getWeaponIndex(0) == 0 ? ModItems.AP_5_INCHES.get() : ModItems.HE_5_INCHES.get();
+        return InventoryTool.countItem(player.getInventory().items, ammo);
     }
 
     @Override

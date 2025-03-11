@@ -507,7 +507,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         turretTurnSound(diffX, diffY, 0.8f);
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -0.6f, 0.6f));
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -0.8f, 0.8f), -45, 5f));
     }
 
     public void autoAim() {
