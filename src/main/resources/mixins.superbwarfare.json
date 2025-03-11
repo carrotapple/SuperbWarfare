@@ -16,7 +16,8 @@
     "ClientPlayerEntityMixin",
     "GameRendererMixin",
     "ItemInHandLayerMixin",
-    "KeyMappingMixin",
+    "KeyboardInputMixin",
+    "KeymappingMixin",
     "LivingEntityRendererMixin",
     "MinecraftMixin",
     "MouseHandlerMixin"
