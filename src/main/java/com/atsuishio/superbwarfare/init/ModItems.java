@@ -172,6 +172,7 @@ public class ModItems {
     public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> CELL = ITEMS.register("cell", Cell::new);
+    public static final RegistryObject<Item> BATTERY = ITEMS.register("battery", Battery::new);
     public static final RegistryObject<Item> TRANSCRIPT = ITEMS.register("transcript", Transcript::new);
     public static final RegistryObject<Item> FIRING_PARAMETERS = ITEMS.register("firing_parameters", FiringParameters::new);
 

@@ -192,6 +192,7 @@
   "item.superbwarfare.dog_tag": "狗牌",
   "curios.identifier.dog_tag": "狗牌",
   "item.superbwarfare.cell": "电池",
+  "item.superbwarfare.battery": "大型电池",
   "item.superbwarfare.drone": "无人机",
   "item.superbwarfare.monitor": "遥控器",
   "des.superbwarfare.monitor": "无人机距离你: %1$s",
