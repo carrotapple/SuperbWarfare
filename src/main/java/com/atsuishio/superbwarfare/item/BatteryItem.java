@@ -17,15 +17,16 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class Battery extends Item {
-
-    public static final int MAX_ENERGY = 100000;
+public class BatteryItem extends Item {
 
     private final Supplier<Integer> energyCapacity;
 
-    public Battery() {
+    public static int MAX_ENERGY = 0;
+
+    public BatteryItem(int maxEnergy, Properties properties) {
         super(new Properties().stacksTo(1));
-        this.energyCapacity = () -> MAX_ENERGY;
+        this.energyCapacity = () -> maxEnergy;
+        MAX_ENERGY = maxEnergy;
     }
 
     @Override
