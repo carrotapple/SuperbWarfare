@@ -1,4 +1,4 @@
-// 1.20.1	2025-02-22T22:02:50.7777089	Item Models: superbwarfare
+// 1.20.1	2025-03-11T18:41:51.1447737	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -46,6 +46,7 @@ e04bbd61e716fc5d53c9425aba508fc3287bfd57 assets/superbwarfare/models/item/iron_p
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/javelin_blueprint.json
 195c1b7cbcce9b0ac42ecbfc21a8cafff8c78372 assets/superbwarfare/models/item/jump_pad.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/k_98_blueprint.json
+02214d593955d899847663e54f3dbcd396da0760 assets/superbwarfare/models/item/large_battery_pack.json
 4c9b6c2911ae5e6e2a026d2ae9d3c0564cdba0b3 assets/superbwarfare/models/item/large_motor.json
 95c0f92c4a4b3adff9c95878540071b04a921792 assets/superbwarfare/models/item/large_propeller.json
 ce9e4fd8ea92cfdbdda158776c1b6e1b482a3f2a assets/superbwarfare/models/item/lead_ingot.json
@@ -54,6 +55,7 @@ ec76dc1a79f4c0e502fee53be8aa8e04420845fc assets/superbwarfare/models/item/light_
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m2hb_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/marlin_blueprint.json
 0033cd03b0203cd3fa071fb5354c74d33bc1afa8 assets/superbwarfare/models/item/medium_armament_module.json
+81699ddddb4270261ae10ff812b00e666649ff7c assets/superbwarfare/models/item/medium_battery_pack.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/minigun_blueprint.json
 c206cd345f459733399e0be4692586849ef0aac2 assets/superbwarfare/models/item/missile_engine.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_14_blueprint.json
@@ -96,6 +98,7 @@ c010baff106b3307ec585df4757f7c3d756e9794 assets/superbwarfare/models/item/seeker
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sentinel_blueprint.json
 129239c26d14526d65764dc10ef99864c9ef7fff assets/superbwarfare/models/item/silver_ingot.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sks_blueprint.json
+6310b8628a1672a3dcbda5fb57733e4e0b2a5af7 assets/superbwarfare/models/item/small_battery_pack.json
 6c55bc5d7664a4bc351118876c97c78597f05df7 assets/superbwarfare/models/item/small_shell.json
 93a18630b8c0a5aab1f0202f42b8bd5ee7153c38 assets/superbwarfare/models/item/steel_action.json
 321bafbe4487eda1a6ca82eec647eabc3230a4e3 assets/superbwarfare/models/item/steel_barrel.json
