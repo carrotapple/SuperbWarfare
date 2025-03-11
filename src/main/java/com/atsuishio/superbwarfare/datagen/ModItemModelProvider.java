@@ -71,6 +71,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.CROWBAR);
         simpleItem(ModItems.FIRING_PARAMETERS);
         simpleItem(ModItems.BEAM_TEST);
+        simpleItem(ModItems.HANDGUN_AMMO);
+        simpleItem(ModItems.RIFLE_AMMO);
+        simpleItem(ModItems.SNIPER_AMMO);
+        simpleItem(ModItems.SHOTGUN_AMMO);
         simpleItem(ModItems.HEAVY_AMMO);
         simpleItem(ModItems.ROCKET_70);
         simpleItem(ModItems.WIRE_GUIDE_MISSILE);

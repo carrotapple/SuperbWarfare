@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-11T19:24:00.2918063	Item Models: superbwarfare
+// 1.20.1	2025-03-11T20:56:29.5501616	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -33,6 +33,7 @@ c102839d5f7d4bdc1c6cbfbf4c2c907b70f22052 assets/superbwarfare/models/item/fusee.
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/glock_17_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/glock_18_blueprint.json
 8752c2b2b648ff23d6b93eedcc6c0500c695afd7 assets/superbwarfare/models/item/grain.json
+c256914755344645319528b6abfabb6179f75052 assets/superbwarfare/models/item/handgun_ammo.json
 afbfd24461fb7e6b43a8e029f0a894b84d8b6638 assets/superbwarfare/models/item/heavy_ammo.json
 89750640cc16a7b2d5bc3fc82ec8a53026c0466e assets/superbwarfare/models/item/heavy_armament_module.json
 e7a6de100f377835831211168d98c8d19434af24 assets/superbwarfare/models/item/he_head.json
@@ -88,6 +89,7 @@ e821640d80c55763e7e7b62f7b80c60ff56dcc4f assets/superbwarfare/models/item/rare_m
 ce0f0949b0545d8ef08aeaa52dd423dbe592f704 assets/superbwarfare/models/item/raw_cemented_carbide_powder.json
 59cbca463403cfc50d964229268638c55dd915fb assets/superbwarfare/models/item/raw_silver.json
 5b8f7d5922e49e06bcd4d4d2a2a3dc934548570b assets/superbwarfare/models/item/reforging_table.json
+d6934896a62737786ed9d2f60a6841c90c7bcab2 assets/superbwarfare/models/item/rifle_ammo.json
 2ffa0e320740cfae96341842450e95c916971fb1 assets/superbwarfare/models/item/rocket_70.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpg_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpk_blueprint.json
@@ -97,10 +99,12 @@ ce2232fbc6a9186371c6ae6745ec3be2a0a33546 assets/superbwarfare/models/item/scheel
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/secondary_cataclysm_blueprint.json
 c010baff106b3307ec585df4757f7c3d756e9794 assets/superbwarfare/models/item/seeker.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sentinel_blueprint.json
+ab3c63c249ab9f48dfb7b21bb4e85d55c50527e8 assets/superbwarfare/models/item/shotgun_ammo.json
 129239c26d14526d65764dc10ef99864c9ef7fff assets/superbwarfare/models/item/silver_ingot.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sks_blueprint.json
 6310b8628a1672a3dcbda5fb57733e4e0b2a5af7 assets/superbwarfare/models/item/small_battery_pack.json
 6c55bc5d7664a4bc351118876c97c78597f05df7 assets/superbwarfare/models/item/small_shell.json
+b06878332d05a1b61e9eb323e4d7079f7dcd4e18 assets/superbwarfare/models/item/sniper_ammo.json
 93a18630b8c0a5aab1f0202f42b8bd5ee7153c38 assets/superbwarfare/models/item/steel_action.json
 321bafbe4487eda1a6ca82eec647eabc3230a4e3 assets/superbwarfare/models/item/steel_barrel.json
 b4e009177af3af6ad6dda54e3e2fed43dc243ff2 assets/superbwarfare/models/item/steel_ingot.json
