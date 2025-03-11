@@ -17,9 +17,12 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     @Inject(method = "setupRotations", at = @At("TAIL"))
     public void render(T entity, PoseStack matrices, float animationProgress, float bodyYaw, float tickDelta, CallbackInfo ci) {
         if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof Ah6Entity ah6Entity) {
-            if (entity == ah6Entity.getNthEntity(2) || entity == ah6Entity.getNthEntity(3)) {
+            if (entity == ah6Entity.getNthEntity(2)) {
                 matrices.mulPose(Axis.XP.rotationDegrees(-ah6Entity.getRoll(tickDelta)));
                 matrices.mulPose(Axis.ZP.rotationDegrees(ah6Entity.getViewXRot(tickDelta)));
+            } else if (entity == ah6Entity.getNthEntity(3)) {
+                matrices.mulPose(Axis.XP.rotationDegrees(ah6Entity.getRoll(tickDelta)));
+                matrices.mulPose(Axis.ZP.rotationDegrees(-ah6Entity.getViewXRot(tickDelta)));
             } else {
                 matrices.mulPose(Axis.XP.rotationDegrees(-ah6Entity.getViewXRot(tickDelta)));
                 matrices.mulPose(Axis.ZP.rotationDegrees(-ah6Entity.getRoll(tickDelta)));
