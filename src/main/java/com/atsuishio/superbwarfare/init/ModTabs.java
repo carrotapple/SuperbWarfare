@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.item.ArmorPlate;
+import com.atsuishio.superbwarfare.item.BatteryItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.heavy.Ntw20Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
@@ -126,6 +127,9 @@ public class ModTabs {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
                                 output.accept(ArmorPlate.getInfiniteInstance());
+                            }
+                            if (registryObject.get() instanceof BatteryItem batteryItem) {
+                                output.accept(batteryItem.makeFullEnergyStack());
                             }
                         }
                     }))

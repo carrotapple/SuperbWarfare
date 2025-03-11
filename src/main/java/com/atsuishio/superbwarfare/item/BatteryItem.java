@@ -62,4 +62,12 @@ public class BatteryItem extends Item {
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         return Optional.of(new CellImageComponent(pStack));
     }
+
+    public ItemStack makeFullEnergyStack() {
+        ItemStack stack = new ItemStack(this);
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> e.receiveEnergy(maxEnergy, false)
+        );
+        return stack;
+    }
 }
