@@ -84,7 +84,6 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
         }
 
         if (name.equals("base")) {
-            bone.setHidden(true);
             float a = animatable.getEntityData().get(YAW);
             float r = (Mth.abs(a) - 90f) / 90f;
 
@@ -107,52 +106,86 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
             bone.setRotZ(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 1.5f);
         }
 
-        for (int i = 0; i < 40; i++) {
-            float tO = animatable.leftTrackO + 2 * i;
+        for (int i = 0; i < 41; i++) {
             float t = animatable.getLeftTrack() + 2 * i;
+            float t2 = animatable.getRightTrack() + 2 * i;
 
             if (t >= 80) {
                 t -= 80;
             }
-
-            float tO2 = animatable.rightTrackO + 2 * i;
-            float t2 = animatable.getRightTrack() + 2 * i;
 
             if (t2 >= 80) {
                 t2 -= 80;
             }
 
             if (name.equals("trackL" + i)) {
-                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO), getBoneMoveY(t)));
-                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO), getBoneMoveZ(t)));
+                bone.setPosY(getBoneMoveY(t));
+                bone.setPosZ(getBoneMoveZ(t));
             }
 
             if (name.equals("trackR" + i)) {
-                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO2), getBoneMoveY(t2)));
-                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO2), getBoneMoveZ(t2)));
+                bone.setPosY(getBoneMoveY(t2));
+                bone.setPosZ(getBoneMoveZ(t2));
             }
 
             if (name.equals("trackLRot" + i)) {
-                bone.setRotX(Mth.lerp(partialTick, getBoneRotX(tO), getBoneRotX(t)) * Mth.DEG_TO_RAD);
+                bone.setRotX(-getBoneRotX(t) * Mth.DEG_TO_RAD);
             }
 
             if (name.equals("trackRRot" + i)) {
-                bone.setRotX(Mth.lerp(partialTick, getBoneRotX(tO2), getBoneRotX(t2)) * Mth.DEG_TO_RAD);
+                bone.setRotX(-getBoneRotX(t2) * Mth.DEG_TO_RAD);
             }
 
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
+    public float getBoneRotX(float t) {
+        if (t <= 32.5833) return 0F;
+        if (t <= 33.5833) return Mth.lerp(t - 32.5833F, 0F, -45F);
+        if (t <= 34.5833) return Mth.lerp(t - 33.5833F, -45F, -90F);
+        if (t <= 36.8333) return Mth.lerp((t - 34.5833F) / (36.8333F - 34.5833F), -90F, -150F);
+        if (t <= 40.5833) return -150F;
+        if (t <= 41.0833) return Mth.lerp((t - 40.5833F) / (41.0833F - 40.5833F), -150F, -180F);
+        if (t <= 70) return -180F;
+        if (t <= 71) return Mth.lerp(t - 70F, -180F, -210F);
+        if (t <= 74.25) return -210F;
+        if (t <= 76.5) return Mth.lerp((t - 74.25F) / (76.5F - 74.25F), -210F, -270F);
+        if (t <= 77.5) return Mth.lerp(t - 76.5F, -270F, -315F);
+        if (t <= 79.75) return Mth.lerp((t - 77.5F) / (79.75F - 77.5F), -315F, -360F);
+
+        return 0F;
+    }
+
     public float getBoneMoveY(float t) {
-        return y;
+        if (t <= 32.5833) return 0F;
+        if (t <= 33.0833) return Mth.lerp((t - 32.5833F) / (33.0833F - 32.5833F), 0F, -1F);
+        if (t <= 34.0833) return Mth.lerp(t - 33.0833F, -1F, -2.5F);
+        if (t <= 35.5833) return Mth.lerp((t - 34.0833F) / (35.5833F - 34.0833F), -2.5F, -7.5F);
+        if (t <= 36.8333) return Mth.lerp((t - 35.5833F) / (36.8333F - 35.5833F), -7.5F, -12.25F);
+        if (t <= 41.0833) return Mth.lerp((t - 36.8333F) / (41.0833F - 36.8333F), -12.25F, -20.9F);
+        if (t <= 70) return -20.9F;
+        if (t <= 74.25) return Mth.lerp((t - 70F) / (74.25F - 70F), -20.9F, -12.25F);
+        if (t <= 76) return Mth.lerp((t - 74.25F) / (76F - 74.25F), -12.25F, -7.5F);
+        if (t <= 77.75) return Mth.lerp((t - 76F) / (77.75F - 76F), -7.5F, -2F);
+        if (t <= 79.25) return Mth.lerp((t - 77.75F) / (79.25F - 77.75F), -2F, -0.3F);
+
+        return Mth.lerp((t - 79.25F) / (80F - 79.25F), -0.3F, 0F);
     }
 
     public float getBoneMoveZ(float t) {
-        return z;
-    }
+        if (t <= 32.5833) return Mth.lerp(t / (32.5833F - 0F), 0F, 135.6F);
+        if (t <= 33.0833) return Mth.lerp((t - 32.5833F) / (33.0833F - 32.5833F), 135.6F, 137.75F);
+        if (t <= 34.0833) return Mth.lerp(t - 33.0833F, 137.75F, 140.25F);
+        if (t <= 35.5833) return 140.25F;
+        if (t <= 36.8333) return Mth.lerp((t - 35.5833F) / (36.8333F - 35.5833F), 140.25F, 137.25F);
+        if (t <= 41.0833) return Mth.lerp((t - 36.8333F) / (41.0833F - 36.8333F), 137.25F, 121.5F);
+        if (t <= 70) return Mth.lerp((t - 41.0833F) / (70F - 41.0833F), 121.5F, 11.5F);
+        if (t <= 74.25) return Mth.lerp((t - 70F) / (74.25F - 70F), 11.5F, -3.75F);
+        if (t <= 76) return Mth.lerp((t - 74.25F) / (76F - 74.25F), -3.75F, -10F);
+        if (t <= 77.75) return Mth.lerp((t - 76F) / (77.75F - 76F), -10F, -8.25F);
+        if (t <= 79.25) return Mth.lerp((t - 77.75F) / (79.25F - 77.75F), -8.25F, -4.12F);
 
-    public float getBoneRotX(float t) {
-        return x;
+        return Mth.lerp((t - 79.25F) / (80F - 79.25F), -4.12F, 0F);
     }
 }
