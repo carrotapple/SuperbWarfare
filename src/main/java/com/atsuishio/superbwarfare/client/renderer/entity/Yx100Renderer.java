@@ -132,6 +132,14 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
                 bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO2), getBoneMoveZ(t2)));
             }
 
+            if (name.equals("trackLRot" + i)) {
+                bone.setRotX(Mth.lerp(partialTick, getBoneRotX(tO), getBoneRotX(t)) * Mth.DEG_TO_RAD);
+            }
+
+            if (name.equals("trackRRot" + i)) {
+                bone.setRotX(Mth.lerp(partialTick, getBoneRotX(tO2), getBoneRotX(t2)) * Mth.DEG_TO_RAD);
+            }
+
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
@@ -142,5 +150,9 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
 
     public float getBoneMoveZ(float t) {
         return z;
+    }
+
+    public float getBoneRotX(float t) {
+        return x;
     }
 }
