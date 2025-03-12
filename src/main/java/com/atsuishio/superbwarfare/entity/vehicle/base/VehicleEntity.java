@@ -235,19 +235,24 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(LAST_DRIVER_UUID, "undefined");
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
-            this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
-
-            var weapons = weaponVehicle.getAllWeapons();
-            for (int i = 0; i < weapons.length && i < this.getMaxPassengers(); i++) {
-                this.availableWeapons[i] = weapons[i];
-            }
-
-            var selected = new int[this.getMaxPassengers()];
-            for (int i = 0; i < this.getMaxPassengers(); i++) {
-                selected[i] = weaponVehicle.hasWeapon(i) ? 0 : -1;
-            }
-            this.entityData.define(SELECTED_WEAPON, IntList.of(selected));
+            this.entityData.define(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
         }
+    }
+
+    private int[] initSelectedWeaponArray(WeaponVehicleEntity weaponVehicle) {
+        this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
+
+        var weapons = weaponVehicle.getAllWeapons();
+        for (int i = 0; i < weapons.length && i < this.getMaxPassengers(); i++) {
+            this.availableWeapons[i] = weapons[i];
+        }
+
+        var selected = new int[this.getMaxPassengers()];
+        for (int i = 0; i < this.getMaxPassengers(); i++) {
+            selected[i] = weaponVehicle.hasWeapon(i) ? 0 : -1;
+        }
+
+        return selected;
     }
 
     @Override
@@ -258,7 +263,12 @@ public abstract class VehicleEntity extends Entity {
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             var selected = compound.getIntArray("SelectedWeapon");
-            this.entityData.set(SELECTED_WEAPON, IntList.of(selected));
+
+            if (selected.length != this.getMaxPassengers()) {
+                this.entityData.set(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
+            } else {
+                this.entityData.set(SELECTED_WEAPON, IntList.of(selected));
+            }
         }
     }
 
