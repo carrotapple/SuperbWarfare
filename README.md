@@ -19,3 +19,13 @@
 本模组的代码部分使用 GPL-3.0 协议进行开源。
 
 模型、贴图等资源，除特殊标注外的，均归制作组所有，禁止在未获得制作组授权的情况下使用。
+
+#### 相关链接
+
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/superb-warfare)
+
+[Modrinth](https://modrinth.com/mod/superb-warfare)
+
+[Github](https://github.com/Mercurows/SuperbWarfare)
+
+[Gitee](https://gitee.com/atsuishio/SuperbWarfare)
