@@ -518,7 +518,7 @@ public class VehicleHudOverlay {
             if (weaponIndex != i) {
                 // 未选中
                 RenderSystem.setShaderColor(1, 1, 1,
-                        Mth.lerp(progress, 1, 0.2f)
+                        Mth.lerp(progress, 1, 0.5f)
                 );
                 startXDiff = Mth.lerp(progress, 0, xDiff);
             } else {
