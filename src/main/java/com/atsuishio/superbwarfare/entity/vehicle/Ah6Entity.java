@@ -66,25 +66,17 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.AH_6_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.AH_6_MAX_ENERGY.get();
-
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
-
     public boolean engineStart;
     public boolean engineStartOver;
-    public float propellerRot;
-    public float propellerRotO;
 
     public double velocity;
-    public int reloadCoolDown;
     public int decoyReloadCoolDown;
     public int fireIndex;
-    public boolean cannotFire;
-    public int heat;
 
+    public int heat;
     public int holdTick;
     public int holdPowerTick;
 
@@ -121,9 +113,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(AMMO, 0);
         this.entityData.define(LOADED_ROCKET, 0);
-        this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(PROPELLER_ROT, 0f);
         this.entityData.define(DECOY_COUNT, 6);
     }
@@ -172,7 +162,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public void baseTick() {
-        propellerRotO = this.getPropellerRot();
         super.baseTick();
 
         setZRot(getRoll() * (backInputDown ? 0.9f : 0.99f));
@@ -401,14 +390,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.HELICOPTER_ENGINE.get();
-    }
-
-    public float getPropellerRot() {
-        return this.propellerRot;
-    }
-
-    public void setPropellerRot(float pPropellerRot) {
-        this.propellerRot = pPropellerRot;
     }
 
     protected void clampRotation(Entity entity) {

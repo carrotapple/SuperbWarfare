@@ -19,9 +19,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -61,29 +58,9 @@ import java.util.Comparator;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
-
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public float turretYRot;
-    public float turretXRot;
-    public float turretYRotO;
-    public float turretXRotO;
-    public float rudderRot;
-    public float rudderRotO;
-    public float leftWheelRot;
-    public float rightWheelRot;
-    public float leftWheelRotO;
-    public float rightWheelRotO;
-    public boolean cannotFire;
-    public boolean cannotFireCoax;
-
     public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.LAV_150.get(), world);
     }
@@ -116,11 +93,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(AMMO, 0);
-        this.entityData.define(FIRE_ANIM, 0);
-        this.entityData.define(DELTA_ROT, 0f);
-        this.entityData.define(HEAT, 0);
-        this.entityData.define(COAX_HEAT, 0);
     }
 
     @Override
@@ -246,22 +218,12 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int) (2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
         }
 
-        float deltaT = Math.abs(getTurretYRot() - turretYRotO);
-        while (getTurretYRot() > 180F) {
-            setTurretYRot(getTurretYRot() - 360F);
-            turretYRotO = getTurretYRot() - deltaT;
-        }
-        while (getTurretYRot() <= -180F) {
-            setTurretYRot(getTurretYRot() + 360F);
-            turretYRotO = deltaT + getTurretYRot();
-        }
-
         collideBlock();
         if (this.getDeltaMovement().length() > 0.2) {
             collideHardBlock();
         }
 
-        gunnerAngle();
+        turretAngle(15, 12.5f);
         lowHealthWarning();
 
         this.refreshDimensions();
@@ -390,18 +352,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         }
     }
 
-    public final Vec3 getBarrelVector(float pPartialTicks) {
-        return this.calculateViewVector(this.getBarrelXRot(pPartialTicks), this.getBarrelYRot(pPartialTicks));
-    }
-
-    public float getBarrelXRot(float pPartialTicks) {
-        return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, getTurretXRot() - this.getXRot());
-    }
-
-    public float getBarrelYRot(float pPartialTick) {
-        return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
-    }
-
     @Override
     public void travel() {
         Entity passenger0 = this.getFirstPassenger();
@@ -455,94 +405,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             this.setYRot((float) (this.getYRot() - Math.max((isInWater() && !onGround() ? 5 : 10) * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
             this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER)));
         }
-    }
-
-    private void gunnerAngle() {
-        Entity driver = this.getFirstPassenger();
-        if (driver == null) return;
-
-        float gunAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
-
-        float diffY;
-        float diffX;
-
-        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
-        diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
-
-        turretTurnSound(diffX, diffY, 0.95f);
-
-        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -32.5f, 15));
-        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -20, 20));
-    }
-
-    @Override
-    public float turretYRotO() {
-        return turretYRotO;
-    }
-
-    @Override
-    public float turretYRot() {
-        return turretYRot;
-    }
-
-    @Override
-    public float turretXRotO() {
-        return turretXRotO;
-    }
-
-    @Override
-    public float turretXRot() {
-        return turretXRot;
-    }
-
-    @Override
-    public Vec3 getBarrelVec(float ticks) {
-        return getBarrelVector(ticks);
-    }
-
-    @Override
-    public Vec3 getGunVec(float ticks) {
-        return null;
-    }
-
-    public float getTurretYRot() {
-        return this.turretYRot;
-    }
-
-    public void setTurretYRot(float pTurretYRot) {
-        this.turretYRot = pTurretYRot;
-    }
-
-    public float getTurretXRot() {
-        return this.turretXRot;
-    }
-
-    public void setTurretXRot(float pTurretXRot) {
-        this.turretXRot = pTurretXRot;
-    }
-
-    public float getRudderRot() {
-        return this.rudderRot;
-    }
-
-    public void setRudderRot(float pRudderRot) {
-        this.rudderRot = pRudderRot;
-    }
-
-    public float getLeftWheelRot() {
-        return this.leftWheelRot;
-    }
-
-    public void setLeftWheelRot(float pLeftWheelRot) {
-        this.leftWheelRot = pLeftWheelRot;
-    }
-
-    public float getRightWheelRot() {
-        return this.rightWheelRot;
-    }
-
-    public void setRightWheelRot(float pRightWheelRot) {
-        this.rightWheelRot = pRightWheelRot;
     }
 
     @Override

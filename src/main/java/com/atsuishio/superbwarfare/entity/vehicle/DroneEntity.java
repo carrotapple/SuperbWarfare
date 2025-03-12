@@ -72,9 +72,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> KAMIKAZE_MODE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_X_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -136,11 +134,9 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(DELTA_X_ROT, 0f);
         this.entityData.define(CONTROLLER, "undefined");
         this.entityData.define(LINKED, false);
-        this.entityData.define(AMMO, 0);
         this.entityData.define(KAMIKAZE_MODE, 0);
     }
 

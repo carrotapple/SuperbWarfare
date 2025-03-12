@@ -43,10 +43,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 30;
     public static final int MAX_ENERGY = 24000;
-    public float leftWheelRot;
-    public float rightWheelRot;
-    public float leftWheelRotO;
-    public float rightWheelRotO;
     public int jumpCoolDown;
     public int handBusyTime;
 
@@ -108,9 +104,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void baseTick() {
-        leftWheelRotO = this.getLeftWheelRot();
-        rightWheelRotO = this.getRightWheelRot();
-
         if (jumpCoolDown > 0 && onGround()) {
             jumpCoolDown--;
         }
@@ -233,22 +226,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.WHEEL_CHAIR_ENGINE.get();
-    }
-
-    public float getLeftWheelRot() {
-        return this.leftWheelRot;
-    }
-
-    public void setLeftWheelRot(float pLeftWheelRot) {
-        this.leftWheelRot = pLeftWheelRot;
-    }
-
-    public float getRightWheelRot() {
-        return this.rightWheelRot;
-    }
-
-    public void setRightWheelRot(float pRightWheelRot) {
-        this.rightWheelRot = pRightWheelRot;
     }
 
     protected void clampRotation(Entity entity) {

@@ -40,8 +40,14 @@ import org.joml.Math;
 import org.joml.Vector3f;
 
 public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
-
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
+
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
+
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public boolean leftInputDown;
     public boolean rightInputDown;
@@ -53,6 +59,32 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     public double lastTickSpeed;
     public double lastTickVerticalSpeed;
     public int collisionCoolDown;
+
+    public float rudderRot;
+    public float rudderRotO;
+
+    public float leftWheelRot;
+    public float rightWheelRot;
+    public float leftWheelRotO;
+    public float rightWheelRotO;
+
+    public float leftTrackO;
+    public float rightTrackO;
+    public float leftTrack;
+    public float rightTrack;
+
+    public float rotorRot;
+    public float rotorRotO;
+
+    public float propellerRot;
+    public float propellerRotO;
+
+    public double recoilShake;
+    public double recoilShakeO;
+
+    public boolean cannotFire;
+    public boolean cannotFireCoax;
+    public int reloadCoolDown;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -72,12 +104,43 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
     @Override
     public void baseTick() {
+        turretYRotO = this.getTurretYRot();
+        turretXRotO = this.getTurretXRot();
+
+        gunYRotO = this.getGunYRot();
+        gunXRotO = this.getGunXRot();
+
+        leftWheelRotO = this.getLeftWheelRot();
+        rightWheelRotO = this.getRightWheelRot();
+
+        leftTrackO = this.getLeftTrack();
+        rightTrackO = this.getRightTrack();
+
+        rotorRotO = this.getRotorRot();
+
+        rudderRotO = this.getRudderRot();
+
+        propellerRotO = this.getPropellerRot();
+
+        recoilShakeO = this.getRecoilShake();
+
         lastTickSpeed = new Vec3(this.getDeltaMovement().x, this.getDeltaMovement().y + 0.06, this.getDeltaMovement().z).length();
         lastTickVerticalSpeed = this.getDeltaMovement().y + 0.06;
         if (collisionCoolDown > 0) {
             collisionCoolDown--;
         }
         super.baseTick();
+
+        float deltaT = java.lang.Math.abs(getTurretYRot() - turretYRotO);
+        while (getTurretYRot() > 180F) {
+            setTurretYRot(getTurretYRot() - 360F);
+            turretYRotO = getTurretYRot() - deltaT;
+        }
+        while (getTurretYRot() <= -180F) {
+            setTurretYRot(getTurretYRot() + 360F);
+            turretYRotO = deltaT + getTurretYRot();
+        }
+
         preventStacking();
         crushEntities(this.getDeltaMovement());
         if (!(this instanceof DroneEntity)) {
@@ -285,10 +348,80 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         return SoundEvents.EMPTY;
     }
 
+    public float getRudderRot() {
+        return this.rudderRot;
+    }
+
+    public void setRudderRot(float pRudderRot) {
+        this.rudderRot = pRudderRot;
+    }
+
+    public float getLeftWheelRot() {
+        return this.leftWheelRot;
+    }
+
+    public void setLeftWheelRot(float pLeftWheelRot) {
+        this.leftWheelRot = pLeftWheelRot;
+    }
+
+    public float getRightWheelRot() {
+        return this.rightWheelRot;
+    }
+
+    public void setRightWheelRot(float pRightWheelRot) {
+        this.rightWheelRot = pRightWheelRot;
+    }
+
+
+    public float getLeftTrack() {
+        return this.leftTrack;
+    }
+
+    public void setLeftTrack(float pLeftTrack) {
+        this.leftTrack = pLeftTrack;
+    }
+
+    public float getRightTrack() {
+        return this.rightTrack;
+    }
+
+    public void setRightTrack(float pRightTrack) {
+        this.rightTrack = pRightTrack;
+    }
+
+    public float getRotorRot() {
+        return this.rotorRot;
+    }
+
+    public void setRotorRot(float pRotorRot) {
+        this.rotorRot = pRotorRot;
+    }
+
+    public float getPropellerRot() {
+        return this.propellerRot;
+    }
+
+    public void setPropellerRot(float pPropellerRot) {
+        this.propellerRot = pPropellerRot;
+    }
+
+    public double getRecoilShake() {
+        return this.recoilShake;
+    }
+
+    public void setRecoilShake(double pRecoilShake) {
+        this.recoilShake = pRecoilShake;
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(POWER, 0f);
+        this.entityData.define(YAW, 0f);
+        this.entityData.define(AMMO, 0);
+        this.entityData.define(FIRE_ANIM, 0);
+        this.entityData.define(HEAT, 0);
+        this.entityData.define(COAX_HEAT, 0);
     }
 
     @Override

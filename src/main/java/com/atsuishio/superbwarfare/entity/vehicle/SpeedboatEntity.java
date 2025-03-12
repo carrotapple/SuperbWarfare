@@ -19,9 +19,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,26 +53,9 @@ import java.util.Comparator;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class SpeedboatEntity extends ContainerMobileVehicleEntity implements GeoEntity, ArmedVehicleEntity, WeaponVehicleEntity, LandArmorEntity {
-
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-
     public static final float MAX_HEALTH = VehicleConfig.SPEEDBOAT_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public float turretYRot;
-    public float turretXRot;
-    public float turretYRotO;
-    public float turretXRotO;
-    public float rotorRot;
-    public float rudderRot;
-    public float rotorRotO;
-    public float rudderRotO;
-
-    public boolean cannotFire;
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
@@ -101,10 +81,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(AMMO, 0);
-        this.entityData.define(FIRE_ANIM, 0);
-        this.entityData.define(DELTA_ROT, 0f);
-        this.entityData.define(HEAT, 0);
     }
 
     @Override
@@ -152,11 +128,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public void baseTick() {
-        turretYRotO = this.getTurretYRot();
-        turretXRotO = this.getTurretXRot();
-        rotorRotO = this.getRotorRot();
-        rudderRotO = this.getRudderRot();
-
         super.baseTick();
 
         if (this.entityData.get(HEAT) > 0) {
@@ -204,7 +175,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int) (40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
-        gunnerAngle();
+        turretAngle(40, 40);
         lowHealthWarning();
         collideBlock();
         if (this.getDeltaMovement().length() > 0.15) {
@@ -357,24 +328,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         }
     }
 
-    private void gunnerAngle() {
-        Entity driver = this.getFirstPassenger();
-        if (driver == null) return;
-
-        float gunAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
-
-        float diffY;
-        float diffX;
-
-        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
-        diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
-
-        turretTurnSound(diffX, diffY, 0.95f);
-
-        this.setTurretXRot(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -40, 40));
-        this.setTurretYRot(Mth.clamp(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -40, 40), -140, 140));
-    }
-
     public Matrix4f getBarrelTransform() {
         Matrix4f transformT = getTurretTransform();
         float x = 0f;
@@ -404,39 +357,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
         return transform;
     }
-
-    public float getTurretYRot() {
-        return this.turretYRot;
-    }
-
-    public void setTurretYRot(float pTurretYRot) {
-        this.turretYRot = pTurretYRot;
-    }
-
-    public float getTurretXRot() {
-        return this.turretXRot;
-    }
-
-    public void setTurretXRot(float pTurretXRot) {
-        this.turretXRot = pTurretXRot;
-    }
-
-    public float getRotorRot() {
-        return this.rotorRot;
-    }
-
-    public void setRotorRot(float pRotorRot) {
-        this.rotorRot = pRotorRot;
-    }
-
-    public float getRudderRot() {
-        return this.rudderRot;
-    }
-
-    public void setRudderRot(float pRudderRot) {
-        this.rudderRot = pRudderRot;
-    }
-
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.BOAT_ENGINE.get();
@@ -570,43 +490,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/speedboat_icon.png");
-    }
-
-    @Override
-    public float turretYRotO() {
-        return turretYRotO;
-    }
-
-    @Override
-    public float turretYRot() {
-        return turretYRot;
-    }
-
-    @Override
-    public float turretXRotO() {
-        return turretXRotO;
-    }
-
-    @Override
-    public float turretXRot() {
-        return turretXRot;
-    }
-
-    @Override
-    public Vec3 getBarrelVec(float ticks) {
-        return getBarrelVector(ticks);
-    }
-
-    public final Vec3 getBarrelVector(float pPartialTicks) {
-        return this.calculateViewVector(this.getBarrelXRot(pPartialTicks), this.getBarrelYRot(pPartialTicks));
-    }
-
-    public float getBarrelXRot(float pPartialTicks) {
-        return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, getTurretXRot() - this.getXRot());
-    }
-
-    public float getBarrelYRot(float pPartialTick) {
-        return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
     }
 
     @Override

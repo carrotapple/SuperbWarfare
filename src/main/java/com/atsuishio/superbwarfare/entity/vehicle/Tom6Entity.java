@@ -47,8 +47,6 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
-
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.TOM_6_HP.get();
@@ -66,7 +64,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(MELON, false);
     }
 

@@ -61,11 +61,11 @@ import java.util.function.Function;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public abstract class VehicleEntity extends Entity {
-
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
 
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
 
     public VehicleWeapon[][] availableWeapons;
@@ -82,6 +82,17 @@ public abstract class VehicleEntity extends Entity {
     public int lastHurtTick;
     public int repairCoolDown = maxRepairCoolDown();
     public boolean crash;
+
+
+    public float turretYRot;
+    public float turretXRot;
+    public float turretYRotO;
+    public float turretXRotO;
+    public float turretRot;
+    public float gunYRot;
+    public float gunXRot;
+    public float gunYRotO;
+    public float gunXRotO;
 
     // 自定义骑乘
     private final List<Entity> orderedPassengers = generatePassengersList();
@@ -233,6 +244,7 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(HEALTH, this.getMaxHealth());
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(LAST_DRIVER_UUID, "undefined");
+        this.entityData.define(DELTA_ROT, 0f);
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             this.entityData.define(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
@@ -605,6 +617,49 @@ public abstract class VehicleEntity extends Entity {
         ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 0.7f * getBbHeight(), this.getZ(), 1, 0.35 * this.getBbWidth(), 0.15 * this.getBbHeight(), 0.35 * this.getBbWidth(), 0.01, true);
     }
 
+    public void turretAngle(float ySpeed, float xSpeed) {
+        Entity driver = this.getFirstPassenger();
+        if (driver != null) {
+            float turretAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
+
+            float diffY;
+            float diffX;
+
+            diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
+            diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
+
+            turretTurnSound(diffX, diffY, 0.95f);
+
+            float min = -ySpeed + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
+            float max = ySpeed + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
+
+            this.setTurretXRot(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -xSpeed, xSpeed));
+            this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, min, max));
+            turretRot = Mth.clamp(0.9f * diffY, min, max);
+        } else {
+            turretRot = 0;
+        }
+    }
+
+    public void gunnerAngle(float ySpeed, float xSpeed) {
+        Entity gunner = this.getNthEntity(1);
+
+        float diffY = 0;
+        float diffX = 0;
+        float speed = 1;
+
+        if (gunner instanceof Player) {
+            float gunAngle = -Mth.wrapDegrees(gunner.getYHeadRot() - this.getYRot());
+            diffY = Mth.wrapDegrees(gunAngle - getGunYRot());
+            diffX = Mth.wrapDegrees(gunner.getXRot() - this.getGunXRot());
+            turretTurnSound(diffX, diffY, 0.95f);
+            speed = 0;
+        }
+
+        this.setGunXRot(this.getGunXRot() + Mth.clamp(0.95f * diffX, -xSpeed, xSpeed));
+        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -ySpeed, ySpeed) + speed * turretRot);
+    }
+
     public void destroy() {
     }
 
@@ -752,5 +807,85 @@ public abstract class VehicleEntity extends Entity {
     // 本方法留空
     @Override
     public void push(double pX, double pY, double pZ) {
+    }
+
+    public Vec3 getBarrelVector(float pPartialTicks) {
+        return this.calculateViewVector(this.getBarrelXRot(pPartialTicks), this.getBarrelYRot(pPartialTicks));
+    }
+
+    public float getBarrelXRot(float pPartialTicks) {
+        return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, getTurretXRot() - this.getXRot());
+    }
+
+    public float getBarrelYRot(float pPartialTick) {
+        return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
+    }
+
+    public Vec3 getGunVector(float pPartialTicks) {
+        return this.calculateViewVector(this.getGunXRot(pPartialTicks), this.getGunYRot(pPartialTicks));
+    }
+
+    public float getGunXRot(float pPartialTicks) {
+        return Mth.lerp(pPartialTicks, gunXRotO - this.xRotO, getGunXRot() - this.getXRot());
+    }
+
+    public float getGunYRot(float pPartialTick) {
+        return -Mth.lerp(pPartialTick, gunYRotO - this.yRotO, getGunYRot() - this.getYRot());
+    }
+
+    public float turretYRotO() {
+        return turretYRotO;
+    }
+
+    public float turretYRot() {
+        return turretYRot;
+    }
+
+    public float turretXRotO() {
+        return turretXRotO;
+    }
+
+    public float turretXRot() {
+        return turretXRot;
+    }
+
+    public Vec3 getBarrelVec(float ticks) {
+        return getBarrelVector(ticks);
+    }
+
+    public Vec3 getGunVec(float ticks) {
+        return getGunVector(ticks);
+    }
+
+    public float getTurretYRot() {
+        return this.turretYRot;
+    }
+
+    public void setTurretYRot(float pTurretYRot) {
+        this.turretYRot = pTurretYRot;
+    }
+
+    public float getTurretXRot() {
+        return this.turretXRot;
+    }
+
+    public void setTurretXRot(float pTurretXRot) {
+        this.turretXRot = pTurretXRot;
+    }
+
+    public float getGunYRot() {
+        return this.gunYRot;
+    }
+
+    public void setGunYRot(float pGunYRot) {
+        this.gunYRot = pGunYRot;
+    }
+
+    public float getGunXRot() {
+        return this.gunXRot;
+    }
+
+    public void setGunXRot(float pGunXRot) {
+        this.gunXRot = pGunXRot;
     }
 }

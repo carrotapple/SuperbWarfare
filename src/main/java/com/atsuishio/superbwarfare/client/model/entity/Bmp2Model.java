@@ -8,9 +8,6 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.TRACK_L;
-import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.TRACK_R;
-
 public class Bmp2Model extends GeoModel<Bmp2Entity> {
 
     @Override
@@ -49,7 +46,7 @@ public class Bmp2Model extends GeoModel<Bmp2Entity> {
             CoreGeoBone trackR = getAnimationProcessor().getBone("trackR" + i);
             CoreGeoBone trackRRot = getAnimationProcessor().getBone("trackRRot" + i);
 
-            float t = animatable.getEntityData().get(TRACK_L) + 2 * i;
+            float t = animatable.getLeftTrack() + 2 * i;
 
             if (t >= 100) {
                 t -= 100;
@@ -57,7 +54,7 @@ public class Bmp2Model extends GeoModel<Bmp2Entity> {
 
             trackAnimation(trackL, trackLRot, t);
 
-            float t2 = animatable.getEntityData().get(TRACK_R) + 2 * i;
+            float t2 = animatable.getRightTrack() + 2 * i;
 
             if (t2 >= 100) {
                 t2 -= 100;
