@@ -79,7 +79,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new CannonShellWeapon()

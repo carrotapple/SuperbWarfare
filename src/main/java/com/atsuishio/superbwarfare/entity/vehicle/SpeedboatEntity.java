@@ -66,7 +66,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new ProjectileWeapon()

@@ -54,7 +54,25 @@ public interface WeaponVehicleEntity extends ArmedVehicleEntity {
     /**
      * 获取所有可用武器列表
      */
-    VehicleWeapon[][] getAllWeapons();
+    default VehicleWeapon[][] getAllWeapons() {
+        if (!(this instanceof VehicleEntity vehicle)) return new VehicleWeapon[][]{};
+
+        if (vehicle.availableWeapons == null) {
+            vehicle.availableWeapons = new VehicleWeapon[vehicle.getMaxPassengers()][];
+
+            var weapons = this.initWeapons();
+            for (int i = 0; i < weapons.length && i < vehicle.getMaxPassengers(); i++) {
+                vehicle.availableWeapons[i] = weapons[i];
+            }
+        }
+
+        return vehicle.availableWeapons;
+    }
+
+    /**
+     * 初始化所有可用武器列表
+     */
+    VehicleWeapon[][] initWeapons();
 
     /**
      * 获取该槽位可用的武器列表

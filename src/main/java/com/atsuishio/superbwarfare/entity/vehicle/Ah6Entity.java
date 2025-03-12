@@ -90,7 +90,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new ProjectileWeapon()

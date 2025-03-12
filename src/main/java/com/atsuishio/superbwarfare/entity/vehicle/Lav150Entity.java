@@ -71,7 +71,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new SmallCannonShellWeapon()

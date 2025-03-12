@@ -72,7 +72,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new CannonShellWeapon()

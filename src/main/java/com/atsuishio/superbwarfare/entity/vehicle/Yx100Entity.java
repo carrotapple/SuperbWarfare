@@ -86,7 +86,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         // AP

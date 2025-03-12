@@ -87,7 +87,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public VehicleWeapon[][] getAllWeapons() {
+    public VehicleWeapon[][] initWeapons() {
         return new VehicleWeapon[][]{
                 new VehicleWeapon[]{
                         new LaserWeapon()

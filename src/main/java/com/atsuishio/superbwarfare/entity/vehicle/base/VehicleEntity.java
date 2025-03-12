@@ -252,12 +252,8 @@ public abstract class VehicleEntity extends Entity {
     }
 
     private int[] initSelectedWeaponArray(WeaponVehicleEntity weaponVehicle) {
-        this.availableWeapons = new VehicleWeapon[this.getMaxPassengers()][];
-
-        var weapons = weaponVehicle.getAllWeapons();
-        for (int i = 0; i < weapons.length && i < this.getMaxPassengers(); i++) {
-            this.availableWeapons[i] = weapons[i];
-        }
+        // 初始化武器数组
+        weaponVehicle.getAllWeapons();
 
         var selected = new int[this.getMaxPassengers()];
         for (int i = 0; i < this.getMaxPassengers(); i++) {
@@ -277,6 +273,7 @@ public abstract class VehicleEntity extends Entity {
             var selected = compound.getIntArray("SelectedWeapon");
 
             if (selected.length != this.getMaxPassengers()) {
+                // 数量不符时（可能是更新或遇到损坏数据），重新初始化已选择武器
                 this.entityData.set(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
             } else {
                 this.entityData.set(SELECTED_WEAPON, IntList.of(selected));
