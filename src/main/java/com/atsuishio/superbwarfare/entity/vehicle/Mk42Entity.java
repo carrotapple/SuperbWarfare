@@ -123,7 +123,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         ItemStack stack = player.getMainHandItem();
 
         if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
-            setTarget(player.getOffhandItem());
+            setTarget(player.getMainHandItem());
             return InteractionResult.SUCCESS;
         }
         if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {

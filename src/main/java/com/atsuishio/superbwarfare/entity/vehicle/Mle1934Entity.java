@@ -127,7 +127,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         ItemStack stack = player.getMainHandItem();
 
         if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
-            setTarget(player.getOffhandItem());
+            setTarget(player.getMainHandItem());
             return InteractionResult.SUCCESS;
         }
         if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get() && player.isCrouching()) {
