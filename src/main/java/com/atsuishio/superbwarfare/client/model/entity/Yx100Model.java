@@ -52,7 +52,7 @@ public class Yx100Model extends GeoModel<Yx100Entity> {
                 t -= 80;
             }
 
-            trackAnimation(trackL, trackLRot, t);
+//            trackAnimation(trackL, trackLRot, t);
 
             float t2 = animatable.getRightTrack() + 2 * i;
 
@@ -60,7 +60,7 @@ public class Yx100Model extends GeoModel<Yx100Entity> {
                 t2 -= 80;
             }
 
-            trackAnimation(trackR, trackRRot, t2);
+//            trackAnimation(trackR, trackRRot, t2);
         }
     }
 

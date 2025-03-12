@@ -204,6 +204,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             setRightTrack(0);
         }
 
+        setRightTrack(getRightTrack() + 0.1f);
+        setLeftTrack(getLeftTrack() + 0.1f);
+
         if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
             this.entityData.set(CANNON_FIRE_TIME, this.entityData.get(CANNON_FIRE_TIME) - 1);
         }
@@ -504,8 +507,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.setLeftWheelRot((float) ((this.getLeftWheelRot() - 1.25 * s0) + Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
         this.setRightWheelRot((float) ((this.getRightWheelRot() - 1.25 * s0) - Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
-        setLeftTrack((float) ((getLeftTrack() - 1.9 * Math.PI * s0) + Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
-        setRightTrack((float) ((getRightTrack() - 1.9 * Math.PI * s0) - Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+//        setLeftTrack((float) ((getLeftTrack() - 1.9 * Math.PI * s0) + Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+//        setRightTrack((float) ((getRightTrack() - 1.9 * Math.PI * s0) - Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
         if (this.isInWater() || onGround()) {
             this.setYRot((float) (this.getYRot() - (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT)));

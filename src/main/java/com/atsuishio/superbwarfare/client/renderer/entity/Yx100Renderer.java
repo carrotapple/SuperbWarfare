@@ -84,6 +84,7 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
         }
 
         if (name.equals("base")) {
+            bone.setHidden(true);
             float a = animatable.getEntityData().get(YAW);
             float r = (Mth.abs(a) - 90f) / 90f;
 
@@ -105,6 +106,41 @@ public class Yx100Renderer extends GeoEntityRenderer<Yx100Entity> {
             bone.setPosX(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 1f);
             bone.setRotZ(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 1.5f);
         }
+
+        for (int i = 0; i < 40; i++) {
+            float tO = animatable.leftTrackO + 2 * i;
+            float t = animatable.getLeftTrack() + 2 * i;
+
+            if (t >= 80) {
+                t -= 80;
+            }
+
+            float tO2 = animatable.rightTrackO + 2 * i;
+            float t2 = animatable.getRightTrack() + 2 * i;
+
+            if (t2 >= 80) {
+                t2 -= 80;
+            }
+
+            if (name.equals("trackL" + i)) {
+                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO), getBoneMoveY(t)));
+                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO), getBoneMoveZ(t)));
+            }
+
+            if (name.equals("trackR" + i)) {
+                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO2), getBoneMoveY(t2)));
+                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO2), getBoneMoveZ(t2)));
+            }
+
+        }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    public float getBoneMoveY(float t) {
+        return y;
+    }
+
+    public float getBoneMoveZ(float t) {
+        return z;
     }
 }
