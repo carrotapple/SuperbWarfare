@@ -32,10 +32,9 @@ import org.joml.Math;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator3P;
-import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.AMMO;
-import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
-import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.MACHINE_GUN_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.MG_AMMO;
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.AMMO;
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.HEAT;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleMgHudOverlay {
@@ -96,7 +95,7 @@ public class VehicleMgHudOverlay {
 
                     // YX-100
                     if (player.getVehicle() instanceof Yx100Entity yx100) {
-                        double heat = yx100.getEntityData().get(MACHINE_GUN_HEAT) / 100.0F;
+                        double heat = yx100.getEntityData().get(HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(".50 HMG " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(MG_AMMO))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                     }
 

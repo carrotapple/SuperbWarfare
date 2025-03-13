@@ -48,9 +48,7 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.LOADED_MISSILE;
 import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.MISSILE_COUNT;
-import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
-import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
-import static com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity.AMMO;
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleHudOverlay {
@@ -280,8 +278,11 @@ public class VehicleHudOverlay {
                 if (player.getVehicle() instanceof Yx100Entity yx100) {
                     if (weaponVehicle.getWeaponIndex(0) == 0) {
                         guiGraphics.drawString(mc.font, Component.literal("AP SHELL  " + yx100.getAmmoCount(player) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(AMMO))), w / 2 - 33, h - 65, 0x66FF00, false);
-                    } else {
+                    } else if (weaponVehicle.getWeaponIndex(0) == 1) {
                         guiGraphics.drawString(mc.font, Component.literal("HE SHELL  " + yx100.getAmmoCount(player) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(AMMO))), w / 2 - 33, h - 65, 0x66FF00, false);
+                    } else if (weaponVehicle.getWeaponIndex(0) == 2) {
+                        double heat = 1 - yx100.getEntityData().get(COAX_HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal(" 12.7MM HMG " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     }
                 }
 
@@ -333,8 +334,11 @@ public class VehicleHudOverlay {
                     if (weaponVehicle instanceof Yx100Entity yx100) {
                         if (weaponVehicle.getWeaponIndex(0) == 0) {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("AP SHELL " + yx100.getAmmoCount(player) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(AMMO))), 30, -9, -1, false);
-                        } else {
+                        } else if (weaponVehicle.getWeaponIndex(0) == 1) {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HE SHELL " + yx100.getAmmoCount(player) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getEntityData().get(AMMO))), 30, -9, -1, false);
+                        } else if (weaponVehicle.getWeaponIndex(0) == 2) {
+                            double heat2 = yx100.getEntityData().get(COAX_HEAT) / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM ПКТ " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         }
                     }
 

@@ -36,6 +36,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.HEAT;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HelicopterHudOverlay {
@@ -119,7 +120,7 @@ public class HelicopterHudOverlay {
 
                 if (mobileVehicle instanceof Ah6Entity ah6Entity) {
                     if (weaponVehicle.getWeaponIndex(0) == 0) {
-                        double heat = 1 - ah6Entity.heat / 100.0F;
+                        double heat = 1 - ah6Entity.getEntityData().get(HEAT) / 100.0F;
                         guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     } else {
                         guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
@@ -187,7 +188,7 @@ public class HelicopterHudOverlay {
 
                     if (mobileVehicle instanceof Ah6Entity ah6Entity) {
                         if (weaponVehicle.getWeaponIndex(0) == 0) {
-                            double heat = ah6Entity.heat / 100.0F;
+                            double heat = ah6Entity.getEntityData().get(HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                         } else {
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), 25, -9, -1, false);

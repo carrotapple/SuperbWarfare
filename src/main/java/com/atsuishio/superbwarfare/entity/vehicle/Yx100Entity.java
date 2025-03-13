@@ -69,7 +69,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Integer> MG_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GUN_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> MACHINE_GUN_HEAT = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = VehicleConfig.YX_100_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.YX_100_MAX_ENERGY.get();
@@ -134,7 +133,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.entityData.define(LOADED_AMMO, 0);
         this.entityData.define(CANNON_FIRE_TIME, 0);
         this.entityData.define(GUN_FIRE_TIME, 0);
-        this.entityData.define(MACHINE_GUN_HEAT, 0);
     }
 
     @Override
@@ -213,10 +211,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             this.entityData.set(GUN_FIRE_TIME, this.entityData.get(GUN_FIRE_TIME) - 1);
         }
 
-        if (this.entityData.get(MACHINE_GUN_HEAT) > 0) {
-            this.entityData.set(MACHINE_GUN_HEAT, this.entityData.get(MACHINE_GUN_HEAT) - 1);
-        }
-
         if (reloadCoolDown == 70 && this.getFirstPassenger() instanceof Player player) {
             SoundTool.playLocalSound(player, ModSounds.YX_100_RELOAD.get());
         }
@@ -226,20 +220,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 reloadCoolDown--;
             }
             this.handleAmmo();
-        }
-
-        if (this.entityData.get(MACHINE_GUN_HEAT) < 40) {
-            cannotFire = false;
-        }
-
-        Entity gunner = this.getNthEntity(1);
-        if (gunner instanceof Player player) {
-            if (this.entityData.get(MACHINE_GUN_HEAT) > 100) {
-                cannotFire = true;
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
-                }
-            }
         }
 
         if (this.onGround()) {
@@ -414,7 +394,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
             this.level().addFreshEntity(projectileEntity);
 
-            float pitch = this.entityData.get(MACHINE_GUN_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(MACHINE_GUN_HEAT)));
+            float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(HEAT)));
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -425,7 +405,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             }
 
             this.entityData.set(GUN_FIRE_TIME, 2);
-            this.entityData.set(MACHINE_GUN_HEAT, this.entityData.get(MACHINE_GUN_HEAT) + 4);
+            this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
 
             Level level = player.level();
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());

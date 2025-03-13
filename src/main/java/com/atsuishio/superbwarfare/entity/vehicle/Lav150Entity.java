@@ -12,7 +12,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.SmallCannonShellWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -155,44 +158,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         super.baseTick();
 
-        if (this.entityData.get(HEAT) > 0) {
-            this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
-        }
-
-        if (this.entityData.get(FIRE_ANIM) > 0) {
-            this.entityData.set(FIRE_ANIM, this.entityData.get(FIRE_ANIM) - 1);
-        }
-
-        if (this.entityData.get(HEAT) < 40) {
-            cannotFire = false;
-        }
-
-        if (this.entityData.get(COAX_HEAT) > 0) {
-            this.entityData.set(COAX_HEAT, this.entityData.get(COAX_HEAT) - 1);
-        }
-
-        if (this.entityData.get(COAX_HEAT) < 40) {
-            cannotFireCoax = false;
-        }
-
         if (this.level() instanceof ServerLevel) {
             this.handleAmmo();
-        }
-
-        Entity driver = this.getFirstPassenger();
-        if (driver instanceof Player player) {
-            if (this.entityData.get(HEAT) > 100) {
-                cannotFire = true;
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
-                }
-            }
-            if (this.entityData.get(COAX_HEAT) > 100) {
-                cannotFireCoax = true;
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
-                }
-            }
         }
 
         double fluidFloat;

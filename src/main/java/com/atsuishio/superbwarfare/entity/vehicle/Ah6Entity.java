@@ -14,7 +14,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -75,8 +78,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public double velocity;
     public int decoyReloadCoolDown;
     public int fireIndex;
-
-    public int heat;
     public int holdTick;
     public int holdPowerTick;
 
@@ -163,24 +164,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         super.baseTick();
 
         setZRot(getRoll() * (backInputDown ? 0.9f : 0.99f));
-
-        if (heat > 0) {
-            heat--;
-        }
-
-        if (heat < 40) {
-            cannotFire = false;
-        }
-
-        Entity driver = this.getFirstPassenger();
-        if (driver instanceof Player player) {
-            if (heat > 100) {
-                cannotFire = true;
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
-                }
-            }
-        }
 
         if (this.level() instanceof ServerLevel) {
             if (reloadCoolDown > 0) {
@@ -602,6 +585,8 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 }
 
             }
+
+            this.entityData.set(HEAT, this.entityData.get(HEAT) + 5);
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {

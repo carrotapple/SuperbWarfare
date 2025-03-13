@@ -20,6 +20,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
@@ -139,6 +140,35 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         while (getTurretYRot() <= -180F) {
             setTurretYRot(getTurretYRot() + 360F);
             turretYRotO = deltaT + getTurretYRot();
+        }
+
+        if (this.entityData.get(HEAT) > 0) {
+            this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
+        }
+
+        if (this.entityData.get(COAX_HEAT) > 0) {
+            this.entityData.set(COAX_HEAT, this.entityData.get(COAX_HEAT) - 1);
+        }
+
+        if (this.entityData.get(FIRE_ANIM) > 0) {
+            this.entityData.set(FIRE_ANIM, this.entityData.get(FIRE_ANIM) - 1);
+        }
+
+        if (this.entityData.get(HEAT) < 40) {
+            cannotFire = false;
+        }
+
+        if (this.entityData.get(COAX_HEAT) < 40) {
+            cannotFireCoax = false;
+        }
+
+        if (this.entityData.get(HEAT) > 100) {
+            cannotFire = true;
+            this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
+        }
+        if (this.entityData.get(COAX_HEAT) > 100) {
+            cannotFireCoax = true;
+            this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
         }
 
         preventStacking();
