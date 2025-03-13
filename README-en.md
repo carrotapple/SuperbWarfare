@@ -30,6 +30,8 @@ use without permission is prohibited.
 
 ## Links
 
+[Discord](https://discord.gg/g7RVnHFDh9)
+
 [CurseForge](https://www.curseforge.com/minecraft/mc-mods/superb-warfare)
 
 [Modrinth](https://modrinth.com/mod/superb-warfare)

@@ -28,6 +28,8 @@
 
 ## 相关链接
 
+QQ群: 460300219
+
 [CurseForge](https://www.curseforge.com/minecraft/mc-mods/superb-warfare)
 
 [Modrinth](https://modrinth.com/mod/superb-warfare)
@@ -35,3 +37,5 @@
 [Github](https://github.com/Mercurows/SuperbWarfare)
 
 [Gitee](https://gitee.com/atsuishio/SuperbWarfare)
+
+[Discord](https://discord.gg/g7RVnHFDh9)
