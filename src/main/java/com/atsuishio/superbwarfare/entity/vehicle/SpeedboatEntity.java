@@ -118,7 +118,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 .multiply(4, DamageTypes.PLAYER_EXPLOSION)
                 .multiply(0.8f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.16f, ModTags.DamageTypes.PROJECTILE)
-                .multiply(10, ModDamageTypes.VEHICLE_STRIKE)
+                .multiply(2, ModDamageTypes.VEHICLE_STRIKE)
                 .reduce(2);
     }
 
@@ -319,7 +319,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -1.25f, 1.25f) * 0.7f * (this.entityData.get(POWER) > 0 ? 1 : -1));
 
         if (this.isInWater() || this.isUnderWater()) {
-            this.setYRot((float) (this.getYRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
+            this.setYRot((float) (this.getYRot() - Math.max(12 * this.getDeltaMovement().length(), 0.8) * this.entityData.get(DELTA_ROT)));
             this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER)));
         }
     }

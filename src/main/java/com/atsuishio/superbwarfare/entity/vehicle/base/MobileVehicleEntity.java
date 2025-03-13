@@ -68,6 +68,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     public float leftWheelRotO;
     public float rightWheelRotO;
 
+    public float leftTrackO;
+    public float rightTrackO;
     public float leftTrack;
     public float rightTrack;
 
@@ -110,6 +112,9 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
         leftWheelRotO = this.getLeftWheelRot();
         rightWheelRotO = this.getRightWheelRot();
+
+        leftTrackO = this.getLeftTrack();
+        rightTrackO = this.getRightTrack();
 
         rotorRotO = this.getRotorRot();
 

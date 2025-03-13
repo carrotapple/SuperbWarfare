@@ -14,6 +14,9 @@
     "minecraft:bell",
     "minecraft:chain",
     "minecraft:snow_block",
-    "minecraft:cobweb"
+    "minecraft:cobweb",
+    "minecraft:mushroom_stem",
+    "minecraft:brown_mushroom_block",
+    "minecraft:red_mushroom_block"
   ]
 }

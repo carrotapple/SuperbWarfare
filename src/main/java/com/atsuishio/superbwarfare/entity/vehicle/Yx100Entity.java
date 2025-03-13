@@ -189,18 +189,20 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public void baseTick() {
         super.baseTick();
 
-        while (getLeftTrack() > 80F) {
-            setLeftTrack(getLeftTrack() - 80F);
-        }
-        while (getLeftTrack() <= 0) {
-            setLeftTrack(getLeftTrack() + 80F);
+        if (getLeftTrack() < 0) {
+            setLeftTrack(80);
         }
 
-        while (getRightTrack() > 80F) {
-            setRightTrack(getRightTrack() - 80F);
+        if (getLeftTrack() > 80) {
+            setLeftTrack(0);
         }
-        while (getRightTrack() <= 0) {
-            setRightTrack(getRightTrack() + 80F);
+
+        if (getRightTrack() < 0) {
+            setRightTrack(80);
+        }
+
+        if (getRightTrack() > 80) {
+            setRightTrack(0);
         }
 
         if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
@@ -264,7 +266,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         this.setRecoilShake(Math.pow(entityData.get(CANNON_FIRE_TIME), 4) * 0.0000007 * Math.sin(0.2 * Math.PI * (entityData.get(CANNON_FIRE_TIME) - 2.5)));
 
-        turretAngle(7, 7);
+        turretAngle(5, 5);
         gunnerAngle(15, 15);
         lowHealthWarning();
         this.refreshDimensions();

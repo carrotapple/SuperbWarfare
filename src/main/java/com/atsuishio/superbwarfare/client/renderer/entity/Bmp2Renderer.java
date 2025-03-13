@@ -71,33 +71,54 @@ public class Bmp2Renderer extends GeoEntityRenderer<Bmp2Entity> {
         }
 
         for (int i = 0; i < 51; i++) {
+            float tO = animatable.leftTrackO + 2 * i;
             float t = animatable.getLeftTrack() + 2 * i;
-            float t2 = animatable.getRightTrack() + 2 * i;
 
-            if (t >= 100) {
+            while (t >= 100) {
                 t -= 100;
             }
+            while (t <= 0) {
+                t += 100;
+            }
+            while (tO >= 100) {
+                tO -= 100;
+            }
+            while (tO <= 0) {
+                tO += 100;
+            }
 
-            if (t2 >= 100) {
+            float tO2 = animatable.rightTrackO + 2 * i;
+            float t2 = animatable.getRightTrack() + 2 * i;
+
+            while (t2 >= 100) {
                 t2 -= 100;
+            }
+            while (t2 <= 0) {
+                t2 += 100;
+            }
+            while (tO2 >= 100) {
+                tO2 -= 100;
+            }
+            while (tO2 <= 0) {
+                tO2 += 100;
             }
 
             if (name.equals("trackL" + i)) {
-                bone.setPosY(getBoneMoveY(t));
-                bone.setPosZ(getBoneMoveZ(t));
+                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO), getBoneMoveY(t)));
+                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO), getBoneMoveZ(t)));
             }
 
             if (name.equals("trackR" + i)) {
-                bone.setPosY(getBoneMoveY(t2));
-                bone.setPosZ(getBoneMoveZ(t2));
+                bone.setPosY(Mth.lerp(partialTick, getBoneMoveY(tO2), getBoneMoveY(t2)));
+                bone.setPosZ(Mth.lerp(partialTick, getBoneMoveZ(tO2), getBoneMoveZ(t2)));
             }
 
             if (name.equals("trackLRot" + i)) {
-                bone.setRotX(-getBoneRotX(t) * Mth.DEG_TO_RAD);
+                bone.setRotX(-Mth.lerp(partialTick, getBoneRotX(tO), getBoneRotX(t)) * Mth.DEG_TO_RAD);
             }
 
             if (name.equals("trackRRot" + i)) {
-                bone.setRotX(-getBoneRotX(t2) * Mth.DEG_TO_RAD);
+                bone.setRotX(-Mth.lerp(partialTick, getBoneRotX(tO2), getBoneRotX(t2)) * Mth.DEG_TO_RAD);
             }
 
         }
