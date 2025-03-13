@@ -169,13 +169,14 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .immuneTo(DamageTypes.PLAYER_ATTACK)
                 .immuneTo(ModTags.DamageTypes.PROJECTILE)
                 .immuneTo(ModDamageTypes.VEHICLE_STRIKE)
-                .multiply(0.4f, DamageTypes.EXPLOSION)
-                .multiply(0.15f, ModDamageTypes.CUSTOM_EXPLOSION)
-                .multiply(0.15f, ModDamageTypes.PROJECTILE_BOOM)
-                .multiply(0.1f, ModDamageTypes.MINE)
-                .multiply(0.1f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.19f, ModDamageTypes.CANNON_FIRE)
-                .multiply(0.03f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .multiply(0.2f)
+                .multiply(2f, DamageTypes.EXPLOSION)
+                .multiply(0.75f, ModDamageTypes.CUSTOM_EXPLOSION)
+                .multiply(0.75f, ModDamageTypes.PROJECTILE_BOOM)
+                .multiply(0.5f, ModDamageTypes.MINE)
+                .multiply(0.5f, ModDamageTypes.LUNGE_MINE)
+                .multiply(0.95f, ModDamageTypes.CANNON_FIRE)
+                .multiply(0.15f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .reduce(9);
     }
 
