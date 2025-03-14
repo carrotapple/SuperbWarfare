@@ -66,13 +66,13 @@ public abstract class CameraMixin {
             }
 
             if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoomVehicle) {
-                float yRot = boat.getYRot();
+                float yRot = Mth.lerp(partialTicks, boat.yRotO, boat.getYRot());
                 if (yRot < 0) {
                     yRot += 360;
                 }
                 yRot = yRot + 90 % 360;
                 var CameraPos = new Vector3d(-0.57, 3.3, 0);
-                CameraPos.rotateZ(-boat.getXRot() * Mth.DEG_TO_RAD);
+                CameraPos.rotateZ(-Mth.lerp(partialTicks, boat.xRotO, boat.getXRot()) * Mth.DEG_TO_RAD);
                 CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
                 setRotation(-Mth.lerp(partialTicks, boat.turretYRotO - boat.yRotO, boat.getTurretYRot() - boat.getYRot()), Mth.lerp(partialTicks, boat.turretXRotO - boat.xRotO, boat.getTurretXRot() - boat.getXRot()));
