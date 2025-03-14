@@ -13,19 +13,19 @@ public class DisplayConfig {
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
 
-        builder.comment("Set TRUE if you want to show kill indication while killing an entity");
+        builder.comment("Set true if you want to show kill indication while killing an entity");
         KILL_INDICATION = builder.define("kill_indication", true);
 
-        builder.comment("Set TRUE to show ammo and gun info on HUD");
+        builder.comment("Set true to show ammo and gun info on HUD");
         AMMO_HUD = builder.define("ammo_hud", true);
 
-        builder.comment("Set TRUE to enable float cross hair");
+        builder.comment("Set true to enable float cross hair");
         FLOAT_CROSS_HAIR = builder.define("float_cross_hair", true);
 
-        builder.comment("Set TRUE to enable camera rotate when holding a gun");
+        builder.comment("Set true to enable camera rotate when holding a gun");
         CAMERA_ROTATE = builder.define("camera_rotate", true);
 
-        builder.comment("Set TRUE to enable armor plate hud");
+        builder.comment("Set true to enable armor plate hud");
         ARMOR_PLATE_HUD = builder.define("armor_plate_hud", true);
 
         builder.pop();

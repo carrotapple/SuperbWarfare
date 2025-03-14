@@ -9,7 +9,7 @@ public class VehicleControlConfig {
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("invert_aircraft_control");
 
-        builder.comment("Set TRUE to invert aircraft control");
+        builder.comment("Set true to invert aircraft control");
         INVERT_AIRCRAFT_CONTROL = builder.define("invert_aircraft_control", false);
 
         builder.pop();

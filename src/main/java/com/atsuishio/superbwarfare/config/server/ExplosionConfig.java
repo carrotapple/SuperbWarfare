@@ -35,7 +35,7 @@ public class ExplosionConfig {
         builder.comment("The percentage of explosion damage you take behind cover");
         EXPLOSION_PENETRATION_RATIO = builder.defineInRange("explosion_penetration_ratio", 15, 0, 100);
 
-        builder.comment("Set TRUE to allow Explosion to destroy blocks");
+        builder.comment("Set true to allow Explosion to destroy blocks");
         EXPLOSION_DESTROY = builder.define("explosion_destroy", false);
 
         builder.push("RGO Grenade");

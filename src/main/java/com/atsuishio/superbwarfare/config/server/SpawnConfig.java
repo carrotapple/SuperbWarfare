@@ -9,7 +9,7 @@ public class SpawnConfig {
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("spawn");
 
-        builder.comment("Set TRUE to allow Senpai to spawn naturally");
+        builder.comment("Set true to allow Senpai to spawn naturally");
         SPAWN_SENPAI = builder.define("spawn_senpai", false);
 
         builder.pop();

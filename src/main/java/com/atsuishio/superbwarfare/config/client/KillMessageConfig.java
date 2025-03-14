@@ -10,7 +10,7 @@ public class KillMessageConfig {
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("kill_message");
 
-        builder.comment("Set TRUE if you want to show kill message");
+        builder.comment("Set true if you want to show kill message");
         SHOW_KILL_MESSAGE = builder.define("show_kill_message", true);
 
         builder.comment("The max count of kill messages to show concurrently");
