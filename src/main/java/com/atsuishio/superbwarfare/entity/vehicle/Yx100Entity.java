@@ -713,7 +713,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public void changeWeapon(int index, int value, boolean isScroll) {
-        WeaponVehicleEntity.super.changeWeapon(index, value, isScroll);
         if (index != 0) return;
 
         if (entityData.get(LOADED_AMMO) > 0) {
@@ -729,6 +728,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(ModSounds.YX_100_RELOAD.get().getLocation(), SoundSource.PLAYERS);
             player.connection.send(clientboundstopsoundpacket);
         }
+
+        WeaponVehicleEntity.super.changeWeapon(index, value, isScroll);
     }
 
     @Override
