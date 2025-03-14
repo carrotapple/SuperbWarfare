@@ -33,8 +33,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
@@ -49,34 +51,33 @@ public class ContainerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
-            ItemStack stack = pPlayer.getItemInHand(pHand);
-            if (stack.is(ModItems.CROWBAR.get())) {
-                BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-                if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return InteractionResult.PASS;
+    @ParametersAreNonnullByDefault
+    public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide
+                || pState.getValue(OPENED)
+                || !(pLevel.getBlockEntity(pPos) instanceof ContainerBlockEntity containerBlockEntity)
+        ) return InteractionResult.PASS;
 
-                if (!hasEntity(pLevel, pPos)) {
-                    pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.empty"), true);
-                    return InteractionResult.PASS;
-                }
-
-                if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entity)) {
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
-                    if (!pLevel.isClientSide()) {
-                        pLevel.playSound(null, BlockPos.containing(pPos.getX(), pPos.getY(), pPos.getZ()), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1);
-                    } else {
-                        pLevel.playLocalSound(pPos.getX(), pPos.getY(), pPos.getZ(), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1, false);
-                    }
-                    return InteractionResult.SUCCESS;
-                } else {
-                    pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.open"), true);
-                }
-            } else {
-                pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.crowbar"), true);
-            }
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        if (!stack.is(ModItems.CROWBAR.get())) {
+            pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.crowbar"), true);
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+
+        if (!hasEntity(pLevel, pPos)) {
+            pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.empty"), true);
+            return InteractionResult.PASS;
+        }
+
+        if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entity)) {
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
+            pLevel.playSound(null, BlockPos.containing(pPos.getX(), pPos.getY(), pPos.getZ()), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1);
+
+            return InteractionResult.SUCCESS;
+        } else {
+            pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.open"), true);
+            return InteractionResult.PASS;
+        }
     }
 
     public boolean hasEntity(Level pLevel, BlockPos pPos) {
@@ -120,7 +121,7 @@ public class ContainerBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         if (!pLevel.isClientSide) {
             return createTickerHelper(pBlockEntityType, ModBlockEntities.CONTAINER.get(), ContainerBlockEntity::serverTick);
         }
@@ -128,7 +129,7 @@ public class ContainerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable BlockGetter pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
         if (tag != null && tag.contains("EntityType")) {
@@ -169,18 +170,19 @@ public class ContainerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return state.getValue(OPENED) ? box(1, 0, 1, 15, 14, 15) : box(0, 0, 0, 16, 15, 16);
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new ContainerBlockEntity(blockPos, blockState);
     }
 
@@ -195,7 +197,8 @@ public class ContainerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+    @ParametersAreNonnullByDefault
+    public @NotNull ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
         ItemStack itemstack = super.getCloneItemStack(pLevel, pPos, pState);
         pLevel.getBlockEntity(pPos, ModBlockEntities.CONTAINER.get()).ifPresent((blockEntity) -> blockEntity.saveToItem(itemstack));
         return itemstack;
