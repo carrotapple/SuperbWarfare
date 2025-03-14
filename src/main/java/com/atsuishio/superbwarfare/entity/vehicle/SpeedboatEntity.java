@@ -148,6 +148,10 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int) (40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
+        if (this.level() instanceof ServerLevel) {
+            this.handleAmmo();
+        }
+
         turretAngle(40, 40);
         lowHealthWarning();
         collideBlock();
