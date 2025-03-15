@@ -70,12 +70,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> SKS_FAR = REGISTRY.register("sks_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("sks_far")));
     public static final RegistryObject<SoundEvent> SKS_VERYFAR = REGISTRY.register("sks_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("sks_veryfar")));
 
-    public static final RegistryObject<SoundEvent> ABEKIRI_FIRE_1P = REGISTRY.register("abekiri_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_fire_1p")));
-    public static final RegistryObject<SoundEvent> ABEKIRI_FIRE_3P = REGISTRY.register("abekiri_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_fire_3p")));
-    public static final RegistryObject<SoundEvent> ABEKIRI_FAR = REGISTRY.register("abekiri_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_far")));
-    public static final RegistryObject<SoundEvent> ABEKIRI_VERYFAR = REGISTRY.register("abekiri_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_veryfar")));
-    public static final RegistryObject<SoundEvent> ABEKIRI_RELOAD_NORMAL = REGISTRY.register("abekiri_reload_normal", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_reload_normal")));
-    public static final RegistryObject<SoundEvent> ABEKIRI_RELOAD_EMPTY = REGISTRY.register("abekiri_reload_empty", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("abekiri_reload_empty")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_FIRE_1P = REGISTRY.register("homemade_shotgun_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_fire_1p")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_FIRE_3P = REGISTRY.register("homemade_shotgun_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_fire_3p")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_FAR = REGISTRY.register("homemade_shotgun_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_far")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_VERYFAR = REGISTRY.register("homemade_shotgun_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_veryfar")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_NORMAL = REGISTRY.register("homemade_shotgun_reload_normal", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_reload_normal")));
+    public static final RegistryObject<SoundEvent> HOMEMADE_SHOTGUN_RELOAD_EMPTY = REGISTRY.register("homemade_shotgun_reload_empty", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("homemade_shotgun_reload_empty")));
 
     public static final RegistryObject<SoundEvent> AK_47_FIRE_1P = REGISTRY.register("ak_47_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("ak_47_fire_1p")));
     public static final RegistryObject<SoundEvent> AK_47_FIRE_3P = REGISTRY.register("ak_47_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("ak_47_fire_3p")));

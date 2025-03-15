@@ -79,7 +79,7 @@ public class ShootMessage {
                     GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
                 }
 
-                if (stack.getItem() == ModItems.ABEKIRI.get()) {
+                if (stack.getItem() == ModItems.HOMEMADE_SHOTGUN.get()) {
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
                     if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
                         ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x, player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,

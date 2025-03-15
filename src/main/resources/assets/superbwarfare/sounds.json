@@ -223,50 +223,50 @@
       }
     ]
   },
-  "abekiri_fire_1p": {
+  "homemade_shotgun_fire_1p": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_fire_1p",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_fire_1p",
         "stream": false
       }
     ]
   },
-  "abekiri_fire_3p": {
+  "homemade_shotgun_fire_3p": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_fire_3p",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_fire_3p",
         "stream": false
       }
     ]
   },
-  "abekiri_far": {
+  "homemade_shotgun_far": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_far",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_far",
         "stream": false
       }
     ]
   },
-  "abekiri_veryfar": {
+  "homemade_shotgun_veryfar": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_veryfar",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_veryfar",
         "stream": false
       }
     ]
   },
-  "abekiri_reload_normal": {
+  "homemade_shotgun_reload_normal": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_reload_normal",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_reload_normal",
         "stream": false
       }
     ]
   },
-  "abekiri_reload_empty": {
+  "homemade_shotgun_reload_empty": {
     "sounds": [
       {
-        "name": "superbwarfare:abekiri/abekiri_reload_empty",
+        "name": "superbwarfare:homemade_shotgun/homemade_shotgun_reload_empty",
         "stream": false
       }
     ]

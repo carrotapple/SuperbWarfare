@@ -41,17 +41,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class AbekiriItem extends GunItem implements GeoItem {
+public class HomemadeShotgunItem extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.ABEKIRI_RELOAD_EMPTY.get(), ModSounds.ABEKIRI_RELOAD_NORMAL.get());
+        return Set.of(ModSounds.HOMEMADE_SHOTGUN_RELOAD_EMPTY.get(), ModSounds.HOMEMADE_SHOTGUN_NORMAL.get());
     }
 
-    public AbekiriItem() {
+    public HomemadeShotgunItem() {
         super(new Item.Properties().durability(24).rarity(Rarity.COMMON));
     }
 
@@ -77,7 +77,7 @@ public class AbekiriItem extends GunItem implements GeoItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<AbekiriItem> event) {
+    private PlayState idlePredicate(AnimationState<HomemadeShotgunItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -114,19 +114,19 @@ public class AbekiriItem extends GunItem implements GeoItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.ABEKIRI.get());
-        GunsTool.initCreativeGun(stack, ModItems.ABEKIRI.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.HOMEMADE_SHOTGUN.get());
+        GunsTool.initCreativeGun(stack, ModItems.HOMEMADE_SHOTGUN.getId().getPath());
         return stack;
     }
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/abekiri_icon.png");
+        return ModUtils.loc("textures/gun_icon/homemade_shotgun_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "Abekiri";
+        return "Homemade Shotgun";
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
+import com.atsuishio.superbwarfare.item.gun.shotgun.HomemadeShotgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -15,25 +15,25 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class AbekiriItemModel extends GeoModel<AbekiriItem> {
+public class AbekiriItemModel extends GeoModel<HomemadeShotgunItem> {
 
     @Override
-    public ResourceLocation getAnimationResource(AbekiriItem animatable) {
+    public ResourceLocation getAnimationResource(HomemadeShotgunItem animatable) {
         return ModUtils.loc("animations/abekiri.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(AbekiriItem animatable) {
+    public ResourceLocation getModelResource(HomemadeShotgunItem animatable) {
         return ModUtils.loc("geo/abekiri.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(AbekiriItem animatable) {
+    public ResourceLocation getTextureResource(HomemadeShotgunItem animatable) {
         return ModUtils.loc("textures/item/abekiri.png");
     }
 
     @Override
-    public void setCustomAnimations(AbekiriItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(HomemadeShotgunItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 

@@ -15,7 +15,7 @@ import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.RpkItem;
 import com.atsuishio.superbwarfare.item.gun.rifle.*;
 import com.atsuishio.superbwarfare.item.gun.shotgun.Aa12Item;
-import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
+import com.atsuishio.superbwarfare.item.gun.shotgun.HomemadeShotgunItem;
 import com.atsuishio.superbwarfare.item.gun.shotgun.M870Item;
 import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.*;
@@ -57,7 +57,7 @@ public class ModTabs {
                                 output.accept(Glock18Item.getGunInstance());
                                 output.accept(M1911Item.getGunInstance());
                                 output.accept(Mp443Item.getGunInstance());
-                                output.accept(AbekiriItem.getGunInstance());
+                                output.accept(HomemadeShotgunItem.getGunInstance());
                                 output.accept(Trachelium.getGunInstance());
                                 output.accept(VectorItem.getGunInstance());
                                 output.accept(SksItem.getGunInstance());

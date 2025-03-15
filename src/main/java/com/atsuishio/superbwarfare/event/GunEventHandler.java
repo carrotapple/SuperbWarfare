@@ -17,6 +17,7 @@ import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
@@ -35,6 +37,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -922,6 +925,15 @@ public class GunEventHandler {
 
         if (GunsTool.getGunIntTag(stack, "ChargeTime", 0) == 1) {
             GunsTool.setGunBooleanTag(stack, "Charging", false);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMissingMappings(MissingMappingsEvent event) {
+        for (MissingMappingsEvent.Mapping<Item> mapping : event.getAllMappings(Registries.ITEM)) {
+            if (ModUtils.MODID.equals(mapping.getKey().getNamespace()) && mapping.getKey().getPath().equals("abekiri")) {
+                mapping.remap(ModItems.HOMEMADE_SHOTGUN.get());
+            }
         }
     }
 }

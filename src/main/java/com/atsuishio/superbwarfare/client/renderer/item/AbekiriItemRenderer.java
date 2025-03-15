@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.layer.AbekiriLayer;
 import com.atsuishio.superbwarfare.client.model.item.AbekiriItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
+import com.atsuishio.superbwarfare.item.gun.shotgun.HomemadeShotgunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,7 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
+public class AbekiriItemRenderer extends GeoItemRenderer<HomemadeShotgunItem> {
 
     public AbekiriItemRenderer() {
         super(new AbekiriItemModel());
@@ -35,7 +35,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public RenderType getRenderType(AbekiriItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(HomemadeShotgunItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -44,7 +44,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected AbekiriItem animatable;
+    protected HomemadeShotgunItem animatable;
     private final Set<String> hiddenBones = new HashSet<>();
 
     @Override
@@ -56,7 +56,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, AbekiriItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, HomemadeShotgunItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -68,7 +68,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public void renderRecursively(PoseStack stack, AbekiriItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
+    public void renderRecursively(PoseStack stack, HomemadeShotgunItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
                                   float green, float blue, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         String name = bone.getName();
@@ -132,7 +132,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AbekiriItem instance) {
+    public ResourceLocation getTextureLocation(HomemadeShotgunItem instance) {
         return super.getTextureLocation(instance);
     }
 }
