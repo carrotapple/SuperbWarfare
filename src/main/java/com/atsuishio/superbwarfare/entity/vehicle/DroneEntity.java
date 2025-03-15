@@ -111,7 +111,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         return Mth.lerp(0.6f * tickDelta, pitchO, getBodyPitch());
     }
 
-
     @Override
     public boolean sendFireStarParticleOnHurt() {
         return false;
@@ -157,7 +156,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("Ammo", this.entityData.get(AMMO));
         compound.putInt("KamikazeMode", this.entityData.get(KAMIKAZE_MODE));
-        compound.put("Item", this.currentItem.save(compound));
+
+        CompoundTag item = new CompoundTag();
+        this.currentItem.save(item);
+        compound.put("Item", item);
     }
 
     @Override
@@ -308,7 +310,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     }
                 }
             }
-        } else if (stack.isEmpty() && player.isCrouching()) {
+        } else if (stack.is(ModItems.CROWBAR.get()) && player.isCrouching()) {
             // 返还物品
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.DRONE.get()));
 
