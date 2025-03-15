@@ -54,10 +54,6 @@ public class FireMessage {
         handleGunBolt(player, stack);
 
         if (type == 0) {
-            // 按下开火
-            if (!(stack.getItem() instanceof SpecialFireWeapon specialFireWeapon)) return;
-            specialFireWeapon.fireOnPress(player);
-
             var tag = stack.getOrCreateTag();
             if (tag.getDouble("prepare") == 0 && GunsTool.getGunBooleanTag(stack, "Reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
                 tag.putDouble("force_stop", 1);
@@ -65,6 +61,14 @@ public class FireMessage {
 
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.edit = false;
+                capability.syncPlayerVariables(player);
+            });
+
+            // 按下开火
+            if (!(stack.getItem() instanceof SpecialFireWeapon specialFireWeapon)) return;
+            specialFireWeapon.fireOnPress(player);
+
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.holdFire = true;
                 capability.syncPlayerVariables(player);
             });
