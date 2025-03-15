@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.network.message.ChangeVehicleSeatMessage;
 import com.atsuishio.superbwarfare.network.message.SwitchVehicleWeaponMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +29,7 @@ public class MinecraftMixin {
     public Options options;
 
     /**
-     * 在可切换座位的载具上，按下shift+数字键时切换座位
+     * 在可切换座位的载具上，按下潜行键+数字键时切换座位
      * 在有武器的载具上，按下数字键时切换武器
      */
     @Inject(method = "handleKeybinds()V", at = @At("HEAD"), cancellable = true)
@@ -48,7 +47,7 @@ public class MinecraftMixin {
 
         // shift+数字键 座位更改
         if (vehicle.getMaxPassengers() > 1
-                && Screen.hasShiftDown()
+                && options.keyShift.isDown()
                 && index < vehicle.getMaxPassengers()
                 && vehicle.getNthEntity(index) == null
         ) {
@@ -68,7 +67,7 @@ public class MinecraftMixin {
             options.keyHotbarSlots[index].consumeClick();
 
             // 数字键 武器切换
-            if (!Screen.hasShiftDown()
+            if (!options.keyShift.isDown()
                     && weaponVehicle.hasWeapon(seatIndex)
                     && weaponVehicle.getWeaponIndex(seatIndex) != index) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
