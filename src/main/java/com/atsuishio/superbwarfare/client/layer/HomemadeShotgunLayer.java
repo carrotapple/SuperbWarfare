@@ -12,10 +12,11 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class AbekiriLayer extends GeoRenderLayer<HomemadeShotgunItem> {
-    private static final ResourceLocation LAYER = ModUtils.loc("textures/item/abekiri_e.png");
+public class HomemadeShotgunLayer extends GeoRenderLayer<HomemadeShotgunItem> {
 
-    public AbekiriLayer(GeoRenderer<HomemadeShotgunItem> entityRenderer) {
+    private static final ResourceLocation LAYER = ModUtils.loc("textures/item/homemade_shotgun_e.png");
+
+    public HomemadeShotgunLayer(GeoRenderer<HomemadeShotgunItem> entityRenderer) {
         super(entityRenderer);
     }
 

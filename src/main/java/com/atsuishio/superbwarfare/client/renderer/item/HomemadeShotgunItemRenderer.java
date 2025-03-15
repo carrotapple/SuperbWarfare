@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.AbekiriLayer;
-import com.atsuishio.superbwarfare.client.model.item.AbekiriItemModel;
+import com.atsuishio.superbwarfare.client.layer.HomemadeShotgunLayer;
+import com.atsuishio.superbwarfare.client.model.item.HomemadeShotgunItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.shotgun.HomemadeShotgunItem;
@@ -27,11 +27,11 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbekiriItemRenderer extends GeoItemRenderer<HomemadeShotgunItem> {
+public class HomemadeShotgunItemRenderer extends GeoItemRenderer<HomemadeShotgunItem> {
 
-    public AbekiriItemRenderer() {
-        super(new AbekiriItemModel());
-        this.addRenderLayer(new AbekiriLayer(this));
+    public HomemadeShotgunItemRenderer() {
+        super(new HomemadeShotgunItemModel());
+        this.addRenderLayer(new HomemadeShotgunLayer(this));
     }
 
     @Override

@@ -15,28 +15,27 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class AbekiriItemModel extends GeoModel<HomemadeShotgunItem> {
+public class HomemadeShotgunItemModel extends GeoModel<HomemadeShotgunItem> {
 
     @Override
     public ResourceLocation getAnimationResource(HomemadeShotgunItem animatable) {
-        return ModUtils.loc("animations/abekiri.animation.json");
+        return ModUtils.loc("animations/homemade_shotgun.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(HomemadeShotgunItem animatable) {
-        return ModUtils.loc("geo/abekiri.geo.json");
+        return ModUtils.loc("geo/homemade_shotgun.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HomemadeShotgunItem animatable) {
-        return ModUtils.loc("textures/item/abekiri.png");
+        return ModUtils.loc("textures/item/homemade_shotgun.png");
     }
 
     @Override
     public void setCustomAnimations(HomemadeShotgunItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;

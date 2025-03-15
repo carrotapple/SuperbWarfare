@@ -166,7 +166,7 @@
 					]
 				},
 				{
-					"name": "abekiri",
+					"name": "homemade_shotgun",
 					"parent": "gun",
 					"pivot": [0.85134, 4.15064, 1.93283],
 					"cubes": [
@@ -552,7 +552,7 @@
 				},
 				{
 					"name": "guan",
-					"parent": "abekiri",
+					"parent": "homemade_shotgun",
 					"pivot": [0.85134, 4.15064, 1.93283],
 					"cubes": [
 						{
@@ -996,7 +996,7 @@
 				},
 				{
 					"name": "jiaodai",
-					"parent": "abekiri",
+					"parent": "homemade_shotgun",
 					"pivot": [0.04048, 3.75996, 2.58283]
 				},
 				{

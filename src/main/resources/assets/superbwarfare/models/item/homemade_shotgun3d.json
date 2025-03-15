@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "superbwarfare:item/abekiri",
-		"particle": "superbwarfare:item/abekiri"
+		"0": "superbwarfare:item/homemade_shotgun",
+		"particle": "superbwarfare:item/homemade_shotgun"
 	},
 	"elements": [
 		{
@@ -1824,7 +1824,7 @@
 	},
 	"groups": [
 		{
-			"name": "abekiri",
+			"name": "homemade_shotgun",
 			"origin": [7.37626, 3.80052, 8],
 			"color": 0,
 			"children": [

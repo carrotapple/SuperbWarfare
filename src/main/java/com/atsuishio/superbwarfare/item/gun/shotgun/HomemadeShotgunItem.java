@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.gun.shotgun;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.AbekiriItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.item.HomemadeShotgunItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.ShotgunImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -59,7 +59,7 @@ public class HomemadeShotgunItem extends GunItem implements GeoItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new AbekiriItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new HomemadeShotgunItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
