@@ -4,6 +4,8 @@
     "#minecraft:planks",
     "#forge:glass",
     "#forge:glass_panes",
+    "#minecraft:wooden_slabs",
+    "#minecraft:wooden_stairs",
     "minecraft:ice",
     "minecraft:frosted_ice",
     "minecraft:packed_ice",
