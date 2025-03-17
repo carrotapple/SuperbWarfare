@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Vector3f;
@@ -316,19 +317,12 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
             var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
                             entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
                     .stream().filter(entity -> {
-                                if (entity.isAlive()
-                                    && (entity instanceof VehicleEntity
-                                    || entity instanceof Boat
-                                    || entity instanceof Minecart
-                                    || (entity instanceof LivingEntity living && !(living instanceof Player player && player.isSpectator())))
-                                ) {
-                                    return true;
-
-                                    // todo 添加碰撞白名单
-
-//                                    var type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-//                                    if (type == null) return false;
-//                                    return !VehicleConfig.COLLISION_ENTITY_BLACKLIST.get().contains(type.toString());
+                                if (entity.isAlive()) {
+                                    var type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+                                    if (type == null) return false;
+                                    return (entity instanceof VehicleEntity || entity instanceof Boat || entity instanceof Minecart
+                                            || (entity instanceof LivingEntity living && !(living instanceof Player player && player.isSpectator())))
+                                            || VehicleConfig.COLLISION_ENTITY_WHITELIST.get().contains(type.toString());
                                 }
                                 return false;
                             }

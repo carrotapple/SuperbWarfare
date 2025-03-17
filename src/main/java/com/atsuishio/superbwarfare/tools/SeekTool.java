@@ -103,12 +103,12 @@ public class SeekTool {
         return entity.isAlive()
                 && !(entity instanceof ItemEntity || entity instanceof ExperienceOrb || entity instanceof HangingEntity || entity instanceof Projectile || entity instanceof ArmorStand || entity instanceof ClaymoreEntity || entity instanceof C4Entity || entity instanceof AreaEffectCloud)
                 && !(entity instanceof Player player && player.isSpectator())
-                && excludedByConfig(entity);
+                || includedByConfig(entity);
     }
 
-    public static boolean excludedByConfig(Entity entity) {
+    public static boolean includedByConfig(Entity entity) {
         var type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
         if (type == null) return false;
-        return !VehicleConfig.COLLISION_ENTITY_BLACKLIST.get().contains(type.toString());
+        return VehicleConfig.COLLISION_ENTITY_WHITELIST.get().contains(type.toString());
     }
 }
