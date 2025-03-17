@@ -240,7 +240,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         collideBlock();
-        if (this.getDeltaMovement().length() > 0.15) {
+        if (this.getDeltaMovement().length() > 0.075) {
             collideHardBlock();
         }
 
