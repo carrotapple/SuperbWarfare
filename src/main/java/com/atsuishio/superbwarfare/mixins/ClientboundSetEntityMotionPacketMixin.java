@@ -1,7 +1,11 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.projectile.FastProjectile;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,12 +44,18 @@ public class ClientboundSetEntityMotionPacketMixin {
     @Shadow
     private int za;
 
-    @Inject(method = "Lnet/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket;" +
-            "<init>(ILnet/minecraft/world/phys/Vec3;)V", at = @At(value = "RETURN"))
+    // TODO 实现仅对 FastProjectile 对象的动量修改
+    @Inject(method = "<init>(ILnet/minecraft/world/phys/Vec3;)V", at = @At(value = "RETURN"))
     public void init(int entityId, Vec3 motion, CallbackInfo ci) {
-        this.xa = (int) (motion.x * 8000.0D);
-        this.ya = (int) (motion.y * 8000.0D);
-        this.za = (int) (motion.z * 8000.0D);
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level != null) {
+            Entity entity = level.getEntity(entityId);
+            if (entity instanceof FastProjectile) {
+                this.xa = (int) (motion.x * 8000.0D);
+                this.ya = (int) (motion.y * 8000.0D);
+                this.za = (int) (motion.z * 8000.0D);
+            }
+        }
     }
 
     @Redirect(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V",
