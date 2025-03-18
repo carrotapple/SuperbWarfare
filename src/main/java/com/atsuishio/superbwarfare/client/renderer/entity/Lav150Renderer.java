@@ -18,6 +18,8 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.YAW;
+
 public class Lav150Renderer extends GeoEntityRenderer<Lav150Entity> {
 
     public Lav150Renderer(EntityRendererProvider.Context renderManager) {
@@ -64,6 +66,34 @@ public class Lav150Renderer extends GeoEntityRenderer<Lav150Entity> {
         if (name.equals("wheel4")) {
             bone.setRotX(1.5f *  Mth.lerp(partialTick, animatable.leftWheelRotO, animatable.getLeftWheelRot()));
         }
+
+        if (name.equals("base")) {
+
+            Player player = Minecraft.getInstance().player;
+            bone.setHidden(ClientEventHandler.zoomVehicle && animatable.getFirstPassenger() == player);
+
+            float a = animatable.getEntityData().get(YAW);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            bone.setPosZ(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 0.2f);
+            bone.setRotX(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 0.3f);
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            bone.setPosX(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 0.15f);
+            bone.setRotZ(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 0.5f);
+        }
+
         if (name.equals("cannon")) {
 
             Player player = Minecraft.getInstance().player;

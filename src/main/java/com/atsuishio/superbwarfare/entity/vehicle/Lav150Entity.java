@@ -272,6 +272,9 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                 }
             }
 
+            this.entityData.set(CANNON_RECOIL_TIME, 40);
+            this.entityData.set(YAW, getTurretYRot());
+
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
 

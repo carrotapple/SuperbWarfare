@@ -18,6 +18,8 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.YAW;
+
 public class Bmp2Renderer extends GeoEntityRenderer<Bmp2Entity> {
 
     public Bmp2Renderer(EntityRendererProvider.Context renderManager) {
@@ -75,6 +77,33 @@ public class Bmp2Renderer extends GeoEntityRenderer<Bmp2Entity> {
         }
         if (name.equals("flare2")) {
             bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+        }
+
+        if (name.equals("base")) {
+
+            Player player = Minecraft.getInstance().player;
+            bone.setHidden(ClientEventHandler.zoomVehicle && animatable.getFirstPassenger() == player);
+
+            float a = animatable.getEntityData().get(YAW);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            bone.setPosZ(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 0.125f);
+            bone.setRotX(r * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 0.06f);
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            bone.setPosX(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * 0.125f);
+            bone.setRotZ(r2 * Mth.lerp(partialTick, (float) animatable.recoilShakeO, (float) animatable.getRecoilShake()) * Mth.DEG_TO_RAD * 0.2f);
         }
 
         for (int i = 0; i < 51; i++) {

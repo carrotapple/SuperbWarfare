@@ -230,6 +230,9 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             }
         }
 
+        this.entityData.set(CANNON_RECOIL_TIME, 30);
+        this.entityData.set(YAW, getTurretYRot());
+
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
         this.entityData.set(FIRE_ANIM, 3);
 

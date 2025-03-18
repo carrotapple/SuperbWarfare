@@ -66,7 +66,6 @@ import java.util.Comparator;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
-    public static final EntityDataAccessor<Integer> CANNON_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MG_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GUN_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
@@ -141,7 +140,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         super.defineSynchedData();
         this.entityData.define(MG_AMMO, 0);
         this.entityData.define(LOADED_AMMO, 0);
-        this.entityData.define(CANNON_FIRE_TIME, 0);
         this.entityData.define(GUN_FIRE_TIME, 0);
     }
 
@@ -213,10 +211,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             setRightTrack(0);
         }
 
-        if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
-            this.entityData.set(CANNON_FIRE_TIME, this.entityData.get(CANNON_FIRE_TIME) - 1);
-        }
-
         if (this.entityData.get(GUN_FIRE_TIME) > 0) {
             this.entityData.set(GUN_FIRE_TIME, this.entityData.get(GUN_FIRE_TIME) - 1);
         }
@@ -253,8 +247,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         if (this.getDeltaMovement().length() > 0.075) {
             collideHardBlock();
         }
-
-        this.setRecoilShake(Math.pow(entityData.get(CANNON_FIRE_TIME), 4) * 0.0000007 * Math.sin(0.2 * Math.PI * (entityData.get(CANNON_FIRE_TIME) - 2.5)));
 
         turretAngle(5, 5);
         gunnerAngle(15, 15);
@@ -330,7 +322,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 }
             }
 
-            this.entityData.set(CANNON_FIRE_TIME, 40);
+            this.entityData.set(CANNON_RECOIL_TIME, 40);
             this.entityData.set(LOADED_AMMO, 0);
             this.consumeEnergy(10000);
             this.entityData.set(YAW, getTurretYRot());
@@ -646,7 +638,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     }
 
     private PlayState cannonShootPredicate(AnimationState<Yx100Entity> event) {
-        if (this.entityData.get(CANNON_FIRE_TIME) > 0) {
+        if (this.entityData.get(CANNON_RECOIL_TIME) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
