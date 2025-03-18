@@ -41,11 +41,14 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
     @Override
     public void setCustomAnimations(Ntw20Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-//        CoreGeoBone scope = getAnimationProcessor().getBone("scope");
-        CoreGeoBone l = getAnimationProcessor().getBone("l");
-        CoreGeoBone r = getAnimationProcessor().getBone("r");
         CoreGeoBone action = getAnimationProcessor().getBone("action");
         CoreGeoBone lh = getAnimationProcessor().getBone("lh");
+        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
+        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -71,14 +74,35 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         double fr = ClientEventHandler.fireRot;
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
 
-        if (isProne(player)) {
-            l.setRotX(-1.5f);
-            r.setRotX(-1.5f);
-        }
+        float posY = switch (type) {
+            case 0 -> -0.25f;
+            case 1 -> -0.24f;
+            case 2 -> -0.5f;
+            case 3 -> -0.28f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 0, 1 -> 0.5f;
+            case 2 -> 0.8f;
+            case 3 -> 0.78f;
+            default -> 0f;
+        };
+        float posZ = switch (type) {
+            case 0, 1 -> 7f;
+            case 2 -> 9.8f;
+            case 3 -> 9.9f;
+            default -> 0f;
+        };
+
+        gun.setPosX(4.5525f * (float) zp);
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(posZ * (float) zp + (float) (0.3f * zpz));
+        gun.setRotZ((float) (0.05f * zpz));
+        gun.setScaleZ(1f - (scaleZ * (float) zp));
+        scope.setScaleZ(1f - (0.6f * (float) zp));
+        scope2.setScaleZ(1f - (0.8f * (float) zp));
+        scope3.setScaleZ(1f - (0.5f * (float) zp));
 
         CoreGeoBone shen;
         if (zt < 0.5) {
@@ -112,17 +136,16 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
 
         CrossHairOverlay.gunRot = shen.getRotZ();
 
-        gun.setPosX(4.54f * (float) zp);
-        gun.setPosY(-0.47f * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(10.0f * (float) zp + (float) (0.3f * zpz));
-        gun.setRotZ((float) (0.02f * zpz));
-        gun.setScaleZ(1f - (0.8f * (float) zp));
-//        scope.setScaleZ(1f - (0.85f * (float) zp));
-
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 4.3));
 
         action.setPosZ(3f * (float) ClientEventHandler.actionMove);
         lh.setPosZ(-3f * (float) ClientEventHandler.actionMove);
+
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
