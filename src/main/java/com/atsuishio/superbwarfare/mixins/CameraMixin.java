@@ -27,8 +27,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.atsuishio.superbwarfare.event.ClientEventHandler.zoom;
-
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 
@@ -150,7 +148,11 @@ public abstract class CameraMixin {
 
     @Inject(method = "setup", at = @At("TAIL"))
     public void superbWarfare$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN) && zoom) {
+        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK
+                && entity instanceof Player player
+                && player.getMainHandItem().is(ModTags.Items.GUN)
+                && Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos) > 0
+        ) {
             move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
             return;
         }
