@@ -229,7 +229,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             }
         }
 
-        Matrix4f transform = getBarrelTransform();
+        Matrix4f transform = getBarrelTransform(1);
         if (getWeaponIndex(0) == 0) {
             if (this.cannotFire) return;
             float x = -0.0234375f;
@@ -385,8 +385,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             return;
         }
 
-        Matrix4f transform = getTurretTransform();
-        Matrix4f transformV = getVehicleTransform();
+        Matrix4f transform = getTurretTransform(1);
+        Matrix4f transformV = getVehicleTransform(1);
 
         float x = 0.36f;
         float y = -0.3f;
@@ -409,8 +409,14 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         return 5;
     }
 
-    public Matrix4f getBarrelTransform() {
-        Matrix4f transformT = getTurretTransform();
+    public Vec3 driverZoomPos(float ticks) {
+        Matrix4f transform = getTurretTransform(ticks);
+        Vector4f worldPosition = transformPosition(transform, 0, 0, 0.56f);
+        return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
+    }
+
+    public Matrix4f getBarrelTransform(float ticks) {
+        Matrix4f transformT = getTurretTransform(ticks);
         float x = 0f;
         float y = 0.33795f;
         float z = 0.825f;
@@ -418,18 +424,18 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         Matrix4f transform = new Matrix4f();
         transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, turretXRotO, getTurretXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 
-    public Matrix4f getTurretTransform() {
+    public Matrix4f getTurretTransform(float ticks) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) getX(), (float) getY() + 2.4f, (float) getZ());
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo + 2.4f, getY() + 2.4f), (float) Mth.lerp(ticks, zo, getZ()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 

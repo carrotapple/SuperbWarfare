@@ -188,22 +188,23 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     /**
      * 机枪塔开火
      */
+
+    public Vec3 shootPos(float ticks) {
+        Matrix4f transform = getBarrelTransform(ticks);
+        Vector4f worldPosition = transformPosition(transform, 0, 0, 0);
+        return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
+    }
+
+
     @Override
     public void vehicleShoot(Player player, int type) {
         if (this.cannotFire) return;
-        Matrix4f transform = getBarrelTransform();
-
-        float x = 0;
-        float y = 0;
-        float z = 0;
-
-        Vector4f worldPosition = transformPosition(transform, x, y, z);
 
 
         var projectile = ((ProjectileWeapon) getWeapon(0)).create(player);
 
         projectile.bypassArmorRate(0.4f);
-        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+        projectile.setPos(shootPos(1).x - 1.1 * this.getDeltaMovement().x, shootPos(1).y, shootPos(1).z - 1.1 * this.getDeltaMovement().z);
         projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 20,
                 (float) 0.4);
         this.level().addFreshEntity(projectile);
@@ -305,8 +306,8 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         }
     }
 
-    public Matrix4f getBarrelTransform() {
-        Matrix4f transformT = getTurretTransform();
+    public Matrix4f getBarrelTransform(float ticks) {
+        Matrix4f transformT = getTurretTransform(ticks);
         float x = 0f;
         float y = 0.5088375f;
         float z = 0.04173125f;
@@ -314,14 +315,14 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         Matrix4f transform = new Matrix4f();
         transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, turretXRotO, getTurretXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 
-    public Matrix4f getTurretTransform() {
-        Matrix4f transformT = getVehicleTransform();
+    public Matrix4f getTurretTransform(float ticks) {
+        Matrix4f transformT = getVehicleTransform(ticks);
         float x = 0f;
         float y = 2.4616625f;
         float z = -0.565625f;
@@ -329,9 +330,9 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         Matrix4f transform = new Matrix4f();
         transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
     @Override

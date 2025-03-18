@@ -592,7 +592,7 @@ public class ClientEventHandler {
 
     public static void gunPartMove(float times) {
         chamberRot = Mth.lerp(0.07 * times, chamberRot, 0);
-        actionMove = Mth.lerp(0.2 * times, actionMove, 0);
+        actionMove = Mth.lerp(0.125 * times, actionMove, 0);
     }
 
     public static void handleClientShoot() {

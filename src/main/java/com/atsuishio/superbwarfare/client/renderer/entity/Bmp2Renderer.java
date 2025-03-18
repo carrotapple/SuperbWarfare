@@ -3,14 +3,17 @@ package com.atsuishio.superbwarfare.client.renderer.entity;
 import com.atsuishio.superbwarfare.client.layer.Bmp2Layer;
 import com.atsuishio.superbwarfare.client.model.entity.Bmp2Model;
 import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -57,6 +60,10 @@ public class Bmp2Renderer extends GeoEntityRenderer<Bmp2Entity> {
         }
 
         if (name.equals("cannon")) {
+
+            Player player = Minecraft.getInstance().player;
+            bone.setHidden(ClientEventHandler.zoomVehicle && animatable.getFirstPassenger() == player);
+
             bone.setRotY(Mth.lerp(partialTick, animatable.turretYRotO, animatable.getTurretYRot()) * Mth.DEG_TO_RAD);
         }
         if (name.equals("barrel")) {

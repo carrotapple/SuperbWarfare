@@ -269,7 +269,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             }
         }
 
-        Matrix4f transform = getBarrelTransform();
+        Matrix4f transform = getBarrelTransform(1);
         if (getWeaponIndex(0) == 0) {
             if (this.cannotFire) return;
             float x = -0.1125f;
@@ -355,7 +355,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 }
             }
         } else if (getWeaponIndex(0) == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
-            Matrix4f transformT = getBarrelTransform();
+            Matrix4f transformT = getBarrelTransform(1);
             Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
 
             var wgMissileEntity = ((WgMissileWeapon) getWeapon(0)).create(player);
@@ -448,8 +448,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
             return;
         }
 
-        Matrix4f transform = getTurretTransform();
-        Matrix4f transformV = getVehicleTransform();
+        Matrix4f transform = getTurretTransform(1);
+        Matrix4f transformV = getVehicleTransform(1);
 
         float x = 0.5f;
         float y = 0.1f;
@@ -472,8 +472,14 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         return 5;
     }
 
-    public Matrix4f getBarrelTransform() {
-        Matrix4f transformT = getTurretTransform();
+    public Vec3 driverZoomPos(float ticks) {
+        Matrix4f transform = getTurretTransform(ticks);
+        Vector4f worldPosition = transformPosition(transform, 0, 0, 0.75f);
+        return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
+    }
+
+    public Matrix4f getBarrelTransform(float ticks) {
+        Matrix4f transformT = getTurretTransform(ticks);
         float x = 0f;
         float y = 0.5541f;
         float z = 0.83004375f;
@@ -481,14 +487,14 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
         Matrix4f transform = new Matrix4f();
         transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, turretXRotO, getTurretXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 
-    public Matrix4f getTurretTransform() {
-        Matrix4f transformT = getVehicleTransform();
+    public Matrix4f getTurretTransform(float ticks) {
+        Matrix4f transformT = getVehicleTransform(ticks);
         float x = 0f;
         float y = 2f;
         float z = -0.703125f;
@@ -496,9 +502,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
         Matrix4f transform = new Matrix4f();
         transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 

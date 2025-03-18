@@ -412,7 +412,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             return;
         }
 
-        Matrix4f transform = getVehicleTransform();
+        Matrix4f transform = getVehicleTransform(1);
 
         float x = 0.6f;
         float y = 1.2f - 1.45f;
@@ -472,12 +472,12 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     @Override
-    public Matrix4f getVehicleTransform() {
+    public Matrix4f getVehicleTransform(float ticks) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) getX(), (float) getY() + 1.45f, (float) getZ());
-        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo + 1.45f, getY() + 1.45f), (float) Mth.lerp(ticks, zo, getZ()));
+        transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(ticks, yRotO, getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 
@@ -529,7 +529,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             }
         }
 
-        Matrix4f transform = getVehicleTransform();
+        Matrix4f transform = getVehicleTransform(1);
         float x;
         float y;
         float z;

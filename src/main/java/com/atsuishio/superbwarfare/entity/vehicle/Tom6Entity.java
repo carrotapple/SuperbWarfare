@@ -197,7 +197,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             if (upInputDown && !onGround() && entityData.get(MELON)) {
                 entityData.set(MELON, false);
 
-                Matrix4f transform = getVehicleTransform();
+                Matrix4f transform = getVehicleTransform(1);
                 Vector4f worldPosition;
                 worldPosition = transformPosition(transform, 0, -0.2f, 0);
 
@@ -252,7 +252,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             return;
         }
 
-        Matrix4f transform = getVehicleTransform();
+        Matrix4f transform = getVehicleTransform(1);
 
         float x = 0f;
         float y = 0.45f;
@@ -284,12 +284,12 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
-    public Matrix4f getVehicleTransform() {
+    public Matrix4f getVehicleTransform(float ticks) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) getX(), (float) getY() + 0.5f, (float) getZ());
-        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo + 0.5f, getY() + 0.5f), (float) Mth.lerp(ticks, zo, getZ()));
+        transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(ticks, yRotO, getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
         return transform;
     }
 
