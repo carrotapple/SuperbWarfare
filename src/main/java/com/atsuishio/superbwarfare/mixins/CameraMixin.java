@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -154,47 +155,11 @@ public abstract class CameraMixin {
             return;
         }
 
-        if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {
-            move(-getMaxZoom(8), 1, 0.0);
-            return;
-        }
-        if (thirdPerson && entity.getVehicle() instanceof Mle1934Entity) {
-            move(-getMaxZoom(10), 1.3, 0.0);
-            return;
-        }
-        if (thirdPerson && entity.getVehicle() instanceof AnnihilatorEntity) {
-            move(-getMaxZoom(16), 1.3, 0.0);
-            return;
-        }
-        if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity && !ClientEventHandler.zoomVehicle) {
-            move(-getMaxZoom(3), 1, 0.0);
-            return;
-        }
-        if (thirdPerson && entity.getVehicle() instanceof Ah6Entity) {
-            move(-getMaxZoom(7), 1, -2.7);
-            return;
-        }
+        if (!thirdPerson || !(entity.getVehicle() instanceof VehicleEntity vehicle)) return;
 
-        if (thirdPerson && entity.getVehicle() instanceof Tom6Entity) {
-            move(-getMaxZoom(4), 1, 0);
-            return;
-        }
-
-        if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoomVehicle) {
-            move(-getMaxZoom(2.75), 1, 0.0);
-            return;
-        }
-
-        if (thirdPerson && entity.getVehicle() instanceof Bmp2Entity && !ClientEventHandler.zoomVehicle) {
-            move(-getMaxZoom(3), 1, 0.0);
-        }
-
-        if (thirdPerson && entity.getVehicle() instanceof Yx100Entity yx100 && !ClientEventHandler.zoomVehicle) {
-            if (yx100.getFirstPassenger() == entity) {
-                move(-getMaxZoom(5), 1.5, -0.8669625f);
-            } else if (yx100.getNthEntity(1) == entity) {
-                move(-getMaxZoom(-0.5), 2, 0);
-            }
+        var cameraPosition = vehicle.getThirdPersonCameraPosition(vehicle.getSeatIndex(entity));
+        if (cameraPosition != null) {
+            move(-getMaxZoom(cameraPosition.distance()), cameraPosition.y(), cameraPosition.z());
         }
     }
 

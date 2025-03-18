@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.CannonShellWeapon;
@@ -123,6 +124,15 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .ammo(ModItems.HEAVY_AMMO.get())
                                 .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
                 }
+        };
+    }
+
+    @Override
+    public ThirdPersonCameraPosition getThirdPersonCameraPosition(int index) {
+        return switch (index) {
+            case 0 -> new ThirdPersonCameraPosition(5, 1.5, -0.8669625);
+            case 1 -> new ThirdPersonCameraPosition(-0.5, 2, 0);
+            default -> null;
         };
     }
 

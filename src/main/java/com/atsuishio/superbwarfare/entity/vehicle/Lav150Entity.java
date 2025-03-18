@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
@@ -64,6 +65,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.LAV_150.get(), world);
     }
@@ -91,6 +93,11 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                                 .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_7_62mm.png")),
                 }
         };
+    }
+
+    @Override
+    public ThirdPersonCameraPosition getThirdPersonCameraPosition(int index) {
+        return new ThirdPersonCameraPosition(2.75, 1, 0);
     }
 
     @Override

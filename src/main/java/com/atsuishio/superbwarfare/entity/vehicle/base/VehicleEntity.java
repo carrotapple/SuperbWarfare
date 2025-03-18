@@ -208,6 +208,17 @@ public abstract class VehicleEntity extends Entity {
         return orderedPassengers.indexOf(entity);
     }
 
+
+    /**
+     * 第三人称视角相机位置重载，返回null表示不进行修改
+     *
+     * @param seatIndex 座位索引
+     */
+    @Nullable
+    public ThirdPersonCameraPosition getThirdPersonCameraPosition(int seatIndex) {
+        return null;
+    }
+
     public float getRoll() {
         return roll;
     }
@@ -885,4 +896,5 @@ public abstract class VehicleEntity extends Entity {
     public void setGunXRot(float pGunXRot) {
         this.gunXRot = pGunXRot;
     }
+
 }
