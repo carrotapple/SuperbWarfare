@@ -42,7 +42,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntity {
+public class WgMissileEntity extends FastThrowableProjectile implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -185,9 +185,6 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
     @Override
     protected float getGravity() {
         return 0;
-    }
-
-    public void setAnimation(String animation) {
     }
 
     @Override
