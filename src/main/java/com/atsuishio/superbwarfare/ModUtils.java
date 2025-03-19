@@ -178,6 +178,7 @@ public class ModUtils {
         addNetworkMessage(SwitchVehicleWeaponMessage.class, SwitchVehicleWeaponMessage::encode, SwitchVehicleWeaponMessage::decode, SwitchVehicleWeaponMessage::handler);
         addNetworkMessage(RadarSetTargetMessage.class, RadarSetTargetMessage::encode, RadarSetTargetMessage::decode, RadarSetTargetMessage::handler);
         addNetworkMessage(ChangeVehicleSeatMessage.class, ChangeVehicleSeatMessage::encode, ChangeVehicleSeatMessage::decode, ChangeVehicleSeatMessage::handler);
+        addNetworkMessage(ClientMotionSyncMessage.class, ClientMotionSyncMessage::encode, ClientMotionSyncMessage::decode, ClientMotionSyncMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));

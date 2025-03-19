@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.network.message.ClientMotionSyncMessage;
 import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
 import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
@@ -299,6 +300,15 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
                     this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z,
                     Math.max(this.getDeltaMovement().length() - 1.1 * this.tickCount, 0.2), true
             );
+        }
+
+        this.syncMotion();
+    }
+
+    @Override
+    public void syncMotion() {
+        if (!this.level().isClientSide) {
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new ClientMotionSyncMessage(this));
         }
     }
 
