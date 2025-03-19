@@ -36,12 +36,12 @@ public class ModEntities {
             EntityType.Builder.<LaserEntity>of(LaserEntity::new, MobCategory.MISC).sized(0.1f, 0.1f).fireImmune().setUpdateInterval(1));
     public static final RegistryObject<EntityType<FlareDecoyEntity>> FLARE_DECOY = register("flare_decoy",
             EntityType.Builder.<FlareDecoyEntity>of(FlareDecoyEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(FlareDecoyEntity::new).sized(0.5f, 0.5f));
-
-    // Projectiles
     public static final RegistryObject<EntityType<ClaymoreEntity>> CLAYMORE = register("claymore",
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<C4Entity>> C_4 = register("c4",
             EntityType.Builder.<C4Entity>of(C4Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
+
+    // Projectiles
     public static final RegistryObject<EntityType<TaserBulletEntity>> TASER_BULLET = register("taser_bullet",
             EntityType.Builder.<TaserBulletEntity>of(TaserBulletEntity::new, MobCategory.MISC).setCustomClientFactory(TaserBulletEntity::new).setTrackingRange(64)
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
