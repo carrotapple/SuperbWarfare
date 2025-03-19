@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -51,7 +50,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity, FastProjectile {
+public class CannonShellEntity extends FastThrowableProjectile implements GeoEntity {
 
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -256,8 +255,6 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
             }
             this.discard();
         }
-
-        this.syncMotion();
     }
 
     @Override
