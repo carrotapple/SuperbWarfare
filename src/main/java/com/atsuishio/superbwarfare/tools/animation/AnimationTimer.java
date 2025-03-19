@@ -62,6 +62,10 @@ public class AnimationTimer {
         return timers;
     }
 
+    public boolean isForward() {
+        return !reversed;
+    }
+
 
     /**
      * 获取当前进度

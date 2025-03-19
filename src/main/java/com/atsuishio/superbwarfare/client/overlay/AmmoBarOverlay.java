@@ -6,20 +6,25 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.common.ammo.AmmoSupplierItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
+import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
+import com.atsuishio.superbwarfare.tools.animation.AnimationTimer;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -40,8 +45,8 @@ public class AmmoBarOverlay {
         return InventoryTool.hasCreativeAmmoBox(player);
     }
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderGui(RenderGuiEvent.Pre event) {
+    @SubscribeEvent
+    public static void renderWeaponInfo(RenderGuiEvent.Pre event) {
         if (!DisplayConfig.AMMO_HUD.get()) return;
 
         int w = event.getWindow().getGuiScaledWidth();
@@ -52,7 +57,7 @@ public class AmmoBarOverlay {
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() instanceof GunItem gunItem &&!(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
+        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
             PoseStack poseStack = event.getGuiGraphics().pose();
 
             // 渲染图标
@@ -204,6 +209,67 @@ public class AmmoBarOverlay {
 
             poseStack.popPose();
         }
+    }
+
+    private static final AnimationTimer ammoInfoTimer = new AnimationTimer(500, AnimationCurves.EASE_OUT_CIRC);
+
+    /**
+     * 在手持弹药或弹药盒时，渲染玩家弹药总量信息
+     */
+    @SubscribeEvent
+    public static void renderAmmoInfo(RenderGuiEvent.Pre event) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null || player.isSpectator()) return;
+
+        // 动画计算
+        var currentTime = System.currentTimeMillis();
+        ItemStack stack = player.getMainHandItem();
+        if ((stack.getItem() instanceof AmmoSupplierItem || stack.getItem() == ModItems.AMMO_BOX.get()) && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
+            ammoInfoTimer.forward(currentTime);
+        } else {
+            ammoInfoTimer.backward(currentTime);
+        }
+        if (!ammoInfoTimer.isForward() && ammoInfoTimer.finished(currentTime)) return;
+
+        var poseStack = event.getGuiGraphics().pose();
+        poseStack.pushPose();
+
+        var xOffset = -Mth.lerp(ammoInfoTimer.getProgress(currentTime), 0, 120);
+        final int fontHeight = 15;
+        var yOffset = -AmmoType.values().length * fontHeight;
+
+        // 渲染总弹药数量
+        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+        int w = event.getWindow().getGuiScaledWidth();
+        int h = event.getWindow().getGuiScaledHeight();
+
+        RenderSystem.setShaderColor(1, 1, 1, Mth.lerp(ammoInfoTimer.getProgress(currentTime), 0, 1));
+        var font = Minecraft.getInstance().font;
+        for (var type : AmmoType.values()) {
+            var ammoCountStr = Integer.toString(type.get(cap));
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    ammoCountStr,
+                    w + xOffset + (30 - font.width(ammoCountStr)),
+                    h + yOffset,
+                    0xFFFFFF,
+                    true
+            );
+
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    Component.translatable(type.translatableKey).getString(),
+                    w + xOffset + 35,
+                    h + yOffset,
+                    0xFFFFFF,
+                    true
+            );
+
+            yOffset += fontHeight;
+        }
+
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        poseStack.popPose();
     }
 
     private static ResourceLocation getFireMode(ItemStack stack) {
