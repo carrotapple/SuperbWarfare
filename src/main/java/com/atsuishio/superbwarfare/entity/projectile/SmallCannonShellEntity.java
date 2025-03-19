@@ -50,7 +50,7 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
     }
 
     public SmallCannonShellEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
-        super(ModEntities.GUN_GRENADE.get(), entity, level);
+        super(ModEntities.SMALL_CANNON_SHELL.get(), entity, level);
         this.damage = damage;
         this.explosionDamage = explosionDamage;
         this.explosionRadius = explosionRadius;
