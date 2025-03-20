@@ -40,7 +40,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-// TODO 修复朝北吸附时角度不正确的问题
 public class C4Entity extends Projectile implements GeoEntity {
 
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
@@ -161,7 +160,7 @@ public class C4Entity extends Projectile implements GeoEntity {
         }
 
         Vec3 motion = this.getDeltaMovement();
-        if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F && !this.inGround) {
             double d0 = motion.horizontalDistance();
             this.setYRot((float) (Mth.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI)));
             this.setXRot((float) (Mth.atan2(motion.y, d0) * (double) (180F / (float) Math.PI)));
