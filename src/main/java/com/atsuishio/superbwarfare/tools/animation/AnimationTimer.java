@@ -13,7 +13,9 @@ public class AnimationTimer {
     private long startTime;
     private boolean reversed;
     private boolean initialized;
-    private boolean isStart;
+
+    // 未初始化状态下，动画进度是否从0开始
+    private boolean playFromStart;
 
     private Function<Double, Double> forwardAnimationCurve = AnimationCurves.LINEAR;
     private Function<Double, Double> backwardAnimationCurve = AnimationCurves.LINEAR;
@@ -110,7 +112,7 @@ public class AnimationTimer {
     }
 
     private long getElapsedTime(long currentTime) {
-        if (!initialized) return 0;
+        if (!initialized) return playFromStart ? 0 : duration;
 
         if (reversed) {
             return Math.min(duration, Math.max(0, startTime - currentTime));
@@ -123,7 +125,7 @@ public class AnimationTimer {
      * 当前动画是否已经结束
      */
     public boolean finished(long currentTime) {
-        return getProgress(currentTime) >= 1;
+        return getElapsedTime(currentTime) >= duration;
     }
 
     /**
@@ -131,7 +133,7 @@ public class AnimationTimer {
      */
     public void begin() {
         initialized = false;
-        isStart = true;
+        playFromStart = true;
     }
 
     /**
@@ -139,7 +141,7 @@ public class AnimationTimer {
      */
     public void end() {
         initialized = false;
-        isStart = false;
+        playFromStart = false;
     }
 
     /**
@@ -148,7 +150,7 @@ public class AnimationTimer {
     public void forward(long currentTime) {
         if (!initialized) {
             initialized = true;
-            startTime = currentTime + (isStart ? 0 : duration);
+            startTime = currentTime + (playFromStart ? 0 : duration);
         } else if (reversed) {
             startTime = currentTime - getElapsedTime(currentTime);
         }
@@ -177,7 +179,7 @@ public class AnimationTimer {
     public void backward(long currentTime) {
         if (!initialized) {
             initialized = true;
-            startTime = currentTime + (isStart ? duration : 0);
+            startTime = currentTime + (playFromStart ? duration : 0);
         } else if (!reversed) {
             startTime = currentTime + getElapsedTime(currentTime);
         }
