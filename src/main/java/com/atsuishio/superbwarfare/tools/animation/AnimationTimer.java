@@ -8,11 +8,12 @@ import java.util.function.Function;
  * 可以更改计时方向的动画计时器
  */
 public class AnimationTimer {
+
     private final long duration;
     private long startTime;
     private boolean reversed;
     private boolean initialized;
-    private boolean isStart = true;
+    private boolean isStart;
 
     private Function<Double, Double> forwardAnimationCurve = AnimationCurves.LINEAR;
     private Function<Double, Double> backwardAnimationCurve = AnimationCurves.LINEAR;
@@ -44,7 +45,6 @@ public class AnimationTimer {
     /**
      * 设置反向计时时采用的动画曲线
      */
-
     public AnimationTimer backwardAnimation(Function<Double, Double> animationCurve) {
         this.backwardAnimationCurve = animationCurve;
         return this;
@@ -56,7 +56,6 @@ public class AnimationTimer {
      * @param size     计时器数量
      * @param duration 动画持续时间，单位为毫秒
      */
-
     public static AnimationTimer[] createTimers(int size, long duration) {
         return createTimers(size, duration, AnimationCurves.LINEAR);
     }
@@ -96,7 +95,6 @@ public class AnimationTimer {
     public boolean isForward() {
         return !reversed;
     }
-
 
     /**
      * 获取当前进度
@@ -160,7 +158,6 @@ public class AnimationTimer {
     /**
      * 开始正向计时
      */
-
     public void beginForward(long currentTime) {
         begin();
         forward(currentTime);
@@ -206,5 +203,4 @@ public class AnimationTimer {
     public float lerp(float start, float end, long currentTime) {
         return Mth.lerp(getProgress(currentTime), start, end);
     }
-
 }
