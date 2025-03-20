@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 public class ClientMotionSyncMessage {
 
     public final int id;
-    public final double x;
-    public final double y;
-    public final double z;
+    public final float x;
+    public final float y;
+    public final float z;
 
     public ClientMotionSyncMessage(Entity entity) {
         this(entity.getId(), entity.getDeltaMovement());
@@ -23,23 +23,23 @@ public class ClientMotionSyncMessage {
 
     public ClientMotionSyncMessage(int id, Vec3 motion) {
         this.id = id;
-        this.x = motion.x;
-        this.y = motion.y;
-        this.z = motion.z;
+        this.x = (float) motion.x;
+        this.y = (float) motion.y;
+        this.z = (float) motion.z;
     }
 
     public static void encode(ClientMotionSyncMessage message, FriendlyByteBuf buffer) {
         buffer.writeVarInt(message.id);
-        buffer.writeDouble(message.x);
-        buffer.writeDouble(message.y);
-        buffer.writeDouble(message.z);
+        buffer.writeFloat(message.x);
+        buffer.writeFloat(message.y);
+        buffer.writeFloat(message.z);
     }
 
     public static ClientMotionSyncMessage decode(FriendlyByteBuf buffer) {
         int id = buffer.readVarInt();
-        double x = buffer.readDouble();
-        double y = buffer.readDouble();
-        double z = buffer.readDouble();
+        double x = buffer.readFloat();
+        double y = buffer.readFloat();
+        double z = buffer.readFloat();
         return new ClientMotionSyncMessage(id, new Vec3(x, y, z));
     }
 
