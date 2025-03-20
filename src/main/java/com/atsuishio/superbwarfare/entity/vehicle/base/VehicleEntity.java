@@ -36,6 +36,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
@@ -596,7 +597,19 @@ public abstract class VehicleEntity extends Entity {
             this.entityData.set(LAST_DRIVER_UUID, getFirstPassenger().getStringUUID());
         }
 
+        clearArrow();
         this.refreshDimensions();
+    }
+
+    public void clearArrow() {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0F, 0.5F, 0F));
+        if (!list.isEmpty()) {
+            for (Entity entity : list) {
+                if (entity instanceof AbstractArrow) {
+                    entity.discard();
+                }
+            }
+        }
     }
 
     public void lowHealthWarning() {

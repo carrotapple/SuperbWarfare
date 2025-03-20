@@ -32,10 +32,9 @@ public class C4Bomb extends Item {
         }
         if (!level.isClientSide) {
             C4Entity entity = new C4Entity(player, level);
-            entity.moveTo(player.getX(), player.getY() + 1.1, player.getZ(), player.getYRot(), 0);
-            entity.setYBodyRot(player.getYRot());
-            entity.setYHeadRot(player.getYRot());
+            entity.setPos(player.getX() + 0.25 * player.getLookAngle().x, player.getEyeY() - 0.2f + 0.25 * player.getLookAngle().y, player.getZ() + 0.25 * player.getLookAngle().z);
             entity.setDeltaMovement(0.5 * player.getLookAngle().x, 0.5 * player.getLookAngle().y, 0.5 * player.getLookAngle().z);
+            entity.setOwner(player);
 
             level.addFreshEntity(entity);
         }

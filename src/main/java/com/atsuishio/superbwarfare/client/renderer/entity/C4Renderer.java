@@ -31,24 +31,15 @@ public class C4Renderer extends GeoEntityRenderer<C4Entity> {
         float scale = 0.5f;
         this.scaleHeight = scale;
         this.scaleWidth = scale;
-        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, 15, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
     public void render(C4Entity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot())));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-entityYaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot()) + 90));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
-    }
-
-    @Override
-    protected float getDeathMaxRotation(C4Entity entityLivingBaseIn) {
-        return 0.0F;
-    }
-
-    @Override
-    public boolean shouldShowName(C4Entity animatable) {
-        return false;
     }
 }

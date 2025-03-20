@@ -72,6 +72,10 @@ public class TaserBulletEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
+    public void playerTouch(Player pEntity) {
+    }
+
+    @Override
     protected ItemStack getPickupItem() {
         return PROJECTILE_ITEM;
     }
