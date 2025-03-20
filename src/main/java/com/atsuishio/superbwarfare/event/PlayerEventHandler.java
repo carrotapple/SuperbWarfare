@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -162,8 +163,10 @@ public class PlayerEventHandler {
                 capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprintCost, 0, 1000);
                 capability.syncPlayerVariables(player);
             });
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
 
+            if (MiscConfig.ALLOW_TACTICAL_SPRINT.get()) {
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
+            }
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 7, 0, 1000);

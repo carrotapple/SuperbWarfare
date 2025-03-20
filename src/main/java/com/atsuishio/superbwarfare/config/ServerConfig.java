@@ -1,9 +1,6 @@
 package com.atsuishio.superbwarfare.config;
 
-import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.config.server.ProjectileConfig;
-import com.atsuishio.superbwarfare.config.server.SpawnConfig;
-import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.config.server.*;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ServerConfig {
@@ -15,6 +12,7 @@ public class ServerConfig {
         ProjectileConfig.init(builder);
         ExplosionConfig.init(builder);
         VehicleConfig.init(builder);
+        MiscConfig.init(builder);
 
         return builder.build();
     }
