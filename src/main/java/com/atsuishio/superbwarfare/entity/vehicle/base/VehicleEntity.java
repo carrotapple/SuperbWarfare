@@ -62,12 +62,12 @@ import java.util.function.Function;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public abstract class VehicleEntity extends Entity {
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
-    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
-    protected static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
 
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
-    protected static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
+    public static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
 
     public VehicleWeapon[][] availableWeapons;
 
@@ -83,7 +83,6 @@ public abstract class VehicleEntity extends Entity {
     public int lastHurtTick;
     public int repairCoolDown = maxRepairCoolDown();
     public boolean crash;
-
 
     public float turretYRot;
     public float turretXRot;
@@ -209,7 +208,6 @@ public abstract class VehicleEntity extends Entity {
         return orderedPassengers.indexOf(entity);
     }
 
-
     /**
      * 第三人称视角相机位置重载，返回null表示不进行修改
      *
@@ -309,7 +307,7 @@ public abstract class VehicleEntity extends Entity {
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
-        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
+        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get()) && this.getPassengers().isEmpty()) {
             ItemStack container = ContainerBlockItem.createInstance(this);
             if (!player.addItem(container)) {
                 player.drop(container, false);
@@ -346,8 +344,7 @@ public abstract class VehicleEntity extends Entity {
         return InteractionResult.PASS;
     }
 
-
-    //将有炮塔的载具驾驶员设置为炮塔角度
+    // 将有炮塔的载具驾驶员设置为炮塔角度
     public void setDriverAngle(Player player) {
         if (this instanceof LandArmorEntity landArmorEntity) {
             player.xRotO = -(float) getXRotFromVector(landArmorEntity.getBarrelVec(1));
@@ -453,14 +450,12 @@ public abstract class VehicleEntity extends Entity {
         if (this.level() instanceof ServerLevel) {
             this.setHealth(this.getHealth() + pHealAmount);
         }
-
     }
 
     public void onHurt(float pHealAmount, Entity attacker, boolean send) {
         if (this.level() instanceof ServerLevel) {
             var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
             if (attacker instanceof ServerPlayer player && pHealAmount > 0 && this.getHealth() > 0 && send && !(this instanceof DroneEntity)) {
-
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getEyeY(), player.getZ(), 0.25f + (2.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()));
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(3, 5));
             }
