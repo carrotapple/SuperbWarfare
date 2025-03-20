@@ -4,6 +4,9 @@ import net.minecraft.util.Mth;
 
 import java.util.function.Function;
 
+/**
+ * 可以更改计时方向的动画计时器
+ */
 public class AnimationTimer {
     private final long duration;
     private long startTime;
@@ -23,14 +26,24 @@ public class AnimationTimer {
         this.duration = duration;
     }
 
+    /**
+     * 设置正向和反向计时时采用的动画曲线
+     */
     public AnimationTimer animation(Function<Double, Double> animationCurve) {
         return this.forwardAnimation(animationCurve).backwardAnimation(animationCurve);
     }
 
+    /**
+     * 设置反向计时时采用的动画曲线
+     */
     public AnimationTimer forwardAnimation(Function<Double, Double> animationCurve) {
         this.forwardAnimationCurve = animationCurve;
         return this;
     }
+
+    /**
+     * 设置反向计时时采用的动画曲线
+     */
 
     public AnimationTimer backwardAnimation(Function<Double, Double> animationCurve) {
         this.backwardAnimationCurve = animationCurve;
@@ -72,12 +85,14 @@ public class AnimationTimer {
         var currentTime = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
             timers[i] = new AnimationTimer(duration).forwardAnimation(forwardAnimationCurve).backwardAnimation(backwardAnimationCurve);
-            timers[i].end();
-            timers[i].backward(currentTime);
+            timers[i].endBackward(currentTime);
         }
         return timers;
     }
 
+    /**
+     * 当前计时方向是否为正向
+     */
     public boolean isForward() {
         return !reversed;
     }
@@ -130,7 +145,7 @@ public class AnimationTimer {
     }
 
     /**
-     * 正向开始计时
+     * 将计时方向更改为正向
      */
     public void forward(long currentTime) {
         if (!initialized) {
@@ -143,7 +158,24 @@ public class AnimationTimer {
     }
 
     /**
-     * 反向开始计时
+     * 开始正向计时
+     */
+
+    public void beginForward(long currentTime) {
+        begin();
+        forward(currentTime);
+    }
+
+    /**
+     * 结束正向计时
+     */
+    public void endForward(long currentTime) {
+        end();
+        forward(currentTime);
+    }
+
+    /**
+     * 将计时方向更改为反向
      */
     public void backward(long currentTime) {
         if (!initialized) {
@@ -153,6 +185,22 @@ public class AnimationTimer {
             startTime = currentTime + getElapsedTime(currentTime);
         }
         reversed = true;
+    }
+
+    /**
+     * 开始反向计时
+     */
+    public void beginBackward(long currentTime) {
+        begin();
+        backward(currentTime);
+    }
+
+    /**
+     * 结束反向计时
+     */
+    public void endBackward(long currentTime) {
+        end();
+        backward(currentTime);
     }
 
 }

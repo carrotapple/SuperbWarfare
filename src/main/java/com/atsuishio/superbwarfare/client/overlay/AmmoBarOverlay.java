@@ -14,6 +14,7 @@ import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
 import com.atsuishio.superbwarfare.tools.animation.AnimationTimer;
+import com.atsuishio.superbwarfare.tools.animation.DualValueHolder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -215,11 +216,16 @@ public class AmmoBarOverlay {
             .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
             .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
 
+    private static final DualValueHolder<Integer>[] ammoCountHolders = DualValueHolder.create(AmmoType.values().length, 0);
+
+    private static final AnimationTimer[] ammoCountTimers = AnimationTimer.createTimers(AmmoType.values().length, 800, AnimationCurves.EASE_OUT_EXPO);
+
     /**
      * 在手持弹药或弹药盒时，渲染玩家弹药总量信息
      */
     @SubscribeEvent
     public static void renderAmmoInfo(RenderGuiEvent.Pre event) {
+        boolean startRenderingAmmoInfo = false;
         Player player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator()) return;
 
@@ -227,6 +233,8 @@ public class AmmoBarOverlay {
         var currentTime = System.currentTimeMillis();
         ItemStack stack = player.getMainHandItem();
         if ((stack.getItem() instanceof AmmoSupplierItem || stack.getItem() == ModItems.AMMO_BOX.get()) && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
+            // 刚拿出弹药物品时，视为开始弹药信息渲染
+            startRenderingAmmoInfo = ammoInfoTimer.getProgress(currentTime) == 0;
             ammoInfoTimer.forward(currentTime);
         } else {
             ammoInfoTimer.backward(currentTime);
@@ -245,25 +253,68 @@ public class AmmoBarOverlay {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
 
+        // 总体透明度设置
         RenderSystem.setShaderColor(1, 1, 1, Mth.lerp(ammoInfoTimer.getProgress(currentTime), 0, 1));
         var font = Minecraft.getInstance().font;
+
         for (var type : AmmoType.values()) {
-            var ammoCountStr = Integer.toString(type.get(cap));
+            var index = type.ordinal();
+            var ammoCount = type.get(cap);
+            var holder = ammoCountHolders[index];
+            var timer = ammoCountTimers[index];
+
+            // 首次开始渲染弹药信息时，记录弹药数量，便于后续播放动画
+            if (startRenderingAmmoInfo) {
+                holder.reset(ammoCount);
+                timer.endForward(currentTime);
+            }
+
+            int isAdd = ammoCount == holder.oldValue() ? 0 : (ammoCount > holder.oldValue() ? 1 : -1);
+            // 弹药数量变化时，开始播放弹药数量更改动画
+            if (holder.newValue() != ammoCount) {
+                // 更新初始和当前弹药数量，播放由 初始弹药数量 -> 当前弹药数量 的动画
+                holder.update(ammoCount);
+                // 开始播放弹药数量更改动画
+                timer.beginForward(currentTime);
+            }
+
+            var progress = timer.getProgress(currentTime);
+            var ammoCountStr = Integer.toString(
+                    Math.round(Mth.lerp(progress, holder.oldValue(), ammoCount))
+            );
+
+            // 弹药增加时，颜色由绿变白，否则由红变白
+            var fontColor = switch (isAdd) {
+                case 1 -> Mth.color(
+                        Mth.lerp(progress, 0, 1),
+                        1,
+                        Mth.lerp(progress, 0, 1)
+                );
+                case -1 -> Mth.color(
+                        1,
+                        Mth.lerp(progress, 0, 1),
+                        Mth.lerp(progress, 0, 1)
+                );
+                default -> 0xFFFFFF;
+            };
+
+            // 弹药数量
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     ammoCountStr,
                     w + xOffset + (30 - font.width(ammoCountStr)),
                     h + yOffset,
-                    0xFFFFFF,
+                    fontColor,
                     true
             );
 
+            // 弹药类型
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(type.translatableKey).getString(),
                     w + xOffset + 35,
                     h + yOffset,
-                    0xFFFFFF,
+                    fontColor,
                     true
             );
 
