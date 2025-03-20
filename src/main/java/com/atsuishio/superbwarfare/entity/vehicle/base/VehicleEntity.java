@@ -652,13 +652,10 @@ public abstract class VehicleEntity extends Entity {
         if (driver != null) {
             float turretAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
 
-            float diffY;
-            float diffX;
+            float diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
+            float diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
-            diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
-            diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
-
-            turretTurnSound(diffX, diffY, 0.95f);
+            this.turretTurnSound(diffX, diffY, 0.95f);
 
             float min = -ySpeed + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);
             float max = ySpeed + (float) (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT);

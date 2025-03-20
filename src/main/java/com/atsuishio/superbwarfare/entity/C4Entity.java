@@ -6,11 +6,12 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,43 +23,41 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.ItemHandlerHelper;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
+import javax.annotation.Nullable;
+
+// TODO 修复朝北吸附时角度不正确的问题
+public class C4Entity extends Projectile implements GeoEntity {
+
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected boolean inGround;
     protected boolean onEntity;
+    @Nullable
+    private BlockState lastState;
 
-    public C4Entity(EntityType<C4Entity> type, Level world) {
-        super(type, world);
-        this.noCulling = true;
+    public C4Entity(EntityType<C4Entity> type, Level level) {
+        super(type, level);
     }
 
     public C4Entity(LivingEntity owner, Level level) {
         super(ModEntities.C_4.get(), level);
-    }
-
-    @Override
-    protected Item getDefaultItem() {
-        return null;
     }
 
     @Override
@@ -83,6 +82,10 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putString("Target", this.entityData.get(TARGET_UUID));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
+
+        if (this.lastState != null) {
+            compound.put("InBlockState", NbtUtils.writeBlockState(this.lastState));
+        }
     }
 
     @Override
@@ -97,6 +100,10 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
 
         if (compound.contains("Target")) {
             this.entityData.set(TARGET_UUID, compound.getString("Target"));
+        }
+
+        if (compound.contains("InBlockState", 10)) {
+            this.lastState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), compound.getCompound("InBlockState"));
         }
     }
 
@@ -115,40 +122,157 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
         return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
+//    @Override
+//    public void tick() {
+//        super.tick();
+//        Level level = this.level();
+//
+//        if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
+//            this.explode();
+//        }
+//
+//        if (inGround && checkNoClip()) {
+//            inGround = false;
+//        }
+//
+//        if (!inGround && !onEntity) {
+//            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.05, 0.0));
+//        }
+//
+//        Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
+//
+//        if (onEntity) {
+//            if (target != null) {
+//                setPosRaw(target.getX(), target.getY() + target.getBbHeight(), target.getZ());
+//            } else {
+//                onEntity = false;
+//            }
+//        }
+//
+//        this.refreshDimensions();
+//    }
+
     @Override
     public void tick() {
         super.tick();
-        Level level = this.level();
 
         if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
             this.explode();
         }
 
-        if (inGround && checkNoClip()) {
-            inGround = false;
+        Vec3 motion = this.getDeltaMovement();
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
+            double d0 = motion.horizontalDistance();
+            this.setYRot((float) (Mth.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI)));
+            this.setXRot((float) (Mth.atan2(motion.y, d0) * (double) (180F / (float) Math.PI)));
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
         }
 
-        if (!inGround && !onEntity) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.05, 0.0));
-        }
+        BlockPos blockpos = this.blockPosition();
+        BlockState blockstate = this.level().getBlockState(blockpos);
+        if (!blockstate.isAir()) {
+            VoxelShape voxelshape = blockstate.getCollisionShape(this.level(), blockpos);
+            if (!voxelshape.isEmpty()) {
+                Vec3 vec31 = this.position();
 
-        Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
-
-        if (onEntity) {
-            if (target != null) {
-                setPosRaw(target.getX(), target.getY() + target.getBbHeight(), target.getZ());
-            } else {
-                onEntity = false;
+                for (AABB aabb : voxelshape.toAabbs()) {
+                    if (aabb.move(blockpos).contains(vec31)) {
+                        this.inGround = true;
+                        break;
+                    }
+                }
             }
         }
 
-        this.refreshDimensions();
+        if (this.inGround) {
+            if (this.lastState != blockstate && this.shouldFall()) {
+                this.startFalling();
+            }
+        } else {
+            Vec3 position = this.position();
+            Vec3 nextPosition = position.add(motion);
+            HitResult hitresult = this.level().clip(new ClipContext(position, nextPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            if (hitresult.getType() != HitResult.Type.MISS) {
+                nextPosition = hitresult.getLocation();
+            }
+
+            while (!this.isRemoved()) {
+                EntityHitResult entityhitresult = this.findHitEntity(position, nextPosition);
+                if (entityhitresult != null) {
+                    hitresult = entityhitresult;
+                }
+
+                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS) {
+                    this.onHit(hitresult);
+                    this.hasImpulse = true;
+                    break;
+                }
+
+                if (entityhitresult == null) {
+                    break;
+                }
+
+                hitresult = null;
+            }
+
+            if (this.isRemoved()) {
+                return;
+            }
+
+            motion = this.getDeltaMovement();
+            double pX = motion.x;
+            double pY = motion.y;
+            double pZ = motion.z;
+
+            double nX = this.getX() + pX;
+            double nY = this.getY() + pY;
+            double nZ = this.getZ() + pZ;
+
+            this.updateRotation();
+
+            float f = 0.99F;
+            if (this.isInWater()) {
+                for (int j = 0; j < 4; ++j) {
+                    this.level().addParticle(ParticleTypes.BUBBLE, nX - pX * 0.25D, nY - pY * 0.25D, nZ - pZ * 0.25D, pX, pY, pZ);
+                }
+
+                f = this.getWaterInertia();
+            }
+
+            this.setDeltaMovement(motion.scale(f));
+            if (!this.isNoGravity()) {
+                Vec3 vec34 = this.getDeltaMovement();
+                this.setDeltaMovement(vec34.x, vec34.y - (double) 0.05F, vec34.z);
+            }
+
+            this.setPos(nX, nY, nZ);
+            this.checkInsideBlocks();
+        }
     }
 
-    public boolean checkNoClip() {
-        return level().clip(new ClipContext(this.getEyePosition(), this.getEyePosition().add(getViewVector(1).scale(-0.25)),
-                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
+    private boolean shouldFall() {
+        return this.inGround && this.level().noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
     }
+
+    private void startFalling() {
+        this.inGround = false;
+        Vec3 vec3 = this.getDeltaMovement();
+        this.setDeltaMovement(vec3.multiply(this.random.nextFloat() * 0.2F, this.random.nextFloat() * 0.2F, this.random.nextFloat() * 0.2F));
+    }
+
+    @Override
+    public void move(MoverType pType, Vec3 pPos) {
+        super.move(pType, pPos);
+        if (pType != MoverType.SELF && this.shouldFall()) {
+            this.startFalling();
+        }
+    }
+
+//    public boolean checkNoClip() {
+//        return level().clip(new ClipContext(this.getEyePosition(), this.getEyePosition().add(getViewVector(1).normalize().scale(-0.25)),
+//                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
+//    }
 
     public void look(Vec3 pTarget) {
         double d0 = pTarget.x;
@@ -156,10 +280,10 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
         double d2 = pTarget.z;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
-        setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+//        setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
         setYHeadRot(getYRot());
-        xRotO = getXRot();
-        yRotO = getYRot();
+        this.xRotO = getXRot();
+        this.yRotO = getYRot();
     }
 
     @Override
@@ -169,54 +293,95 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
         }
     }
 
-    @Override
-    protected void onHit(HitResult result) {
-        switch (result.getType()) {
-            case BLOCK:
-                BlockHitResult blockResult = (BlockHitResult) result;
-                BlockPos resultPos = blockResult.getBlockPos();
-                BlockState state = this.level().getBlockState(resultPos);
-                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
-                double speed = this.getDeltaMovement().length();
-                if (speed > 0.1) {
-                    this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
-                }
-                this.bounce(blockResult.getDirection());
+//    @Override
+//    protected void onHit(HitResult result) {
+//        switch (result.getType()) {
+//            case BLOCK:
+//                BlockHitResult blockResult = (BlockHitResult) result;
+//                BlockPos resultPos = blockResult.getBlockPos();
+//                BlockState state = this.level().getBlockState(resultPos);
+//                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
+//                double speed = this.getDeltaMovement().length();
+//                if (speed > 0.1) {
+//                    this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
+//                }
+//                this.bounce(blockResult.getDirection());
+//
+//                break;
+//            case ENTITY:
+//                EntityHitResult entityResult = (EntityHitResult) result;
+//                Entity entity = entityResult.getEntity();
+//                if (entity == this.getOwner() || entity == this.getVehicle()) return;
+//                entityData.set(TARGET_UUID, entity.getStringUUID());
+//                onEntity = true;
+//                this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+//                setXRot(-90);
+//                xRotO = getXRot();
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+        return ProjectileUtil.getEntityHitResult(this.level(), this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+    }
+
+    @Override
+    protected void onHit(HitResult pResult) {
+        switch (pResult.getType()) {
+            case BLOCK:
+                this.onHitBlock((BlockHitResult) pResult);
                 break;
             case ENTITY:
-                EntityHitResult entityResult = (EntityHitResult) result;
-                Entity entity = entityResult.getEntity();
-                if (entity == this.getOwner() || entity == this.getVehicle()) return;
-                entityData.set(TARGET_UUID, entity.getStringUUID());
-                onEntity = true;
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-                setXRot(-90);
-                xRotO = getXRot();
+                this.onHitEntity((EntityHitResult) pResult);
                 break;
             default:
                 break;
         }
     }
 
-    private void bounce(Direction direction) {
-        Vec3 vec3 = Vec3.atLowerCornerOf(direction.getNormal());
-        look(vec3);
-        inGround = true;
-        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+    @Override
+    protected void onHitEntity(EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+    }
+
+    //    private void bounce(Direction direction) {
+//        Vec3 vec3 = Vec3.atLowerCornerOf(direction.getNormal());
+//        this.setYRot((float) (direction.get2DDataValue() * 90));
+//        this.look(vec3);
+//        this.inGround = true;
+//        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+//    }
+
+    @Override
+    protected void onHitBlock(BlockHitResult pResult) {
+        this.lastState = this.level().getBlockState(pResult.getBlockPos());
+        super.onHitBlock(pResult);
+        Vec3 vec3 = pResult.getLocation().subtract(this.getX(), this.getY(), this.getZ());
+        this.setDeltaMovement(vec3);
+        Vec3 vec31 = vec3.normalize().scale(0.05F);
+        this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
+
+        this.look(Vec3.atLowerCornerOf(pResult.getDirection().getNormal()));
+        this.setYRot((float) (pResult.getDirection().get2DDataValue() * 90));
+
+        BlockPos resultPos = pResult.getBlockPos();
+        BlockState state = this.level().getBlockState(resultPos);
+        SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
+        double speed = this.getDeltaMovement().length();
+        if (speed > 0.1) {
+            this.level().playSound(null, pResult.getLocation().x, pResult.getLocation().y, pResult.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
+        }
+        this.inGround = true;
     }
 
     public void explode() {
         if (!this.level().isClientSide()) {
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            this.discard();
+            ModUtils.queueServerWork(1, () -> this.triggerExplode(this));
         }
-
-        ModUtils.queueServerWork(1, () -> {
-            if (this.level().isClientSide()) return;
-
-            this.triggerExplode(this);
-        });
         this.discard();
     }
 
@@ -231,8 +396,8 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale((float) 0.5);
+    public EntityDimensions getDimensions(Pose pPose) {
+        return super.getDimensions(pPose).scale((float) 0.5);
     }
 
     @Override
@@ -244,8 +409,7 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
         return this.cache;
     }
 
-    @Override
-    protected float getGravity() {
-        return 0;
+    protected float getWaterInertia() {
+        return 0.6F;
     }
 }
