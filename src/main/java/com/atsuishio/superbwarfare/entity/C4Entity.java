@@ -4,7 +4,9 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,17 +17,23 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemHandlerHelper;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -37,6 +45,7 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected boolean inGround;
+    protected boolean onEntity;
 
     public C4Entity(EntityType<C4Entity> type, Level world) {
         super(type, world);
@@ -92,6 +101,21 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
     }
 
     @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (this.getOwner() == player && player.isShiftKeyDown()) {
+            if (!this.level().isClientSide()) {
+                this.discard();
+            }
+
+            if (!player.getAbilities().instabuild) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.C4_BOMB.get()));
+            }
+        }
+
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
+    }
+
+    @Override
     public void tick() {
         super.tick();
         Level level = this.level();
@@ -104,8 +128,18 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
             inGround = false;
         }
 
-        if (!inGround) {
+        if (!inGround && !onEntity) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.05, 0.0));
+        }
+
+        Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
+
+        if (onEntity) {
+            if (target != null) {
+                setPosRaw(target.getX(), target.getY() + target.getBbHeight(), target.getZ());
+            } else {
+                onEntity = false;
+            }
         }
 
         this.refreshDimensions();
@@ -130,7 +164,7 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
 
     @Override
     protected void updateRotation() {
-        if (getDeltaMovement().length() > 0.05 && !inGround) {
+        if (getDeltaMovement().length() > 0.05 && !inGround && !onEntity) {
             super.updateRotation();
         }
     }
@@ -151,22 +185,14 @@ public class C4Entity extends ThrowableItemProjectile implements GeoEntity {
 
                 break;
             case ENTITY:
-//                EntityHitResult entityResult = (EntityHitResult) result;
-//                Entity entity = entityResult.getEntity();
-//                if (entity == this.getOwner() || entity == this.getVehicle()) return;
-//                double speed_e = this.getDeltaMovement().length();
-//                if (speed_e > 0.1) {
-//                    if (this.getOwner() instanceof LivingEntity living) {
-//                        if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-//                            living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-//
-//                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-//                        }
-//                    }
-//                    entity.hurt(entity.damageSources().thrown(this, this.getOwner()), 1.0F);
-//                }
-//                this.bounce(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-//                this.setDeltaMovement(this.getDeltaMovement().multiply(0.25, 1.0, 0.25));
+                EntityHitResult entityResult = (EntityHitResult) result;
+                Entity entity = entityResult.getEntity();
+                if (entity == this.getOwner() || entity == this.getVehicle()) return;
+                entityData.set(TARGET_UUID, entity.getStringUUID());
+                onEntity = true;
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+                setXRot(-90);
+                xRotO = getXRot();
                 break;
             default:
                 break;
