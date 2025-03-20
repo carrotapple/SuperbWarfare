@@ -33,10 +33,15 @@ public abstract class FastThrowableProjectile extends ThrowableItemProjectile im
     @Override
     public void syncMotion() {
         if (this.level().isClientSide) return;
+        if (!shouldSyncMotion()) return;
 
         if (this.tickCount % this.getType().updateInterval() == 0) {
             ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new ClientMotionSyncMessage(this));
         }
+    }
+
+    public boolean shouldSyncMotion() {
+        return false;
     }
 
     @Override
