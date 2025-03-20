@@ -251,7 +251,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     }
 
     public void autoAim() {
-        if (this.getEnergy() <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30) {
+        if (this.getEnergy() <= 0 || !entityData.get(ACTIVE)) {
             return;
         }
 
@@ -296,8 +296,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
             }
 
             if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1 && checkNoClip(target)) {
-
-                this.entityData.set(COOL_DOWN, 40);
+                this.entityData.set(COOL_DOWN, VehicleConfig.LASER_TOWER_COOLDOWN.get());
 
                 if (level() instanceof ServerLevel serverLevel) {
                     this.level().playSound(this, getOnPos(), ModSounds.LASER_TOWER_SHOOT.get(), SoundSource.PLAYERS, 2, random.nextFloat() * 0.1f + 1);
