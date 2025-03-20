@@ -71,9 +71,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public static final EntityDataAccessor<Integer> LOADED_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GUN_FIRE_TIME = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
 
-    public static final float MAX_HEALTH = VehicleConfig.YX_100_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.YX_100_MAX_ENERGY.get();
-    public static final int SHOOT_COST = VehicleConfig.YX_100_SHOOT_COST.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public Yx100Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -307,7 +304,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
         if (reloadCoolDown == 0 && type == 0) {
 
-            if (!this.canConsume(SHOOT_COST)) {
+            if (!this.canConsume(VehicleConfig.YX_100_SHOOT_COST.get())) {
                 player.displayClientMessage(Component.translatable("tips.superbwarfare.annihilator.energy_not_enough").withStyle(ChatFormatting.RED), true);
                 return;
             }
@@ -477,7 +474,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.consumeEnergy(VehicleConfig.BMP_2_ENERGY_COST.get());
+            this.consumeEnergy(VehicleConfig.YX_100_ENERGY_COST.get());
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.947f : 0.96f));
@@ -672,12 +669,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.YX_100_MAX_ENERGY.get();
     }
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.YX_100_HP.get();
     }
 
     @Override
@@ -695,7 +692,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public boolean canShoot(Player player) {
         return switch (getSeatIndex(player)) {
-            case 0 -> this.entityData.get(LOADED_AMMO) > 0 && getEnergy() > SHOOT_COST;
+            case 0 -> this.entityData.get(LOADED_AMMO) > 0 && getEnergy() > VehicleConfig.YX_100_SHOOT_COST.get();
             case 1 -> (this.entityData.get(MG_AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFire;
             default -> false;
         };

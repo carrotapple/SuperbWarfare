@@ -53,8 +53,6 @@ import java.util.Comparator;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class SpeedboatEntity extends ContainerMobileVehicleEntity implements GeoEntity, ArmedVehicleEntity, WeaponVehicleEntity, LandArmorEntity {
-    public static final float MAX_HEALTH = VehicleConfig.SPEEDBOAT_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -437,12 +435,12 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
     }
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.SPEEDBOAT_HP.get();
     }
 
     @Override

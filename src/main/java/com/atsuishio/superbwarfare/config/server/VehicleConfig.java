@@ -12,8 +12,7 @@ public class VehicleConfig {
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> COLLISION_ENTITY_WHITELIST;
 
-    public static final List<? extends String> DEFAULT_COLLISION_ENTITY_WHITELIST =
-            List.of();
+    public static final List<? extends String> DEFAULT_COLLISION_ENTITY_WHITELIST = List.of();
 
     public static ForgeConfigSpec.IntValue REPAIR_COOLDOWN;
     public static ForgeConfigSpec.DoubleValue REPAIR_AMOUNT;
@@ -41,12 +40,18 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue ANNIHILATOR_MAX_ENERGY;
 
     public static ForgeConfigSpec.IntValue LASER_TOWER_HP;
+    public static ForgeConfigSpec.IntValue LASER_TOWER_DAMAGE;
     public static ForgeConfigSpec.IntValue LASER_TOWER_SHOOT_COST;
     public static ForgeConfigSpec.IntValue LASER_TOWER_MAX_ENERGY;
 
     public static ForgeConfigSpec.IntValue SPEEDBOAT_HP;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_ENERGY_COST;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_MAX_ENERGY;
+
+    public static ForgeConfigSpec.IntValue WHEELCHAIR_HP;
+    public static ForgeConfigSpec.IntValue WHEELCHAIR_JUMP_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue WHEELCHAIR_MOVE_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue WHEELCHAIR_MAX_ENERGY;
 
     public static ForgeConfigSpec.IntValue AH_6_HP;
     public static ForgeConfigSpec.IntValue AH_6_MIN_ENERGY_COST;
@@ -117,7 +122,7 @@ public class VehicleConfig {
 
         builder.push("mk_42");
 
-        builder.comment("The HealthPoint of MK-42");
+        builder.comment("The health of MK-42");
         MK42_HP = builder.defineInRange("mk_42_hp", 350, 1, 10000000);
 
         builder.comment("The AP shell damage of MK-42");
@@ -142,7 +147,7 @@ public class VehicleConfig {
 
         builder.push("mle_1934");
 
-        builder.comment("The HealthPoint of MLE-1934");
+        builder.comment("The health of MLE-1934");
         MLE1934_HP = builder.defineInRange("mle_1934_hp", 350, 1, 10000000);
 
         builder.comment("The AP shell damage of MLE-1934");
@@ -174,7 +179,7 @@ public class VehicleConfig {
 
         builder.push("annihilator");
 
-        builder.comment("The HealthPoint of Annihilator");
+        builder.comment("The health of Annihilator");
         ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 1200, 1, 10000000);
 
         builder.comment("The energy cost of Annihilator per shoot");
@@ -187,20 +192,23 @@ public class VehicleConfig {
 
         builder.push("laser_tower");
 
-        builder.comment("The HealthPoint of Laser_Tower");
+        builder.comment("The health of Laser Tower");
         LASER_TOWER_HP = builder.defineInRange("laser_tower_hp", 100, 1, 10000000);
 
-        builder.comment("The energy cost of Laser_Tower per shoot");
+        builder.comment("The damage of Laser Tower");
+        LASER_TOWER_DAMAGE = builder.defineInRange("laser_tower_damage", 15, 1, 10000000);
+
+        builder.comment("The energy cost of Laser Tower per shoot");
         LASER_TOWER_SHOOT_COST = builder.defineInRange("laser_tower_shoot_cost", 5000, 0, 2147483647);
 
-        builder.comment("The max energy storage of Laser_Tower");
+        builder.comment("The max energy storage of Laser Tower");
         LASER_TOWER_MAX_ENERGY = builder.defineInRange("laser_tower_max_energy", 500000, 0, 2147483647);
 
         builder.pop();
 
         builder.push("speedboat");
 
-        builder.comment("The HealthPoint of Speedboat");
+        builder.comment("The health of Speedboat");
         SPEEDBOAT_HP = builder.defineInRange("speedboat_hp", 200, 1, 10000000);
 
         builder.comment("The energy cost of Speedboat per tick");
@@ -211,9 +219,25 @@ public class VehicleConfig {
 
         builder.pop();
 
+        builder.push("wheelchair");
+
+        builder.comment("The health of the wheelchair");
+        WHEELCHAIR_HP = builder.defineInRange("wheelchair_hp", 30, 1, 10000000);
+
+        builder.comment("The jump energy cost of the wheelchair");
+        WHEELCHAIR_JUMP_ENERGY_COST = builder.defineInRange("wheelchair_jump_energy_cost", 400, 0, 2147483647);
+
+        builder.comment("The move energy cost of the wheelchair");
+        WHEELCHAIR_MOVE_ENERGY_COST = builder.defineInRange("wheelchair_move_energy_cost", 1, 0, 2147483647);
+
+        builder.comment("The max energy storage of the wheelchair");
+        WHEELCHAIR_MAX_ENERGY = builder.defineInRange("wheelchair_max_energy", 24000, 0, 2147483647);
+
+        builder.pop();
+
         builder.push("ah_6");
 
-        builder.comment("The HealthPoint of AH-6");
+        builder.comment("The health of AH-6");
         AH_6_HP = builder.defineInRange("ah_6_hp", 250, 1, 10000000);
 
         builder.comment("The min energy cost of AH-6 per tick");
@@ -241,7 +265,7 @@ public class VehicleConfig {
 
         builder.push("lav_150");
 
-        builder.comment("The HealthPoint of Lav_150");
+        builder.comment("The health of Lav_150");
         LAV_150_HP = builder.defineInRange("lav_150_hp", 250, 1, 10000000);
 
         builder.comment("The energy cost of Lav_150 per tick");
@@ -263,7 +287,7 @@ public class VehicleConfig {
 
         builder.push("tom_6");
 
-        builder.comment("The HealthPoint of Tom_6");
+        builder.comment("The health of Tom_6");
         TOM_6_HP = builder.defineInRange("tom_6_hp", 40, 1, 10000000);
 
         builder.comment("The energy cost of Tom_6 per tick");
@@ -282,7 +306,7 @@ public class VehicleConfig {
 
         builder.push("bmp_2");
 
-        builder.comment("The HealthPoint of Bmp_2");
+        builder.comment("The health of Bmp_2");
         BMP_2_HP = builder.defineInRange("bmp_2_hp", 300, 1, 10000000);
 
         builder.comment("The energy cost of Bmp_2 per tick");
@@ -304,7 +328,7 @@ public class VehicleConfig {
 
         builder.push("yx_100");
 
-        builder.comment("The HealthPoint of Yx_100");
+        builder.comment("The health of Yx_100");
         YX_100_HP = builder.defineInRange("yx_100_hp", 500, 1, 10000000);
 
         builder.comment("The energy cost of Yx_100 per tick");

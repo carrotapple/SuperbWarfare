@@ -58,7 +58,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = VehicleConfig.MK42_HP.get();
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
 
@@ -381,7 +380,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.MK42_HP.get();
     }
 
     @Override

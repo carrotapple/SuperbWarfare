@@ -66,9 +66,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     public static final EntityDataAccessor<Integer> CANNON_FIRE_TIME = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_MISSILE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MISSILE_COUNT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
-
-    public static final float MAX_HEALTH = VehicleConfig.BMP_2_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.BMP_2_MAX_ENERGY.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public int reloadCoolDown;
 
@@ -572,12 +569,12 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.BMP_2_MAX_ENERGY.get();
     }
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.BMP_2_HP.get();
     }
 
     @Override

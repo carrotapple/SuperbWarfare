@@ -62,8 +62,6 @@ import java.util.Comparator;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
-    public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -502,12 +500,12 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.LAV_150_MAX_ENERGY.get();
     }
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.LAV_150_HP.get();
     }
 
     @Override

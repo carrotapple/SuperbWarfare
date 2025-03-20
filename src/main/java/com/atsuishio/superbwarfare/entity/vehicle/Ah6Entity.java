@@ -68,8 +68,6 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity, HelicopterEntity, WeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = VehicleConfig.AH_6_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.AH_6_MAX_ENERGY.get();
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
@@ -518,12 +516,12 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.AH_6_HP.get();
     }
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.AH_6_MAX_ENERGY.get();
     }
 
     @Override

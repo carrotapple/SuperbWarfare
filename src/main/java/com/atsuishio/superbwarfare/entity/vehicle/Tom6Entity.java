@@ -50,8 +50,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = VehicleConfig.TOM_6_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.TOM_6_MAX_ENERGY.get();
 
     public Tom6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.TOM_6.get(), world);
@@ -342,12 +340,12 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public float getMaxHealth() {
-        return MAX_HEALTH;
+        return VehicleConfig.TOM_6_HP.get();
     }
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return VehicleConfig.TOM_6_MAX_ENERGY.get();
     }
 
     @Override
