@@ -71,7 +71,7 @@ public class VehicleHudOverlay {
     private static boolean lastTimeRenderingWeapons = false;
     private static int lastTimeWeaponIndex = 0;
     private static int lastTimeRenderWeaponIndex = 0;
-    private static final AnimationTimer weaponIndexUpdateTimer = new AnimationTimer(ANIMATION_TIME, AnimationCurves.EASE_OUT_CIRC);
+    private static final AnimationTimer weaponIndexUpdateTimer = new AnimationTimer(ANIMATION_TIME).animation(AnimationCurves.EASE_OUT_CIRC);
 
 
     @SubscribeEvent(priority = EventPriority.HIGH)

@@ -211,7 +211,9 @@ public class AmmoBarOverlay {
         }
     }
 
-    private static final AnimationTimer ammoInfoTimer = new AnimationTimer(500, AnimationCurves.EASE_OUT_CIRC);
+    private static final AnimationTimer ammoInfoTimer = new AnimationTimer(1500)
+            .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
+            .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
 
     /**
      * 在手持弹药或弹药盒时，渲染玩家弹药总量信息

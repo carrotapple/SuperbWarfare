@@ -11,26 +11,30 @@ public class AnimationTimer {
     private boolean initialized;
     private boolean isStart = true;
 
-    private final Function<Float, Float> animationCurve;
+    private Function<Double, Double> forwardAnimationCurve = AnimationCurves.LINEAR;
+    private Function<Double, Double> backwardAnimationCurve = AnimationCurves.LINEAR;
 
     /**
-     * 创建一个反向线性动画计时器
+     * 创建一个动画计时器
      *
      * @param duration 动画持续时间，单位为毫秒
      */
     public AnimationTimer(long duration) {
-        this(duration, AnimationCurves.LINEAR);
+        this.duration = duration;
     }
 
-    /**
-     * 创建一个反向动画计时器
-     *
-     * @param duration       动画持续时间，单位为毫秒
-     * @param animationCurve 动画曲线函数
-     */
-    public AnimationTimer(long duration, Function<Float, Float> animationCurve) {
-        this.duration = duration;
-        this.animationCurve = animationCurve;
+    public AnimationTimer animation(Function<Double, Double> animationCurve) {
+        return this.forwardAnimation(animationCurve).backwardAnimation(animationCurve);
+    }
+
+    public AnimationTimer forwardAnimation(Function<Double, Double> animationCurve) {
+        this.forwardAnimationCurve = animationCurve;
+        return this;
+    }
+
+    public AnimationTimer backwardAnimation(Function<Double, Double> animationCurve) {
+        this.backwardAnimationCurve = animationCurve;
+        return this;
     }
 
     /**
@@ -51,11 +55,23 @@ public class AnimationTimer {
      * @param duration       动画持续时间，单位为毫秒
      * @param animationCurve 动画曲线函数
      */
-    public static AnimationTimer[] createTimers(int size, long duration, Function<Float, Float> animationCurve) {
+    public static AnimationTimer[] createTimers(int size, long duration, Function<Double, Double> animationCurve) {
+        return createTimers(size, duration, animationCurve, animationCurve);
+    }
+
+    /**
+     * 创建多个动画计时器
+     *
+     * @param size                   计时器数量
+     * @param duration               动画持续时间，单位为毫秒
+     * @param forwardAnimationCurve  正向动画曲线函数
+     * @param backwardAnimationCurve 反向动画曲线函数
+     */
+    public static AnimationTimer[] createTimers(int size, long duration, Function<Double, Double> forwardAnimationCurve, Function<Double, Double> backwardAnimationCurve) {
         var timers = new AnimationTimer[size];
         var currentTime = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
-            timers[i] = new AnimationTimer(duration, animationCurve);
+            timers[i] = new AnimationTimer(duration).forwardAnimation(forwardAnimationCurve).backwardAnimation(backwardAnimationCurve);
             timers[i].end();
             timers[i].backward(currentTime);
         }
@@ -74,9 +90,9 @@ public class AnimationTimer {
      */
     public float getProgress(long currentTime) {
         if (reversed) {
-            return 1 - animationCurve.apply(Mth.clamp(1 - getElapsedTime(currentTime) / (float) duration, 0, 1));
+            return 1 - backwardAnimationCurve.apply(Mth.clamp(1 - getElapsedTime(currentTime) / (double) duration, 0, 1)).floatValue();
         } else {
-            return animationCurve.apply(Mth.clamp(getElapsedTime(currentTime) / (float) duration, 0, 1));
+            return forwardAnimationCurve.apply(Mth.clamp(getElapsedTime(currentTime) / (double) duration, 0, 1)).floatValue();
         }
     }
 
