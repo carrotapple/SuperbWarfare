@@ -196,4 +196,9 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
+
+    @Override
+    public boolean shouldSyncMotion() {
+        return true;
+    }
 }

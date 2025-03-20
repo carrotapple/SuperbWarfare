@@ -323,13 +323,6 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
         return 0F;
     }
 
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    public void setAnimation(String animation) {
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
@@ -338,5 +331,10 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public boolean shouldSyncMotion() {
+        return true;
     }
 }
