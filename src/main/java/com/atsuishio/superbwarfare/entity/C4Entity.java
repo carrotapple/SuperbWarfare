@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -121,36 +122,6 @@ public class C4Entity extends Projectile implements GeoEntity {
         return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
-//    @Override
-//    public void tick() {
-//        super.tick();
-//        Level level = this.level();
-//
-//        if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
-//            this.explode();
-//        }
-//
-//        if (inGround && checkNoClip()) {
-//            inGround = false;
-//        }
-//
-//        if (!inGround && !onEntity) {
-//            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.05, 0.0));
-//        }
-//
-//        Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
-//
-//        if (onEntity) {
-//            if (target != null) {
-//                setPosRaw(target.getX(), target.getY() + target.getBbHeight(), target.getZ());
-//            } else {
-//                onEntity = false;
-//            }
-//        }
-//
-//        this.refreshDimensions();
-//    }
-
     @Override
     public void tick() {
         super.tick();
@@ -188,7 +159,7 @@ public class C4Entity extends Projectile implements GeoEntity {
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
             }
-        } else {
+        } else if (!this.onEntity) {
             Vec3 position = this.position();
             Vec3 nextPosition = position.add(motion);
             HitResult hitresult = this.level().clip(new ClipContext(position, nextPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
@@ -247,7 +218,16 @@ public class C4Entity extends Projectile implements GeoEntity {
 
             this.setPos(nX, nY, nZ);
             this.checkInsideBlocks();
+        } else {
+            Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
+            if (target != null) {
+                this.setPos(target.getX(), target.getY() + target.getBbHeight(), target.getZ());
+            } else {
+                this.onEntity = false;
+            }
         }
+
+        this.refreshDimensions();
     }
 
     private boolean shouldFall() {
@@ -268,18 +248,12 @@ public class C4Entity extends Projectile implements GeoEntity {
         }
     }
 
-//    public boolean checkNoClip() {
-//        return level().clip(new ClipContext(this.getEyePosition(), this.getEyePosition().add(getViewVector(1).normalize().scale(-0.25)),
-//                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
-//    }
-
     public void look(Vec3 pTarget) {
         double d0 = pTarget.x;
         double d1 = pTarget.y;
         double d2 = pTarget.z;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
-//        setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
         setYHeadRot(getYRot());
         this.xRotO = getXRot();
         this.yRotO = getYRot();
@@ -291,36 +265,6 @@ public class C4Entity extends Projectile implements GeoEntity {
             super.updateRotation();
         }
     }
-
-//    @Override
-//    protected void onHit(HitResult result) {
-//        switch (result.getType()) {
-//            case BLOCK:
-//                BlockHitResult blockResult = (BlockHitResult) result;
-//                BlockPos resultPos = blockResult.getBlockPos();
-//                BlockState state = this.level().getBlockState(resultPos);
-//                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
-//                double speed = this.getDeltaMovement().length();
-//                if (speed > 0.1) {
-//                    this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
-//                }
-//                this.bounce(blockResult.getDirection());
-//
-//                break;
-//            case ENTITY:
-//                EntityHitResult entityResult = (EntityHitResult) result;
-//                Entity entity = entityResult.getEntity();
-//                if (entity == this.getOwner() || entity == this.getVehicle()) return;
-//                entityData.set(TARGET_UUID, entity.getStringUUID());
-//                onEntity = true;
-//                this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-//                setXRot(-90);
-//                xRotO = getXRot();
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 
     @Nullable
     protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
@@ -344,15 +288,14 @@ public class C4Entity extends Projectile implements GeoEntity {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
+        Entity entity = pResult.getEntity();
+        if (entity == this.getOwner() || entity == this.getVehicle()) return;
+        this.entityData.set(TARGET_UUID, entity.getStringUUID());
+        this.onEntity = true;
+        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+        this.setXRot(-90);
+        this.xRotO = this.getXRot();
     }
-
-    //    private void bounce(Direction direction) {
-//        Vec3 vec3 = Vec3.atLowerCornerOf(direction.getNormal());
-//        this.setYRot((float) (direction.get2DDataValue() * 90));
-//        this.look(vec3);
-//        this.inGround = true;
-//        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-//    }
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
