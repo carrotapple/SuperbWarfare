@@ -434,6 +434,20 @@ public abstract class VehicleEntity extends Entity {
                 .reduce(5, ModDamageTypes.VEHICLE_STRIKE);
     }
 
+    public float getSourceAngle(DamageSource source, float multiply) {
+        Entity attacker = source.getDirectEntity();
+        if (attacker == null) {
+            attacker = source.getEntity();
+        }
+
+        if (attacker != null) {
+            float angle = (float) java.lang.Math.abs(VectorTool.calculateAngle(this.position().vectorTo(attacker.position()), this.getViewVector(1)));
+            return java.lang.Math.max(1f + multiply * ((angle - 90) / 90), 0.5f);
+        }
+
+        return 1;
+    }
+
     public void heal(float pHealAmount) {
         if (this.level() instanceof ServerLevel) {
             this.setHealth(this.getHealth() + pHealAmount);

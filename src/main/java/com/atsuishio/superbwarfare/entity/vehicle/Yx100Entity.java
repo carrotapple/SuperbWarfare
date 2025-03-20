@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -181,8 +182,15 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .multiply(0.75f, ModDamageTypes.PROJECTILE_BOOM)
                 .multiply(0.5f, ModDamageTypes.MINE)
                 .multiply(0.5f, ModDamageTypes.LUNGE_MINE)
-                .multiply(0.95f, ModDamageTypes.CANNON_FIRE)
+                .multiply(1.5f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.15f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .custom((source, damage) -> getSourceAngle(source, 1.5f) * damage)
+                .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof SmallCannonShellEntity) {
+                        return 0.375f * damage;
+                    }
+                    return damage;
+                })
                 .reduce(9);
     }
 

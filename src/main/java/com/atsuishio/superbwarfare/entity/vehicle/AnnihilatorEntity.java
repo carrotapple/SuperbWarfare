@@ -217,6 +217,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                 .multiply(0.24f, ModDamageTypes.LUNGE_MINE)
                 .multiply(0.3f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.04f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
+                .custom((source, damage) -> getSourceAngle(source, 3) * damage)
                 .reduce(12);
     }
 

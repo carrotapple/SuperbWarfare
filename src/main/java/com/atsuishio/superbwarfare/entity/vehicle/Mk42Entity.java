@@ -200,6 +200,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                 .multiply(0.25f, ModTags.DamageTypes.PROJECTILE)
                 .multiply(0.85f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .multiply(10f, ModDamageTypes.VEHICLE_STRIKE)
+                .custom((source, damage) -> getSourceAngle(source, 1f) * damage)
                 .reduce(8);
     }
 
