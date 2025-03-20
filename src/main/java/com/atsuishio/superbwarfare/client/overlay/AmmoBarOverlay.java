@@ -14,14 +14,14 @@ import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
 import com.atsuishio.superbwarfare.tools.animation.AnimationTimer;
-import com.atsuishio.superbwarfare.tools.animation.DualValueHolder;
+import com.atsuishio.superbwarfare.tools.animation.ValueAnimator;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -215,10 +215,17 @@ public class AmmoBarOverlay {
     private static final AnimationTimer ammoInfoTimer = new AnimationTimer(1500)
             .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
             .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
+    private static final AnimationTimer ammoBoxTimer = new AnimationTimer(1500)
+            .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
+            .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
 
-    private static final DualValueHolder<Integer>[] ammoCountHolders = DualValueHolder.create(AmmoType.values().length, 0);
+    private static final ValueAnimator<Integer>[] ammoCountAnimators = ValueAnimator.create(
+            AmmoType.values().length, 800, 0
+    );
+    private static final ValueAnimator<Integer>[] ammoBoxAnimators = ValueAnimator.create(
+            AmmoType.values().length, 800, 0
+    );
 
-    private static final AnimationTimer[] ammoCountTimers = AnimationTimer.createTimers(AmmoType.values().length, 800, AnimationCurves.EASE_OUT_EXPO);
 
     /**
      * 在手持弹药或弹药盒时，渲染玩家弹药总量信息
@@ -229,80 +236,100 @@ public class AmmoBarOverlay {
         Player player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator()) return;
 
+        boolean isAmmoBox = false;
+
         // 动画计算
         var currentTime = System.currentTimeMillis();
         ItemStack stack = player.getMainHandItem();
-        if ((stack.getItem() instanceof AmmoSupplierItem || stack.getItem() == ModItems.AMMO_BOX.get()) && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
+        if ((stack.getItem() instanceof AmmoSupplierItem || stack.getItem() == ModItems.AMMO_BOX.get())
+                && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))
+        ) {
             // 刚拿出弹药物品时，视为开始弹药信息渲染
             startRenderingAmmoInfo = ammoInfoTimer.getProgress(currentTime) == 0;
             ammoInfoTimer.forward(currentTime);
+
+            if (stack.getItem() == ModItems.AMMO_BOX.get()) {
+                isAmmoBox = true;
+                ammoBoxTimer.forward(currentTime);
+            } else {
+                ammoBoxTimer.backward(currentTime);
+            }
         } else {
             ammoInfoTimer.backward(currentTime);
+            ammoBoxTimer.backward(currentTime);
         }
         if (!ammoInfoTimer.isForward() && ammoInfoTimer.finished(currentTime)) return;
 
         var poseStack = event.getGuiGraphics().pose();
         poseStack.pushPose();
 
-        var xOffset = -Mth.lerp(ammoInfoTimer.getProgress(currentTime), 0, 120);
-        final int fontHeight = 15;
-        var yOffset = -AmmoType.values().length * fontHeight;
-
-        // 渲染总弹药数量
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
 
-        // 总体透明度设置
-        RenderSystem.setShaderColor(1, 1, 1, Mth.lerp(ammoInfoTimer.getProgress(currentTime), 0, 1));
+        var ammoX = ammoInfoTimer.lerp(w + 120, (float) w / 2 + 40, currentTime);
+        final int fontHeight = 15;
+        var yOffset = (-h - AmmoType.values().length * fontHeight) / 2f;
+
+        // 渲染总弹药数量
+        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         var font = Minecraft.getInstance().font;
 
         for (var type : AmmoType.values()) {
             var index = type.ordinal();
             var ammoCount = type.get(cap);
-            var holder = ammoCountHolders[index];
-            var timer = ammoCountTimers[index];
+            var animator = ammoCountAnimators[index];
+
+            var boxAnimator = ammoBoxAnimators[index];
+            var boxAmmoCount = boxAnimator.newValue();
+            boolean boxAmmoSelected = false;
+
+            if (isAmmoBox) {
+                var ammoBoxType = stack.getOrCreateTag().getString("Type");
+                boxAmmoCount = type.get(stack);
+                if (ammoBoxType.equals("All") || ammoBoxType.equals(type.name)) {
+                    boxAnimator.forward(currentTime);
+                    boxAmmoSelected = true;
+                } else {
+                    boxAnimator.reset(boxAmmoCount);
+                }
+            }
 
             // 首次开始渲染弹药信息时，记录弹药数量，便于后续播放动画
             if (startRenderingAmmoInfo) {
-                holder.reset(ammoCount);
-                timer.endForward(currentTime);
+                animator.reset(ammoCount);
+                animator.endForward(currentTime);
+                if (isAmmoBox) {
+                    boxAnimator.reset(type.get(stack));
+                    boxAnimator.endForward(currentTime);
+                }
             }
 
-            int isAdd = ammoCount == holder.oldValue() ? 0 : (ammoCount > holder.oldValue() ? 1 : -1);
-            // 弹药数量变化时，开始播放弹药数量更改动画
-            if (holder.newValue() != ammoCount) {
-                // 更新初始和当前弹药数量，播放由 初始弹药数量 -> 当前弹药数量 的动画
-                holder.update(ammoCount);
-                // 开始播放弹药数量更改动画
-                timer.beginForward(currentTime);
-            }
+            int ammoAdd = Integer.compare(ammoCount, animator.oldValue());
+            // 弹药数量变化时，更新并开始播放弹药数量更改动画
+            animator.compareAndUpdate(ammoCount, () -> {
+                // 弹药数量变化时，开始播放弹药数量更改动画
+                animator.beginForward(currentTime);
+            });
 
-            var progress = timer.getProgress(currentTime);
+            var progress = animator.getProgress(currentTime);
             var ammoCountStr = Integer.toString(
-                    Math.round(Mth.lerp(progress, holder.oldValue(), ammoCount))
+                    Math.round(animator.lerp(animator.oldValue(), ammoCount, currentTime))
             );
 
             // 弹药增加时，颜色由绿变白，否则由红变白
-            var fontColor = switch (isAdd) {
-                case 1 -> Mth.color(
-                        Mth.lerp(progress, 0, 1),
-                        1,
-                        Mth.lerp(progress, 0, 1)
-                );
-                case -1 -> Mth.color(
-                        1,
-                        Mth.lerp(progress, 0, 1),
-                        Mth.lerp(progress, 0, 1)
-                );
-                default -> 0xFFFFFF;
-            };
+            var fontColor = FastColor.ARGB32.lerp(progress, switch (ammoAdd) {
+                case 1 -> 0xFF00FF00;
+                case -1 -> 0xFFFF0000;
+                default -> 0xFFFFFFFF;
+            }, 0xFFFFFFFF);
+
+            RenderSystem.setShaderColor(1, 1, 1, ammoInfoTimer.lerp(0, 1, currentTime));
 
             // 弹药数量
             event.getGuiGraphics().drawString(
-                    Minecraft.getInstance().font,
+                    font,
                     ammoCountStr,
-                    w + xOffset + (30 - font.width(ammoCountStr)),
+                    ammoX + (30 - font.width(ammoCountStr)),
                     h + yOffset,
                     fontColor,
                     true
@@ -310,11 +337,42 @@ public class AmmoBarOverlay {
 
             // 弹药类型
             event.getGuiGraphics().drawString(
-                    Minecraft.getInstance().font,
+                    font,
                     Component.translatable(type.translatableKey).getString(),
-                    w + xOffset + 35,
+                    ammoX + 35,
                     h + yOffset,
                     fontColor,
+                    true
+            );
+
+            // 弹药盒信息渲染
+            RenderSystem.setShaderColor(1, 1, 1, ammoBoxTimer.lerp(0, 1, currentTime));
+            var ammoBoxX = ammoBoxTimer.lerp(-30, (float) w / 2, currentTime);
+
+            int ammoBoxAdd = Integer.compare(boxAmmoCount, boxAnimator.oldValue());
+            boxAnimator.compareAndUpdate(boxAmmoCount, () -> boxAnimator.beginForward(currentTime));
+
+            // 选中时显示为黄色，否则为白色
+            var targetColor = boxAmmoSelected ? 0xFFFFFF00 : 0xFFFFFFFF;
+
+            var boxFontColor = FastColor.ARGB32.lerp(boxAnimator.getProgress(currentTime),
+                    switch (ammoBoxAdd) {
+                        case 1 -> 0xFF00FF00;
+                        case -1 -> 0xFFFF0000;
+                        default -> targetColor;
+                    },
+                    targetColor
+            );
+
+            // 弹药盒内弹药数量
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    Integer.toString(
+                            Math.round(boxAnimator.lerp(boxAnimator.oldValue(), boxAmmoCount, currentTime))
+                    ),
+                    ammoBoxX - 70,
+                    h + yOffset,
+                    boxFontColor,
                     true
             );
 

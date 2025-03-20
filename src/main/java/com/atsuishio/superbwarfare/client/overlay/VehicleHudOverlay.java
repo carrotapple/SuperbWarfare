@@ -68,9 +68,9 @@ public class VehicleHudOverlay {
 
     public static final int ANIMATION_TIME = 300;
     private static final AnimationTimer[] weaponSlotsTimer = AnimationTimer.createTimers(9, ANIMATION_TIME, AnimationCurves.EASE_OUT_CIRC);
-    private static boolean lastTimeRenderingWeapons = false;
-    private static int lastTimeWeaponIndex = 0;
-    private static int lastTimeRenderWeaponIndex = 0;
+    private static boolean wasRenderingWeapons = false;
+    private static int oldWeaponIndex = 0;
+    private static int oldRenderWeaponIndex = 0;
     private static final AnimationTimer weaponIndexUpdateTimer = new AnimationTimer(ANIMATION_TIME).animation(AnimationCurves.EASE_OUT_CIRC);
 
 
@@ -81,7 +81,7 @@ public class VehicleHudOverlay {
         Player player = Minecraft.getInstance().player;
 
         if (!shouldRenderHud(player)) {
-            lastTimeRenderingWeapons = false;
+            wasRenderingWeapons = false;
             return;
         }
 
@@ -456,8 +456,8 @@ public class VehicleHudOverlay {
     private static void renderWeaponInfo(GuiGraphics guiGraphics, VehicleEntity vehicle, int w, int h) {
         if (!(vehicle instanceof WeaponVehicleEntity weaponVehicle)) return;
 
-        var temp = lastTimeRenderingWeapons;
-        lastTimeRenderingWeapons = false;
+        var temp = wasRenderingWeapons;
+        wasRenderingWeapons = false;
 
         Player player = Minecraft.getInstance().player;
         assert player != null;
@@ -471,37 +471,33 @@ public class VehicleHudOverlay {
         int weaponIndex = weaponVehicle.getWeaponIndex(index);
         if (weaponIndex == -1) return;
 
-        lastTimeRenderingWeapons = temp;
+        wasRenderingWeapons = temp;
 
         var currentTime = System.currentTimeMillis();
 
         // 若上一帧未在渲染武器信息，则初始化动画相关变量
-        if (!lastTimeRenderingWeapons) {
-            weaponSlotsTimer[weaponIndex].begin();
-            weaponSlotsTimer[weaponIndex].forward(currentTime);
+        if (!wasRenderingWeapons) {
+            weaponSlotsTimer[weaponIndex].beginForward(currentTime);
 
-            if (lastTimeWeaponIndex != weaponIndex) {
-                weaponSlotsTimer[lastTimeWeaponIndex].backward(currentTime);
-                weaponSlotsTimer[lastTimeWeaponIndex].end();
+            if (oldWeaponIndex != weaponIndex) {
+                weaponSlotsTimer[oldWeaponIndex].endBackward(currentTime);
 
-                lastTimeWeaponIndex = weaponIndex;
-                lastTimeRenderWeaponIndex = weaponIndex;
+                oldWeaponIndex = weaponIndex;
+                oldRenderWeaponIndex = weaponIndex;
             }
 
-            weaponIndexUpdateTimer.begin();
-            weaponIndexUpdateTimer.forward(currentTime);
+            weaponIndexUpdateTimer.beginForward(currentTime);
         }
 
         // 切换武器时，更新上一个武器槽位和当前武器槽位的动画信息
-        if (weaponIndex != lastTimeWeaponIndex) {
+        if (weaponIndex != oldWeaponIndex) {
             weaponSlotsTimer[weaponIndex].forward(currentTime);
-            weaponSlotsTimer[lastTimeWeaponIndex].backward(currentTime);
+            weaponSlotsTimer[oldWeaponIndex].backward(currentTime);
 
-            lastTimeRenderWeaponIndex = lastTimeWeaponIndex;
-            lastTimeWeaponIndex = weaponIndex;
+            oldRenderWeaponIndex = oldWeaponIndex;
+            oldWeaponIndex = weaponIndex;
 
-            weaponIndexUpdateTimer.begin();
-            weaponIndexUpdateTimer.forward(currentTime);
+            weaponIndexUpdateTimer.beginForward(currentTime);
         }
 
         var pose = guiGraphics.pose();
@@ -537,7 +533,7 @@ public class VehicleHudOverlay {
             // 当前选中武器
             if (weaponIndex == i) {
                 var startY = Mth.lerp(progress,
-                        h - (weapons.size() - 1 - lastTimeRenderWeaponIndex) * 18 - 16,
+                        h - (weapons.size() - 1 - oldRenderWeaponIndex) * 18 - 16,
                         h - (weapons.size() - 1 - weaponIndex) * 18 - 16
                 );
 
@@ -562,10 +558,10 @@ public class VehicleHudOverlay {
         pose.popPose();
 
         // 切换武器光标动画播放结束后，更新上次选择槽位
-        if (lastTimeWeaponIndex != lastTimeRenderWeaponIndex && weaponIndexUpdateTimer.finished(currentTime)) {
-            lastTimeRenderWeaponIndex = lastTimeWeaponIndex;
+        if (oldWeaponIndex != oldRenderWeaponIndex && weaponIndexUpdateTimer.finished(currentTime)) {
+            oldRenderWeaponIndex = oldWeaponIndex;
         }
-        lastTimeRenderingWeapons = true;
+        wasRenderingWeapons = true;
     }
 
     private static void renderNumber(GuiGraphics guiGraphics, int number, boolean percent, float x, float y, float scale) {

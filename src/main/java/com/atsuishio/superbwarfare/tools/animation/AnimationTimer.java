@@ -151,7 +151,7 @@ public class AnimationTimer {
         if (!initialized) {
             initialized = true;
             startTime = currentTime + (isStart ? 0 : duration);
-        } else {
+        } else if (reversed) {
             startTime = currentTime - getElapsedTime(currentTime);
         }
         reversed = false;
@@ -181,7 +181,7 @@ public class AnimationTimer {
         if (!initialized) {
             initialized = true;
             startTime = currentTime + (isStart ? duration : 0);
-        } else {
+        } else if (!reversed) {
             startTime = currentTime + getElapsedTime(currentTime);
         }
         reversed = true;
@@ -201,6 +201,10 @@ public class AnimationTimer {
     public void endBackward(long currentTime) {
         end();
         backward(currentTime);
+    }
+
+    public float lerp(float start, float end, long currentTime) {
+        return Mth.lerp(getProgress(currentTime), start, end);
     }
 
 }
