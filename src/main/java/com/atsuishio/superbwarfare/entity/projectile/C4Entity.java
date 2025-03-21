@@ -22,6 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -45,6 +46,8 @@ public class C4Entity extends Projectile implements GeoEntity {
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> IS_CONTROLLABLE = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.BOOLEAN);
+
+    public static final int DEFAULT_DEFUSE_PROGRESS = 100;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected boolean inGround;
@@ -112,15 +115,11 @@ public class C4Entity extends Projectile implements GeoEntity {
             }
 
             if (!player.getAbilities().instabuild) {
-                ItemStack stack = new ItemStack(ModItems.C4_BOMB.get());
-                if (this.getEntityData().get(IS_CONTROLLABLE)) {
-                    stack.getOrCreateTag().putBoolean("Control", true);
-                }
-                ItemHandlerHelper.giveItemToPlayer(player, stack);
+                ItemHandlerHelper.giveItemToPlayer(player, this.getItemStack());
             }
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
-
-        return InteractionResult.sidedSuccess(this.level().isClientSide());
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -373,5 +372,21 @@ public class C4Entity extends Projectile implements GeoEntity {
     @Override
     public boolean isPickable() {
         return true;
+    }
+
+    public ItemStack getItemStack() {
+        ItemStack stack = new ItemStack(ModItems.C4_BOMB.get());
+        if (this.getEntityData().get(IS_CONTROLLABLE)) {
+            stack.getOrCreateTag().putBoolean("Control", true);
+        }
+        return stack;
+    }
+
+    public void defuse() {
+        this.discard();
+        ItemEntity entity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItemStack());
+        if (!this.level().isClientSide) {
+            this.level().addFreshEntity(entity);
+        }
     }
 }
