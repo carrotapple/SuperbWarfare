@@ -79,6 +79,7 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putString("Target", this.entityData.get(TARGET_UUID));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         compound.putBoolean("IsControllable", this.entityData.get(IS_CONTROLLABLE));
@@ -90,6 +91,7 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         if (compound.contains("LastAttacker")) {
             this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         }
