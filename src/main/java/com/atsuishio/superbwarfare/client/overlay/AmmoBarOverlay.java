@@ -212,10 +212,10 @@ public class AmmoBarOverlay {
         }
     }
 
-    private static final AnimationTimer ammoInfoTimer = new AnimationTimer(1500)
+    private static final AnimationTimer ammoInfoTimer = new AnimationTimer(500, 2000)
             .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
             .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
-    private static final AnimationTimer ammoBoxTimer = new AnimationTimer(1500)
+    private static final AnimationTimer ammoBoxTimer = new AnimationTimer(500)
             .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
             .backwardAnimation(AnimationCurves.EASE_IN_EXPO);
 

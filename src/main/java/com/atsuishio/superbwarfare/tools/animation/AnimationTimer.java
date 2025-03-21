@@ -9,9 +9,10 @@ import java.util.function.Function;
  */
 public class AnimationTimer {
 
-    private final long duration;
+    private final long forwardDuration;
+    private final long backwardDuration;
     private long startTime;
-    private boolean reversed;
+    private boolean isForward = true;
     private boolean initialized;
 
     // 未初始化状态下，动画进度是否从0开始
@@ -26,7 +27,19 @@ public class AnimationTimer {
      * @param duration 动画持续时间，单位为毫秒
      */
     public AnimationTimer(long duration) {
-        this.duration = duration;
+        this.forwardDuration = duration;
+        this.backwardDuration = duration;
+    }
+
+    /**
+     * 创建一个动画计时器
+     *
+     * @param forwardDuration  正向动画持续时间，单位为毫秒
+     * @param backwardDuration 反向动画持续时间，单位为毫秒
+     */
+    public AnimationTimer(long forwardDuration, long backwardDuration) {
+        this.forwardDuration = forwardDuration;
+        this.backwardDuration = backwardDuration;
     }
 
     /**
@@ -82,10 +95,23 @@ public class AnimationTimer {
      * @param backwardAnimationCurve 反向动画曲线函数
      */
     public static AnimationTimer[] createTimers(int size, long duration, Function<Double, Double> forwardAnimationCurve, Function<Double, Double> backwardAnimationCurve) {
+        return createTimers(size, duration, duration, forwardAnimationCurve, backwardAnimationCurve);
+    }
+
+    /**
+     * 创建多个动画计时器
+     *
+     * @param size                   计时器数量
+     * @param forwardDuration        正向动画持续时间，单位为毫秒
+     * @param backwardDuration       反向动画持续时间，单位为毫秒
+     * @param forwardAnimationCurve  正向动画曲线函数
+     * @param backwardAnimationCurve 反向动画曲线函数
+     */
+    public static AnimationTimer[] createTimers(int size, long forwardDuration, long backwardDuration, Function<Double, Double> forwardAnimationCurve, Function<Double, Double> backwardAnimationCurve) {
         var timers = new AnimationTimer[size];
         var currentTime = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
-            timers[i] = new AnimationTimer(duration).forwardAnimation(forwardAnimationCurve).backwardAnimation(backwardAnimationCurve);
+            timers[i] = new AnimationTimer(forwardDuration, backwardDuration).forwardAnimation(forwardAnimationCurve).backwardAnimation(backwardAnimationCurve);
             timers[i].endBackward(currentTime);
         }
         return timers;
@@ -95,7 +121,7 @@ public class AnimationTimer {
      * 当前计时方向是否为正向
      */
     public boolean isForward() {
-        return !reversed;
+        return isForward;
     }
 
     /**
@@ -104,20 +130,20 @@ public class AnimationTimer {
      * @return 进度值，范围在0到1之间
      */
     public float getProgress(long currentTime) {
-        if (reversed) {
-            return 1 - backwardAnimationCurve.apply(Mth.clamp(1 - getElapsedTime(currentTime) / (double) duration, 0, 1)).floatValue();
+        if (isForward) {
+            return forwardAnimationCurve.apply(Mth.clamp(getElapsedTime(currentTime) / (double) forwardDuration, 0, 1)).floatValue();
         } else {
-            return forwardAnimationCurve.apply(Mth.clamp(getElapsedTime(currentTime) / (double) duration, 0, 1)).floatValue();
+            return 1 - backwardAnimationCurve.apply(Mth.clamp(1 - getElapsedTime(currentTime) / (double) backwardDuration, 0, 1)).floatValue();
         }
     }
 
     private long getElapsedTime(long currentTime) {
-        if (!initialized) return playFromStart ? 0 : duration;
+        if (!initialized) return playFromStart ? 0 : (isForward() ? forwardDuration : backwardDuration);
 
-        if (reversed) {
-            return Math.min(duration, Math.max(0, startTime - currentTime));
+        if (isForward) {
+            return Math.min(forwardDuration, currentTime - startTime);
         } else {
-            return Math.min(duration, currentTime - startTime);
+            return Math.min(backwardDuration, Math.max(0, startTime - currentTime));
         }
     }
 
@@ -125,7 +151,7 @@ public class AnimationTimer {
      * 当前动画是否已经结束
      */
     public boolean finished(long currentTime) {
-        return getElapsedTime(currentTime) >= duration;
+        return getElapsedTime(currentTime) >= (isForward ? forwardDuration : backwardDuration);
     }
 
     /**
@@ -150,11 +176,11 @@ public class AnimationTimer {
     public void forward(long currentTime) {
         if (!initialized) {
             initialized = true;
-            startTime = currentTime + (playFromStart ? 0 : duration);
-        } else if (reversed) {
-            startTime = currentTime - getElapsedTime(currentTime);
+            startTime = currentTime + (playFromStart ? 0 : forwardDuration);
+        } else if (!isForward) {
+            startTime = (long) (currentTime - ((double) getElapsedTime(currentTime) / backwardDuration * forwardDuration));
         }
-        reversed = false;
+        isForward = true;
     }
 
     /**
@@ -179,11 +205,11 @@ public class AnimationTimer {
     public void backward(long currentTime) {
         if (!initialized) {
             initialized = true;
-            startTime = currentTime + (playFromStart ? duration : 0);
-        } else if (!reversed) {
-            startTime = currentTime + getElapsedTime(currentTime);
+            startTime = currentTime + (playFromStart ? backwardDuration : 0);
+        } else if (isForward) {
+            startTime = (long) (currentTime + ((double) getElapsedTime(currentTime) / forwardDuration * backwardDuration));
         }
-        reversed = true;
+        isForward = false;
     }
 
     /**
