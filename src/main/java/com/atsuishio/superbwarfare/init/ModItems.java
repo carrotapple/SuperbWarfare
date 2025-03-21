@@ -132,6 +132,8 @@ public class ModItems {
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
+
+    public static final RegistryObject<Item> DETONATOR = ITEMS.register("detonator", Detonator::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
     public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", Knife::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);

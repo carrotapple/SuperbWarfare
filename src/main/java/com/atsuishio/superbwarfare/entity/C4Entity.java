@@ -309,7 +309,7 @@ public class C4Entity extends Projectile implements GeoEntity {
         this.inGround = true;
     }
 
-    private void explode() {
+    public void explode() {
         Vec3 pos = position();
 
         if (onEntity) {
