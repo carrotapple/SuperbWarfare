@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -56,9 +56,10 @@ public class C4Bomb extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        TooltipTool.addDevelopingText(pTooltipComponents);
         if (pStack.getOrCreateTag().getBoolean(TAG_CONTROL)) {
-            pTooltipComponents.add(Component.literal("Control"));
+            pTooltipComponents.add(Component.translatable("des.superbwarfare.c4_bomb.control").withStyle(ChatFormatting.GRAY));
+        } else {
+            pTooltipComponents.add(Component.translatable("des.superbwarfare.c4_bomb.time").withStyle(ChatFormatting.GRAY));
         }
     }
 

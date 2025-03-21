@@ -181,6 +181,8 @@
   "item.superbwarfare.mortar_deployer": "迫击炮",
   "item.superbwarfare.claymore_mine": "阔剑地雷",
   "item.superbwarfare.c4_bomb": "C4炸药",
+  "des.superbwarfare.c4_bomb.time": "定时",
+  "des.superbwarfare.c4_bomb.control": "遥控",
   "item.superbwarfare.seeker": "导引头",
   "item.superbwarfare.missile_engine": "导弹发动机",
   "item.superbwarfare.fusee": "引信",

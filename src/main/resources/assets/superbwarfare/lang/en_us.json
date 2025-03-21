@@ -181,6 +181,8 @@
   "item.superbwarfare.mortar_deployer": "Mortar",
   "item.superbwarfare.claymore_mine": "Claymore",
   "item.superbwarfare.c4_bomb": "C4",
+  "des.superbwarfare.c4_bomb.time": "Time Bomb",
+  "des.superbwarfare.c4_bomb.control": "RC Bomb",
   "item.superbwarfare.seeker": "Seeker",
   "item.superbwarfare.missile_engine": "Missile Engine",
   "item.superbwarfare.fusee": "Fusee",
