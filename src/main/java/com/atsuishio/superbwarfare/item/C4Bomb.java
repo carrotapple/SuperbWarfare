@@ -2,8 +2,10 @@ package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.entity.C4Entity;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -25,11 +27,6 @@ public class C4Bomb extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (player.serializeNBT().contains("C4UUID") && player.serializeNBT().hasUUID("C4UUID")) {
-            if (EntityFindUtil.findEntity(player.level(), player.serializeNBT().getUUID("C4UUID").toString()) != null) {
-                return InteractionResultHolder.pass(stack);
-            }
-        }
         if (!level.isClientSide) {
             C4Entity entity = new C4Entity(player, level);
             entity.setPos(player.getX() + 0.25 * player.getLookAngle().x, player.getEyeY() - 0.2f + 0.25 * player.getLookAngle().y, player.getZ() + 0.25 * player.getLookAngle().z);
@@ -37,6 +34,10 @@ public class C4Bomb extends Item {
             entity.setOwner(player);
 
             level.addFreshEntity(entity);
+        }
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.C4_THROW.get(), SoundSource.PLAYERS, 1, 1);
         }
 
         player.getCooldowns().addCooldown(this, 20);

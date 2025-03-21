@@ -279,7 +279,7 @@ public class C4Entity extends Projectile implements GeoEntity {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         Entity entity = pResult.getEntity();
-        if (entity == this.getOwner() || entity == this.getVehicle()) return;
+        if (entity == this.getVehicle()) return;
         this.entityData.set(TARGET_UUID, entity.getStringUUID());
         this.onEntity = true;
         this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
