@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "superbwarfare:item/crowbar"
+    "layer0": "superbwarfare:item/defuser"
   }
 }
