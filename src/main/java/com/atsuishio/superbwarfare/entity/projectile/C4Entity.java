@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -44,6 +44,8 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Boolean> IS_CONTROLLABLE = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.BOOLEAN);
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected boolean inGround;
     protected boolean onEntity;
@@ -56,18 +58,27 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     public C4Entity(LivingEntity owner, Level level) {
         super(ModEntities.C_4.get(), level);
+        this.setOwner(owner);
+    }
+
+    public C4Entity(LivingEntity owner, Level level, boolean isControllable) {
+        super(ModEntities.C_4.get(), level);
+        this.setOwner(owner);
+        this.entityData.set(IS_CONTROLLABLE, isControllable);
     }
 
     @Override
     protected void defineSynchedData() {
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(TARGET_UUID, "undefined");
+        this.entityData.define(IS_CONTROLLABLE, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putString("Target", this.entityData.get(TARGET_UUID));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
+        compound.putBoolean("IsControllable", this.entityData.get(IS_CONTROLLABLE));
 
         if (this.lastState != null) {
             compound.put("InBlockState", NbtUtils.writeBlockState(this.lastState));
@@ -86,6 +97,10 @@ public class C4Entity extends Projectile implements GeoEntity {
 
         if (compound.contains("InBlockState", 10)) {
             this.lastState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), compound.getCompound("InBlockState"));
+        }
+
+        if (compound.contains("IsControllable")) {
+            this.entityData.set(IS_CONTROLLABLE, compound.getBoolean("IsControllable"));
         }
     }
 
@@ -108,16 +123,19 @@ public class C4Entity extends Projectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
-            this.explode();
-        }
+        if (!this.entityData.get(IS_CONTROLLABLE)) {
+            if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
+                this.explode();
+            }
 
-        if (ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - tickCount > 39 && tickCount %((20 * (ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - tickCount)) / ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() + 1) == 0) {
-            this.level().playSound(null, this.getOnPos(), ModSounds.C4_BEEP.get(), SoundSource.PLAYERS, 1, 1);
-        }
+            int countdown = ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get();
+            if (countdown - tickCount > 39 && tickCount % ((20 * (countdown - tickCount)) / countdown + 1) == 0) {
+                this.level().playSound(null, this.getOnPos(), ModSounds.C4_BEEP.get(), SoundSource.PLAYERS, 1, 1);
+            }
 
-        if (tickCount == ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - 39) {
-            this.level().playSound(null, this.getOnPos(), ModSounds.C4_FINAL.get(), SoundSource.PLAYERS, 2, 1);
+            if (tickCount == countdown - 39) {
+                this.level().playSound(null, this.getOnPos(), ModSounds.C4_FINAL.get(), SoundSource.PLAYERS, 2, 1);
+            }
         }
 
         Vec3 motion = this.getDeltaMovement();
@@ -346,5 +364,10 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     protected float getWaterInertia() {
         return 0.6F;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return true;
     }
 }

@@ -1,11 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.entity.C4Entity;
-import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
-import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
+import com.atsuishio.superbwarfare.entity.projectile.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
