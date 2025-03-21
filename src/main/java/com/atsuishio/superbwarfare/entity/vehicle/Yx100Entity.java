@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
@@ -185,6 +186,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .custom((source, damage) -> {
                     if (source.getDirectEntity() instanceof SmallCannonShellEntity) {
                         return 0.375f * damage;
+                    }
+                    return damage;
+                })
+                .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof C4Entity || source.getDirectEntity() instanceof DroneEntity) {
+                        return 3f * damage;
                     }
                     return damage;
                 })

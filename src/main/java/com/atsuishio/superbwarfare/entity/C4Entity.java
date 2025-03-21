@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.entity;
 
-import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -21,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -45,7 +44,6 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
     protected static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected boolean inGround;
     protected boolean onEntity;
@@ -63,23 +61,11 @@ public class C4Entity extends Projectile implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
-        this.entityData.define(HEALTH, 10f);
         this.entityData.define(TARGET_UUID, "undefined");
     }
 
     @Override
-    public boolean isPickable() {
-        return !this.isRemoved();
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        return false;
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putString("Target", this.entityData.get(TARGET_UUID));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
 
@@ -90,10 +76,6 @@ public class C4Entity extends Projectile implements GeoEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
-        }
-
         if (compound.contains("LastAttacker")) {
             this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         }
@@ -128,6 +110,14 @@ public class C4Entity extends Projectile implements GeoEntity {
 
         if (this.tickCount >= ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
             this.explode();
+        }
+
+        if (ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - tickCount > 39 && tickCount %((20 * (ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - tickCount)) / ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() + 1) == 0) {
+            this.level().playSound(null, this.getOnPos(), ModSounds.C4_BEEP.get(), SoundSource.PLAYERS, 1, 1);
+        }
+
+        if (tickCount == ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get() - 39) {
+            this.level().playSound(null, this.getOnPos(), ModSounds.C4_FINAL.get(), SoundSource.PLAYERS, 2, 1);
         }
 
         Vec3 motion = this.getDeltaMovement();
@@ -319,22 +309,25 @@ public class C4Entity extends Projectile implements GeoEntity {
         this.inGround = true;
     }
 
-    public void explode() {
-        if (!this.level().isClientSide()) {
-            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            ModUtils.queueServerWork(1, () -> this.triggerExplode(this));
-        }
-        this.discard();
-    }
+    private void explode() {
+        Vec3 pos = position();
 
-    private void triggerExplode(Entity target) {
+        if (onEntity) {
+            Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
+            if (target != null) {
+                pos = target.position();
+            }
+        }
+
         CustomExplosion explosion = new CustomExplosion(level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(level().registryAccess(), this, this.getOwner()), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
-                target.getX(), target.getY(), target.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                pos.x, pos.y, pos.z, ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(level(), explosion);
         ParticleTool.spawnHugeExplosionParticles(level(), position());
         explosion.finalizeExplosion(false);
+
+        this.discard();
     }
 
     @Override

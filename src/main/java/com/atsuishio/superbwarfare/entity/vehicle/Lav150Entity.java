@@ -143,6 +143,12 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                 .multiply(0.85f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .multiply(10f, ModDamageTypes.VEHICLE_STRIKE)
                 .custom((source, damage) -> getSourceAngle(source, 0.25f) * damage)
+                .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof DroneEntity) {
+                        return 1.5f * damage;
+                    }
+                    return damage;
+                })
                 .reduce(7);
     }
 

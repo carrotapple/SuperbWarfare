@@ -423,5 +423,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> YX_100_FAR = REGISTRY.register("yx_100_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_far")));
     public static final RegistryObject<SoundEvent> YX_100_VERYFAR = REGISTRY.register("yx_100_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("yx_100_veryfar")));
     public static final RegistryObject<SoundEvent> TURRET_TURN = REGISTRY.register("turret_turn", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("turret_turn")));
+    public static final RegistryObject<SoundEvent> C4_BEEP = REGISTRY.register("c4_beep", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("c4_beep")));
+    public static final RegistryObject<SoundEvent> C4_FINAL = REGISTRY.register("c4_final", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("c4_final")));
 }
 

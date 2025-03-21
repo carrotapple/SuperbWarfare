@@ -2915,5 +2915,21 @@
         "stream": false
       }
     ]
+  },
+  "c4_beep": {
+    "sounds": [
+      {
+        "name": "superbwarfare:c4/c4_beep",
+        "stream": false
+      }
+    ]
+  },
+  "c4_final": {
+    "sounds": [
+      {
+        "name": "superbwarfare:c4/c4_final",
+        "stream": false
+      }
+    ]
   }
 }

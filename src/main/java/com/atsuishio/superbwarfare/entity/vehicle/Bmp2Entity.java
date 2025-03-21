@@ -154,6 +154,12 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 .multiply(0.7f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .multiply(8.5f, ModDamageTypes.VEHICLE_STRIKE)
                 .custom((source, damage) -> getSourceAngle(source, 0.4f) * damage)
+                .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof DroneEntity) {
+                        return 1.5f * damage;
+                    }
+                    return damage;
+                })
                 .reduce(8);
     }
 
