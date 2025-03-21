@@ -11,12 +11,12 @@
       "item": "superbwarfare:high_energy_explosives"
     },
     "c": {
-      "item": "minecraft:redstone_torch"
+      "item": "minecraft:comparator"
     }
   },
   "result": {
     "item": "superbwarfare:c4_bomb",
-    "count": 1,
+    "count": 2,
     "nbt": {
       "Control": true
     }

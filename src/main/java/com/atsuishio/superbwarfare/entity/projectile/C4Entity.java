@@ -112,7 +112,11 @@ public class C4Entity extends Projectile implements GeoEntity {
             }
 
             if (!player.getAbilities().instabuild) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.C4_BOMB.get()));
+                ItemStack stack = new ItemStack(ModItems.C4_BOMB.get());
+                if (this.getEntityData().get(IS_CONTROLLABLE)) {
+                    stack.getOrCreateTag().putBoolean("Control", true);
+                }
+                ItemHandlerHelper.giveItemToPlayer(player, stack);
             }
         }
 
