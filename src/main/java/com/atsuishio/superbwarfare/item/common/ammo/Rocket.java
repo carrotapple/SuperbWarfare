@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.client.renderer.item.RocketItemRenderer;
+import com.atsuishio.superbwarfare.config.advancement.CriteriaRegister;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -16,6 +18,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -32,7 +35,7 @@ public class Rocket extends Item implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new RocketItemRenderer();
@@ -70,8 +73,12 @@ public class Rocket extends Item implements GeoItem {
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity entity, LivingEntity source) {
+    public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity entity, @NotNull LivingEntity source) {
         if (entity.level() instanceof ServerLevel level && Math.random() < 0.25) {
+            if (source instanceof ServerPlayer player) {
+                CriteriaRegister.RPG_MELEE_EXPLOSION.trigger(player);
+            }
+
             level.explode(source, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
             level.explode(null, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
 
