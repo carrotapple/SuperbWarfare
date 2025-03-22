@@ -19,17 +19,12 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
 public class Rocket extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public Rocket() {
@@ -53,37 +48,9 @@ public class Rocket extends Item implements GeoItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<Rocket> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (this.animationProcedure.equals("empty")) {
-                event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.rpg.idle"));
-                return PlayState.CONTINUE;
-            }
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<Rocket> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
-    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 0, this::idlePredicate);
-        data.add(idleController);
     }
 
     @Override
