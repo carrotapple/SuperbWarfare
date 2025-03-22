@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-23T02:12:10.7268593	Tags for minecraft:item mod id superbwarfare
+// 1.20.1	2025-03-23T02:24:30.1439366	Tags for minecraft:item mod id superbwarfare
 cf8d49a8d2872286d1a9c3d4a7e1c2b7690db0b8 data/forge/tags/items/dusts.json
 0fa06c2ff83bf09797e3ddff90f62d1124e645b4 data/forge/tags/items/dusts/coal_coke.json
 295ddf906b7133a0558d03e9a60eea18281fe430 data/forge/tags/items/dusts/iron.json
@@ -29,7 +29,7 @@ af6fd64b4a685c353f243763db268f7b2304c009 data/forge/tags/items/storage_blocks/le
 362d41246c4c832d114e8b8942b105f4010d4ba0 data/superbwarfare/tags/items/blueprint.json
 b2487459d95ca9a319bfbd94e60a48de60e07297 data/superbwarfare/tags/items/blueprint/cannon.json
 889e4b56462df422f57191f07229009dcf2073e3 data/superbwarfare/tags/items/blueprint/common.json
-9b346c7045e067325acd15afe92e9fdd4a9f9310 data/superbwarfare/tags/items/blueprint/epic.json
+2512dd03ae847ab6b4a9cc60d32ff3b3a5cdad82 data/superbwarfare/tags/items/blueprint/epic.json
 8014c67b62b785b4b7e23d8e5aa70343c30b2fbd data/superbwarfare/tags/items/blueprint/legendary.json
 2a49f09e9374bf7f355aae50be470169406ff2d3 data/superbwarfare/tags/items/blueprint/rare.json
 748a5e10c7eb644efcfbce889daff4d68a0ceb2b data/superbwarfare/tags/items/gun.json
