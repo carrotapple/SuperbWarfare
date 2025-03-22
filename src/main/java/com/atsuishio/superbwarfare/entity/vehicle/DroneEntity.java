@@ -366,6 +366,17 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
+        } else if (stack.getItem() == ModItems.ROCKET.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+            // RPG神风
+            this.currentItem = new ItemStack(stack.getItem(), 1);
+
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            this.entityData.set(KAMIKAZE_MODE, 3);
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
+            }
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -471,6 +482,9 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
                     target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
                     target.invulnerableTime = 0;
+                } else if (this.entityData.get(KAMIKAZE_MODE) == 3) {
+                    target.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_RPG.get());
+                    target.invulnerableTime = 0;
                 }
 
                 if (controller != null && controller.getMainHandItem().is(ModItems.MONITOR.get())) {
@@ -566,6 +580,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
                     this.getX(), this.getY(), this.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
 
+            case 3 -> new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, attacker), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get(),
+                    this.getX(), this.getY(), this.getZ(), ExplosionConfig.RPG_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+
             default -> null;
         };
 
@@ -582,7 +600,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             }
         }
 
-        if (mode == 2) {
+        if (mode == 2 || mode == 3) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
     }

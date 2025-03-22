@@ -218,7 +218,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                 .custom((source, damage) -> getSourceAngle(source, 3) * damage)
                 .custom((source, damage) -> {
                     if (source.getDirectEntity() instanceof C4Entity) {
-                        return 40f * damage;
+                        return 10f * damage;
                     }
                     return damage;
                 })

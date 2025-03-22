@@ -214,9 +214,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player.level() instanceof ServerLevel serverLevel) {
             RpgRocketEntity rocket = new RpgRocketEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -231,7 +229,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
                 int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
                 if (perkLevel > 0) {
-                    rocket.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0) * 0.5f);
+                    rocket.setExplosionRadius(0.5f);
                     rocket.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage", 0) * (1.1f + perkLevel * 0.1f));
                     velocity *= 1.2f;
                 }

@@ -4,6 +4,7 @@ package com.atsuishio.superbwarfare.client.renderer.entity;
 import com.atsuishio.superbwarfare.client.model.entity.DroneModel;
 import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
+import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -63,6 +64,11 @@ public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
 				if (entityIn.getEntityData().get(KAMIKAZE_MODE) == 1) {
 					Entity entity = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), entityIn.level());
 					entityRenderDispatcher.render(entity, 0, 0.03, 0.25, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
+				}
+
+				if (entityIn.getEntityData().get(KAMIKAZE_MODE) == 3) {
+					Entity entity = new RpgRocketEntity(ModEntities.RPG_ROCKET.get(), entityIn.level());
+					entityRenderDispatcher.render(entity, 0, -0.03, -1.8, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
 				}
 
 				for (int i = 0; i < entityIn.getEntityData().get(AMMO); i++) {
