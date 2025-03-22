@@ -75,9 +75,6 @@ public class Rocket extends Item implements GeoItem {
     @Override
     public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity entity, @NotNull LivingEntity source) {
         if (entity.level() instanceof ServerLevel level && Math.random() < 0.25) {
-            if (source instanceof ServerPlayer player) {
-                CriteriaRegister.RPG_MELEE_EXPLOSION.trigger(player);
-            }
 
             level.explode(source, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
             level.explode(null, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
@@ -86,7 +83,14 @@ public class Rocket extends Item implements GeoItem {
                 ParticleTool.spawnMediumExplosionParticles(source.level(), source.getPosition(0));
             }
 
-            stack.shrink(1);
+            if (source instanceof ServerPlayer player) {
+                CriteriaRegister.RPG_MELEE_EXPLOSION.trigger(player);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+            } else {
+                stack.shrink(1);
+            }
         }
 
         return super.hurtEnemy(stack, entity, source);
