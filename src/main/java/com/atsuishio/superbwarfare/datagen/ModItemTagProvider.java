@@ -18,9 +18,10 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagProvider extends ItemTagsProvider {
-    public ModItemTagProvider(PackOutput p_275343_, CompletableFuture<HolderLookup.Provider> p_275729_,
-                              CompletableFuture<TagLookup<Block>> p_275322_, @Nullable ExistingFileHelper existingFileHelper) {
-        super(p_275343_, p_275729_, p_275322_, ModUtils.MODID, existingFileHelper);
+
+    public ModItemTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> providerCompletableFuture,
+                              CompletableFuture<TagLookup<Block>> tagLookupCompletableFuture, @Nullable ExistingFileHelper existingFileHelper) {
+        super(packOutput, providerCompletableFuture, tagLookupCompletableFuture, ModUtils.MODID, existingFileHelper);
     }
 
     @SuppressWarnings("unchecked")
@@ -113,6 +114,21 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.REVOLVER).add(ModItems.TRACHELIUM.get());
 
         this.tag(ModTags.Items.MILITARY_ARMOR).add(ModItems.RU_CHEST_6B43.get(), ModItems.US_CHEST_IOTV.get());
+
+        this.tag(ModTags.Items.BLUEPRINT).addTags(ModTags.Items.COMMON_BLUEPRINT, ModTags.Items.RARE_BLUEPRINT, ModTags.Items.EPIC_BLUEPRINT, ModTags.Items.LEGENDARY_BLUEPRINT);
+        this.tag(ModTags.Items.COMMON_BLUEPRINT).add(ModItems.GLOCK_17_BLUEPRINT.get(), ModItems.MP_443_BLUEPRINT.get(), ModItems.MARLIN_BLUEPRINT.get(),
+                ModItems.TASER_BLUEPRINT.get(), ModItems.M_1911_BLUEPRINT.get());
+        this.tag(ModTags.Items.RARE_BLUEPRINT).add(ModItems.GLOCK_18_BLUEPRINT.get(), ModItems.M_79_BLUEPRINT.get(), ModItems.M_4_BLUEPRINT.get(),
+                ModItems.SKS_BLUEPRINT.get(), ModItems.M_870_BLUEPRINT.get(), ModItems.AK_47_BLUEPRINT.get(), ModItems.K_98_BLUEPRINT.get(),
+                ModItems.MOSIN_NAGANT_BLUEPRINT.get(), ModItems.M_2_HB_BLUEPRINT.get());
+        this.tag(ModTags.Items.EPIC_BLUEPRINT).add(ModItems.TRACHELIUM_BLUEPRINT.get(), ModItems.HUNTING_RIFLE_BLUEPRINT.get(), ModItems.RPG_BLUEPRINT.get(),
+                ModItems.BOCEK_BLUEPRINT.get(), ModItems.HK_416_BLUEPRINT.get(), ModItems.VECTOR_BLUEPRINT.get(), ModItems.MK_14_BLUEPRINT.get(),
+                ModItems.M_60_BLUEPRINT.get(), ModItems.SVD_BLUEPRINT.get(), ModItems.M_98B_BLUEPRINT.get(), ModItems.AK_12_BLUEPRINT.get(),
+                ModItems.DEVOTION_BLUEPRINT.get(), ModItems.QBZ_95_BLUEPRINT.get());
+        this.tag(ModTags.Items.LEGENDARY_BLUEPRINT).add(ModItems.AA_12_BLUEPRINT.get(), ModItems.NTW_20_BLUEPRINT.get(), ModItems.MINIGUN_BLUEPRINT.get(),
+                ModItems.SENTINEL_BLUEPRINT.get(), ModItems.JAVELIN_BLUEPRINT.get(), ModItems.SECONDARY_CATACLYSM_BLUEPRINT.get(), ModItems.MK_42_BLUEPRINT.get(),
+                ModItems.MLE_1934_BLUEPRINT.get(), ModItems.ANNIHILATOR_BLUEPRINT.get());
+        this.tag(ModTags.Items.CANNON_BLUEPRINT).add(ModItems.MK_42_BLUEPRINT.get(), ModItems.MLE_1934_BLUEPRINT.get(), ModItems.ANNIHILATOR_BLUEPRINT.get());
     }
 
     public static TagKey<Item> forgeTag(String name) {

@@ -242,9 +242,10 @@ public class ModItems {
     public static final RegistryObject<Item> MK_42_BLUEPRINT = ITEMS.register("mk_42_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> MLE_1934_BLUEPRINT = ITEMS.register("mle_1934_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> ANNIHILATOR_BLUEPRINT = ITEMS.register("annihilator_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
-    public static final RegistryObject<Item> LIGHT_ARMAMENT_MODULE = ITEMS.register("light_armament_module", () -> new BlueprintItem(Rarity.RARE));
-    public static final RegistryObject<Item> MEDIUM_ARMAMENT_MODULE = ITEMS.register("medium_armament_module", () -> new BlueprintItem(Rarity.EPIC));
-    public static final RegistryObject<Item> HEAVY_ARMAMENT_MODULE = ITEMS.register("heavy_armament_module", () -> new BlueprintItem(RarityTool.LEGENDARY));
+
+    public static final RegistryObject<Item> LIGHT_ARMAMENT_MODULE = ITEMS.register("light_armament_module", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> MEDIUM_ARMAMENT_MODULE = ITEMS.register("medium_armament_module", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> HEAVY_ARMAMENT_MODULE = ITEMS.register("heavy_armament_module", () -> new Item(new Item.Properties().rarity(RarityTool.LEGENDARY)));
 
     /**
      * Block
