@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-23T02:09:05.2669837	Tags for minecraft:item mod id superbwarfare
+// 1.20.1	2025-03-23T02:12:10.7268593	Tags for minecraft:item mod id superbwarfare
 cf8d49a8d2872286d1a9c3d4a7e1c2b7690db0b8 data/forge/tags/items/dusts.json
 0fa06c2ff83bf09797e3ddff90f62d1124e645b4 data/forge/tags/items/dusts/coal_coke.json
 295ddf906b7133a0558d03e9a60eea18281fe430 data/forge/tags/items/dusts/iron.json
@@ -26,7 +26,7 @@ af6fd64b4a685c353f243763db268f7b2304c009 data/forge/tags/items/storage_blocks/le
 30d1daa7590f7364b5bc2dc777a00caf2f5eecb0 data/forge/tags/items/storage_blocks/silver.json
 3743c2790deca7e779d3e4b82f092de39b446988 data/forge/tags/items/storage_blocks/steel.json
 144e54d908121dee498b2ebba3b24b09fd6f18d9 data/forge/tags/items/storage_blocks/tungsten.json
-15edbbc4a4232f07a6b9da49269c2d91e73a02e2 data/superbwarfare/tags/items/blueprint.json
+362d41246c4c832d114e8b8942b105f4010d4ba0 data/superbwarfare/tags/items/blueprint.json
 b2487459d95ca9a319bfbd94e60a48de60e07297 data/superbwarfare/tags/items/blueprint/cannon.json
 889e4b56462df422f57191f07229009dcf2073e3 data/superbwarfare/tags/items/blueprint/common.json
 9b346c7045e067325acd15afe92e9fdd4a9f9310 data/superbwarfare/tags/items/blueprint/epic.json
