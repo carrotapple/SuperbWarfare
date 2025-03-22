@@ -95,7 +95,7 @@ public class ExplosionConfig {
         C4_EXPLOSION_COUNTDOWN = builder.defineInRange("c4_explosion_countdown", 514, 1, Integer.MAX_VALUE);
 
         builder.comment("The explosion radius of C4");
-        C4_EXPLOSION_RADIUS = builder.defineInRange("c4_explosion_radius", 14, 1, Integer.MAX_VALUE);
+        C4_EXPLOSION_RADIUS = builder.defineInRange("c4_explosion_radius", 10, 1, Integer.MAX_VALUE);
 
         builder.pop();
 
