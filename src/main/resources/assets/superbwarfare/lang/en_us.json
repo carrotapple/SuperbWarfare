@@ -542,5 +542,9 @@
 
   "config.jade.plugin_superbwarfare.vehicle_energy": "Vehicle Energy",
   "config.jade.plugin_superbwarfare.vehicle_health": "Vehicle Health",
-  "config.jade.plugin_superbwarfare.container_entity": "Container Entity"
+  "config.jade.plugin_superbwarfare.container_entity": "Container Entity",
+  "superbwarfare.advancement.main.root": "Superb Warfare",
+  "superbwarfare.advancement.main.root.des": "Welcome to the Superb Warfare!",
+  "superbwarfare.advancement.main.best_friend": "\"Best Friends\" Forever",
+  "superbwarfare.advancement.main.best_friend.des": "Maybe it shouldn't be your friend"
 }

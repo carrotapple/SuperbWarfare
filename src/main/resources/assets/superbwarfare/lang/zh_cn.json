@@ -542,5 +542,9 @@
 
   "config.jade.plugin_superbwarfare.vehicle_energy": "载具能量",
   "config.jade.plugin_superbwarfare.vehicle_health": "载具血量",
-  "config.jade.plugin_superbwarfare.container_entity": "集装箱实体"
+  "config.jade.plugin_superbwarfare.container_entity": "集装箱实体",
+  "superbwarfare.advancement.main.root": "卓越前线",
+  "superbwarfare.advancement.main.root.des": "欢迎来到卓越前线！",
+  "superbwarfare.advancement.main.best_friend": "永恒的“伙伴”",
+  "superbwarfare.advancement.main.best_friend.des": "也许你不该拿它当朋友"
 }
