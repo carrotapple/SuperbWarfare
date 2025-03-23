@@ -39,6 +39,8 @@ public class WheelChairRenderer extends GeoEntityRenderer<WheelChairEntity> {
     public void render(WheelChairEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-entityYaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.prevRoll, entityIn.getRoll())));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
     }

@@ -23,16 +23,22 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -41,9 +47,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    public float p1y = 0;
+    public float p2y = 0;
+    public float p3y = 0;
+    public float p4y = 0;
     public int jumpCoolDown;
     public int handBusyTime;
 
@@ -95,11 +104,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
-    protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
-        return 0.75F;
-    }
-
-    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -128,6 +132,90 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         }
         this.setSprinting(this.getDeltaMovement().horizontalDistance() > 0.15);
         attractEntity();
+
+        //地形适应测试
+
+        Matrix4f transform = getVehicleTransform(1);
+
+        //点位
+        // 左前
+        Vector4f worldPosition1 = transformPosition(transform, 0.5f, p1y, 0.75f);
+        // 右前
+        Vector4f worldPosition2 = transformPosition(transform, -0.5f, p2y, 0.75f);
+        // 左后
+        Vector4f worldPosition3 = transformPosition(transform, 0.5f, p3y, -0.75f);
+        // 右后
+        Vector4f worldPosition4 = transformPosition(transform, -0.5f, p4y, -0.75f);
+
+        Vec3 p1 = new Vec3(worldPosition1.x,worldPosition1.y,worldPosition1.z);
+        Vec3 p2 = new Vec3(worldPosition2.x,worldPosition2.y,worldPosition2.z);
+        Vec3 p3 = new Vec3(worldPosition3.x,worldPosition3.y,worldPosition3.z);
+        Vec3 p4 = new Vec3(worldPosition4.x,worldPosition4.y,worldPosition4.z);
+
+        //确定点位是否在墙里来调整点位高度
+        if (this.level().noCollision((new AABB(p1, p1)))) {
+            p1y -= 0.02f;
+        } else {
+            p1y += 0.02f;
+        }
+
+        if (this.level().noCollision((new AABB(p2, p2)))) {
+            p2y -= 0.02f;
+        } else {
+            p2y += 0.02f;
+        }
+
+        if (this.level().noCollision((new AABB(p3, p3)))) {
+            p3y -= 0.02f;
+        } else {
+            p3y += 0.02f;
+        }
+
+        if (this.level().noCollision((new AABB(p4, p4)))) {
+            p4y -= 0.02f;
+        } else {
+            p4y += 0.02f;
+        }
+
+        p1y *= 0.98f;
+        p2y *= 0.98f;
+        p3y *= 0.98f;
+        p4y *= 0.98f;
+
+        //测试用粒子效果，用于确定点位位置
+//        Player player = (Player) this.getFirstPassenger();
+//
+//        if (player != null) {
+//            if (player.level() instanceof ServerLevel serverLevel ) {
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
+//            }
+//        }
+
+
+        //通过点位位置获取角度
+        //左后-左前
+        Vec3 LbToLr = p3.vectorTo(p1);
+        //右后-右前
+        Vec3 RbToRr = p4.vectorTo(p2);
+        //左前-右前
+        Vec3 LrToRr = p1.vectorTo(p2);
+        //左后-右后
+        Vec3 LbToRb = p3.vectorTo(p4);
+
+        double x1 = getXRotFromVector(LbToLr);
+        double x2 = getXRotFromVector(RbToRr);
+        double z1 = getXRotFromVector(LrToRr);
+        double z2 = getXRotFromVector(LbToRb);
+
+        setXRot((float) (-(x1 + x2) / 2));
+        setZRot((float) (-(z1 + z2) / 2));
+
+        this.setZRot(this.roll * 0.98f);
+        this.setXRot(this.getXRot() * 0.98f);
+
         this.refreshDimensions();
     }
 
@@ -247,6 +335,33 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);
+    }
+
+    @Override
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        // From Immersive_Aircraft
+        if (!this.hasPassenger(passenger)) {
+            return;
+        }
+
+        Matrix4f transform = getVehicleTransform(1);
+
+        float x = 0f;
+        float y = 0.7f;
+        float z = 0f;
+        y += (float) passenger.getMyRidingOffset();
+
+        int i = this.getSeatIndex(passenger);
+
+        if (i == 0) {
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        }
+
+        if (passenger != this.getFirstPassenger()) {
+            passenger.setXRot(passenger.getXRot() + (getXRot() - xRotO));
+        }
     }
 
     @Override

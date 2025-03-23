@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -32,6 +33,10 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
         if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof Tom6Entity tom6Entity) {
             matrices.mulPose(Axis.XP.rotationDegrees(-tom6Entity.getViewXRot(tickDelta)));
             matrices.mulPose(Axis.ZP.rotationDegrees(-tom6Entity.getRoll(tickDelta)));
+        }
+        if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof WheelChairEntity wheelChairEntity) {
+            matrices.mulPose(Axis.XP.rotationDegrees(-wheelChairEntity.getViewXRot(tickDelta)));
+            matrices.mulPose(Axis.ZP.rotationDegrees(-wheelChairEntity.getRoll(tickDelta)));
         }
     }
 }
