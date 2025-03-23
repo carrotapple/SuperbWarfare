@@ -14,7 +14,6 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -52,15 +51,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
-
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    public float p1y = 0;
-    public float p2y = 0;
-    public float p3y = 0;
-    public float p4y = 0;
     public int jumpCoolDown;
     public int handBusyTime;
 
@@ -75,14 +67,14 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void playerTouch(Player pPlayer) {
-//        if (this.position().distanceTo(pPlayer.position()) > 1.4) return;
-//        if (!this.level().isClientSide) {
-//            double entitySize = pPlayer.getBbWidth() * pPlayer.getBbHeight();
-//            double thisSize = this.getBbWidth() * this.getBbHeight();
-//            double f = Math.min(entitySize / thisSize, 2);
-//            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(pPlayer.position().vectorTo(this.position()).toVector3f()).scale(0.5 * f * pPlayer.getDeltaMovement().length())));
-//            this.setYRot(pPlayer.getYHeadRot());
-//        }
+        if (this.position().distanceTo(pPlayer.position()) > 1.4 || pPlayer == this.getFirstPassenger()) return;
+        if (!this.level().isClientSide) {
+            double entitySize = pPlayer.getBbWidth() * pPlayer.getBbHeight();
+            double thisSize = this.getBbWidth() * this.getBbHeight();
+            double f = Math.min(entitySize / thisSize, 2);
+            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(pPlayer.position().vectorTo(this.position()).toVector3f()).scale(0.5 * f * pPlayer.getDeltaMovement().length())));
+            this.setYRot(pPlayer.getYHeadRot());
+        }
     }
 
     @Override
@@ -174,22 +166,22 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         Vec3 p4 = new Vec3(positionRB.x, positionRB.y, positionRB.z);
 
         // 测试用粒子效果，用于确定点位位置
-        var passenger = this.getFirstPassenger();
-
-        if (passenger != null) {
-            if (passenger.level() instanceof ServerLevel serverLevel) {
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
-            }
-        }
+//        var passenger = this.getFirstPassenger();
+//
+//        if (passenger != null) {
+//            if (passenger.level() instanceof ServerLevel serverLevel) {
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
+//            }
+//        }
 
         // 确定点位是否在墙里来调整点位高度
-        this.p1y = (float) Mth.clamp(this.traceBlockY(p1, 2), -1, 1);
-        this.p2y = (float) Mth.clamp(this.traceBlockY(p2, 2), -1, 1);
-        this.p3y = (float) Mth.clamp(this.traceBlockY(p3, 2), -1, 1);
-        this.p4y = (float) Mth.clamp(this.traceBlockY(p4, 2), -1, 1);
+        float p1y = (float) Mth.clamp(this.traceBlockY(p1, 2), -1, 1);
+        float p2y = (float) Mth.clamp(this.traceBlockY(p2, 2), -1, 1);
+        float p3y = (float) Mth.clamp(this.traceBlockY(p3, 2), -1, 1);
+        float p4y = (float) Mth.clamp(this.traceBlockY(p4, 2), -1, 1);
 
         p1 = p1.add(new Vec3(0, p1y, 0));
         p2 = p2.add(new Vec3(0, p2y, 0));
@@ -212,10 +204,10 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         double z2 = getXRotFromVector(lrb);
 
         float diffX = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((x1 + x2) / 2) - this.getXRot()));
-        this.setXRot(Mth.clamp(this.getXRot() + 0.5f * diffX, -90f, 90f));
+        this.setXRot(Mth.clamp(this.getXRot() + 0.15f * diffX, -90f, 90f));
 
         float diffZ = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((z1 + z2) / 2) - this.getRoll()));
-        this.setZRot(Mth.clamp(this.getRoll() + 0.5f * diffZ, -90f, 90f));
+        this.setZRot(Mth.clamp(this.getRoll() + 0.15f * diffZ, -90f, 90f));
     }
 
     public Matrix4f getWheelsTransform(float ticks) {
