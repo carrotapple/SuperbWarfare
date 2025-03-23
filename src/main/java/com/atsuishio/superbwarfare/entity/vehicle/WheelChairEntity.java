@@ -29,15 +29,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
@@ -133,100 +128,9 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         this.setSprinting(this.getDeltaMovement().horizontalDistance() > 0.15);
         attractEntity();
 
-        this.terrainCompat();
+        this.terrainCompat(0.9f, 1f);
 
         this.refreshDimensions();
-    }
-
-    public boolean inBlock(Vec3 vec3) {
-        AABB aabb = new AABB(vec3, vec3);
-        return BlockPos.betweenClosedStream(aabb).anyMatch((p_201942_) -> {
-            BlockState blockstate = this.level().getBlockState(p_201942_);
-            return !blockstate.isAir() && blockstate.isSuffocating(this.level(), p_201942_) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), p_201942_).move((double) p_201942_.getX(), (double) p_201942_.getY(), (double) p_201942_.getZ()), Shapes.create(aabb), BooleanOp.AND);
-        });
-    }
-
-    // 地形适应测试
-    public void terrainCompat() {
-        Matrix4f transform = this.getWheelsTransform(1);
-
-        // 点位
-        // 左前
-        Vector4f positionLF = transformPosition(transform, 0.45f, 0, 0.5f);
-        // 右前
-        Vector4f positionRF = transformPosition(transform, -0.45f, 0, 0.5f);
-        // 左后
-        Vector4f positionLB = transformPosition(transform, 0.45f, 0, -0.5f);
-        // 右后
-        Vector4f positionRB = transformPosition(transform, -0.45f, 0, -0.5f);
-
-        Vec3 p1 = new Vec3(positionLF.x, positionLF.y, positionLF.z);
-        Vec3 p2 = new Vec3(positionRF.x, positionRF.y, positionRF.z);
-        Vec3 p3 = new Vec3(positionLB.x, positionLB.y, positionLB.z);
-        Vec3 p4 = new Vec3(positionRB.x, positionRB.y, positionRB.z);
-
-        // 测试用粒子效果，用于确定点位位置
-//        var passenger = this.getFirstPassenger();
-//
-//        if (passenger != null) {
-//            if (passenger.level() instanceof ServerLevel serverLevel) {
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
-//            }
-//        }
-
-        // 确定点位是否在墙里来调整点位高度
-        float p1y = (float) Mth.clamp(this.traceBlockY(p1, 2), -1, 1);
-        float p2y = (float) Mth.clamp(this.traceBlockY(p2, 2), -1, 1);
-        float p3y = (float) Mth.clamp(this.traceBlockY(p3, 2), -1, 1);
-        float p4y = (float) Mth.clamp(this.traceBlockY(p4, 2), -1, 1);
-
-        p1 = p1.add(new Vec3(0, p1y, 0));
-        p2 = p2.add(new Vec3(0, p2y, 0));
-        p3 = p3.add(new Vec3(0, p3y, 0));
-        p4 = p4.add(new Vec3(0, p4y, 0));
-
-        // 通过点位位置获取角度
-        // 左后-左前
-        Vec3 lbf = p3.vectorTo(p1);
-        // 右后-右前
-        Vec3 rbf = p4.vectorTo(p2);
-        // 左前-右前
-        Vec3 lrf = p1.vectorTo(p2);
-        // 左后-右后
-        Vec3 lrb = p3.vectorTo(p4);
-
-        double x1 = getXRotFromVector(lbf);
-        double x2 = getXRotFromVector(rbf);
-        double z1 = getXRotFromVector(lrf);
-        double z2 = getXRotFromVector(lrb);
-
-        float diffX = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((x1 + x2) / 2) - this.getXRot()));
-        this.setXRot(Mth.clamp(this.getXRot() + 0.15f * diffX, -90f, 90f));
-
-        float diffZ = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((z1 + z2) / 2) - this.getRoll()));
-        this.setZRot(Mth.clamp(this.getRoll() + 0.15f * diffZ, -90f, 90f));
-    }
-
-    public Matrix4f getWheelsTransform(float ticks) {
-        Matrix4f transform = new Matrix4f();
-        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo, getY()), (float) Mth.lerp(ticks, zo, getZ()));
-        transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(ticks, yRotO, getYRot())));
-        return transform;
-    }
-
-    public double traceBlockY(Vec3 pos, double maxLength) {
-        var res = this.level().clip(new ClipContext(pos.add(0, maxLength / 2d, 0), pos.add(0, -maxLength / 2d, 0),
-                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-        if (res.getType() == HitResult.Type.BLOCK) {
-            return pos.y - res.getLocation().y;
-        }
-        if (!this.level().noCollision(new AABB(pos, pos))) {
-            return pos.y;
-        }
-        return pos.y - maxLength / 2d;
     }
 
     public boolean hasEnoughSpaceFor(Entity pEntity) {
@@ -357,7 +261,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         Matrix4f transform = getVehicleTransform(1);
 
         float x = 0f;
-        float y = 0.7f;
+        float y = 0.3f;
         float z = 0f;
         y += (float) passenger.getMyRidingOffset();
 
@@ -372,6 +276,16 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         if (passenger != this.getFirstPassenger()) {
             passenger.setXRot(passenger.getXRot() + (getXRot() - xRotO));
         }
+    }
+
+    @Override
+    public Matrix4f getVehicleTransform(float ticks) {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo + 0.4f, getY() + 0.4f), (float) Mth.lerp(ticks, zo, getZ()));
+        transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(ticks, yRotO, getYRot())));
+        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
+        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
+        return transform;
     }
 
     @Override

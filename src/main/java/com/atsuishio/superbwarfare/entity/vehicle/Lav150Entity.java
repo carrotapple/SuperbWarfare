@@ -204,6 +204,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         turretAngle(15, 12.5f);
         lowHealthWarning();
 
+        this.terrainCompat(2.7f, 3.61f);
+
         this.refreshDimensions();
     }
 
@@ -384,7 +386,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         if (this.isInWater() || onGround()) {
             this.setYRot((float) (this.getYRot() - Math.max((isInWater() && !onGround() ? 5 : 10) * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER)));
+            this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale((!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER))));
         }
     }
 
@@ -403,21 +405,25 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         Matrix4f transform = getTurretTransform(1);
         Matrix4f transformV = getVehicleTransform(1);
 
-        float x = 0.36f;
-        float y = -0.3f;
-        float z = 0.56f;
-        y += (float) passenger.getMyRidingOffset();
-
         int i = this.getSeatIndex(passenger);
 
         Vector4f worldPosition;
         if (i == 0) {
-            worldPosition = transformPosition(transform, x, y, z);
+            worldPosition = transformPosition(transform, 0.36f, -0.75f, 0.56f);
         } else {
             worldPosition = transformPosition(transformV, 0, 1, 0);
         }
         passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
         callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+
+        copyEntityData(passenger);
+    }
+
+    public void copyEntityData(Entity entity) {
+        if (entity == getNthEntity(0)) {
+
+            entity.setYBodyRot(getBarrelYRot(1));
+        }
     }
 
     public int getMaxPassengers() {
@@ -426,7 +432,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     public Vec3 driverZoomPos(float ticks) {
         Matrix4f transform = getTurretTransform(ticks);
-        Vector4f worldPosition = transformPosition(transform, 0, 0, 0.56f);
+        Vector4f worldPosition = transformPosition(transform, 0, 0.5f, 0.56f);
         return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
     }
 
@@ -447,10 +453,31 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     public Matrix4f getTurretTransform(float ticks) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo + 2.4f, getY() + 2.4f), (float) Mth.lerp(ticks, zo, getZ()));
+
+        Matrix4f transformV = getVehicleTransform(ticks);
+        Vector4f worldPosition = transformPosition(transformV, 0, 2.475375f, 0);
+
+        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+
+        float a = this.getTurretYaw(ticks);
+
+        float r = (Mth.abs(a) - 90f) / 90f;
+
+        float r2;
+
+        if (Mth.abs(a) <= 90f) {
+            r2 = a / 90f;
+        } else {
+            if (a < 0) {
+                r2 = - (180f + a) / 90f;
+            } else {
+                r2 = (180f - a) / 90f;
+            }
+        }
+
         transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
-        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
-        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
+        transform.rotate(Axis.XP.rotationDegrees(-r * getViewXRot(ticks) - r2 * getRoll(ticks)));
+        transform.rotate(Axis.ZP.rotationDegrees(-r * getRoll(ticks) + r2 * getViewXRot(ticks)));
         return transform;
     }
 
@@ -471,10 +498,12 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     protected void clampRotation(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getXRot());
+        float f = Mth.wrapDegrees(entity.getXRot() - this.getXRot());
         float f1 = Mth.clamp(f, -32.5F, 15F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
+
+        entity.setYBodyRot(getBarrelYRot(1));
     }
 
     @Override
@@ -546,7 +575,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public boolean hidePassenger(Entity entity) {
-        return true;
+        return false;
     }
 
     @Override

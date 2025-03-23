@@ -895,6 +895,10 @@ public abstract class VehicleEntity extends Entity {
         return this.turretYRot;
     }
 
+    public float getTurretYaw(float pPartialTick) {
+        return Mth.lerp(pPartialTick, turretYRotO, getTurretYRot());
+    }
+
     public void setTurretYRot(float pTurretYRot) {
         this.turretYRot = pTurretYRot;
     }

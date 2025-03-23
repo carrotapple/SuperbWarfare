@@ -167,8 +167,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public void baseTick() {
         super.baseTick();
 
-        setZRot(getRoll() * (backInputDown ? 0.9f : 0.99f));
-
         if (this.level() instanceof ServerLevel) {
             if (reloadCoolDown > 0) {
                 reloadCoolDown--;
@@ -180,10 +178,10 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         }
 
         if (this.onGround()) {
+            this.terrainCompat(2.7f, 2.7f);
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
-            this.setZRot(this.roll * 0.9f);
-            this.setXRot(this.getXRot() * 0.9f);
         } else {
+            setZRot(getRoll() * (backInputDown ? 0.9f : 0.99f));
             float f = (float) Mth.clamp(0.9f - 0.015 * getDeltaMovement().length() + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((this.getXRot() < 0 ? -0.035 : (this.getXRot() > 0 ? 0.035 : 0)) * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));

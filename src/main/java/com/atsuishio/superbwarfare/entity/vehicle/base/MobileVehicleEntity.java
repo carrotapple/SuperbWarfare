@@ -7,8 +7,10 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,16 +27,22 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     public static final EntityDataAccessor<Integer> CANNON_RECOIL_TIME = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
@@ -183,6 +191,108 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         this.move(MoverType.SELF, this.getDeltaMovement());
         collideLilyPadBlock();
         this.refreshDimensions();
+    }
+
+    // 地形适应测试
+    public void terrainCompat(float w, float l) {
+Matrix4f transform = this.getWheelsTransform(1);
+
+        // 点位
+        // 前
+        Vector4f positionF = transformPosition(transform, 0, 0, l / 2);
+        // 后
+        Vector4f positionB = transformPosition(transform, 0, 0, -l / 2);
+        // 左
+        Vector4f positionL = transformPosition(transform, -w / 2, 0, 0);
+        // 右
+        Vector4f positionR = transformPosition(transform, w / 2, 0, 0);
+        // 左前
+        Vector4f positionLF = transformPosition(transform, w / 2, 0, l / 2);
+        // 右前
+        Vector4f positionRF = transformPosition(transform, -w / 2, 0, l / 2);
+        // 左后
+        Vector4f positionLB = transformPosition(transform, w / 2, 0, -l / 2);
+        // 右后
+        Vector4f positionRB = transformPosition(transform, -w / 2, 0, -l / 2);
+
+        Vec3 p1 = new Vec3(positionLF.x, positionLF.y, positionLF.z);
+        Vec3 p2 = new Vec3(positionRF.x, positionRF.y, positionRF.z);
+        Vec3 p3 = new Vec3(positionLB.x, positionLB.y, positionLB.z);
+        Vec3 p4 = new Vec3(positionRB.x, positionRB.y, positionRB.z);
+
+        Vec3 p5 = new Vec3(positionF.x, positionF.y, positionF.z);
+        Vec3 p6 = new Vec3(positionB.x, positionB.y, positionB.z);
+        Vec3 p7 = new Vec3(positionL.x, positionL.y, positionL.z);
+        Vec3 p8 = new Vec3(positionR.x, positionR.y, positionR.z);
+
+        // 测试用粒子效果，用于确定点位位置
+        var passenger = this.getFirstPassenger();
+
+        if (passenger != null) {
+            if (passenger.level() instanceof ServerLevel serverLevel) {
+                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
+                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
+                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
+                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
+            }
+        }
+
+        // 确定点位是否在墙里来调整点位高度
+        float p1y = (float) Mth.clamp(this.traceBlockY(p1, l), -l / 2, l / 2);
+        float p2y = (float) Mth.clamp(this.traceBlockY(p2, l), -l / 2, l / 2);
+        float p3y = (float) Mth.clamp(this.traceBlockY(p3, l), -l / 2, l / 2);
+        float p4y = (float) Mth.clamp(this.traceBlockY(p4, l), -l / 2, l / 2);
+
+        float p5y = (float) Mth.clamp(this.traceBlockY(p5, 3), -1, 1);
+        float p6y = (float) Mth.clamp(this.traceBlockY(p6, 3), -1, 1);
+        float p7y = (float) Mth.clamp(this.traceBlockY(p7, 3), -1, 1);
+        float p8y = (float) Mth.clamp(this.traceBlockY(p8, 3), -1, 1);
+
+        p1 = p1.add(new Vec3(0, p1y, 0));
+        p2 = p2.add(new Vec3(0, p2y, 0));
+        p3 = p3.add(new Vec3(0, p3y, 0));
+        p4 = p4.add(new Vec3(0, p4y, 0));
+
+        // 通过点位位置获取角度
+
+        // 左后-左前
+        Vec3 v0 = p3.vectorTo(p1);
+        // 右后-右前
+        Vec3 v1 = p4.vectorTo(p2);
+        // 左前-右前
+        Vec3 v2 = p1.vectorTo(p2);
+        // 左后-右后
+        Vec3 v3 = p3.vectorTo(p4);
+
+        double x1 = getXRotFromVector(v0);
+        double x2 = getXRotFromVector(v1);
+        double z1 = getXRotFromVector(v2);
+        double z2 = getXRotFromVector(v3);
+
+        float diffX = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((getY() < 0 ? -1 : 1) * (x1 + x2) / 2) - this.getXRot()));
+        this.setXRot(Mth.clamp(this.getXRot() + 0.15f * diffX, -90f, 90f));
+
+        float diffZ = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((getY() < 0 ? -1 : 1) * (z1 + z2) / 2) - this.getRoll()));
+        this.setZRot(Mth.clamp(this.getRoll() + 0.15f * diffZ, -90f, 90f));
+    }
+
+    public Matrix4f getWheelsTransform(float ticks) {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) Mth.lerp(ticks, xo, getX()), (float) Mth.lerp(ticks, yo, getY()), (float) Mth.lerp(ticks, zo, getZ()));
+        transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(ticks, yRotO, getYRot())));
+        return transform;
+    }
+
+    public double traceBlockY(Vec3 pos, double maxLength) {
+        var res = this.level().clip(new ClipContext(pos.add(0, maxLength / 2d, 0), pos.add(0, -maxLength / 2d, 0),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        if (res.getType() == HitResult.Type.BLOCK) {
+            return pos.y - res.getLocation().y;
+        }
+        if (!this.level().noCollision(new AABB(pos, pos))) {
+            return pos.y;
+        }
+        return pos.y - maxLength / 2d;
     }
 
     public void collideLilyPadBlock() {

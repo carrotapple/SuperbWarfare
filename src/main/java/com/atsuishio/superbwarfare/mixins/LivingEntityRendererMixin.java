@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,6 +39,28 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
         if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof WheelChairEntity wheelChairEntity) {
             matrices.mulPose(Axis.XP.rotationDegrees(-wheelChairEntity.getViewXRot(tickDelta)));
             matrices.mulPose(Axis.ZP.rotationDegrees(-wheelChairEntity.getRoll(tickDelta)));
+        }
+
+        if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof Lav150Entity lav150) {
+
+            float a = lav150.getTurretYaw(tickDelta);
+
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            matrices.mulPose(Axis.XP.rotationDegrees(r * lav150.getViewXRot(tickDelta) + r2 * lav150.getRoll(tickDelta)));
+            matrices.mulPose(Axis.ZP.rotationDegrees(r * lav150.getRoll(tickDelta) - r2 * lav150.getViewXRot(tickDelta)));
         }
     }
 }
