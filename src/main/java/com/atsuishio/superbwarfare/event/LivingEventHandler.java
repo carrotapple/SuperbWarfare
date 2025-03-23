@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
@@ -472,7 +473,7 @@ public class LivingEventHandler {
             return;
         }
 
-        if (attacker != null) {
+        if (attacker != null && MiscConfig.SEND_KILL_FEEDBACK.get()) {
             if (DamageTypeTool.isHeadshotDamage(source)) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), true, damageTypeResourceKey));
             } else {

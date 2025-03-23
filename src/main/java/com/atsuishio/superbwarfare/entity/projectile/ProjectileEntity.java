@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.BarbedWireBlock;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.config.server.ProjectileConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
@@ -341,7 +342,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         if (result instanceof BlockHitResult blockHitResult) {
             if (blockHitResult.getType() == HitResult.Type.MISS) {
                 return;
@@ -491,7 +492,9 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
                 ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
 
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), living.getId(), false, ModDamageTypes.BEAST));
+                if (MiscConfig.SEND_KILL_FEEDBACK.get()) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), living.getId(), false, ModDamageTypes.BEAST));
+                }
             }
 
             if (living instanceof ServerPlayer victim) {
@@ -712,7 +715,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
         return p_217300_2_.apply(context);
     }
 
-    public LivingEntity getShooter() {
+    public @Nullable LivingEntity getShooter() {
         return this.shooter;
     }
 
