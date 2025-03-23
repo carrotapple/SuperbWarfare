@@ -241,7 +241,7 @@ public class VehicleHudOverlay {
                     guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(entityRange, "m")),
                             w / 2 - 6, h - 53, 0x66FF00, false);
                 } else {
-                    if (blockRange > 512) {
+                    if (blockRange > 500) {
                         guiGraphics.drawString(mc.font, Component.literal("---m"), w / 2 - 6, h - 53, 0x66FF00, false);
                     } else {
                         guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(blockRange, "m")),
