@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,6 +9,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +49,30 @@ public class GameRendererMixin {
 
         if (entity != null && !mainCamera.isDetached() && entity.getRootVehicle() instanceof VehicleEntity vehicle) {
             // rotate camera
-            matrices.mulPose(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
+            if (vehicle instanceof Lav150Entity lav150 && entity == lav150.getFirstPassenger()) {
+
+                float a = lav150.getTurretYaw(tickDelta);
+
+                float r = (Mth.abs(a) - 90f) / 90f;
+
+                float r2;
+
+                if (Mth.abs(a) <= 90f) {
+                    r2 = a / 90f;
+                } else {
+                    if (a < 0) {
+                        r2 = - (180f + a) / 90f;
+                    } else {
+                        r2 = (180f - a) / 90f;
+                    }
+                }
+
+//                matrices.mulPose(Axis.XP.rotationDegrees(-r * lav150.getViewXRot(tickDelta) + r2 * lav150.getRoll(tickDelta)));
+                matrices.mulPose(Axis.ZP.rotationDegrees(-r * lav150.getRoll(tickDelta) + r2 * lav150.getViewXRot(tickDelta)));
+
+            } else {
+                matrices.mulPose(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
+            }
 
             // fetch eye offset
             float eye = entity.getEyeHeight();

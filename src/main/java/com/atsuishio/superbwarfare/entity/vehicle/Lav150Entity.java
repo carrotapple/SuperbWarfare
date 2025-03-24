@@ -432,7 +432,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     public Vec3 driverZoomPos(float ticks) {
         Matrix4f transform = getTurretTransform(ticks);
-        Vector4f worldPosition = transformPosition(transform, 0, 0.5f, 0.56f);
+        Vector4f worldPosition = transformPosition(transform, 0, 0.75f, 0.56f);
         return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
     }
 
@@ -498,10 +498,10 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     protected void clampRotation(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getXRot() - this.getXRot());
-        float f1 = Mth.clamp(f, -32.5F, 15F);
-        entity.xRotO += f1 - f;
-        entity.setXRot(entity.getXRot() + f1 - f);
+//        float f = Mth.wrapDegrees(entity.getXRot() - this.getXRot());
+//        float f1 = Mth.clamp(f, -32.5F, 15F);
+//        entity.xRotO += f1 - f;
+//        entity.setXRot(entity.getXRot() + f1 - f);
 
         entity.setYBodyRot(getBarrelYRot(1));
     }
