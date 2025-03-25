@@ -652,7 +652,7 @@ public abstract class VehicleEntity extends Entity {
         if (driver != null) {
             float turretAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
 
-            float diffY = Mth.wrapDegrees(turretAngle - getTurretYRot() + 0.05f);
+            float diffY = Mth.wrapDegrees(turretAngle - getTurretYRot());
             float diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
             this.turretTurnSound(diffX, diffY, 0.95f);

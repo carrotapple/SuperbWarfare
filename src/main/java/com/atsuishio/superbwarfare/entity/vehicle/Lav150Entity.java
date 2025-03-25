@@ -409,7 +409,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         Vector4f worldPosition;
         if (i == 0) {
-            worldPosition = transformPosition(transform, 0.36f, -0.75f, 0.56f);
+            worldPosition = transformPosition(transform, 0.36f, 1.75f, 0.56f);
         } else {
             worldPosition = transformPosition(transformV, 0, 1, 0);
         }
@@ -452,32 +452,13 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     public Matrix4f getTurretTransform(float ticks) {
-        Matrix4f transform = new Matrix4f();
+        Matrix4f transform = getVehicleTransform(ticks);
+        Vector4f worldPosition = transformPosition(transform, 0, 2.4003f, 0);
 
-        Matrix4f transformV = getVehicleTransform(ticks);
-        Vector4f worldPosition = transformPosition(transformV, 0, 2.475375f, 0);
+        Matrix4f transformT = new Matrix4f();
+        transformT.translate(worldPosition.x, worldPosition.y, worldPosition.z);
 
-        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-
-        float a = this.getTurretYaw(ticks);
-
-        float r = (Mth.abs(a) - 90f) / 90f;
-
-        float r2;
-
-        if (Mth.abs(a) <= 90f) {
-            r2 = a / 90f;
-        } else {
-            if (a < 0) {
-                r2 = - (180f + a) / 90f;
-            } else {
-                r2 = (180f - a) / 90f;
-            }
-        }
-
-        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
-        transform.rotate(Axis.XP.rotationDegrees(-r * getViewXRot(ticks) - r2 * getRoll(ticks)));
-        transform.rotate(Axis.ZP.rotationDegrees(-r * getRoll(ticks) + r2 * getViewXRot(ticks)));
+        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO, getTurretYRot())));
         return transform;
     }
 
