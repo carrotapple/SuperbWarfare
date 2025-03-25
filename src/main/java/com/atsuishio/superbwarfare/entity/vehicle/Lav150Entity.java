@@ -409,7 +409,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         Vector4f worldPosition;
         if (i == 0) {
-            worldPosition = transformPosition(transform, 0.36f, 1.75f, 0.56f);
+            worldPosition = transformPosition(transform, 0.36f, -0.65f, 0.56f);
         } else {
             worldPosition = transformPosition(transformV, 0, 1, 0);
         }
@@ -452,14 +452,14 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     public Matrix4f getTurretTransform(float ticks) {
-        Matrix4f transform = getVehicleTransform(ticks);
+        Matrix4f transformV = getVehicleTransform(ticks);
+
+        Matrix4f transform = new Matrix4f();
         Vector4f worldPosition = transformPosition(transform, 0, 2.4003f, 0);
 
-        Matrix4f transformT = new Matrix4f();
-        transformT.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-
-        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO, getTurretYRot())));
-        return transform;
+        transformV.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transformV.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO, getTurretYRot())));
+        return transformV;
     }
 
     @Override
