@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.datagen;
 
-import com.atsuishio.superbwarfare.config.advancement.criteria.RPGMeleeExplosionTrigger;
+import com.atsuishio.superbwarfare.advancement.criteria.RPGMeleeExplosionTrigger;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.advancements.Advancement;

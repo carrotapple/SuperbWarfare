@@ -1,6 +1,6 @@
-package com.atsuishio.superbwarfare.config.advancement;
+package com.atsuishio.superbwarfare.advancement;
 
-import com.atsuishio.superbwarfare.config.advancement.criteria.RPGMeleeExplosionTrigger;
+import com.atsuishio.superbwarfare.advancement.criteria.RPGMeleeExplosionTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

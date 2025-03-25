@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
+import com.atsuishio.superbwarfare.advancement.CriteriaRegister;
 import com.atsuishio.superbwarfare.client.renderer.item.RocketItemRenderer;
-import com.atsuishio.superbwarfare.config.advancement.CriteriaRegister;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

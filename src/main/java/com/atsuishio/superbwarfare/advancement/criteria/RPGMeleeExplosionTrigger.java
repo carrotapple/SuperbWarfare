@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.config.advancement.criteria;
+package com.atsuishio.superbwarfare.advancement.criteria;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.google.gson.JsonObject;
