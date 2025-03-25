@@ -479,10 +479,28 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     protected void clampRotation(Entity entity) {
-//        float f = Mth.wrapDegrees(entity.getXRot() - this.getXRot());
-//        float f1 = Mth.clamp(f, -32.5F, 15F);
-//        entity.xRotO += f1 - f;
-//        entity.setXRot(entity.getXRot() + f1 - f);
+        float a = getTurretYaw(1);
+        float r = (Mth.abs(a) - 90f) / 90f;
+
+        float r2;
+
+        if (Mth.abs(a) <= 90f) {
+            r2 = a / 90f;
+        } else {
+            if (a < 0) {
+                r2 = - (180f + a) / 90f;
+            } else {
+                r2 = (180f - a) / 90f;
+            }
+        }
+
+        float min = -32.5f - r * getXRot() - r2 * getRoll();
+        float max = 15f - r * getXRot() - r2 * getRoll();
+
+        float f = Mth.wrapDegrees(entity.getXRot());
+        float f1 = Mth.clamp(f, min, max);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
 
         entity.setYBodyRot(getBarrelYRot(1));
     }
