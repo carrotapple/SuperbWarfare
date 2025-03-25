@@ -25,6 +25,7 @@ public class ClientRenderHandler {
         event.register(SentinelImageComponent.class, ClientSentinelImageTooltip::new);
         event.register(LauncherImageComponent.class, ClientLauncherImageTooltip::new);
         event.register(SecondaryCataclysmImageComponent.class, ClientSecondaryCataclysmImageTooltip::new);
+        event.register(ChargingStationImageComponent.class, ClientChargingStationImageTooltip::new);
     }
 
     @SubscribeEvent
@@ -33,5 +34,4 @@ public class ClientRenderHandler {
         event.registerBlockEntityRenderer(ModBlockEntities.FUMO_25.get(), context -> new FuMO25BlockEntityRenderer());
         event.registerBlockEntityRenderer(ModBlockEntities.CHARGING_STATION.get(), context -> new ChargingStationBlockEntityRenderer());
     }
-
 }
