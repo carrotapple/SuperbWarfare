@@ -49,7 +49,7 @@ public class SmallContainerBlock extends BaseEntityBlock {
     @Override
     @ParametersAreNonnullByDefault
     public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide || pState.getValue(OPENED) || !(pLevel.getBlockEntity(pPos) instanceof SmallContainerBlockEntity)) {
+        if (pLevel.isClientSide || pState.getValue(OPENED) || !(pLevel.getBlockEntity(pPos) instanceof SmallContainerBlockEntity blockEntity)) {
             return InteractionResult.PASS;
         }
 
@@ -58,6 +58,8 @@ public class SmallContainerBlock extends BaseEntityBlock {
             pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.crowbar"), true);
             return InteractionResult.PASS;
         }
+
+        blockEntity.setPlayer(pPlayer);
 
         pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
         pLevel.playSound(null, BlockPos.containing(pPos.getX(), pPos.getY(), pPos.getZ()), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1);
@@ -86,7 +88,9 @@ public class SmallContainerBlock extends BaseEntityBlock {
     @Override
     @ParametersAreNonnullByDefault
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return state.getValue(OPENED) ? box(1, 0, 1, 15, 14, 15) : box(0, 0, 0, 16, 15, 16);
+        if (state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH) {
+            return state.getValue(OPENED) ? box(0, 0, 1, 16, 1, 15) : box(0, 0, 1, 16, 14, 15);
+        } else return state.getValue(OPENED) ? box(1, 0, 0, 15, 1, 16) : box(1, 0, 0, 15, 14, 16);
     }
 
     @Override

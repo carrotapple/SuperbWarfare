@@ -3,20 +3,29 @@ package com.atsuishio.superbwarfare.block.entity;
 import com.atsuishio.superbwarfare.block.ContainerBlock;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -26,6 +35,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEntity {
 
@@ -33,6 +44,8 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
     public ResourceLocation lootTable;
     protected long lootTableSeed;
     public int tick = 0;
+    @Nullable
+    private Player player;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -54,11 +67,19 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
                 pLevel.playSound(null, pPos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F) * 0.7F);
             }
         } else {
-
+            var items = blockEntity.unpackLootTable(blockEntity.player);
+            if (!items.isEmpty()) {
+                for (var item : items) {
+                    ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY() + 0.5, pPos.getZ(), item);
+                    entity.setDeltaMovement(new Vec3(pLevel.random.nextDouble() * 0.2, 0.3, pLevel.random.nextDouble() * 0.2));
+                    pLevel.addFreshEntity(entity);
+                }
+            }
             pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
         }
     }
 
+    // TODO 添加开箱动画
     private PlayState predicate(AnimationState<SmallContainerBlockEntity> event) {
 //        if (this.getBlockState().getValue(ContainerBlock.OPENED)) {
 //            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.container.open"));
@@ -118,5 +139,38 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
             }
         }
         BlockItem.setBlockEntityData(pStack, this.getType(), tag);
+    }
+
+    public void setLootTable(ResourceLocation pLootTable, long pLootTableSeed) {
+        this.lootTable = pLootTable;
+        this.lootTableSeed = pLootTableSeed;
+    }
+
+    public List<ItemStack> unpackLootTable(@Nullable Player pPlayer) {
+        if (this.lootTable != null && this.level != null && this.level.getServer() != null) {
+            LootTable loottable = this.level.getServer().getLootData().getLootTable(this.lootTable);
+            if (pPlayer instanceof ServerPlayer) {
+                CriteriaTriggers.GENERATE_LOOT.trigger((ServerPlayer) pPlayer, this.lootTable);
+            }
+
+            this.lootTable = null;
+            LootParams.Builder builder = (new LootParams.Builder((ServerLevel) this.level))
+                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(this.worldPosition));
+            if (pPlayer != null) {
+                builder.withLuck(pPlayer.getLuck()).withParameter(LootContextParams.THIS_ENTITY, pPlayer);
+            }
+
+            return loottable.getRandomItems(builder.create(LootContextParamSets.CHEST), this.lootTableSeed).stream().toList();
+        }
+        return Collections.emptyList();
+    }
+
+    @Nullable
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(@Nullable Player player) {
+        this.player = player;
     }
 }
