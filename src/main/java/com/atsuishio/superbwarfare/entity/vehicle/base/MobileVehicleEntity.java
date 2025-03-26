@@ -195,7 +195,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
     // 地形适应测试
     public void terrainCompat(float w, float l) {
-Matrix4f transform = this.getWheelsTransform(1);
+        Matrix4f transform = this.getWheelsTransform(1);
 
         // 点位
         // 前
@@ -225,6 +225,22 @@ Matrix4f transform = this.getWheelsTransform(1);
         Vec3 p7 = new Vec3(positionL.x, positionL.y, positionL.z);
         Vec3 p8 = new Vec3(positionR.x, positionR.y, positionR.z);
 
+        // 确定点位是否在墙里来调整点位高度
+        float p1y = (float) this.traceBlockY(p1, l);
+        float p2y = (float) this.traceBlockY(p2, l);
+        float p3y = (float) this.traceBlockY(p3, l);
+        float p4y = (float) this.traceBlockY(p4, l);
+
+        float p5y = (float) Mth.clamp(this.traceBlockY(p5, l), -l, l);
+        float p6y = (float) Mth.clamp(this.traceBlockY(p6, l), -l, l);
+        float p7y = (float) Mth.clamp(this.traceBlockY(p7, l), -l, l);
+        float p8y = (float) Mth.clamp(this.traceBlockY(p8, l), -l, l);
+
+        p1 = new Vec3(positionLF.x, p1y, positionLF.z);
+        p2 = new Vec3(positionRF.x, p2y, positionRF.z);
+        p3 = new Vec3(positionLB.x, p3y, positionLB.z);
+        p4 = new Vec3(positionRB.x, p4y, positionRB.z);
+
         // 测试用粒子效果，用于确定点位位置
         var passenger = this.getFirstPassenger();
 
@@ -236,22 +252,6 @@ Matrix4f transform = this.getWheelsTransform(1);
                 sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
             }
         }
-
-        // 确定点位是否在墙里来调整点位高度
-        float p1y = (float) Mth.clamp(this.traceBlockY(p1, l), -l / 2, l / 2);
-        float p2y = (float) Mth.clamp(this.traceBlockY(p2, l), -l / 2, l / 2);
-        float p3y = (float) Mth.clamp(this.traceBlockY(p3, l), -l / 2, l / 2);
-        float p4y = (float) Mth.clamp(this.traceBlockY(p4, l), -l / 2, l / 2);
-
-        float p5y = (float) Mth.clamp(this.traceBlockY(p5, 3), -1, 1);
-        float p6y = (float) Mth.clamp(this.traceBlockY(p6, 3), -1, 1);
-        float p7y = (float) Mth.clamp(this.traceBlockY(p7, 3), -1, 1);
-        float p8y = (float) Mth.clamp(this.traceBlockY(p8, 3), -1, 1);
-
-        p1 = p1.add(new Vec3(0, p1y, 0));
-        p2 = p2.add(new Vec3(0, p2y, 0));
-        p3 = p3.add(new Vec3(0, p3y, 0));
-        p4 = p4.add(new Vec3(0, p4y, 0));
 
         // 通过点位位置获取角度
 
@@ -269,10 +269,10 @@ Matrix4f transform = this.getWheelsTransform(1);
         double z1 = getXRotFromVector(v2);
         double z2 = getXRotFromVector(v3);
 
-        float diffX = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((getY() < 0 ? -1 : 1) * (x1 + x2) / 2) - this.getXRot()));
-        this.setXRot(Mth.clamp(this.getXRot() + 0.15f * diffX, -90f, 90f));
+        float diffX = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) (-(x1 + x2)) - this.getXRot()));
+        this.setXRot(Mth.clamp(this.getXRot() + 0.075f * diffX, -90f, 90f));
 
-        float diffZ = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) ((getY() < 0 ? -1 : 1) * (z1 + z2) / 2) - this.getRoll()));
+        float diffZ = Math.clamp(-90f, 90f, Mth.wrapDegrees((float) (-(z1 + z2)) - this.getRoll()));
         this.setZRot(Mth.clamp(this.getRoll() + 0.15f * diffZ, -90f, 90f));
     }
 
@@ -284,15 +284,21 @@ Matrix4f transform = this.getWheelsTransform(1);
     }
 
     public double traceBlockY(Vec3 pos, double maxLength) {
-        var res = this.level().clip(new ClipContext(pos.add(0, maxLength / 2d, 0), pos.add(0, -maxLength / 2d, 0),
+        var res = this.level().clip(new ClipContext(pos, pos.add(0, -maxLength, 0),
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+
+        double targetY = 0;
+
         if (res.getType() == HitResult.Type.BLOCK) {
-            return pos.y - res.getLocation().y;
+            targetY  = res.getLocation().y;
+        } else if (!this.level().noCollision(new AABB(pos, pos))) {
+            targetY = pos.y + maxLength / 2;
+        } else if (res.getType() == HitResult.Type.MISS){
+            targetY = pos.y - maxLength / 2;
         }
-        if (!this.level().noCollision(new AABB(pos, pos))) {
-            return pos.y;
-        }
-        return pos.y - maxLength / 2d;
+
+        double diffY = targetY - pos.y;
+        return pos.y + 0.5f * diffY;
     }
 
     public void collideLilyPadBlock() {
