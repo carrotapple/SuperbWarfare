@@ -135,6 +135,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
         for (Entity entity : entities) {
             if (entity.equals(this.shooter)) continue;
             if (entity.equals(this.shooter.getVehicle())) continue;
+            if (entity.getVehicle() == this.shooter.getVehicle()) continue;
             if (entity instanceof TargetEntity && entity.getEntityData().get(TargetEntity.DOWN_TIME) > 0) continue;
 
             EntityResult result = this.getHitResult(entity, startVec, endVec);
@@ -166,7 +167,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
                 PROJECTILE_TARGETS
         );
         for (Entity entity : entities) {
-            if (!entity.equals(this.shooter)) {
+            if (this.shooter != null && !entity.equals(this.shooter) && !entity.equals(this.shooter.getVehicle()) && entity.getVehicle() != this.shooter.getVehicle()) {
                 EntityResult result = this.getHitResult(entity, startVec, endVec);
                 if (result == null) continue;
                 hitEntities.add(result);

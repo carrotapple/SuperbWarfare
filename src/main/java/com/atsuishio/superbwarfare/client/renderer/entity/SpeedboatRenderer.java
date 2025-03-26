@@ -5,17 +5,14 @@ import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
 import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -57,10 +54,6 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
     public void renderRecursively(PoseStack poseStack, SpeedboatEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         String name = bone.getName();
         if (name.equals("root")) {
-
-            Player player = Minecraft.getInstance().player;
-            bone.setHidden(ClientEventHandler.zoomVehicle && animatable.getFirstPassenger() == player);
-
             float a = animatable.getEntityData().get(YAW);
             float r = (Mth.abs(a) - 90f) / 90f;
 
