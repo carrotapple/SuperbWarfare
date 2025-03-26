@@ -88,7 +88,7 @@ public abstract class VehicleEntity extends Entity {
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
-    public float turretRot;
+    public float turretYRotLock;
     public float gunYRot;
     public float gunXRot;
     public float gunYRotO;
@@ -662,9 +662,9 @@ public abstract class VehicleEntity extends Entity {
 
             this.setTurretXRot(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -xSpeed, xSpeed));
             this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.9f * diffY, min, max));
-            turretRot = Mth.clamp(0.9f * diffY, min, max);
+            turretYRotLock = Mth.clamp(0.9f * diffY, min, max);
         } else {
-            turretRot = 0;
+            turretYRotLock = 0;
         }
     }
 
@@ -684,7 +684,7 @@ public abstract class VehicleEntity extends Entity {
         }
 
         this.setGunXRot(this.getGunXRot() + Mth.clamp(0.95f * diffX, -xSpeed, xSpeed));
-        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -ySpeed, ySpeed) + speed * turretRot);
+        this.setGunYRot(this.getGunYRot() + Mth.clamp(0.9f * diffY, -ySpeed, ySpeed) + speed * turretYRotLock);
     }
 
     public void destroy() {

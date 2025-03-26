@@ -1,7 +1,5 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -50,29 +48,23 @@ public class GameRendererMixin {
 
         if (entity != null && !mainCamera.isDetached() && entity.getRootVehicle() instanceof VehicleEntity vehicle) {
             // rotate camera
-            if ((vehicle instanceof Lav150Entity || vehicle instanceof Bmp2Entity) && entity == vehicle.getFirstPassenger()) {
+            float a = vehicle.getTurretYaw(tickDelta);
 
-                float a = vehicle.getTurretYaw(tickDelta);
+            float r = (Mth.abs(a) - 90f) / 90f;
 
-                float r = (Mth.abs(a) - 90f) / 90f;
+            float r2;
 
-                float r2;
-
-                if (Mth.abs(a) <= 90f) {
-                    r2 = a / 90f;
-                } else {
-                    if (a < 0) {
-                        r2 = - (180f + a) / 90f;
-                    } else {
-                        r2 = (180f - a) / 90f;
-                    }
-                }
-
-                matrices.mulPose(Axis.ZP.rotationDegrees(-r * vehicle.getRoll(tickDelta) + r2 * vehicle.getViewXRot(tickDelta)));
-
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
             } else {
-                matrices.mulPose(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
             }
+
+            matrices.mulPose(Axis.ZP.rotationDegrees(-r * vehicle.getRoll(tickDelta) + r2 * vehicle.getViewXRot(tickDelta)));
 
             // fetch eye offset
             float eye = entity.getEyeHeight();

@@ -228,7 +228,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         }
 
         turretAngle(15, 10);
-        this.terrainCompat(4.1375f, 5.171875f);
+        this.terrainCompat(4f, 5f);
 
         lowHealthWarning();
         this.refreshDimensions();

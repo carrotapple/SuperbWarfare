@@ -129,7 +129,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public ThirdPersonCameraPosition getThirdPersonCameraPosition(int index) {
         return switch (index) {
             case 0 -> new ThirdPersonCameraPosition(5, 1.5, -0.8669625);
-            case 1 -> new ThirdPersonCameraPosition(-0.5, 2, 0);
+            case 1 -> new ThirdPersonCameraPosition(-1, 0.5, 0);
             default -> null;
         };
     }
@@ -263,6 +263,8 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         turretAngle(5, 5);
         gunnerAngle(15, 15);
         lowHealthWarning();
+
+        this.terrainCompat(4.6f, 6.7f);
         this.refreshDimensions();
     }
 
@@ -396,7 +398,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         if (type == 1) {
             if (this.cannotFire) return;
-
             Matrix4f transform = getGunTransform(1);
             Vector4f worldPosition = transformPosition(transform, 0, -0.25f, 0);
 
@@ -404,7 +405,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             var projectileEntity = projectile.create(player);
 
             projectileEntity.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            projectileEntity.shoot(getGunVector(1).x, getGunVector(1).y + 0.005f, getGunVector(1).z, 20, 0.3f);
+            projectileEntity.shoot(getGunnerVector(1).x, getGunnerVector(1).y, getGunnerVector(1).z, 20, 0.3f);
 
             this.level().addFreshEntity(projectileEntity);
 
@@ -525,14 +526,22 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         int i = this.getOrderedPassengers().indexOf(passenger);
 
         var worldPosition = switch (i) {
-            case 0 -> transformPosition(transform, 0.8669625f, -1.3f, 0.6076875f);
-            case 1 -> transformPosition(transform, -0.87890625f, -1f, -0.6640625f);
+            case 0 -> transformPosition(transform, 0.8669625f, 0.2f, 0.6076875f);
+            case 1 -> transformPosition(transform, -0.87890625f, 0.5f, -0.6640625f);
             case 2 -> transformPosition(transform, 1f, 0.15f, -0.6640625f);
             default -> throw new IllegalStateException("Unexpected value: " + i);
         };
 
         passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
         callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+
+        copyEntityData(passenger);
+    }
+
+    public void copyEntityData(Entity entity) {
+        if (entity == getNthEntity(0)) {
+            entity.setYBodyRot(getBarrelYRot(1));
+        }
     }
 
     public Vec3 driverZoomPos(float ticks) {
@@ -545,50 +554,107 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         return 3;
     }
 
+    @Override
+    public Vec3 getBarrelVector(float pPartialTicks) {
+        Matrix4f transform = getBarrelTransform(pPartialTicks);
+        Vector4f rootPosition = transformPosition(transform, 0, 0, 0);
+        Vector4f targetPosition = transformPosition(transform, 0, 0, 1);
+        return new Vec3(rootPosition.x, rootPosition.y, rootPosition.z).vectorTo(new Vec3(targetPosition.x, targetPosition.y, targetPosition.z));
+    }
+
+    public Vec3 getGunnerVector(float pPartialTicks) {
+        Matrix4f transform = getGunnerBarrelTransform(pPartialTicks);
+        Vector4f rootPosition = transformPosition(transform, 0, 0, 0);
+        Vector4f targetPosition = transformPosition(transform, 0, 0, 1);
+        return new Vec3(rootPosition.x, rootPosition.y, rootPosition.z).vectorTo(new Vec3(targetPosition.x, targetPosition.y, targetPosition.z));
+    }
+
     public Matrix4f getBarrelTransform(float ticks) {
         Matrix4f transformT = getTurretTransform(ticks);
-        float x = 0f;
-        float y = 0.653275f;
-        float z = 0.750975f;
-        Vector4f worldPosition = transformPosition(transformT, x, y, z);
 
         Matrix4f transform = new Matrix4f();
-        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
-        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, turretXRotO, getTurretXRot())));
-        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
-        return transform;
+        Vector4f worldPosition = transformPosition(transform, 0f, 0.653275f, 0.750975f);
+
+        transformT.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+
+        float a = getTurretYaw(ticks);
+
+        float r = (Mth.abs(a) - 90f) / 90f;
+
+        float r2;
+
+        if (Mth.abs(a) <= 90f) {
+            r2 = a / 90f;
+        } else {
+            if (a < 0) {
+                r2 = - (180f + a) / 90f;
+            } else {
+                r2 = (180f - a) / 90f;
+            }
+        }
+
+        float x = Mth.lerp(ticks, turretXRotO, getTurretXRot());
+        float xV = Mth.lerp(ticks, xRotO, getXRot());
+        float z = Mth.lerp(ticks, prevRoll, getRoll());
+
+        transformT.rotate(Axis.XP.rotationDegrees(x + r * xV + r2 * z));
+        return transformT;
+    }
+
+    public Matrix4f getTurretTransform(float ticks) {
+        Matrix4f transformV = getVehicleTransform(ticks);
+
+        Matrix4f transform = new Matrix4f();
+        Vector4f worldPosition = transformPosition(transform, 0, 2.1484375f, 0);
+
+        transformV.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transformV.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO, getTurretYRot())));
+        return transformV;
     }
 
     public Matrix4f getGunTransform(float ticks) {
         Matrix4f transformT = getTurretTransform(ticks);
-        float x = -0.87890625f;
-        float y = 2f;
-        float z = -0.6640625f;
-        Vector4f worldPosition = transformPosition(transformT, x, y, z);
 
         Matrix4f transform = new Matrix4f();
-        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
-        return transform;
+        Vector4f worldPosition = transformPosition(transform, -0.87890625f, 1.31171875F, -0.6640625f);
+
+        transformT.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transformT.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, gunYRotO, getGunYRot()) - Mth.lerp(ticks, turretYRotO, getTurretYRot())));
+        return transformT;
     }
 
-    public Matrix4f getTurretTransform(float ticks) {
-        Matrix4f transformT = getVehicleTransform(ticks);
-        float x = 0f;
-        float y = 2.1484375f;
-        float z = 0;
-        Vector4f worldPosition = transformPosition(transformT, x, y, z);
+    public Matrix4f getGunnerBarrelTransform(float ticks) {
+        Matrix4f transformG = getGunTransform(ticks);
 
         Matrix4f transform = new Matrix4f();
-        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
-        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, xRotO, getXRot())));
-        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
-        return transform;
+        Vector4f worldPosition = transformPosition(transform, 0f, 0.4325125f, 0.0632125f);
+
+        transformG.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+
+        float a = getTurretYaw(ticks);
+
+        float r = (Mth.abs(a) - 90f) / 90f;
+
+        float r2;
+
+        if (Mth.abs(a) <= 90f) {
+            r2 = a / 90f;
+        } else {
+            if (a < 0) {
+                r2 = - (180f + a) / 90f;
+            } else {
+                r2 = (180f - a) / 90f;
+            }
+        }
+
+        float x = Mth.lerp(ticks, gunXRotO, getGunXRot());
+        float xV = Mth.lerp(ticks, xRotO, getXRot());
+        float z = Mth.lerp(ticks, prevRoll, getRoll());
+
+        transformG.rotate(Axis.XP.rotationDegrees(x + r * xV + r2 * z));
+        return transformG;
     }
+
 
     @Override
     public void destroy() {
@@ -609,36 +675,88 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     protected void clampRotation(Entity entity) {
         Minecraft mc = Minecraft.getInstance();
         if (entity.level().isClientSide && entity == getFirstPassenger()) {
+            float a = getTurretYaw(1);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            float min = -30f - r * getXRot() - r2 * getRoll();
+            float max = 10f - r * getXRot() - r2 * getRoll();
+
             float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -30F, 4F);
+            float f1 = Mth.clamp(f, min, max);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
 
             if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                entity.setYBodyRot(this.getYRot());
                 float f2 = Mth.wrapDegrees(entity.getYRot() - this.getBarrelYRot(1));
                 float f3 = Mth.clamp(f2, -20.0F, 20.0F);
                 entity.yRotO += f3 - f2;
                 entity.setYRot(entity.getYRot() + f3 - f2);
-                entity.setYBodyRot(this.getYRot());
+                entity.setYBodyRot(getBarrelYRot(1));
             }
         } else if (entity == getNthEntity(1)) {
+            float a = getTurretYaw(1);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            float min = -60f - r * getXRot() - r2 * getRoll();
+            float max = 10f - r * getXRot() - r2 * getRoll();
+
             float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -60F, 12.5F);
+            float f1 = Mth.clamp(f, min, max);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
 
             if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                entity.setYBodyRot(this.getYRot());
                 float f2 = Mth.wrapDegrees(entity.getYRot() - this.getGunYRot(1));
                 float f3 = Mth.clamp(f2, -150.0F, 150.0F);
                 entity.yRotO += f3 - f2;
                 entity.setYRot(entity.getYRot() + f3 - f2);
-                entity.setYBodyRot(this.getYRot());
+                entity.setYBodyRot(entity.getYRot());
             }
         } else if (entity == getNthEntity(2)) {
+            float a = getTurretYaw(1);
+            float r = (Mth.abs(a) - 90f) / 90f;
+
+            float r2;
+
+            if (Mth.abs(a) <= 90f) {
+                r2 = a / 90f;
+            } else {
+                if (a < 0) {
+                    r2 = - (180f + a) / 90f;
+                } else {
+                    r2 = (180f - a) / 90f;
+                }
+            }
+
+            float min = -90f - r * getXRot() - r2 * getRoll();
+            float max = 22.5f - r * getXRot() - r2 * getRoll();
+
             float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -90F, 22.5F);
+            float f1 = Mth.clamp(f, min, max);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
         }
@@ -750,6 +868,10 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         WeaponVehicleEntity.super.changeWeapon(index, value, isScroll);
+    }
+
+    public Vec3 getGunVec(float ticks) {
+        return getGunnerVector(ticks);
     }
 
     @Override
