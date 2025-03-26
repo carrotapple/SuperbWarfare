@@ -75,7 +75,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     public Bmp2Entity(EntityType<Bmp2Entity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(1.5f);
+        this.setMaxUpStep(2.25f);
     }
 
     @Override
@@ -449,7 +449,7 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
         if (this.isInWater() || onGround()) {
             this.setYRot((float) (this.getYRot() - (isInWater() && !onGround() ? 2.5 : 6) * entityData.get(DELTA_ROT)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER)));
+            this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale((!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2 : 2.4f)) * this.entityData.get(POWER))));
         }
     }
 

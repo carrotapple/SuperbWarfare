@@ -371,6 +371,7 @@ public abstract class VehicleEntity extends Entity {
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.is(DamageTypes.CACTUS)) return false;
         // 计算减伤后的伤害
         float computedAmount = damageModifier.compute(source, amount);
         this.crash = source.is(ModDamageTypes.VEHICLE_STRIKE);
@@ -424,7 +425,6 @@ public abstract class VehicleEntity extends Entity {
         return new DamageModifier()
                 .immuneTo(source -> source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
                 .immuneTo(DamageTypes.FALL)
-                .immuneTo(DamageTypes.CACTUS)
                 .immuneTo(DamageTypes.DROWN)
                 .immuneTo(DamageTypes.DRAGON_BREATH)
                 .immuneTo(DamageTypes.WITHER)
