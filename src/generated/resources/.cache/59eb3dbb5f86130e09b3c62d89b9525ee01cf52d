@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-26T00:18:06.5455415	Loot Tables
+// 1.20.1	2025-03-27T02:03:48.3596605	Loot Tables
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
 811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
 1bd82f36748620ba596356795d6bf498ed12bd7b data/superbwarfare/loot_tables/blocks/charging_station.json
@@ -17,5 +17,6 @@ cdd4acb439988069ca04920cb3905f01b7257362 data/superbwarfare/loot_tables/blocks/g
 bce3fc7a50ba51c24ad3a37d2534a7db9cf0db73 data/superbwarfare/loot_tables/blocks/scheelite_ore.json
 a223f61202cf9937e8be5b90791925bba09d17b9 data/superbwarfare/loot_tables/blocks/silver_block.json
 015f852f7abbf1ecf2d730a61537b4e58b3e17bd data/superbwarfare/loot_tables/blocks/silver_ore.json
+66dd0e24fc30c75599eb6ff39dba80c9fe020011 data/superbwarfare/loot_tables/blocks/small_container.json
 83112ebff477e322bd3d23ed4653c7c02b230473 data/superbwarfare/loot_tables/blocks/steel_block.json
 71fc892124b5343e10688cabc2fb7c87d83cfef8 data/superbwarfare/loot_tables/blocks/tungsten_block.json

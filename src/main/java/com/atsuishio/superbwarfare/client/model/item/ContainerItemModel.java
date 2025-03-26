@@ -1,11 +1,11 @@
-package com.atsuishio.superbwarfare.client.model.block;
+package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class ContainerDisplayModel extends GeoModel<ContainerBlockItem> {
+public class ContainerItemModel extends GeoModel<ContainerBlockItem> {
 
     @Override
     public ResourceLocation getAnimationResource(ContainerBlockItem animatable) {

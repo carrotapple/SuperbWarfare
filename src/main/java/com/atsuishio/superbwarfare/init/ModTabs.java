@@ -126,16 +126,12 @@ public class ModTabs {
                     .icon(() -> new ItemStack(ModItems.TARGET_DEPLOYER.get()))
                     .withTabsBefore(AMMO_TAB.getKey())
                     .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> {
-                        if (registryObject.get() == ModItems.CONTAINER.get()) {
-                            CONTAINER_ENTITIES.stream().map(Supplier::get).forEach(output::accept);
-                        } else {
-                            output.accept(registryObject.get());
-                            if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
-                                output.accept(ArmorPlate.getInfiniteInstance());
-                            }
-                            if (registryObject.get() instanceof BatteryItem batteryItem) {
-                                output.accept(batteryItem.makeFullEnergyStack());
-                            }
+                        output.accept(registryObject.get());
+                        if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
+                            output.accept(ArmorPlate.getInfiniteInstance());
+                        }
+                        if (registryObject.get() instanceof BatteryItem batteryItem) {
+                            output.accept(batteryItem.makeFullEnergyStack());
                         }
                     }))
                     .build());
@@ -145,7 +141,13 @@ public class ModTabs {
                     .title(Component.translatable("item_group.superbwarfare.block"))
                     .icon(() -> new ItemStack(ModItems.SANDBAG.get()))
                     .withTabsBefore(ITEM_TAB.getKey())
-                    .displayItems((param, output) -> ModItems.BLOCKS.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
+                    .displayItems((param, output) -> ModItems.BLOCKS.getEntries().forEach(registryObject -> {
+                        if (registryObject.get() == ModItems.CONTAINER.get()) {
+                            CONTAINER_ENTITIES.stream().map(Supplier::get).forEach(output::accept);
+                        } else {
+                            output.accept(registryObject.get());
+                        }
+                    }))
                     .build());
 
     @SubscribeEvent

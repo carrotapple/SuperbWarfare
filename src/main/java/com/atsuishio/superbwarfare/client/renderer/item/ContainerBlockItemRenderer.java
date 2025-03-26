@@ -1,6 +1,6 @@
-package com.atsuishio.superbwarfare.client.renderer.block;
+package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.atsuishio.superbwarfare.client.model.block.ContainerDisplayModel;
+import com.atsuishio.superbwarfare.client.model.item.ContainerItemModel;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -10,7 +10,7 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 public class ContainerBlockItemRenderer extends GeoItemRenderer<ContainerBlockItem> {
 
     public ContainerBlockItemRenderer() {
-        super(new ContainerDisplayModel());
+        super(new ContainerItemModel());
     }
 
     @Override
