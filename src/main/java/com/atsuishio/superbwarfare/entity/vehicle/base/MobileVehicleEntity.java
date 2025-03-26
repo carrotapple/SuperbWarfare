@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -41,8 +40,6 @@ import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
-import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     public static final EntityDataAccessor<Integer> CANNON_RECOIL_TIME = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
@@ -242,16 +239,16 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         p4 = new Vec3(positionRB.x, p4y, positionRB.z);
 
         // 测试用粒子效果，用于确定点位位置
-        var passenger = this.getFirstPassenger();
-
-        if (passenger != null) {
-            if (passenger.level() instanceof ServerLevel serverLevel) {
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
-                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
-            }
-        }
+//        var passenger = this.getFirstPassenger();
+//
+//        if (passenger != null) {
+//            if (passenger.level() instanceof ServerLevel serverLevel) {
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, 1, 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, 1, 0, 0, 0, 0, true);
+//            }
+//        }
 
         // 通过点位位置获取角度
 

@@ -206,6 +206,23 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         this.terrainCompat(2.7f, 3.61f);
 
+//        Matrix4f transform = getBarrelTransform(1);
+//        float x = 0.0609375f;
+//        float y = 0.0517f;
+//        float z = 3.0927625f;
+//
+//        Vector4f worldPosition = transformPosition(transform, x, y, z);
+//
+//        // 测试用粒子效果，用于确定点位位置
+//        var passenger = this.getFirstPassenger();
+//
+//        if (passenger != null) {
+//            if (passenger.level() instanceof ServerLevel serverLevel) {
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, worldPosition.x, worldPosition.y, worldPosition.z, 1, 0, 0, 0, 0, true);
+//            }
+//        }
+
+
         this.refreshDimensions();
     }
 
@@ -235,6 +252,14 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
     }
 
     @Override
+    public Vec3 getBarrelVector(float pPartialTicks) {
+        Matrix4f transform = getBarrelTransform(pPartialTicks);
+        Vector4f rootPosition = transformPosition(transform, 0, 0, 0);
+        Vector4f targetPosition = transformPosition(transform, 0, 0, 1);
+        return new Vec3(rootPosition.x, rootPosition.y, rootPosition.z).vectorTo(new Vec3(targetPosition.x, targetPosition.y, targetPosition.z));
+    }
+
+    @Override
     public void vehicleShoot(Player player, int type) {
         boolean hasCreativeAmmo = false;
         for (int i = 0; i < getMaxPassengers() - 1; i++) {
@@ -246,9 +271,9 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         Matrix4f transform = getBarrelTransform(1);
         if (getWeaponIndex(0) == 0) {
             if (this.cannotFire) return;
-            float x = -0.0234375f;
-            float y = 0f;
-            float z = 4f;
+            float x = 0.0609375f;
+            float y = 0.0517f;
+            float z = 3.0927625f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             var smallCannonShell = ((SmallCannonShellWeapon) getWeapon(0)).create(player);
@@ -421,7 +446,6 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     public void copyEntityData(Entity entity) {
         if (entity == getNthEntity(0)) {
-
             entity.setYBodyRot(getBarrelYRot(1));
         }
     }
@@ -432,23 +456,40 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     public Vec3 driverZoomPos(float ticks) {
         Matrix4f transform = getTurretTransform(ticks);
-        Vector4f worldPosition = transformPosition(transform, 0, 0.75f, 0.56f);
+        Vector4f worldPosition = transformPosition(transform, 0.3f, 0.75f, 0.56f);
         return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
     }
 
     public Matrix4f getBarrelTransform(float ticks) {
         Matrix4f transformT = getTurretTransform(ticks);
-        float x = 0f;
-        float y = 0.33795f;
-        float z = 0.825f;
-        Vector4f worldPosition = transformPosition(transformT, x, y, z);
 
         Matrix4f transform = new Matrix4f();
-        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
-        transform.rotate(Axis.YP.rotationDegrees(Mth.lerp(ticks, turretYRotO - yRotO, getTurretYRot() - getYRot())));
-        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(ticks, turretXRotO, getTurretXRot())));
-        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(ticks, prevRoll, getRoll())));
-        return transform;
+        Vector4f worldPosition = transformPosition(transform, 0.0234375f, 0.33795f, 0.825f);
+
+        transformT.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+
+        float a = getTurretYaw(ticks);
+
+        float r = (Mth.abs(a) - 90f) / 90f;
+
+        float r2;
+
+        if (Mth.abs(a) <= 90f) {
+            r2 = a / 90f;
+        } else {
+            if (a < 0) {
+                r2 = - (180f + a) / 90f;
+            } else {
+                r2 = (180f - a) / 90f;
+            }
+        }
+
+        float x = Mth.lerp(ticks, turretXRotO, getTurretXRot());
+        float xV = Mth.lerp(ticks, xRotO, getXRot());
+        float z = Mth.lerp(ticks, prevRoll, getRoll());
+
+        transformT.rotate(Axis.XP.rotationDegrees(x + r * xV + r2 * z));
+        return transformT;
     }
 
     public Matrix4f getTurretTransform(float ticks) {
@@ -574,7 +615,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
     @Override
     public boolean hidePassenger(Entity entity) {
-        return false;
+        return true;
     }
 
     @Override

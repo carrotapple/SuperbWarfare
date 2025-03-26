@@ -74,7 +74,7 @@ public abstract class CameraMixin {
 
             if (player.getVehicle() instanceof Lav150Entity lav150 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
                 if (lav150.getFirstPassenger() == player) {
-                    setRotation(-Mth.lerp(partialTicks, lav150.turretYRotO - lav150.yRotO, lav150.getTurretYRot() - lav150.getYRot()), Mth.lerp(partialTicks, lav150.turretXRotO - lav150.xRotO, lav150.getTurretXRot() - lav150.getXRot()));
+                    setRotation((float) -VehicleEntity.getYRotFromVector(lav150.getBarrelVec(partialTicks)), (float) -VehicleEntity.getXRotFromVector(lav150.getBarrelVec(partialTicks)));
                     if (ClientEventHandler.zoomVehicle) {
                         setPosition(lav150.driverZoomPos(partialTicks).x, Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), lav150.driverZoomPos(partialTicks).z);
                     } else {
@@ -91,7 +91,7 @@ public abstract class CameraMixin {
 
             if (player.getVehicle() instanceof Bmp2Entity bmp2 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
                 if (bmp2.getFirstPassenger() == player) {
-                    setRotation(-Mth.lerp(partialTicks, bmp2.turretYRotO - bmp2.yRotO, bmp2.getTurretYRot() - bmp2.getYRot()), Mth.lerp(partialTicks, bmp2.turretXRotO - bmp2.xRotO, bmp2.getTurretXRot() - bmp2.getXRot()));
+                    setRotation((float) -VehicleEntity.getYRotFromVector(bmp2.getBarrelVec(partialTicks)), (float) -VehicleEntity.getXRotFromVector(bmp2.getBarrelVec(partialTicks)));
                     if (ClientEventHandler.zoomVehicle) {
                         setPosition(bmp2.driverZoomPos(partialTicks).x, Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), bmp2.driverZoomPos(partialTicks).z);
                     } else {

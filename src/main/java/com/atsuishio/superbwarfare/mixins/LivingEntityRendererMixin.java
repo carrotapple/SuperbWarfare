@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -41,9 +39,10 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
             matrices.mulPose(Axis.ZP.rotationDegrees(-wheelChairEntity.getRoll(tickDelta)));
         }
 
-        if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof Lav150Entity lav150) {
+        if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof VehicleEntity vehicle &&
+         (vehicle instanceof Lav150Entity || vehicle instanceof Bmp2Entity)) {
 
-            float a = lav150.getTurretYaw(tickDelta);
+            float a = vehicle.getTurretYaw(tickDelta);
 
             float r = (Mth.abs(a) - 90f) / 90f;
 
@@ -59,8 +58,8 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
                 }
             }
 
-            matrices.mulPose(Axis.XP.rotationDegrees(r * lav150.getViewXRot(tickDelta) + r2 * lav150.getRoll(tickDelta)));
-            matrices.mulPose(Axis.ZP.rotationDegrees(r * lav150.getRoll(tickDelta) - r2 * lav150.getViewXRot(tickDelta)));
+            matrices.mulPose(Axis.XP.rotationDegrees(r * vehicle.getViewXRot(tickDelta) + r2 * vehicle.getRoll(tickDelta)));
+            matrices.mulPose(Axis.ZP.rotationDegrees(r * vehicle.getRoll(tickDelta) - r2 * vehicle.getViewXRot(tickDelta)));
         }
     }
 }

@@ -360,11 +360,11 @@ public abstract class VehicleEntity extends Entity {
         }
     }
 
-    public double getYRotFromVector(Vec3 vec3) {
+    public static double getYRotFromVector(Vec3 vec3) {
         return Mth.atan2(vec3.x, vec3.z) * (180F / Math.PI);
     }
 
-    public double getXRotFromVector(Vec3 vec3) {
+    public static double getXRotFromVector(Vec3 vec3) {
         double d0 = vec3.horizontalDistance();
         return Mth.atan2(vec3.y, d0) * (180F / Math.PI);
     }
@@ -902,6 +902,10 @@ public abstract class VehicleEntity extends Entity {
 
     public void setTurretXRot(float pTurretXRot) {
         this.turretXRot = pTurretXRot;
+    }
+
+    public float getTurretPitch(float pPartialTick) {
+        return Mth.lerp(pPartialTick, turretXRotO, getTurretXRot());
     }
 
     public float getGunYRot() {
