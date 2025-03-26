@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.village.VillagerTradesEvent;
+import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -248,4 +249,33 @@ public class ModVillagers {
         return ForgeRegistries.ITEMS.getHolder(new ResourceLocation(ModUtils.MODID, name)).orElse(new Holder.Direct<>(ItemStack.EMPTY.getItem()));
     }
 
+    @SubscribeEvent
+    public static void addWandererTrade(WandererTradesEvent event) {
+        List<VillagerTrades.ItemListing> rareTrades = event.getRareTrades();
+
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.HUNTING_RIFLE_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.RPG_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.HK_416_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.RPK_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.VECTOR_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.MK_14_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.M_60_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.SVD_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.M_98B_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.DEVOTION_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.QBZ_95_BLUEPRINT.get()), 1, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                new ItemStack(ModItems.AK_12_BLUEPRINT.get()), 1, 0, 0.05f));
+    }
 }
