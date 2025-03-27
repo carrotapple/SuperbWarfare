@@ -3,11 +3,14 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.DispenserLaunchable;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -61,6 +64,11 @@ public class PotionMortarShell extends MortarShell implements DispenserLaunchabl
                 var shell = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), pPosition.x(), pPosition.y(), pPosition.z(), pLevel);
                 shell.setEffectsFromItem(pStack);
                 return shell;
+            }
+
+            @Override
+            protected void playSound(BlockSource pSource) {
+                pSource.getLevel().playSound(null, pSource.getPos(), ModSounds.MORTAR_FIRE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         };
     }

@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.network.chat.Component;
@@ -31,7 +32,6 @@ public class C4Bomb extends Item implements DispenserLaunchable {
     public C4Bomb() {
         super(new Item.Properties());
     }
-
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand hand) {
@@ -91,6 +91,11 @@ public class C4Bomb extends Item implements DispenserLaunchable {
                 var c4 = new C4Entity((LivingEntity) null, level);
                 c4.setPos(position.x(), position.y(), position.z());
                 return c4;
+            }
+
+            @Override
+            protected void playSound(BlockSource pSource) {
+                pSource.getLevel().playSound(null, pSource.getPos(), ModSounds.C4_THROW.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         };
     }

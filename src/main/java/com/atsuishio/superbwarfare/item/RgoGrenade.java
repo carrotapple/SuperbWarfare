@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RgoGrenade extends Item implements DispenserLaunchable {
+
     public RgoGrenade() {
         super(new Properties().rarity(Rarity.UNCOMMON));
     }
@@ -112,6 +114,11 @@ public class RgoGrenade extends Item implements DispenserLaunchable {
             @ParametersAreNonnullByDefault
             protected @NotNull Projectile getProjectile(Level pLevel, Position pPosition, ItemStack pStack) {
                 return new RgoGrenadeEntity(ModEntities.RGO_GRENADE.get(), pPosition.x(), pPosition.y(), pPosition.z(), pLevel);
+            }
+
+            @Override
+            protected void playSound(BlockSource pSource) {
+                pSource.getLevel().playSound(null, pSource.getPos(), ModSounds.GRENADE_THROW.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         };
     }
