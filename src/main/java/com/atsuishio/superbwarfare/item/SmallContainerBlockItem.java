@@ -1,9 +1,14 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.renderer.item.SmallContainerBlockItemRenderer;
+import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -13,9 +18,15 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class SmallContainerBlockItem extends BlockItem implements GeoItem {
+
+    public static final List<Supplier<ItemStack>> SMALL_CONTAINER_LOOT_TABLES = List.of(
+            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints"))
+    );
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -48,5 +59,20 @@ public class SmallContainerBlockItem extends BlockItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public static ItemStack createInstance(ResourceLocation lootTable) {
+        return createInstance(lootTable, 0L);
+    }
+
+    public static ItemStack createInstance(ResourceLocation lootTable, long lootTableSeed) {
+        ItemStack stack = new ItemStack(ModBlocks.SMALL_CONTAINER.get());
+        CompoundTag tag = new CompoundTag();
+        tag.putString("LootTable", lootTable.toString());
+        if (lootTableSeed != 0L) {
+            tag.putLong("LootTableSeed", lootTableSeed);
+        }
+        BlockItem.setBlockEntityData(stack, ModBlockEntities.SMALL_CONTAINER.get(), tag);
+        return stack;
     }
 }

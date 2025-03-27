@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.item.ArmorPlate;
-import com.atsuishio.superbwarfare.item.BatteryItem;
-import com.atsuishio.superbwarfare.item.C4Bomb;
+import com.atsuishio.superbwarfare.item.*;
 import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.heavy.Ntw20Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
@@ -39,8 +37,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
-
-import static com.atsuishio.superbwarfare.item.ContainerBlockItem.CONTAINER_ENTITIES;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModTabs {
@@ -143,7 +139,10 @@ public class ModTabs {
                     .withTabsBefore(ITEM_TAB.getKey())
                     .displayItems((param, output) -> ModItems.BLOCKS.getEntries().forEach(registryObject -> {
                         if (registryObject.get() == ModItems.CONTAINER.get()) {
-                            CONTAINER_ENTITIES.stream().map(Supplier::get).forEach(output::accept);
+                            ContainerBlockItem.CONTAINER_ENTITIES.stream().map(Supplier::get).forEach(output::accept);
+                        } else if (registryObject.get() == ModItems.SMALL_CONTAINER.get()) {
+                            output.accept(registryObject.get());
+                            SmallContainerBlockItem.SMALL_CONTAINER_LOOT_TABLES.stream().map(Supplier::get).forEach(output::accept);
                         } else {
                             output.accept(registryObject.get());
                         }
