@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.SmallContainerBlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -82,11 +83,20 @@ public class SmallContainerBlock extends BaseEntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
         if (tag != null) {
-            long seed = tag.getLong("LootTableSeed");
-            if (seed != 0 && seed % 205 == 0) {
-                pTooltip.add(Component.translatable("des.superbwarfare.small_container.special").withStyle(ChatFormatting.GRAY));
+            String lootTable = tag.getString("LootTable");
+            if (lootTable.startsWith(ModUtils.MODID + ":containers/")) {
+                var split = lootTable.split(ModUtils.MODID + ":containers/");
+                if (split.length == 2) {
+                    lootTable = "loot." + split[1];
+                }
+                pTooltip.add(Component.translatable("des.superbwarfare.small_container." + lootTable).withStyle(ChatFormatting.GRAY));
             } else {
-                pTooltip.add(Component.translatable("des.superbwarfare.small_container.random").withStyle(ChatFormatting.GRAY));
+                long seed = tag.getLong("LootTableSeed");
+                if (seed != 0 && seed % 205 == 0) {
+                    pTooltip.add(Component.translatable("des.superbwarfare.small_container.special").withStyle(ChatFormatting.GRAY));
+                } else {
+                    pTooltip.add(Component.translatable("des.superbwarfare.small_container.random").withStyle(ChatFormatting.GRAY));
+                }
             }
         } else {
             pTooltip.add(Component.translatable("des.superbwarfare.small_container").withStyle(ChatFormatting.GRAY));
