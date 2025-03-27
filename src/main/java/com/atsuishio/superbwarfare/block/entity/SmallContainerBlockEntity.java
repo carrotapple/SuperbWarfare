@@ -31,6 +31,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -79,11 +80,10 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
         }
     }
 
-    // TODO 添加开箱动画
     private PlayState predicate(AnimationState<SmallContainerBlockEntity> event) {
-//        if (this.getBlockState().getValue(ContainerBlock.OPENED)) {
-//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.container.open"));
-//        }
+        if (this.getBlockState().getValue(ContainerBlock.OPENED)) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.container.open"));
+        }
         return PlayState.STOP;
     }
 

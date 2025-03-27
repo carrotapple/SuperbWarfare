@@ -89,8 +89,8 @@ public class SmallContainerBlock extends BaseEntityBlock {
     @ParametersAreNonnullByDefault
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH) {
-            return state.getValue(OPENED) ? box(0, 0, 1, 16, 1, 15) : box(0, 0, 1, 16, 14, 15);
-        } else return state.getValue(OPENED) ? box(1, 0, 0, 15, 1, 16) : box(1, 0, 0, 15, 14, 16);
+            return state.getValue(OPENED) ? box(1, 0, 2, 15, 12, 14) : box(0, 0, 1, 16, 13.5, 15);
+        } else return state.getValue(OPENED) ? box(2, 0, 1, 14, 12, 15) : box(1, 0, 0, 15, 13.5, 16);
     }
 
     @Override
