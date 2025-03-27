@@ -167,9 +167,10 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
                 PROJECTILE_TARGETS
         );
         for (Entity entity : entities) {
-            if (this.shooter != null && !entity.equals(this.shooter) && !entity.equals(this.shooter.getVehicle()) && entity.getVehicle() != this.shooter.getVehicle()) {
+            if (shooter != null && entity != shooter && entity != shooter.getVehicle()) {
                 EntityResult result = this.getHitResult(entity, startVec, endVec);
                 if (result == null) continue;
+                if (entity.getVehicle() !=null && entity.getVehicle() == shooter.getVehicle()) continue;
                 hitEntities.add(result);
             }
         }
