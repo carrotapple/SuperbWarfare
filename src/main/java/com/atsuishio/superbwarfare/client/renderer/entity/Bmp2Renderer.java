@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.client.layer.Bmp2Layer;
+import com.atsuishio.superbwarfare.client.layer.vehicle.Bmp2Layer;
 import com.atsuishio.superbwarfare.client.model.entity.Bmp2Model;
 import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;

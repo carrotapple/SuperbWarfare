@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.client.layer.SpeedBoatHeatLayer;
-import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
-import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
+import com.atsuishio.superbwarfare.client.layer.vehicle.SpeedBoatHeatLayer;
+import com.atsuishio.superbwarfare.client.layer.vehicle.SpeedBoatLayer;
+import com.atsuishio.superbwarfare.client.layer.vehicle.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
 import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.client.layer.Lav150Layer;
+import com.atsuishio.superbwarfare.client.layer.vehicle.Lav150Layer;
 import com.atsuishio.superbwarfare.client.model.entity.Lav150Model;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
