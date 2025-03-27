@@ -30,17 +30,19 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class ModItems {
-
-    public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
-
     /**
      * guns
      */
@@ -296,6 +298,19 @@ public class ModItems {
      */
     public static final RegistryObject<Item> AP_BULLET = PERKS.register("ap_bullet", () -> new PerkItem(ModPerks.AP_BULLET));
 
+
+    public static void registerDispenserBehavior(FMLCommonSetupEvent event) {
+        List<RegistryObject<Item>> list = new ArrayList<>();
+        list.addAll(AMMO.getEntries());
+        list.addAll(ITEMS.getEntries());
+
+        for (var item : list) {
+            if (item.get() instanceof DispenserLaunchable launchable) {
+                DispenserBlock.registerBehavior(item.get(), launchable.getLaunchBehavior());
+            }
+        }
+    }
+
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
         GUNS.register(bus);
@@ -303,6 +318,5 @@ public class ModItems {
         BLOCKS.register(bus);
         registerPerkItems();
         PERKS.register(bus);
-        REGISTRY.register(bus);
     }
 }

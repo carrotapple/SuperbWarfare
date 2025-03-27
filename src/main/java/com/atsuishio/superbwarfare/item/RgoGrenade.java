@@ -3,15 +3,20 @@ package com.atsuishio.superbwarfare.item;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -20,12 +25,15 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class RgoGrenade extends Item {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+public class RgoGrenade extends Item implements DispenserLaunchable {
     public RgoGrenade() {
         super(new Properties().rarity(Rarity.UNCOMMON));
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         playerIn.startUsingItem(handIn);
@@ -41,6 +49,7 @@ public class RgoGrenade extends Item {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         if (!worldIn.isClientSide) {
             if (entityLiving instanceof Player player) {
@@ -67,7 +76,8 @@ public class RgoGrenade extends Item {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
+    @ParametersAreNonnullByDefault
+    public @NotNull ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
             RgoGrenadeEntity rgoGrenade = new RgoGrenadeEntity(pLivingEntity, pLevel, 100);
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
@@ -91,8 +101,19 @@ public class RgoGrenade extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 80;
+    }
+
+    @Override
+    public DispenseItemBehavior getLaunchBehavior() {
+        return new AbstractProjectileDispenseBehavior() {
+            @Override
+            @ParametersAreNonnullByDefault
+            protected @NotNull Projectile getProjectile(Level pLevel, Position pPosition, ItemStack pStack) {
+                return new RgoGrenadeEntity(ModEntities.RGO_GRENADE.get(), pPosition.x(), pPosition.y(), pPosition.z(), pLevel);
+            }
+        };
     }
 }
 
