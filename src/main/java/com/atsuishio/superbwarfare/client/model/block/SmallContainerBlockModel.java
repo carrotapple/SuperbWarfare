@@ -19,6 +19,9 @@ public class SmallContainerBlockModel extends GeoModel<SmallContainerBlockEntity
 
     @Override
     public ResourceLocation getTextureResource(SmallContainerBlockEntity animatable) {
+        if (animatable.lootTableSeed != 0L && animatable.lootTableSeed % 205 == 0) {
+            return ModUtils.loc("textures/block/small_container_sui.png");
+        }
         return ModUtils.loc("textures/block/small_container.png");
     }
 }

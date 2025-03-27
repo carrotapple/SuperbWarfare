@@ -18,7 +18,7 @@ public class ContainerItemModel extends GeoModel<ContainerBlockItem> {
     }
 
     @Override
-    public ResourceLocation getTextureResource(ContainerBlockItem entity) {
+    public ResourceLocation getTextureResource(ContainerBlockItem animatable) {
         return ModUtils.loc("textures/block/container.png");
     }
 }

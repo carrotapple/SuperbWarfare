@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.block.entity.SmallContainerBlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +82,14 @@ public class SmallContainerBlock extends BaseEntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
         if (tag != null) {
-
+            long seed = tag.getLong("LootTableSeed");
+            if (seed != 0 && seed % 205 == 0) {
+                pTooltip.add(Component.translatable("des.superbwarfare.small_container.special").withStyle(ChatFormatting.GRAY));
+            } else {
+                pTooltip.add(Component.translatable("des.superbwarfare.small_container.random").withStyle(ChatFormatting.GRAY));
+            }
+        } else {
+            pTooltip.add(Component.translatable("des.superbwarfare.small_container").withStyle(ChatFormatting.GRAY));
         }
     }
 

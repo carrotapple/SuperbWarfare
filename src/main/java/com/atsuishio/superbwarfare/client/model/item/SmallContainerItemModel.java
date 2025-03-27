@@ -9,8 +9,7 @@ public class SmallContainerItemModel extends GeoModel<SmallContainerBlockItem> {
 
     @Override
     public ResourceLocation getAnimationResource(SmallContainerBlockItem animatable) {
-//        return ModUtils.loc("animations/small_container.animation.json");
-        return null;
+        return ModUtils.loc("animations/small_container.animation.json");
     }
 
     @Override
@@ -19,7 +18,7 @@ public class SmallContainerItemModel extends GeoModel<SmallContainerBlockItem> {
     }
 
     @Override
-    public ResourceLocation getTextureResource(SmallContainerBlockItem entity) {
+    public ResourceLocation getTextureResource(SmallContainerBlockItem animatable) {
         return ModUtils.loc("textures/block/small_container.png");
     }
 }

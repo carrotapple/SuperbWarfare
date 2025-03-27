@@ -43,7 +43,7 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
 
     @Nullable
     public ResourceLocation lootTable;
-    protected long lootTableSeed;
+    public long lootTableSeed;
     public int tick = 0;
     @Nullable
     private Player player;
@@ -71,7 +71,7 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
             var items = blockEntity.unpackLootTable(blockEntity.player);
             if (!items.isEmpty()) {
                 for (var item : items) {
-                    ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY() + 0.5, pPos.getZ(), item);
+                    ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY() + 0.9, pPos.getZ(), item);
                     entity.setDeltaMovement(new Vec3(pLevel.random.nextDouble() * 0.2, 0.3, pLevel.random.nextDouble() * 0.2));
                     pLevel.addFreshEntity(entity);
                 }

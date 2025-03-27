@@ -250,6 +250,9 @@
   "des.superbwarfare.container.fail.open": "没有足够的空间",
   "des.superbwarfare.container.fail.crowbar": "或许应该换个工具试试",
   "block.superbwarfare.small_container": "小型集装箱",
+  "des.superbwarfare.small_container": "空的",
+  "des.superbwarfare.small_container.random": "随机补给",
+  "des.superbwarfare.small_container.special": "岁己补给",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",

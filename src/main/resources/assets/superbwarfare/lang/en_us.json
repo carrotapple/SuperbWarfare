@@ -252,6 +252,9 @@
   "des.superbwarfare.container.fail.open": "No enough space",
   "des.superbwarfare.container.fail.crowbar": "Maybe try another tool",
   "block.superbwarfare.small_container": "Small Container",
+  "des.superbwarfare.small_container": "Empty",
+  "des.superbwarfare.small_container.random": "Random Supplies",
+  "des.superbwarfare.small_container.special": "Random SUI-pplies",
 
   "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
   "item.superbwarfare.grain": "Grain",
