@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
+import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -144,8 +146,11 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
                 .multiply(10f, ModDamageTypes.VEHICLE_STRIKE)
                 .custom((source, damage) -> getSourceAngle(source, 0.25f) * damage)
                 .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof DroneEntity) {
-                        return 1.5f * damage;
+                    if (source.getDirectEntity() instanceof MelonBombEntity) {
+                        return 3f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof MortarShellEntity) {
+                        return 3f * damage;
                     }
                     return damage;
                 })

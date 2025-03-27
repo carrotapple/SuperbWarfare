@@ -477,13 +477,16 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (lastTickSpeed > 0.12) {
             if (this.entityData.get(KAMIKAZE_MODE) != 0 && 20 * lastTickSpeed > this.getHealth()) {
                 if (this.entityData.get(KAMIKAZE_MODE) == 1) {
-                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
+                    Entity mortarShell = new MortarShellEntity(controller, controller.level());
+                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), mortarShell, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
                     target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
-                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
+                    Entity c4 = new C4Entity(controller, controller.level());
+                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), c4, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
                     target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 3) {
-                    target.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_RPG.get());
+                    Entity rpg = new RpgRocketEntity(controller, controller.level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
+                    target.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), rpg, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_RPG.get());
                     target.invulnerableTime = 0;
                 }
 
@@ -571,17 +574,23 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     private void kamikazeExplosion(int mode) {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+
+        Entity mortarShell = new MortarShellEntity(controller, level());
+        Entity c4 = new C4Entity(controller, level());
+        Entity rpg = new RpgRocketEntity(controller, level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
+
         CustomExplosion explosion = switch (mode) {
             case 1 -> new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, attacker), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), mortarShell, attacker), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
                     this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
 
             case 2 -> new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), c4, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
                     this.getX(), this.getY(), this.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
 
             case 3 -> new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, attacker), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get(),
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), rpg, attacker), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get(),
                     this.getX(), this.getY(), this.getZ(), ExplosionConfig.RPG_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
 
             default -> null;

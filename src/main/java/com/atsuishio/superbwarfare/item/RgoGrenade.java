@@ -69,9 +69,10 @@ public class RgoGrenade extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
+            RgoGrenadeEntity rgoGrenade = new RgoGrenadeEntity(pLivingEntity, pLevel, 100);
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
-                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 75,
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 5.75f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), rgoGrenade, pLivingEntity), ExplosionConfig.RGO_GRENADE_EXPLOSION_DAMAGE.get(),
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), ExplosionConfig.RPG_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);

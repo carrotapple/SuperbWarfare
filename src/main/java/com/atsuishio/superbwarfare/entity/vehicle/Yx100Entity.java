@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
+import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
+import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
@@ -184,14 +186,17 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 .multiply(0.15f, ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
                 .custom((source, damage) -> getSourceAngle(source, 1f) * damage)
                 .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof MelonBombEntity) {
+                        return 3f * damage;
+                    }
                     if (source.getDirectEntity() instanceof SmallCannonShellEntity) {
                         return 0.375f * damage;
                     }
-                    return damage;
-                })
-                .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof C4Entity || source.getDirectEntity() instanceof DroneEntity) {
-                        return 3f * damage;
+                    if (source.getDirectEntity() instanceof C4Entity) {
+                        return 4f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof RpgRocketEntity) {
+                        return 1.5f * damage;
                     }
                     return damage;
                 })

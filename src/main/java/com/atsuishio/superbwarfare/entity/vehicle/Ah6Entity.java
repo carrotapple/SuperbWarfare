@@ -3,8 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.projectile.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -160,6 +159,22 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 .multiply(0.8f, ModDamageTypes.CANNON_FIRE)
                 .multiply(0.16f, ModTags.DamageTypes.PROJECTILE)
                 .multiply(10, ModDamageTypes.VEHICLE_STRIKE)
+                .custom((source, damage) -> {
+                    if (source.getDirectEntity() instanceof MelonBombEntity) {
+                        return 2f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof RgoGrenadeEntity) {
+                        return 6f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof HandGrenadeEntity) {
+                        return 5f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof MortarShellEntity) {
+                        return 4f * damage;
+                    }
+                    return damage;
+                })
+
                 .reduce(2);
     }
 

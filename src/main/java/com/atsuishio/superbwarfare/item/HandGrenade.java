@@ -69,9 +69,11 @@ public class HandGrenade extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
+            HandGrenadeEntity handGrenade = new HandGrenadeEntity(pLivingEntity, pLevel, 100);
+
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
-                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 90,
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), handGrenade, pLivingEntity), ExplosionConfig.M67_GRENADE_EXPLOSION_DAMAGE.get(),
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), ExplosionConfig.M67_GRENADE_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);

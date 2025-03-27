@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
+import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -155,8 +157,11 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
                 .multiply(8.5f, ModDamageTypes.VEHICLE_STRIKE)
                 .custom((source, damage) -> getSourceAngle(source, 0.4f) * damage)
                 .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof DroneEntity) {
-                        return 1.5f * damage;
+                    if (source.getDirectEntity() instanceof MelonBombEntity) {
+                        return 2f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof MortarShellEntity) {
+                        return 3f * damage;
                     }
                     return damage;
                 })

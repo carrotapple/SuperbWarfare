@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
+import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.EnergyVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -220,10 +221,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
                     if (source.getDirectEntity() instanceof C4Entity) {
                         return 10f * damage;
                     }
-                    return damage;
-                })
-                .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof DroneEntity) {
+                    if (source.getDirectEntity() instanceof MelonBombEntity) {
                         return 8f * damage;
                     }
                     return damage;
