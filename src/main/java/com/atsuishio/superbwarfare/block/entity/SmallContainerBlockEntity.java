@@ -71,8 +71,8 @@ public class SmallContainerBlockEntity extends BlockEntity implements GeoBlockEn
             var items = blockEntity.unpackLootTable(blockEntity.player);
             if (!items.isEmpty()) {
                 for (var item : items) {
-                    ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY() + 0.9, pPos.getZ(), item);
-                    entity.setDeltaMovement(new Vec3(pLevel.random.nextDouble() * 0.2, 0.3, pLevel.random.nextDouble() * 0.2));
+                    ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY() + 0.85, pPos.getZ(), item);
+                    entity.setDeltaMovement(new Vec3(pLevel.random.nextDouble() * 0.2, 0.1, pLevel.random.nextDouble() * 0.2));
                     pLevel.addFreshEntity(entity);
                 }
             }
