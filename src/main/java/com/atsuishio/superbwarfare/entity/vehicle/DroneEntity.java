@@ -477,15 +477,15 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (lastTickSpeed > 0.12) {
             if (this.entityData.get(KAMIKAZE_MODE) != 0 && 20 * lastTickSpeed > this.getHealth()) {
                 if (this.entityData.get(KAMIKAZE_MODE) == 1) {
-                    Entity mortarShell = new MortarShellEntity(player, this.level());
+                    var mortarShell = new MortarShellEntity(player, this.level());
                     target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), mortarShell, player), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
                     target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
-                    Entity c4 = new C4Entity(player, this.level());
+                    var c4 = new C4Entity(player, this.level());
                     target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), c4, player), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
                     target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 3) {
-                    Entity rpg = new RpgRocketEntity(player, this.level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
+                    var rpg = new RpgRocketEntity(player, this.level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
                     target.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), rpg, player), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_RPG.get());
                     target.invulnerableTime = 0;
                 }
@@ -573,12 +573,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     private void kamikazeExplosion(int mode) {
-        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+        var attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
 
-        Entity mortarShell = new MortarShellEntity(controller, level());
-        Entity c4 = new C4Entity(controller, level());
-        Entity rpg = new RpgRocketEntity(controller, level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
+        var mortarShell = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), level());
+        var c4 = new C4Entity(ModEntities.C_4.get(), level());
+        var rpg = new RpgRocketEntity(ModEntities.RPG_ROCKET.get(), level());
 
         CustomExplosion explosion = switch (mode) {
             case 1 -> new CustomExplosion(this.level(), this,

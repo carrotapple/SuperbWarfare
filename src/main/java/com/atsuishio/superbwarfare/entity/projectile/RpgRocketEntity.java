@@ -64,18 +64,17 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
         this.damage = damage;
     }
 
-    public void setExplosionRadius(float explosionRadius) {
-        this.explosionRadius = explosionRadius;
-    }
-
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.RPG_ROCKET.get(), level);
+    }
+
+    public void setExplosionRadius(float explosionRadius) {
+        this.explosionRadius = explosionRadius;
     }
 
     public void setDamage(float damage) {
         this.damage = damage;
     }
-
 
     public void setMonsterMultiplier(float monsterMultiplier) {
         this.monsterMultiplier = monsterMultiplier;
