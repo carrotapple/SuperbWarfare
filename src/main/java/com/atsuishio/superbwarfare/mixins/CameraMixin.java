@@ -64,10 +64,12 @@ public abstract class CameraMixin {
             }
 
             if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoomVehicle) {
-                float yRot = -Mth.lerp(partialTicks, boat.turretYRotO - boat.yRotO, boat.getTurretYRot() - boat.getYRot());
-                float xRot = Mth.lerp(partialTicks, boat.turretXRotO - boat.xRotO, boat.getTurretXRot() - boat.getXRot());
-                setRotation(yRot, xRot);
-                setPosition(boat.shootPos(partialTicks).x - 0.35 * boat.getBarrelVector(partialTicks).x, boat.shootPos(partialTicks).y + 0.35, boat.shootPos(partialTicks).z - 0.35 * boat.getBarrelVector(partialTicks).z);
+                setRotation((float) -VehicleEntity.getYRotFromVector(boat.getBarrelVec(partialTicks)), (float) -VehicleEntity.getXRotFromVector(boat.getBarrelVec(partialTicks)));
+                if (ClientEventHandler.zoomVehicle) {
+                    setPosition(boat.driverZoomPos(partialTicks).x, boat.driverZoomPos(partialTicks).y, boat.driverZoomPos(partialTicks).z);
+                } else {
+                    setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
+                }
                 info.cancel();
                 return;
             }
