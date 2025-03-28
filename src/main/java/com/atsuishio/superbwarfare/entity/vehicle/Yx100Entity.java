@@ -271,7 +271,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         gunnerAngle(15, 15);
         lowHealthWarning();
         this.terrainCompat(4.6f, 6.7f);
-        inertiaRotate(6);
+        inertiaRotate(1.2f);
 
         this.refreshDimensions();
     }

@@ -209,7 +209,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         turretAngle(15, 12.5f);
         lowHealthWarning();
         this.terrainCompat(2.7f, 3.61f);
-        inertiaRotate(8);
+        inertiaRotate(1.25f);
 
         this.refreshDimensions();
     }

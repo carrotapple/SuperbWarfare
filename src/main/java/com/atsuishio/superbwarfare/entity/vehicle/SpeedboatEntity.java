@@ -136,7 +136,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             this.terrainCompat(2f, 3f);
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
         } else if (isInWater()) {
-            float f = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f = (float) (0.75f - (0.04f * java.lang.Math.min(getSubmergedHeight(this), this.getBbHeight())) + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90);
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         } else {
@@ -299,9 +299,9 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 this.setXRot(this.getXRot() * 0.85f);
                 float direct = (90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
 
-                this.setXRot((float) (this.getXRot() - direct * (this.onGround() ? 0 : 1) * 1.1f * this.getDeltaMovement().length()));
+                this.setXRot((float) (this.getXRot() - direct * (this.onGround() ? 0 : 1) * 1.1f * this.getDeltaMovement().horizontalDistance()));
                 this.setYRot((float) (this.getYRot() - Math.max(12 * this.getDeltaMovement().length(), 0.8) * this.entityData.get(DELTA_ROT)));
-                this.setZRot((float) (this.getRoll() - direct * this.entityData.get(DELTA_ROT) * (this.onGround() ? 0 : 1) * 10 * this.getDeltaMovement().length()));
+                this.setZRot((float) (this.getRoll() - direct * this.entityData.get(DELTA_ROT) * (this.onGround() ? 0 : 1) * 10 * this.getDeltaMovement().horizontalDistance()));
 
                 this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale(this.entityData.get(POWER) * 1.75f)));
             } else {
