@@ -485,7 +485,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), c4, player), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
                     target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 3) {
-                    var rpg = new RpgRocketEntity(player, this.level(), ExplosionConfig.RPG_EXPLOSION_DAMAGE.get());
+                    var rpg = new RpgRocketEntity(player, this.level());
                     target.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), rpg, player), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_RPG.get());
                     target.invulnerableTime = 0;
                 }

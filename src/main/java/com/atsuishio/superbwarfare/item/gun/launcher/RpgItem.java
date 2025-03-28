@@ -214,7 +214,9 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player.level() instanceof ServerLevel serverLevel) {
             RpgRocketEntity rocket = new RpgRocketEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
