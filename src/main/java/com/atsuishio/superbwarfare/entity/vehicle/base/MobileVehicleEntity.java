@@ -41,7 +41,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
+public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements ControllableVehicle {
     public static final EntityDataAccessor<Integer> CANNON_RECOIL_TIME = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
@@ -98,6 +98,24 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     }
 
     @Override
+    public void processInput(short keys) {
+        leftInputDown
+                = (keys & 0b0000001) > 0;
+        rightInputDown
+                = (keys & 0b0000010) > 0;
+        forwardInputDown
+                = (keys & 0b0000100) > 0;
+        backInputDown
+                = (keys & 0b0001000) > 0;
+        upInputDown
+                = (keys & 0b0010000) > 0;
+        downInputDown
+                = (keys & 0b0100000) > 0;
+        decoyInputDown
+                = (keys & 0b1000000) > 0;
+    }
+
+    @Override
     public void playerTouch(Player pPlayer) {
         if (pPlayer.isCrouching() && !this.level().isClientSide) {
             double entitySize = pPlayer.getBbWidth() * pPlayer.getBbHeight();
@@ -141,7 +159,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
         super.baseTick();
 
-        double direct = (90 -  calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+        double direct = (90 - calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
         setVelocity(Mth.lerp(0.4, getVelocity(), getDeltaMovement().horizontalDistance() * direct * 20));
 
         float deltaT = java.lang.Math.abs(getTurretYRot() - turretYRotO);
@@ -304,10 +322,10 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         double targetY = 0;
 
         if (res.getType() == HitResult.Type.BLOCK) {
-            targetY  = res.getLocation().y;
+            targetY = res.getLocation().y;
         } else if (!this.level().noCollision(new AABB(pos, pos))) {
             targetY = pos.y + maxLength / 2;
-        } else if (res.getType() == HitResult.Type.MISS){
+        } else if (res.getType() == HitResult.Type.MISS) {
             targetY = pos.y - maxLength / 2;
         }
 
@@ -331,7 +349,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05 , 0.1);
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05, 0.1);
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(ModTags.Blocks.SOFT_COLLISION)) {
@@ -345,7 +363,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_HARD_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05 , 0.1);
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05, 0.1);
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(ModTags.Blocks.HARD_COLLISION)) {

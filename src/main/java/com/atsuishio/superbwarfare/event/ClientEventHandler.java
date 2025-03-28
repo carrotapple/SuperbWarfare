@@ -214,6 +214,7 @@ public class ClientEventHandler {
                 || (player != null && player.isSprinting());
     }
 
+    static short keysCache = 0;
     @SubscribeEvent
     public static void handleClientTick(TickEvent.ClientTickEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -238,14 +239,43 @@ public class ClientEventHandler {
         handleLungeAttack(player, stack);
         handleGunMelee(player, stack);
 
-        if (player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && mobileVehicle.getFirstPassenger() == player && notInGame()) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(0, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(1, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(3, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(4, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(5, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(6, false));
+
+        var options = Minecraft.getInstance().options;
+        short keys = 0;
+
+        // 正在游戏内控制载具或无人机
+        if (!notInGame() && (player.getVehicle() instanceof MobileVehicleEntity mobileVehicle
+                && mobileVehicle.getFirstPassenger() == player
+                || stack.is(ModItems.MONITOR.get())
+                && ItemNBTTool.getBoolean(stack, "Using", false)
+                && ItemNBTTool.getBoolean(stack, "Linked", false))
+        ) {
+            if (options.keyLeft.isDown()) {
+                keys |= 0b0000001;
+            }
+            if (options.keyRight.isDown()) {
+                keys |= 0b0000010;
+            }
+            if (options.keyUp.isDown()) {
+                keys |= 0b0000100;
+            }
+            if (options.keyDown.isDown()) {
+                keys |= 0b0001000;
+            }
+            if (options.keyJump.isDown()) {
+                keys |= 0b0010000;
+            }
+            if (options.keyShift.isDown()) {
+                keys |= 0b0100000;
+            }
+            if (ModKeyMappings.RELEASE_DECOY.isDown()) {
+                keys |= 0b1000000;
+            }
+        }
+
+        if (keys != keysCache) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(keys));
+            keysCache = keys;
         }
 
         if (event.phase == TickEvent.Phase.END) {
