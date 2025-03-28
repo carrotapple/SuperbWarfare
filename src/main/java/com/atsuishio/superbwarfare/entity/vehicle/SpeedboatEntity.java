@@ -159,6 +159,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         if (this.getDeltaMovement().length() > 0.15) {
             collideHardBlock();
         }
+        inertiaRotate(2);
 
         this.refreshDimensions();
     }
@@ -298,11 +299,11 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 this.setXRot(this.getXRot() * 0.85f);
                 float direct = (90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
 
-                this.setXRot((float) (this.getXRot() - direct * (this.onGround() ? 0 : 1) * 1.2f * this.getDeltaMovement().length()));
+                this.setXRot((float) (this.getXRot() - direct * (this.onGround() ? 0 : 1) * 1.1f * this.getDeltaMovement().length()));
                 this.setYRot((float) (this.getYRot() - Math.max(12 * this.getDeltaMovement().length(), 0.8) * this.entityData.get(DELTA_ROT)));
                 this.setZRot((float) (this.getRoll() - direct * this.entityData.get(DELTA_ROT) * (this.onGround() ? 0 : 1) * 10 * this.getDeltaMovement().length()));
 
-                this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale(this.entityData.get(POWER) * 2f)));
+                this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale(this.entityData.get(POWER) * 1.75f)));
             } else {
                 this.setXRot(this.getXRot() * 0.99f);
             }

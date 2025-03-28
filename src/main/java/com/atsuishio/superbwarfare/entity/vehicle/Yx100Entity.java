@@ -270,8 +270,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         turretAngle(5, 5);
         gunnerAngle(15, 15);
         lowHealthWarning();
-
         this.terrainCompat(4.6f, 6.7f);
+        inertiaRotate(6);
+
         this.refreshDimensions();
     }
 
@@ -470,11 +471,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         if (forwardInputDown) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (this.entityData.get(POWER) < 0 ? 0.016f : 0.0024f), 0.21f));
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (this.entityData.get(POWER) < 0 ? 0.004f : 0.0024f), 0.21f));
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.016f : 0.0024f), -0.16f));
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.004f : 0.0024f), -0.16f));
             if (rightInputDown) {
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
             } else if (this.leftInputDown) {

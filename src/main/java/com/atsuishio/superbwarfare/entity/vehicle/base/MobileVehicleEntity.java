@@ -90,6 +90,9 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     public boolean cannotFireCoax;
     public int reloadCoolDown;
 
+    public double velocityO;
+    public double velocity;
+
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -128,12 +131,18 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
         recoilShakeO = this.getRecoilShake();
 
+        velocityO = this.getVelocity();
+
         lastTickSpeed = new Vec3(this.getDeltaMovement().x, this.getDeltaMovement().y + 0.06, this.getDeltaMovement().z).length();
         lastTickVerticalSpeed = this.getDeltaMovement().y + 0.06;
         if (collisionCoolDown > 0) {
             collisionCoolDown--;
         }
+
         super.baseTick();
+
+        double direct = (90 -  calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+        setVelocity(Mth.lerp(0.4, getVelocity(), getDeltaMovement().horizontalDistance() * direct * 20));
 
         float deltaT = java.lang.Math.abs(getTurretYRot() - turretYRotO);
         while (getTurretYRot() > 180F) {
@@ -188,6 +197,14 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         this.move(MoverType.SELF, this.getDeltaMovement());
         collideLilyPadBlock();
         this.refreshDimensions();
+    }
+
+    // 惯性倾斜
+
+    public void inertiaRotate(float multiple) {
+        float angleX = 0;
+        float diffX = (float) (getAcceleration() * multiple - angleX);
+        setXRot(getXRot() - 0.5f * diffX);
     }
 
     // 地形适应测试
@@ -500,6 +517,18 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public SoundEvent getEngineSound() {
         return SoundEvents.EMPTY;
+    }
+
+    public double getVelocity() {
+        return this.velocity;
+    }
+
+    public void setVelocity(double pV) {
+        this.velocity = pV;
+    }
+
+    public double getAcceleration() {
+        return getVelocity() - velocityO;
     }
 
     public float getRudderRot() {

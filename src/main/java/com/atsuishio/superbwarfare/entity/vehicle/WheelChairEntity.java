@@ -127,8 +127,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         }
         this.setSprinting(this.getDeltaMovement().horizontalDistance() > 0.15);
         attractEntity();
-
         this.terrainCompat(0.9f, 1.2f);
+        inertiaRotate(35);
 
         this.refreshDimensions();
     }
@@ -167,6 +167,9 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             }
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY, -5f, 5f));
+
+            float direct = (90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            this.setZRot((float) (this.getRoll() + direct * diffY * 0.2 * this.getDeltaMovement().length()));
         }
 
         if (this.forwardInputDown) {

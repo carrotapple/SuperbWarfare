@@ -208,25 +208,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
 
         turretAngle(15, 12.5f);
         lowHealthWarning();
-
         this.terrainCompat(2.7f, 3.61f);
-
-//        Matrix4f transform = getBarrelTransform(1);
-//        float x = 0.0609375f;
-//        float y = 0.0517f;
-//        float z = 3.0927625f;
-//
-//        Vector4f worldPosition = transformPosition(transform, x, y, z);
-//
-//        // 测试用粒子效果，用于确定点位位置
-//        var passenger = this.getFirstPassenger();
-//
-//        if (passenger != null) {
-//            if (passenger.level() instanceof ServerLevel serverLevel) {
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, worldPosition.x, worldPosition.y, worldPosition.z, 1, 0, 0, 0, 0, true);
-//            }
-//        }
-
+        inertiaRotate(8);
 
         this.refreshDimensions();
     }
