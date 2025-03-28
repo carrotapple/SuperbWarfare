@@ -314,12 +314,11 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05 , 0.1);
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(ModTags.Blocks.SOFT_COLLISION)) {
                     this.level().destroyBlock(pos, true);
-                    this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
                 }
             });
         }
@@ -329,12 +328,12 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_HARD_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.5)).inflate(0.1, -0.05 , 0.1);
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(ModTags.Blocks.HARD_COLLISION)) {
                     this.level().destroyBlock(pos, true);
-                    this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.95));
                 }
             });
         }
@@ -374,6 +373,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity {
     }
 
     public void bounceHorizontal(Direction direction) {
+        collideBlock();
+        collideHardBlock();
         switch (direction.getAxis()) {
             case X:
                 this.setDeltaMovement(this.getDeltaMovement().multiply(-0.4, 0.99, 0.99));

@@ -647,4 +647,12 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public boolean canCrushEntities() {
         return false;
     }
+
+    @Override
+    public void collideBlock() {
+    }
+
+    @Override
+    public void collideHardBlock() {
+    }
 }

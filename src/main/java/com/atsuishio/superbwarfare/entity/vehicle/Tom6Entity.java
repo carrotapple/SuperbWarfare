@@ -356,4 +356,12 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public boolean allowFreeCam() {
         return true;
     }
+
+    @Override
+    public void collideBlock() {
+    }
+
+    @Override
+    public void collideHardBlock() {
+    }
 }
