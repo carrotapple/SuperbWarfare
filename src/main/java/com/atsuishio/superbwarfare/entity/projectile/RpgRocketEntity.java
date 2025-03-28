@@ -13,9 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -45,7 +42,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntity {
 
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private float monsterMultiplier = 0.0f;
@@ -179,15 +175,6 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
 
     private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
-    }
-
-    @Override
-    protected float getGravity() {
-        return super.getGravity();
-    }
-
-    public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
