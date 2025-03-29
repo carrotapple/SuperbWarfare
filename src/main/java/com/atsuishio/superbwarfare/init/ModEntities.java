@@ -40,8 +40,8 @@ public class ModEntities {
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<C4Entity>> C_4 = register("c4",
             EntityType.Builder.<C4Entity>of(C4Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
-    public static final RegistryObject<EntityType<WaterMaskEntity>> WATER_MASK_ENTITY = register("water_mask_entity",
-            EntityType.Builder.<WaterMaskEntity>of(WaterMaskEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(3).sized(1f, 1f));
+    public static final RegistryObject<EntityType<WaterMaskEntity>> WATER_MASK = register("water_mask",
+            EntityType.Builder.of(WaterMaskEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(3).sized(1f, 1f).noSave().noSummon().fireImmune());
 
     // Projectiles
     public static final RegistryObject<EntityType<TaserBulletEntity>> TASER_BULLET = register("taser_bullet",

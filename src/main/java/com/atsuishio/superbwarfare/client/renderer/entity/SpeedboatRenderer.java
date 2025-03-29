@@ -57,7 +57,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
         poseStack.pushPose();
         poseStack.scale(2.4f, 0.4f, 4.05f);
         poseStack.translate(0, 1.5, -0.22);
-        Entity entity = new WaterMaskEntity(ModEntities.WATER_MASK_ENTITY.get(), entityIn.level());
+        Entity entity = new WaterMaskEntity(ModEntities.WATER_MASK.get(), entityIn.level());
         entityRenderDispatcher.render(entity, 0, 0, 0, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
         poseStack.popPose();
