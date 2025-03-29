@@ -697,8 +697,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void updateOBB() {
         this.obb.center().set(this.position().toVector3f());
-        this.obb.rotation().x = this.getPitch(0);
-        this.obb.rotation().y = this.getYaw(0);
-        this.obb.rotation().z = this.getRoll(0);
+
+        this.obb.rotation().x = this.getPitch(1) * Mth.DEG_TO_RAD / 2;
+        this.obb.rotation().y = -this.getYaw(1) * Mth.DEG_TO_RAD / 2;
+        this.obb.rotation().z = this.getRoll(1) * Mth.DEG_TO_RAD / 2;
     }
 }
