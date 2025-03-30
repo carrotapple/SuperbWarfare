@@ -440,7 +440,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 if (this.cannotFireCoax) return;
 
                 Matrix4f transform = getBarrelTransform(1);
-                Vector4f worldPosition = transformPosition(transform, -0.2f, 0.1f, 1);
+                Vector4f worldPosition = transformPosition(transform, -0.12f, 0.15f, 2f);
 
                 if (this.entityData.get(MG_AMMO) > 0 || hasCreativeAmmo) {
                     var projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player);
@@ -491,7 +491,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             var projectileEntity = projectile.create(player);
 
             projectileEntity.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            projectileEntity.shoot(getGunnerVector(1).x, getGunnerVector(1).y, getGunnerVector(1).z, 20, 0.3f);
+            projectileEntity.shoot(getGunnerVector(1).x, getGunnerVector(1).y + 0.005f, getGunnerVector(1).z, 20, 0.3f);
 
             this.level().addFreshEntity(projectileEntity);
 
@@ -860,6 +860,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle"));
     }
 
+    private PlayState coaxShootPredicate(AnimationState<Yx100Entity> event) {
+        if (this.entityData.get(FIRE_ANIM) > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire_coax"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.yx100.idle_coax"));
+    }
+
     private PlayState gunShootPredicate(AnimationState<Yx100Entity> event) {
         if (this.entityData.get(GUN_FIRE_TIME) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.yx100.fire2"));
@@ -870,6 +877,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "cannon", 0, this::cannonShootPredicate));
+        data.add(new AnimationController<>(this, "coax", 0, this::coaxShootPredicate));
         data.add(new AnimationController<>(this, "gun", 0, this::gunShootPredicate));
     }
 
