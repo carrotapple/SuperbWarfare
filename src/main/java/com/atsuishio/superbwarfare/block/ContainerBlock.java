@@ -109,7 +109,8 @@ public class ContainerBlock extends BaseEntityBlock {
                         continue;
                     }
 
-                    if (pLevel.getBlockState(pPos.offset(i, j, k)).canOcclude()) {
+                    var state = pLevel.getBlockState(pPos.offset(i, j, k));
+                    if (state.canOcclude() && !state.is(Blocks.SNOW)) {
                         flag = false;
                     }
                 }
