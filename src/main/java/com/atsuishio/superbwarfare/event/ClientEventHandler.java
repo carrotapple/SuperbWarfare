@@ -814,6 +814,14 @@ public class ClientEventHandler {
                 }
             }
         }
+        if (iVehicle instanceof PrismTankEntity prismTank) {
+            if (prismTank.getWeaponIndex(0) == 0) {
+                player.playSound(ModSounds.PRISM_FIRE_1P.get(), 1f, 1);
+            } else if (prismTank.getWeaponIndex(0) == 1) {
+                float pitch = prismTank.getEntityData().get(HEAT) <= 60 ? 1.1f : (float) (1.1f - 0.011 * Math.abs(60 - prismTank.getEntityData().get(HEAT)));
+                player.playSound(ModSounds.PRISM_FIRE_1P_2.get(), 1f, pitch);
+            }
+        }
     }
 
     @SubscribeEvent

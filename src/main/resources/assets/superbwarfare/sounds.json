@@ -2947,5 +2947,37 @@
         "stream": false
       }
     ]
+  },
+  "prism_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:prism/prism_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "prism_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:prism/prism_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "prism_fire_1p_2": {
+    "sounds": [
+      {
+        "name": "superbwarfare:prism/prism_fire_1p_2",
+        "stream": false
+      }
+    ]
+  },
+  "prism_fire_3p_2": {
+    "sounds": [
+      {
+        "name": "superbwarfare:prism/prism_fire_3p_2",
+        "stream": false
+      }
+    ]
   }
 }

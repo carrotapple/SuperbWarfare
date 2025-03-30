@@ -3,10 +3,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
-import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.*;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.HeliRocketWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.LaserWeapon;
@@ -189,6 +186,8 @@ public class VehicleHudOverlay {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                     }
 
+                } else if (weaponVehicle instanceof PrismTankEntity) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                 } else {
                     if (weaponVehicle.getWeaponIndex(0) == 0) {
                         preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
@@ -289,6 +288,12 @@ public class VehicleHudOverlay {
                     }
                 }
 
+                // Prism Tank
+                if (player.getVehicle() instanceof PrismTankEntity prismTank) {
+                    double heat = 1 - prismTank.getEntityData().get(HEAT) / 100.0F;
+                    guiGraphics.drawString(mc.font, Component.literal("LASER   " + (prismTank.getEntityData().get(HEAT) + 25) + " ℃"), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                }
+
                 // 血量
                 double heal = mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
@@ -343,6 +348,11 @@ public class VehicleHudOverlay {
                             double heat2 = yx100.getEntityData().get(COAX_HEAT) / 100.0F;
                             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("12.7MM HMG " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : yx100.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
                         }
+                    }
+                    // Prism Tank
+                    if (weaponVehicle instanceof PrismTankEntity prismTank) {
+                        double heat = prismTank.getEntityData().get(HEAT) / 100.0F;
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("LASER " + (prismTank.getEntityData().get(HEAT) + 25) + " ℃"), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
                     }
 
                     double heal = 1 - mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();

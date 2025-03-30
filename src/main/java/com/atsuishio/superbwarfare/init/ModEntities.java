@@ -101,6 +101,8 @@ public class ModEntities {
             EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(DroneEntity::new).sized(0.6f, 0.2f));
     public static final RegistryObject<EntityType<LaserTowerEntity>> LASER_TOWER = register("laser_tower",
             EntityType.Builder.<LaserTowerEntity>of(LaserTowerEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(LaserTowerEntity::new).fireImmune().sized(0.9f, 1.65f));
+    public static final RegistryObject<EntityType<PrismTankEntity>> PRISM_TANK = register("prism_tank",
+            EntityType.Builder.<PrismTankEntity>of(PrismTankEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(PrismTankEntity::new).fireImmune().sized(5f, 2.4f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

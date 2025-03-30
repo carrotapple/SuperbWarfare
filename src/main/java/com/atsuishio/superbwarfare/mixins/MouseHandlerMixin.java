@@ -69,6 +69,10 @@ public class MouseHandlerMixin {
             }
         }
 
+        if (player.getVehicle() instanceof PrismTankEntity) {
+            return ClientEventHandler.zoomVehicle ? 0.26 : 0.33;
+        }
+
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
             return 0.33;
         }

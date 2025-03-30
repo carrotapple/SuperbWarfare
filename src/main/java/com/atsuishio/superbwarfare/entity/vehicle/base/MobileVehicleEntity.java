@@ -192,7 +192,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             cannotFireCoax = false;
         }
 
-        if (this.entityData.get(HEAT) > 100) {
+        if (this.entityData.get(HEAT) > 100 && !cannotFire) {
             cannotFire = true;
             this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
         }
@@ -412,10 +412,10 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         collideHardBlock();
         switch (direction.getAxis()) {
             case X:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.4, 0.99, 0.99));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 0.99, 0.99));
                 break;
             case Z:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.4));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, 0.8));
                 break;
         }
     }
@@ -489,8 +489,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             for (var entity : entities) {
                 double entitySize = entity.getBbWidth() * entity.getBbHeight();
                 double thisSize = this.getBbWidth() * this.getBbHeight();
-                double f = Math.min(entitySize / thisSize, 2);
-                double f1 = Math.min(thisSize / entitySize, 4);
+                double f = Math.min(entitySize / thisSize, 2) * 0.5;
+                double f1 = Math.min(thisSize / entitySize, 4) * 2;
 
                 if (velocity.length() > 0.3 && getBoundingBox().distanceToSqr(entity.getBoundingBox().getCenter()) < 1) {
                     if (!this.level().isClientSide) {
