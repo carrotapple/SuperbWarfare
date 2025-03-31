@@ -392,10 +392,10 @@ public class VehicleConfig {
         PRISM_TANK_SHOOT_COST_MODE_1 = builder.defineInRange("prism_tank_shoot_cost_mode_1", 100000, 1, 10000000);
 
         builder.comment("The laser AOE damage of PrismTank");
-        PRISM_TANK_AOE_DAMAGE = builder.defineInRange("prism_tank_aoe_damage", 50, 1, 10000000);
+        PRISM_TANK_AOE_DAMAGE = builder.defineInRange("prism_tank_aoe_damage", 72, 1, 10000000);
 
         builder.comment("The laser AOE radius of PrismTank");
-        PRISM_TANK_AOE_RADIUS = builder.defineInRange("prism_tank_aoe_radius", 10, 1, 10000000);
+        PRISM_TANK_AOE_RADIUS = builder.defineInRange("prism_tank_aoe_radius", 12, 1, 10000000);
 
         builder.comment("The Laser Damage of PrismTank Mode 2 per tick");
         PRISM_TANK_DAMAGE_MODE_2 = builder.defineInRange("prism_tank_damage_mode_2", 15, 1, 10000000);

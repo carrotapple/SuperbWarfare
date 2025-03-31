@@ -334,7 +334,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     private float laserLength(Vec3 pos, Entity cannon) {
         if (this.level() instanceof ServerLevel) {
             BlockHitResult result = cannon.level().clip(new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon));
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, cannon));
 
             Vec3 looking = Vec3.atLowerCornerOf(result.getBlockPos());
             Vec3 hitPos = result.getLocation();
@@ -361,7 +361,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
         return (float) pos.distanceTo((Vec3.atLowerCornerOf(cannon.level().clip(
                 new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
-                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon)).getBlockPos())));
+                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, cannon)).getBlockPos())));
     }
 
     private float laserLengthEntity(Vec3 pos, Entity cannon) {
