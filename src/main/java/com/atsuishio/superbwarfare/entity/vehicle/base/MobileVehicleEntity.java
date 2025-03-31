@@ -376,6 +376,9 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     @Override
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
+        if (!this.level().isClientSide()) {
+            MobileVehicleEntity.IGNORE_ENTITY_GROUND_CHECK_STEPPING = true;
+        }
         super.move(movementType, movement);
         if (level() instanceof ServerLevel) {
             if (lastTickSpeed < 0.3 || collisionCoolDown > 0 || this instanceof DroneEntity) return;
@@ -641,4 +644,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public boolean canCrushEntities() {
         return true;
     }
+
+    public static boolean IGNORE_ENTITY_GROUND_CHECK_STEPPING = false;
 }
