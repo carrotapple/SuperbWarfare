@@ -228,7 +228,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
         }
 
         turretAngle(15, 10);
-        this.terrainCompat(4f, 5f);
+        this.terrainCompat(4.6375f, 5.171875f);
         inertiaRotate(1);
 
         lowHealthWarning();

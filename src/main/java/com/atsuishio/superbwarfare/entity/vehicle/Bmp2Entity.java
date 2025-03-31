@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.OBBEntity;
 import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
 import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
@@ -17,7 +16,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.WgMissileWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.InventoryTool;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,8 +50,6 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -64,15 +64,13 @@ import java.util.Comparator;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity, OBBEntity {
+public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
 
     public static final EntityDataAccessor<Integer> CANNON_FIRE_TIME = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_MISSILE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> MISSILE_COUNT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public int reloadCoolDown;
-
-    public OBB obb;
 
     public Bmp2Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.BMP_2.get(), world);
@@ -81,7 +79,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     public Bmp2Entity(EntityType<Bmp2Entity> type, Level world) {
         super(type, world);
         this.setMaxUpStep(2.25f);
-        this.obb = new OBB(this.position().toVector3f(), new Vector3f(3.5f, 3.0f, 5.0f), new Quaternionf());
     }
 
     @Override
@@ -185,9 +182,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public void baseTick() {
         super.baseTick();
-
-        this.updateOBB();
-
         if (getLeftTrack() < 0) {
             setLeftTrack(100);
         }
@@ -684,20 +678,5 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/bmp2_icon.png");
-    }
-
-    @Override
-    public OBB getOBB() {
-        return this.obb;
-    }
-
-    // TODO 实现正确的旋转设置
-    @Override
-    public void updateOBB() {
-        this.obb.center().set(this.position().toVector3f());
-
-        this.obb.rotation().x = this.getPitch(1) * Mth.DEG_TO_RAD / 2;
-        this.obb.rotation().y = -this.getYaw(1) * Mth.DEG_TO_RAD / 2;
-        this.obb.rotation().z = this.getRoll(1) * Mth.DEG_TO_RAD / 2;
     }
 }
