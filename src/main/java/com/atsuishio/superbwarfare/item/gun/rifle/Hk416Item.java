@@ -46,7 +46,7 @@ public class Hk416Item extends GunItem implements GeoItem {
     public static ItemDisplayContext transformType;
 
     public Hk416Item() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 
     @Override

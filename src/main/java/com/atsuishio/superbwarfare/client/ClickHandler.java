@@ -213,6 +213,7 @@ public class ClickHandler {
                 handleConfigScreen(player);
             }
             if (key == ModKeyMappings.RELOAD.getKey().getValue()) {
+                ClientEventHandler.burstFireSize = 0;
                 ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
             }
             if (key == ModKeyMappings.FIRE_MODE.getKey().getValue()) {
@@ -336,13 +337,21 @@ public class ClickHandler {
             if (!gunItem.useBackpackAmmo(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                    ClientEventHandler.burstFireSize = 0;
                 }
             } else {
                 ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
-                if (!stack.is(ModItems.BOCEK.get())) {
+                if (!stack.is(ModItems.BOCEK.get()) && ClientEventHandler.burstFireSize == 0) {
                     ClientEventHandler.holdFire = true;
                 }
-                if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0) {
+                if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0
+                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                        && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                        && !GunsTool.getGunBooleanTag(stack, "Charging")
+                        && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
+                        && cantFireTime == 0
+                        && drawTime < 0.01
+                        && !notInGame()) {
                     ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize", 1);
                 }
             }

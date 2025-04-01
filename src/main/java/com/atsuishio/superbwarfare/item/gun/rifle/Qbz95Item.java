@@ -46,7 +46,7 @@ public class Qbz95Item extends GunItem implements GeoItem {
     public static ItemDisplayContext transformType;
 
     public Qbz95Item() {
-        super(new Properties().stacksTo(1).rarity(Rarity.EPIC));
+        super(new Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 
     @Override

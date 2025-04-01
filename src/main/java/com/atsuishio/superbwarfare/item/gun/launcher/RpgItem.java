@@ -63,7 +63,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
     public static ItemDisplayContext transformType;
 
     public RpgItem() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 
     @Override
