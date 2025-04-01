@@ -39,8 +39,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
-import static com.atsuishio.superbwarfare.event.ClientEventHandler.cantFireTime;
-import static com.atsuishio.superbwarfare.event.ClientEventHandler.drawTime;
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClickHandler {
@@ -323,16 +322,18 @@ public class ClickHandler {
             ClientEventHandler.holdFire = true;
         }
 
-        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null && player.getVehicle() instanceof CannonEntity)) {
-            if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !GunsTool.getGunBooleanTag(stack, "Reloading")
-                    && !GunsTool.getGunBooleanTag(stack, "Charging")
-                    && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
-                    && cantFireTime == 0
-                    && drawTime < 0.01
-                    && !notInGame()) {
-                player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
-            }
+        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null
+                && player.getVehicle() instanceof CannonEntity) && clientTimer.getProgress() == 0 && cantFireTime == 0
+                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                && !GunsTool.getGunBooleanTag(stack, "Charging")
+                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
+                && cantFireTime == 0
+                && drawTime < 0.01
+                && !notInGame()
+        ) {
+
+            player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
 
             if (!gunItem.useBackpackAmmo(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
@@ -341,18 +342,14 @@ public class ClickHandler {
                 }
             } else {
                 ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
-                if (!stack.is(ModItems.BOCEK.get()) && ClientEventHandler.burstFireSize == 0) {
-                    ClientEventHandler.holdFire = true;
-                }
-                if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0
-                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                        && !GunsTool.getGunBooleanTag(stack, "Reloading")
-                        && !GunsTool.getGunBooleanTag(stack, "Charging")
-                        && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
-                        && cantFireTime == 0
-                        && drawTime < 0.01
-                        && !notInGame()) {
-                    ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize", 1);
+                if (GunsTool.getGunIntTag(stack, "FireMode") == 1) {
+                    if (ClientEventHandler.burstFireSize == 0) {
+                        ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize", 1);
+                    }
+                } else {
+                    if (!stack.is(ModItems.BOCEK.get())) {
+                        ClientEventHandler.holdFire = true;
+                    }
                 }
             }
         }

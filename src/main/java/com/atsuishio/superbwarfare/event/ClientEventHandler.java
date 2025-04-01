@@ -564,7 +564,7 @@ public class ClientEventHandler {
                         burstFireSize = 1;
                     }
                     if (burstFireSize == 1) {
-                        cantFireTime = 40;
+                        cantFireTime = 30;
                     }
                 }
 
@@ -1527,6 +1527,7 @@ public class ClientEventHandler {
             lungeDraw = 30;
             lungeSprint = 0;
             lungeAttack = 0;
+            burstFireSize = 0;
         }
     }
 
