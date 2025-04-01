@@ -1,24 +1,28 @@
 package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +47,7 @@ public class C4Bomb extends Item implements DispenserLaunchable {
             C4Entity entity = new C4Entity(player, level, flag);
             entity.setPos(player.getX() + 0.25 * player.getLookAngle().x, player.getEyeY() - 0.2f + 0.25 * player.getLookAngle().y, player.getZ() + 0.25 * player.getLookAngle().z);
             entity.setDeltaMovement(0.5 * player.getLookAngle().x, 0.5 * player.getLookAngle().y, 0.5 * player.getLookAngle().z);
-            entity.setOwner(player);
+            entity.setOwnerUUID(player.getUUID());
 
             level.addFreshEntity(entity);
         }
@@ -77,25 +81,32 @@ public class C4Bomb extends Item implements DispenserLaunchable {
     }
 
     @Override
-    public AbstractProjectileDispenseBehavior getLaunchBehavior() {
-        return new AbstractProjectileDispenseBehavior() {
-
-            @Override
-            protected float getPower() {
-                return 0.15F;
-            }
-
+    public DispenseItemBehavior getLaunchBehavior() {
+        return new DefaultDispenseItemBehavior() {
             @Override
             @ParametersAreNonnullByDefault
-            protected @NotNull Projectile getProjectile(Level level, Position position, ItemStack stack) {
-                var c4 = new C4Entity((LivingEntity) null, level);
-                c4.setPos(position.x(), position.y(), position.z());
-                return c4;
-            }
+            public @NotNull ItemStack execute(BlockSource pSource, ItemStack pStack) {
+                Level level = pSource.getLevel();
+                Position position = DispenserBlock.getDispensePosition(pSource);
+                Direction direction = pSource.getBlockState().getValue(DispenserBlock.FACING);
 
-            @Override
-            protected void playSound(BlockSource pSource) {
-                pSource.getLevel().playSound(null, pSource.getPos(), ModSounds.C4_THROW.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                var entity = new C4Entity(ModEntities.C_4.get(), level);
+                entity.setPos(position.x(), position.y(), position.z());
+
+                var pX = direction.getStepX();
+                var pY = direction.getStepY() + 0.1F;
+                var pZ = direction.getStepZ();
+                Vec3 vec3 = (new Vec3(pX, pY, pZ)).normalize().scale(0.05);
+                entity.setDeltaMovement(vec3);
+                double d0 = vec3.horizontalDistance();
+                entity.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
+                entity.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
+                entity.yRotO = entity.getYRot();
+                entity.xRotO = entity.getXRot();
+
+                level.addFreshEntity(entity);
+                pStack.shrink(1);
+                return pStack;
             }
         };
     }
