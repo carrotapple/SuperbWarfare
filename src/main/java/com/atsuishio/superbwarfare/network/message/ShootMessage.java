@@ -54,7 +54,7 @@ public class ShootMessage {
     public static void pressAction(Player player, double spared) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount");
+            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);
 
             if (GunsTool.getGunIntTag(stack, "Ammo") > 0) {
                 // 空仓挂机

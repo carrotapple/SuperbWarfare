@@ -125,7 +125,7 @@ public class FireMessage {
 
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot");
-        float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power") * (float) perkSpeed(stack);
+        float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power", 6) * (float) perkSpeed(stack);
         float bypassArmorRate = (float) GunsTool.getGunDoubleTag(stack, "BypassesArmor");
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
@@ -134,12 +134,12 @@ public class FireMessage {
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
             damage = 0.08333333 * GunsTool.getGunDoubleTag(stack, "Damage") *
-                    GunsTool.getGunDoubleTag(stack, "Power") * perkDamage(stack);
+                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
                     GunsTool.getGunDoubleTag(stack, "Damage") *
-                    GunsTool.getGunDoubleTag(stack, "Power") * perkDamage(stack);
+                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
