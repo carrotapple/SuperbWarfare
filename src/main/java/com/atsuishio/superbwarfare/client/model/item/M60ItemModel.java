@@ -58,7 +58,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
             r.setRotX(1.5f);
         }
 
-        int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
+        int ammo = GunsTool.getGunIntTag(stack, "Ammo");
         boolean flag = GunsTool.getGunBooleanTag(stack, "HideBulletChain");
 
         if (ammo < 5 && flag) {

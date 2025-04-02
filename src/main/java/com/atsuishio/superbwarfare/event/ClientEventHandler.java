@@ -225,7 +225,7 @@ public class ClientEventHandler {
         if (stack.is(ModItems.MINIGUN.get())) {
             if (holdFire || zoom) {
                 miniGunRot = Math.min(miniGunRot + 5, 21);
-                float rpm = (float) GunsTool.getGunIntTag(stack, "RPM", 0) / 3600;
+                float rpm = (float) GunsTool.getGunIntTag(stack, "RPM") / 3600;
                 player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
             }
         }
@@ -441,7 +441,7 @@ public class ClientEventHandler {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
         }
 
-        int rpm = GunsTool.getGunIntTag(stack, "RPM", 0) + customRpm;
+        int rpm = GunsTool.getGunIntTag(stack, "RPM") + customRpm;
         if (rpm == 0) {
             rpm = 600;
         }
@@ -476,9 +476,9 @@ public class ClientEventHandler {
                 && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !GunsTool.getGunBooleanTag(stack, "Reloading")
                 && !GunsTool.getGunBooleanTag(stack, "Charging")
-                && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0
+                && GunsTool.getGunIntTag(stack, "Ammo") > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
-                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)
+                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction")
                 && revolverPre())
                 || (stack.is(ModItems.MINIGUN.get())
                 && !player.isSprinting()
@@ -553,14 +553,14 @@ public class ClientEventHandler {
     public static void shootClient(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+            if (GunsTool.getGunIntTag(stack, "Ammo") > 0) {
                 int mode = GunsTool.getGunIntTag(stack, "FireMode");
                 if (mode != 2) {
                     holdFire = false;
                 }
 
                 if (mode == 1) {
-                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo") == 1) {
                         burstFireSize = 1;
                     }
                     if (burstFireSize == 1) {
@@ -586,7 +586,7 @@ public class ClientEventHandler {
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                if (GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && GunsTool.getGunIntTag(stack, "Ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
 
@@ -635,7 +635,7 @@ public class ClientEventHandler {
         ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
         fireRecoilTime = 10;
 
-        float gunRecoilY = (float) GunsTool.getGunDoubleTag(stack, "RecoilY", 0) * 10;
+        float gunRecoilY = (float) GunsTool.getGunDoubleTag(stack, "RecoilY") * 10;
 
         recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
@@ -1100,7 +1100,7 @@ public class ClientEventHandler {
         float pitch = event.getPitch();
         float roll = event.getRoll();
         ItemStack stack = entity.getMainHandItem();
-        double amplitude = 15000 * GunsTool.getGunDoubleTag(stack, "RecoilY", 0) * GunsTool.getGunDoubleTag(stack, "RecoilX", 0);
+        double amplitude = 15000 * GunsTool.getGunDoubleTag(stack, "RecoilY") * GunsTool.getGunDoubleTag(stack, "RecoilX");
 
         if (fireRecoilTime > 0) {
             firePosTimer = 0.001;
@@ -1135,7 +1135,7 @@ public class ClientEventHandler {
         double rpm = 1;
 
         if (stack.is(ModItems.MINIGUN.get())) {
-            rpm = (double) GunsTool.getGunIntTag(stack, "RPM", 0) / 1800;
+            rpm = (double) GunsTool.getGunIntTag(stack, "RPM") / 1800;
         }
 
         float[] shake = {0, 0};
@@ -1224,10 +1224,10 @@ public class ClientEventHandler {
         double rpm = 1;
 
         if (stack.is(ModItems.MINIGUN.get())) {
-            rpm = (double) GunsTool.getGunIntTag(stack, "RPM", 0) / 1800;
+            rpm = (double) GunsTool.getGunIntTag(stack, "RPM") / 1800;
         }
 
-        float gunRecoilX = (float) GunsTool.getGunDoubleTag(stack, "RecoilX", 0) * 60;
+        float gunRecoilX = (float) GunsTool.getGunDoubleTag(stack, "RecoilX") * 60;
 
         recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
         recoilY = 0;
@@ -1395,7 +1395,7 @@ public class ClientEventHandler {
                 p = zoomPos;
             }
 
-            customZoom = Mth.lerp(0.6 * times, customZoom, GunsTool.getGunDoubleTag(stack, "CustomZoom", 0));
+            customZoom = Mth.lerp(0.6 * times, customZoom, GunsTool.getGunDoubleTag(stack, "CustomZoom"));
 
             double zoomFov = 1.25 + customZoom;
 

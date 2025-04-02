@@ -314,7 +314,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
     public void fireOnPress(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (GunsTool.getGunBooleanTag(stack, "Reloading")) return;
-        if (player.getCooldowns().isOnCooldown(stack.getItem()) || GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0) return;
+        if (player.getCooldowns().isOnCooldown(stack.getItem()) || GunsTool.getGunIntTag(stack, "Ammo") <= 0) return;
 
         boolean zooming = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         double spread = GunsTool.getGunDoubleTag(stack, "Spread");
@@ -327,9 +327,9 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
 
         if (player.level() instanceof ServerLevel serverLevel) {
             GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, serverLevel,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius"));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -340,11 +340,11 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
             gunGrenadeEntity.setNoGravity(PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
             gunGrenadeEntity.charged(isChargedFire);
 
-            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0);
+            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity");
             int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
             if (perkLevel > 0) {
-                gunGrenadeEntity.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0) * 0.5f);
-                gunGrenadeEntity.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage", 0) * (1.1f + perkLevel * 0.1f));
+                gunGrenadeEntity.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius") * 0.5f);
+                gunGrenadeEntity.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage") * (1.1f + perkLevel * 0.1f));
                 velocity *= 1.2f;
             }
 
@@ -378,7 +378,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
         player.getCooldowns().addCooldown(stack.getItem(), 6);
     }
 }

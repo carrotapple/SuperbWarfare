@@ -153,7 +153,7 @@ public class VectorItem extends GunItem implements GeoItem {
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 0.75;
-            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
+            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
         };
 
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);

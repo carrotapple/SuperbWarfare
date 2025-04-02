@@ -75,7 +75,7 @@ public class JavelinHudOverlay {
                 float j1 = l + j;
                 preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/javelin/javelin_hud.png"), k, l, 0, 0.0F, i, j, i, j);
                 preciseBlit(event.getGuiGraphics(), ModUtils.loc(stack.getOrCreateTag().getBoolean("TopMode") ? "textures/screens/javelin/top.png" : "textures/screens/javelin/dir.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), ModUtils.loc(GunsTool.getGunIntTag(stack, "Ammo", 0) > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc(GunsTool.getGunIntTag(stack, "Ammo") > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
                 if (stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 20) {
                     preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/javelin/seek.png"), k, l, 0, 0.0F, i, j, i, j);
                 }

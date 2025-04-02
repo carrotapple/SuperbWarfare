@@ -275,9 +275,9 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player.level() instanceof ServerLevel serverLevel) {
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius"),
                     stack.getOrCreateTag().getInt("GuideType"),
                     new Vec3(stack.getOrCreateTag().getDouble("TargetPosX"), stack.getOrCreateTag().getDouble("TargetPosY"), stack.getOrCreateTag().getDouble("TargetPosZ")));
 
@@ -308,7 +308,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 10);
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
     }
 
     @Override
@@ -332,7 +332,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
                 .map(c -> c.zoom)
                 .orElse(false)
-                || GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0
+                || GunsTool.getGunIntTag(stack, "Ammo") <= 0
         ) return;
 
         Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);

@@ -25,8 +25,8 @@ public class ClientSentinelImageTooltip extends ClientEnergyImageTooltip {
         );
 
         if (flag.get()) {
-            double damage = (GunsTool.getGunDoubleTag(stack, "Damage", 0) +
-                    GunsTool.getGunDoubleTag(stack, "ChargedDamage", 0))
+            double damage = (GunsTool.getGunDoubleTag(stack, "Damage") +
+                    GunsTool.getGunDoubleTag(stack, "ChargedDamage"))
                     * TooltipTool.perkDamage(stack);
             return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -34,7 +34,7 @@ public class ClientSentinelImageTooltip extends ClientEnergyImageTooltip {
                                     FormatTool.format1D(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : ""))
                             .withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
         } else {
-            double damage = GunsTool.getGunDoubleTag(stack, "Damage", 0) * TooltipTool.perkDamage(stack);
+            double damage = GunsTool.getGunDoubleTag(stack, "Damage") * TooltipTool.perkDamage(stack);
             return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ?

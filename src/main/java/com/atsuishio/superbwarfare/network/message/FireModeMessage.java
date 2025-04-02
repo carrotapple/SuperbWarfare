@@ -119,7 +119,7 @@ public class FireModeMessage {
                 }
             }
 
-            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
+            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction")) {
                 tag.putBoolean("DA", !tag.getBoolean("DA"));
                 if (!tag.getBoolean("canImmediatelyShoot")) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);

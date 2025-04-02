@@ -60,7 +60,7 @@ public class ReloadMessage {
 
                 boolean canSingleReload = gunItem.isIterativeReload(stack);
                 boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
-                boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo", 0) == 0 && gunItem.isClipReload(stack);
+                boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo") == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
                 boolean hasCreativeAmmoBox = player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()));
@@ -84,27 +84,27 @@ public class ReloadMessage {
                 }
 
                 if (canReload || clipLoad) {
-                    int magazine = GunsTool.getGunIntTag(stack, "Magazine", 0);
+                    int magazine = GunsTool.getGunIntTag(stack, "Magazine");
 
                     if (gunItem.isOpenBolt(stack)) {
                         if (gunItem.hasBulletInBarrel(stack)) {
-                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + 1) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo") < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine") + 1) {
                                 GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         } else {
-                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo") < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine")) {
                                 GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         }
-                    } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
+                    } else if (GunsTool.getGunIntTag(stack, "Ammo") < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine")) {
                         GunsTool.setGunBooleanTag(stack, "StartReload", true);
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0)
-                            + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo") < GunsTool.getGunIntTag(stack, "Magazine")
+                            + GunsTool.getGunIntTag(stack, "CustomMagazine")) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

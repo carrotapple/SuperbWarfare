@@ -58,7 +58,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int rpm = GunsTool.getGunIntTag(stack, "RPM", 0);
+        int rpm = GunsTool.getGunIntTag(stack, "RPM");
 
         gun.setRotZ(gun.getRotZ() + times * -0.07f * ((float) rpm / 1200) * ClientEventHandler.miniGunRot);
 

@@ -186,7 +186,7 @@ public class AK47Item extends GunItem implements GeoItem {
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.75;
-            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
+            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
         };
 
         stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);

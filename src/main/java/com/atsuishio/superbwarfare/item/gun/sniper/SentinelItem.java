@@ -185,7 +185,7 @@ public class SentinelItem extends GunItem implements GeoItem {
                     if (energyStored > 0) {
                         energy.extractEnergy(1, false);
                         GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0.2857142857142857
-                                * GunsTool.getGunDoubleTag(stack, "Damage", 0));
+                                * GunsTool.getGunDoubleTag(stack, "Damage"));
                     } else {
                         GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0);
                     }

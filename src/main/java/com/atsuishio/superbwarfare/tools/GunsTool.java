@@ -72,8 +72,8 @@ public class GunsTool {
                 data.putDouble(k, v);
                 stack.addTagElement("GunData", data);
             });
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
-                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0));
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine"));
         }
     }
 
@@ -83,6 +83,20 @@ public class GunsTool {
         var data = tag.getCompound("GunData");
         data.putUUID("UUID", uuid);
         stack.addTagElement("GunData", data);
+    }
+
+    private static String getId(ItemStack stack) {
+        var id = stack.getDescriptionId();
+        return id.substring(id.lastIndexOf(".") + 1);
+    }
+
+    public static double getGunDefaultData(ItemStack stack, String name) {
+        if (!stack.getOrCreateTag().getBoolean("init")) {
+            return GunsTool.gunsData
+                    .getOrDefault(getId(stack), new HashMap<>())
+                    .getOrDefault(name, 0.0);
+        }
+        return getGunDoubleTag(stack, name);
     }
 
     @SubscribeEvent
@@ -105,12 +119,12 @@ public class GunsTool {
         CompoundTag tag = stack.getOrCreateTag();
         if (!(stack.getItem() instanceof GunItem)) return;
 
-        int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0);
-        int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
+        int mag = GunsTool.getGunIntTag(stack, "Magazine") + GunsTool.getGunIntTag(stack, "CustomMagazine");
+        int ammo = GunsTool.getGunIntTag(stack, "Ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记
-        if (ammo == 0 && GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && !stack.is(ModTags.Items.REVOLVER)) {
+        if (ammo == 0 && GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && !stack.is(ModTags.Items.REVOLVER)) {
             GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
         }
 
@@ -201,13 +215,10 @@ public class GunsTool {
     }
 
     public static int getGunIntTag(ItemStack stack, String name) {
-        return getGunIntTag(stack, name, 0);
-    }
-
-    public static int getGunIntTag(ItemStack stack, String name, int defaultValue) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
-        if (!data.contains(name)) return defaultValue;
+        if (!data.contains(name)) return (int) getGunDefaultData(stack, name);
+        ;
         return data.getInt(name);
     }
 
@@ -219,13 +230,9 @@ public class GunsTool {
     }
 
     public static double getGunDoubleTag(ItemStack stack, String name) {
-        return getGunDoubleTag(stack, name, 0);
-    }
-
-    public static double getGunDoubleTag(ItemStack stack, String name, double defaultValue) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
-        if (!data.contains(name)) return defaultValue;
+        if (!data.contains(name) && !tag.getBoolean("init")) return getGunDefaultData(stack, name);
         return data.getDouble(name);
     }
 
@@ -237,13 +244,9 @@ public class GunsTool {
     }
 
     public static boolean getGunBooleanTag(ItemStack stack, String name) {
-        return getGunBooleanTag(stack, name, false);
-    }
-
-    public static boolean getGunBooleanTag(ItemStack stack, String name, boolean defaultValue) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
-        if (!data.contains(name)) return defaultValue;
+        if (!data.contains(name)) return getGunDefaultData(stack, name) != 0;
         return data.getBoolean(name);
     }
 

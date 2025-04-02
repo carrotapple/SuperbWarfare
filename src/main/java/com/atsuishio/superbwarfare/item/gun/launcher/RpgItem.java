@@ -151,7 +151,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
         if (stack.getOrCreateTag().getBoolean("draw")) {
             stack.getOrCreateTag().putBoolean("draw", false);
 
-            if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+            if (GunsTool.getGunIntTag(stack, "Ammo") == 0) {
                 stack.getOrCreateTag().putDouble("empty", 1);
             }
         }
@@ -206,7 +206,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (GunsTool.getGunBooleanTag(stack, "Reloading")
                 || player.getCooldowns().isOnCooldown(stack.getItem())
-                || GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0
+                || GunsTool.getGunIntTag(stack, "Ammo") <= 0
         ) return;
 
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
@@ -214,9 +214,9 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player.level() instanceof ServerLevel serverLevel) {
             RpgRocketEntity rocket = new RpgRocketEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage"),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius"));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -224,7 +224,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 rocket.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
-            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0);
+            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity");
 
             if (PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get()) {
                 rocket.setNoGravity(true);
@@ -232,7 +232,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
                 if (perkLevel > 0) {
                     rocket.setExplosionRadius(0.5f);
-                    rocket.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage", 0) * (1.1f + perkLevel * 0.1f));
+                    rocket.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage") * (1.1f + perkLevel * 0.1f));
                     velocity *= 1.2f;
                 }
             }
@@ -257,12 +257,12 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
+        if (GunsTool.getGunIntTag(stack, "Ammo") == 1) {
             tag.putBoolean("empty", true);
             GunsTool.setGunBooleanTag(stack, "CloseHammer", true);
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 10);
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
     }
 }

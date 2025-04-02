@@ -44,7 +44,7 @@ public class K98ItemModel extends GeoModel<K98Item> {
         if (!stack.is(ModTags.Items.GUN)) return;
 
 
-        if (stack.getOrCreateTag().getDouble("prepare") > 11 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
+        if (stack.getOrCreateTag().getDouble("prepare") > 11 && GunsTool.getGunIntTag(stack, "Ammo") == 1) {
             clip.setScaleX(0);
             clip.setScaleY(0);
             clip.setScaleZ(0);

@@ -54,11 +54,11 @@ public class ShootMessage {
     public static void pressAction(Player player, double spared) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);
+            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount");
 
-            if (GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+            if (GunsTool.getGunIntTag(stack, "Ammo") > 0) {
                 // 空仓挂机
-                if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
+                if (GunsTool.getGunIntTag(stack, "Ammo") == 1) {
                     GunsTool.setGunBooleanTag(stack, "HoldOpen", true);
                 }
 
@@ -67,15 +67,15 @@ public class ShootMessage {
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                if (GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && GunsTool.getGunIntTag(stack, "Ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
 
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
 
                 stack.getOrCreateTag().putDouble("empty", 1);
 
-                if (stack.getItem() == ModItems.M_60.get() && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 5) {
+                if (stack.getItem() == ModItems.M_60.get() && GunsTool.getGunIntTag(stack, "Ammo") <= 5) {
                     GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
                 }
 

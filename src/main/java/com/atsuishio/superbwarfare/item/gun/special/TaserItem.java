@@ -279,7 +279,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 .orElse(false);
 
         if (player.getCooldowns().isOnCooldown(stack.getItem())
-                || GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0
+                || GunsTool.getGunIntTag(stack, "Ammo") <= 0
                 || !hasEnoughEnergy
         ) return;
 
@@ -296,17 +296,17 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
             var level = serverPlayer.level();
             TaserBulletEntity taserBulletProjectile = new TaserBulletEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), volt, wireLength);
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage"), volt, wireLength);
 
             taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-            taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+            taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity"),
                     (float) (zoom ? 0.1 : spread));
             level.addFreshEntity(taserBulletProjectile);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
         stack.getOrCreateTag().putBoolean("shoot", true);
     }

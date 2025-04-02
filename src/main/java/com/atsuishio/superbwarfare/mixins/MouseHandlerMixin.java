@@ -89,7 +89,7 @@ public class MouseHandlerMixin {
             return original;
         }
 
-        double zoom = 1.25 + GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
+        double zoom = 1.25 + GunsTool.getGunDoubleTag(stack, "CustomZoom");
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
