@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SvdItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -125,12 +124,6 @@ public class SvdItem extends GunItem implements GeoItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.SVD_RELOAD_EMPTY.get(), ModSounds.SVD_RELOAD_NORMAL.get());
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.SVD.get());
-        GunsTool.initCreativeGun(stack, ModItems.SVD.getId().getPath());
-        return stack;
     }
 
     @Override

@@ -167,12 +167,6 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
         return stack.getItem() == ModItems.ROCKET.get();
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.RPG.get());
-        GunsTool.initCreativeGun(stack, ModItems.RPG.getId().getPath());
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/rpg_icon.png");

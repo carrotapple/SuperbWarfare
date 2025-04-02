@@ -3,13 +3,11 @@ package com.atsuishio.superbwarfare.item.gun.machinegun;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.renderer.item.MinigunItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.RarityTool;
@@ -182,12 +180,6 @@ public class MinigunItem extends GunItem implements GeoItem {
         if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {
             itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));
         }
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.MINIGUN.get());
-        GunsTool.initCreativeGun(stack, ModItems.MINIGUN.getId().getPath());
-        return stack;
     }
 
     @Override

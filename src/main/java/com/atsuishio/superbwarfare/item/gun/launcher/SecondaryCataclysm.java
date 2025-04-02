@@ -257,12 +257,6 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
         return stack.getItem() == ModItems.GRENADE_40MM.get();
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.SECONDARY_CATACLYSM.get());
-        GunsTool.initCreativeGun(stack, ModItems.SECONDARY_CATACLYSM.getId().getPath());
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/secondary_cataclysm_icon.png");

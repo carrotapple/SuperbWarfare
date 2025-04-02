@@ -229,15 +229,6 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
         return stack.getItem() == ModItems.TASER_ELECTRODE.get();
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.TASER.get());
-        GunsTool.initCreativeGun(stack, ModItems.TASER.getId().getPath());
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                energy -> energy.receiveEnergy(MAX_ENERGY, false)
-        );
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/taser_icon.png");

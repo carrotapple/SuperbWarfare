@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.MosinNagantItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -146,12 +145,6 @@ public class MosinNagantItem extends GunItem implements GeoItem {
                 ModSounds.MOSIN_NAGANT_LOOP.get(),
                 ModSounds.MOSIN_NAGANT_END.get()
         );
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.MOSIN_NAGANT.get());
-        GunsTool.initCreativeGun(stack, ModItems.MOSIN_NAGANT.getId().getPath());
-        return stack;
     }
 
     @Override

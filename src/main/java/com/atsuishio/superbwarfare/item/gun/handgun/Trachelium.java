@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.renderer.item.TracheliumItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -245,12 +244,6 @@ public class Trachelium extends GunItem implements GeoItem {
         TooltipTool.addHideText(list, Component.literal(""));
         TooltipTool.addHideText(list, Component.translatable("des.superbwarfare.trachelium_3").withStyle(ChatFormatting.WHITE));
         TooltipTool.addHideText(list, Component.translatable("des.superbwarfare.trachelium_4").withStyle(Style.EMPTY.withColor(0xF4F0FF)));
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.TRACHELIUM.get());
-        GunsTool.initCreativeGun(stack, ModItems.TRACHELIUM.getId().getPath());
-        return stack;
     }
 
     @Override

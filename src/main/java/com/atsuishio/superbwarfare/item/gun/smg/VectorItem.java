@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.VectorItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -158,12 +157,6 @@ public class VectorItem extends GunItem implements GeoItem {
 
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
         GunsTool.setGunDoubleTag(stack, "CustomMagazine", customMag);
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.VECTOR.get());
-        GunsTool.initCreativeGun(stack, ModItems.VECTOR.getId().getPath());
-        return stack;
     }
 
     @Override

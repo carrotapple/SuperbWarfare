@@ -4,13 +4,11 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.HuntingRifleItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -102,12 +100,6 @@ public class HuntingRifleItem extends GunItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.HUNTING_RIFLE.get());
-        GunsTool.initCreativeGun(stack, ModItems.HUNTING_RIFLE.getId().getPath());
-        return stack;
     }
 
     @Override

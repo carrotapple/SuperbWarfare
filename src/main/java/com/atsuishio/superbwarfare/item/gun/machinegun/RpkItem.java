@@ -4,14 +4,12 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.RpkItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -109,12 +107,6 @@ public class RpkItem extends GunItem implements GeoItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.RPK_RELOAD_EMPTY.get(), ModSounds.RPK_RELOAD_NORMAL.get());
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.RPK.get());
-        GunsTool.initCreativeGun(stack, ModItems.RPK.getId().getPath());
-        return stack;
     }
 
     @Override

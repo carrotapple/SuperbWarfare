@@ -228,12 +228,6 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         return stack.getItem() == ModItems.JAVELIN_MISSILE.get();
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.JAVELIN.get());
-        GunsTool.initCreativeGun(stack, ModItems.JAVELIN.getId().getPath());
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/javelin_icon.png");

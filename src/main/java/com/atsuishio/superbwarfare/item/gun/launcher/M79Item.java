@@ -157,12 +157,6 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
         return stack.getItem() == ModItems.GRENADE_40MM.get();
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.M_79.get());
-        GunsTool.initCreativeGun(stack, ModItems.M_79.getId().getPath());
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/m79_icon.png");

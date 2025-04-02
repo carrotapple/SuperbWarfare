@@ -146,12 +146,6 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
         return stack.getItem() == Items.ARROW;
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.BOCEK.get());
-        GunsTool.initCreativeGun(stack, ModItems.BOCEK.getId().getPath());
-        return stack;
-    }
-
     @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/bocek_icon.png");

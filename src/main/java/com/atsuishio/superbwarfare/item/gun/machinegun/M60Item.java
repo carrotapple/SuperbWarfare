@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.M60ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -125,12 +124,6 @@ public class M60Item extends GunItem implements GeoItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.M_60_RELOAD_EMPTY.get(), ModSounds.M_60_RELOAD_NORMAL.get());
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.M_60.get());
-        GunsTool.initCreativeGun(stack, ModItems.M_60.getId().getPath());
-        return stack;
     }
 
     @Override

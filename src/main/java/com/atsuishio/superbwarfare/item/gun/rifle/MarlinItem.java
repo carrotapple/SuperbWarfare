@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.MarlinItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -143,12 +142,6 @@ public class MarlinItem extends GunItem implements GeoItem {
                 ModSounds.MARLIN_PREPARE.get(),
                 ModSounds.MARLIN_END.get(),
                 ModSounds.MARLIN_BOLT.get());
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.MARLIN.get());
-        GunsTool.initCreativeGun(stack, ModItems.MARLIN.getId().getPath());
-        return stack;
     }
 
     @Override

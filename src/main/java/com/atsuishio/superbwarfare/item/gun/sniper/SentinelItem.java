@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.SentinelImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -201,12 +200,6 @@ public class SentinelItem extends GunItem implements GeoItem {
                 ModSounds.SENTINEL_CHARGE.get(),
                 ModSounds.SENTINEL_BOLT.get()
         );
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.SENTINEL.get());
-        GunsTool.initCreativeGun(stack, ModItems.SENTINEL.getId().getPath());
-        return stack;
     }
 
     @Override

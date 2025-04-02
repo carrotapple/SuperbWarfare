@@ -55,17 +55,17 @@ public class GunsTool {
 
     public static void initGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
-            gunsData.get(location).forEach((k, v) -> {
-                CompoundTag tag = stack.getOrCreateTag();
-                CompoundTag data = tag.getCompound("GunData");
-                data.putDouble(k, v);
-                stack.addTagElement("GunData", data);
-            });
+            CompoundTag tag = stack.getOrCreateTag();
+            CompoundTag data = tag.getCompound("GunData");
+
+            gunsData.get(location).forEach(data::putDouble);
+            data.putBoolean("Init", true);
+            stack.addTagElement("GunData", data);
         }
     }
 
     public static void initCreativeGun(ItemStack stack, String location) {
-        if (stack.getOrCreateTag().getCompound("GunData").size() <= 1) {
+        if (!stack.getOrCreateTag().getCompound("GunData").getBoolean("Init")) {
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
                     + GunsTool.getGunIntTag(stack, "CustomMagazine"));
         }
