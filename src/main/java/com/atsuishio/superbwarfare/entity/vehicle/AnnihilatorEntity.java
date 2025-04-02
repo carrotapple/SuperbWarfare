@@ -52,7 +52,9 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
 import org.joml.Vector3d;
+import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -179,22 +181,25 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
-        if (this.hasPassenger(pPassenger)) {
-            float f1 = (float) ((this.isRemoved() ? 0.009999999776482582 : this.getPassengersRidingOffset()) + pPassenger.getMyRidingOffset());
-            Vec3 vec3 = (new Vec3(1, 0.0, 0.0)).yRot(-this.getYRot() * 0.017453292F - 1.5707964F);
-            pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double) f1, this.getZ() + vec3.z);
-        }
-    }
-
-    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() + 0.75;
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        if (!this.hasPassenger(passenger)) {
+            return;
+        }
+
+        Matrix4f transform = getVehicleFlatTransform(1);
+
+        float x = 0f;
+        float y = 3.3f;
+        float z = 1.5f;
+
+        Vector4f worldPosition = transformPosition(transform, x, y, z);
+        passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+        callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
     }
 
     @Override

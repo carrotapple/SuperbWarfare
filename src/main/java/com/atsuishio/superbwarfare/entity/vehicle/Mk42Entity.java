@@ -31,7 +31,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -43,6 +45,8 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -164,20 +168,9 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
         entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))) - (float) (distance * 0.008f));
     }
-
-    @Override
-    protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
-        return 2.16F;
-    }
-
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.25;
     }
 
     @Override
@@ -267,6 +260,23 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
     }
 
     @Override
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        if (!this.hasPassenger(passenger)) {
+            return;
+        }
+
+        Matrix4f transform = getVehicleFlatTransform(1);
+
+        float x = 0f;
+        float y = 2.3f;
+        float z = 0f;
+
+        Vector4f worldPosition = transformPosition(transform, x, y, z);
+        passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+        callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+    }
+
+    @Override
     public void vehicleShoot(Player player, int type) {
         if (this.entityData.get(COOL_DOWN) > 0) return;
 
@@ -282,8 +292,11 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
             var entityToSpawn = ((CannonShellWeapon) getWeapon(0)).create(player);
 
-            entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-            entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
+            Matrix4f transform = getVehicleFlatTransform(1);
+            Vector4f worldPosition = transformPosition(transform, 0f, 2.16f, 0.5175f);
+
+            entityToSpawn.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            entityToSpawn.shoot(getLookAngle().x, getLookAngle().y, getLookAngle().z, 15, 0.05f);
             level.addFreshEntity(entityToSpawn);
 
             if (player instanceof ServerPlayer serverPlayer) {
@@ -302,9 +315,9 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                     this.getZ() + 5 * this.getLookAngle().z,
                     100, 7, 0.02, 7, 0.005);
 
-            double x = this.getX() + 9 * this.getLookAngle().x;
-            double y = this.getEyeY() + 9 * this.getLookAngle().y;
-            double z = this.getZ() + 9 * this.getLookAngle().z;
+            double x = worldPosition.x + 9 * this.getLookAngle().x;
+            double y = worldPosition.y + 9 * this.getLookAngle().y;
+            double z = worldPosition.z + 9 * this.getLookAngle().z;
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
             server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
