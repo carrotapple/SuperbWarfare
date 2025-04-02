@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +22,7 @@ import javax.annotation.Nullable;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(modid = ModUtils.MODID)
 public class GunsTool {
@@ -65,12 +67,14 @@ public class GunsTool {
     }
 
     public static void initCreativeGun(ItemStack stack, String location) {
-        if (!stack.getOrCreateTag().getCompound("GunData").getBoolean("Init")) {
+        var fillAmmo = !stack.getOrCreateTag().getCompound("GunData").getBoolean("Init");
+
+        initGun(stack, location);
+
+        if (fillAmmo) {
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
                     + GunsTool.getGunIntTag(stack, "CustomMagazine"));
         }
-
-        initGun(stack, location);
     }
 
     public static void generateAndSetUUID(ItemStack stack) {
@@ -105,6 +109,19 @@ public class GunsTool {
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
         initJsonData(event.getServer().getResourceManager());
+    }
+
+    @SubscribeEvent
+    public static void datapackSync(OnDatapackSyncEvent event) {
+        AtomicInteger count = new AtomicInteger();
+        event.getPlayerList().getPlayers().forEach(player -> {
+            if (count.get() == 0 && player.getServer() != null) {
+                initJsonData(player.getServer().getResourceManager());
+            }
+            count.getAndIncrement();
+
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
+        });
     }
 
     public static void reload(Player player, ItemStack stack, AmmoType type) {
