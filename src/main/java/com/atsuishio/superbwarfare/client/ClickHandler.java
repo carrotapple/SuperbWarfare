@@ -278,6 +278,10 @@ public class ClickHandler {
                     switchZoom = !switchZoom;
                 }
             }
+
+            if (key == ModKeyMappings.BREATH.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(true));
+            }
         } else {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 return;
@@ -286,6 +290,7 @@ public class ClickHandler {
             if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFireRelease();
             }
+
             if (key == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
                 handleWeaponZoomRelease();
                 return;
@@ -293,6 +298,12 @@ public class ClickHandler {
 
             if (key == ModKeyMappings.SWITCH_ZOOM.getKey().getValue() && !switchZoom) {
                 handleWeaponZoomRelease();
+            }
+
+            if (event.getAction() == GLFW.GLFW_RELEASE) {
+                if (key == ModKeyMappings.BREATH.getKey().getValue()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(false));
+                }
             }
         }
     }
