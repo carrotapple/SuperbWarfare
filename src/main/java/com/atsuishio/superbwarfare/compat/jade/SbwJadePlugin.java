@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.block.ContainerBlock;
 import com.atsuishio.superbwarfare.compat.jade.providers.C4InfoProvider;
 import com.atsuishio.superbwarfare.compat.jade.providers.ContainerEntityProvider;
 import com.atsuishio.superbwarfare.compat.jade.providers.VehicleHealthProvider;
-import com.atsuishio.superbwarfare.entity.projectile.C4Entity;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;

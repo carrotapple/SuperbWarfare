@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.projectile;
+package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -346,7 +346,7 @@ public class C4Entity extends Entity implements GeoEntity, OwnableEntity {
             return false;
         } else {
             Entity entity = this.getOwner();
-            return entity == null || !entity.isPassengerOfSameVehicle(pTarget);
+            return entity == null || entity == pTarget || !entity.isPassengerOfSameVehicle(pTarget);
         }
     }
 
