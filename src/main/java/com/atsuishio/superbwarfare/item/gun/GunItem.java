@@ -52,13 +52,21 @@ public abstract class GunItem extends Item {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (!(entity instanceof LivingEntity)) return;
         if (!stack.is(ModTags.Items.GUN)) return;
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         if (!ItemNBTTool.getBoolean(stack, "init", false)) {
-            GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
+            var name = this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1);
+
+            if (level.getServer() != null && entity instanceof Player player && player.isCreative()) {
+                GunsTool.initCreativeGun(stack, name);
+            } else {
+                GunsTool.initGun(stack, name);
+            }
+
             GunsTool.generateAndSetUUID(stack);
             ItemNBTTool.setBoolean(stack, "init", true);
         }

@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,17 +53,7 @@ public class GunsTool {
         }
     }
 
-    public static void initGun(Level level, ItemStack stack, String location) {
-        if (level.getServer() == null) return;
-        gunsData.get(location).forEach((k, v) -> {
-            CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag data = tag.getCompound("GunData");
-            data.putDouble(k, v);
-            stack.addTagElement("GunData", data);
-        });
-    }
-
-    public static void initCreativeGun(ItemStack stack, String location) {
+    public static void initGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
                 CompoundTag tag = stack.getOrCreateTag();
@@ -72,9 +61,16 @@ public class GunsTool {
                 data.putDouble(k, v);
                 stack.addTagElement("GunData", data);
             });
+        }
+    }
+
+    public static void initCreativeGun(ItemStack stack, String location) {
+        if (stack.getOrCreateTag().getCompound("GunData").size() <= 1) {
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
                     + GunsTool.getGunIntTag(stack, "CustomMagazine"));
         }
+
+        initGun(stack, location);
     }
 
     public static void generateAndSetUUID(ItemStack stack) {
