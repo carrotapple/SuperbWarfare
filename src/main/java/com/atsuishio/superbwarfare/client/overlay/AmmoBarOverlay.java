@@ -198,7 +198,7 @@ public class AmmoBarOverlay {
             );
 
             // 渲染弹药类型
-            String ammoName = getGunAmmoType(stack);
+            String ammoName = gunItem.getAmmoDisplayName(stack);
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     ammoName,
@@ -395,7 +395,7 @@ public class AmmoBarOverlay {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
+            return (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0));
         }
 
         if (stack.getItem() == ModItems.BOCEK.get()) {
@@ -412,65 +412,29 @@ public class AmmoBarOverlay {
             return "";
         }
 
+        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         if (!hasCreativeAmmo()) {
             if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
                 return "" + GunsTool.getGunIntTag(stack, "MaxAmmo");
             }
             if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
+                return "" + cap.rifleAmmo;
             }
             if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo;
+                return "" + cap.handgunAmmo;
             }
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo;
+                return "" + cap.shotgunAmmo;
             }
             if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo;
+                return "" + cap.sniperAmmo;
             }
             if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).heavyAmmo;
+                return "" + cap.heavyAmmo;
             }
             return "";
         }
 
         return "∞";
-    }
-
-    private static String getGunAmmoType(ItemStack stack) {
-        if (stack.getItem() == ModItems.BOCEK.get()) {
-            return "Arrow";
-        }
-        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
-            return "40mm Grenade";
-        }
-        if (stack.getItem() == ModItems.RPG.get()) {
-            return "Yassin105 TBG";
-        }
-        if (stack.getItem() == ModItems.JAVELIN.get()) {
-            return "Javelin Missile";
-        }
-        if (stack.getItem() == ModItems.TASER.get()) {
-            return "Electrode Rod";
-        }
-        if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return "Rifle Ammo";
-        }
-        if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            return "Rifle Ammo";
-        }
-        if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-            return "Handgun Ammo";
-        }
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            return "Shotgun Ammo";
-        }
-        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            return "Sniper Ammo";
-        }
-        if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-            return "Heavy Ammo";
-        }
-        return "";
     }
 }

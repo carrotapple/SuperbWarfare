@@ -305,6 +305,11 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
     }
 
     @Override
+    public String getAmmoDisplayName(ItemStack stack) {
+        return "40mm Grenade";
+    }
+
+    @Override
     public void fireOnPress(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (GunsTool.getGunBooleanTag(stack, "Reloading")) return;

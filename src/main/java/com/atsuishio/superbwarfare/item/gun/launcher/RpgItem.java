@@ -59,6 +59,11 @@ import java.util.function.Consumer;
 
 public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
+    @Override
+    public String getAmmoDisplayName(ItemStack stack) {
+        return "Yassin105 TBG";
+    }
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 

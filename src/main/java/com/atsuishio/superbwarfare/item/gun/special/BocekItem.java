@@ -175,6 +175,10 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
         return true;
     }
 
+    @Override
+    public String getAmmoDisplayName(ItemStack stack) {
+        return "Arrow";
+    }
 
     @Override
     public void fireOnRelease(Player player) {
