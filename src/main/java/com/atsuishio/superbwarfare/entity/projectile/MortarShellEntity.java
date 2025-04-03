@@ -5,8 +5,8 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,11 +25,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -183,8 +185,8 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
             Entity entity = entityHitResult.getEntity();
             entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
-                this.createAreaCloud(this.level());
+                causeExplode(entityHitResult.getLocation());
+                this.createAreaCloud(this.level(), entityHitResult.getLocation());
             }
             this.discard();
         }
@@ -200,8 +202,8 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
         }
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
             if (this.tickCount > 1) {
-                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
-                this.createAreaCloud(this.level());
+                causeExplode(blockHitResult.getLocation());
+                this.createAreaCloud(this.level(), blockHitResult.getLocation());
             }
         }
         this.discard();
@@ -219,11 +221,29 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
         }
         if (this.tickCount > this.life || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
-                this.createAreaCloud(this.level());
+                causeExplode(position());
+                this.createAreaCloud(this.level(), position());
             }
             this.discard();
         }
+    }
+
+    private void causeExplode(Vec3 vec3) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                damage,
+                vec3.x,
+                vec3.y,
+                vec3.z,
+                radius,
+                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(1.25f);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), vec3);
     }
 
     @Override
@@ -248,10 +268,10 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
         super.onRemovedFromWorld();
     }
 
-    private void createAreaCloud(Level level) {
+    private void createAreaCloud(Level level, Vec3 pos) {
         if (this.potion == Potions.EMPTY) return;
 
-        AreaEffectCloud cloud = new AreaEffectCloud(level, this.getX() + 0.75 * getDeltaMovement().x, this.getY() + 0.5 * getBbHeight() + 0.75 * getDeltaMovement().y, this.getZ() + 0.75 * getDeltaMovement().z);
+        AreaEffectCloud cloud = new AreaEffectCloud(level, pos.x, pos.y, pos.z);
         cloud.setPotion(this.potion);
         cloud.setDuration((int) this.damage);
         cloud.setRadius(this.radius);

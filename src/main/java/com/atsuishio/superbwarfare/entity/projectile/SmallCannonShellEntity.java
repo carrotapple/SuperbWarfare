@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -93,7 +91,7 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode(entity);
+                causeExplode(result.getLocation());
             }
         }
         this.discard();
@@ -108,48 +106,27 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (this.level() instanceof ServerLevel) {
-            causeExplodeBlock(blockHitResult);
+            causeExplode(blockHitResult.getLocation());
         }
         this.discard();
     }
 
-    private void causeExplode(Entity entity) {
+    private void causeExplode(Vec3 vec3) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
                         this,
                         this.getOwner()),
                 explosionDamage,
-                entity.getX(),
-                entity.getY() + 0.6 * entity.getBbHeight(),
-                entity.getZ(),
+                vec3.x,
+                vec3.y,
+                vec3.z,
                 explosionRadius,
                 ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1.25f);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnSmallExplosionParticles(this.level(),
-                new Vec3(entity.getX(),
-                        entity.getEyeY(),
-                        entity.getZ()));
-    }
-
-    private void causeExplodeBlock(HitResult result) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
-                        this,
-                        this.getOwner()),
-                explosionDamage,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
-                explosionRadius,
-                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
-                setDamageMultiplier(1.25f);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnSmallExplosionParticles(this.level(), result.getLocation());
+        ParticleTool.spawnSmallExplosionParticles(this.level(), vec3);
     }
 
     @Override
@@ -167,9 +144,7 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel && !onGround()) {
-                ProjectileTool.causeCustomExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosionDamage, this.explosionRadius, 1.25f);
+                causeExplode(position());
             }
             this.discard();
         }

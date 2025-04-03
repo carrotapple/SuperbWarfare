@@ -334,13 +334,9 @@ public class ClickHandler {
         }
 
         if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null
-                && player.getVehicle() instanceof CannonEntity) && clientTimer.getProgress() == 0 && cantFireTime == 0
-                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !GunsTool.getGunBooleanTag(stack, "Reloading")
-                && !GunsTool.getGunBooleanTag(stack, "Charging")
-                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction"))
+                && player.getVehicle() instanceof CannonEntity)
+                && clientTimer.getProgress() == 0
                 && cantFireTime == 0
-                && drawTime < 0.01
                 && !notInGame()
         ) {
 
@@ -353,13 +349,19 @@ public class ClickHandler {
                 }
             } else {
                 ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
-                if (GunsTool.getGunIntTag(stack, "FireMode") == 1) {
-                    if (ClientEventHandler.burstFireSize == 0) {
-                        ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize");
-                    }
-                } else {
-                    if (!stack.is(ModItems.BOCEK.get())) {
-                        ClientEventHandler.holdFire = true;
+                if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                        && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                        && !GunsTool.getGunBooleanTag(stack, "Charging")
+                        && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction"))
+                        && drawTime < 0.01) {
+                    if (GunsTool.getGunIntTag(stack, "FireMode") == 1) {
+                        if (ClientEventHandler.burstFireSize == 0) {
+                            ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize");
+                        }
+                    } else {
+                        if (!stack.is(ModItems.BOCEK.get())) {
+                            ClientEventHandler.holdFire = true;
+                        }
                     }
                 }
             }
