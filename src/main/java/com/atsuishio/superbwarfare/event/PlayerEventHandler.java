@@ -43,7 +43,6 @@ public class PlayerEventHandler {
         for (ItemStack pStack : player.getInventory().items) {
             if (pStack.is(ModTags.Items.GUN)) {
                 pStack.getOrCreateTag().putBoolean("draw", true);
-                pStack.getOrCreateTag().putBoolean("init", false);
             }
         }
     }
