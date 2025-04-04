@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.renderer.item.K98ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -104,6 +105,7 @@ public class K98Item extends GunItem implements GeoItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+        var data = GunData.from(stack);
 
         if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
@@ -112,7 +114,7 @@ public class K98Item extends GunItem implements GeoItem {
                 && stack.getOrCreateTag().getInt("reload_stage") != 2
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
                 && ClientEventHandler.drawTime < 0.01
-                && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
+                && !data.isReloading()) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
             } else {

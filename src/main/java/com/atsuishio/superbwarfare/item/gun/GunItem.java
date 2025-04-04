@@ -57,6 +57,7 @@ public abstract class GunItem extends Item {
         if (!(entity instanceof LivingEntity)) return;
         if (!stack.is(ModTags.Items.GUN)) return;
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
+        var data = GunData.from(stack);
 
         if (!ItemNBTTool.getBoolean(stack, "init", false)) {
             var name = this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1);
@@ -76,15 +77,11 @@ public abstract class GunItem extends Item {
         }
 
         handleGunPerks(stack);
-        handleGunAttachment(stack);
 
-        if ((gunItem.hasBulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo") >
-                GunsTool.getGunIntTag(stack, "Magazine") + GunsTool.getGunIntTag(stack, "CustomMagazine") + 1)
-                || (!gunItem.hasBulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo") >
-                GunsTool.getGunIntTag(stack, "Magazine") + GunsTool.getGunIntTag(stack, "CustomMagazine"))
+        if ((gunItem.hasBulletInBarrel(stack) && data.getAmmo() > data.magazine() + 1)
+                || (!gunItem.hasBulletInBarrel(stack) && data.getAmmo() > data.magazine())
         ) {
-            int count = GunsTool.getGunIntTag(stack, "Ammo") - GunsTool.getGunIntTag(stack, "Magazine")
-                    + GunsTool.getGunIntTag(stack, "CustomMagazine") - (gunItem.hasBulletInBarrel(stack) ? 1 : 0);
+            int count = data.getAmmo() - data.magazine() - (gunItem.hasBulletInBarrel(stack) ? 1 : 0);
             entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
@@ -102,8 +99,7 @@ public abstract class GunItem extends Item {
                 capability.syncPlayerVariables(entity);
             });
 
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
-                    + GunsTool.getGunIntTag(stack, "CustomMagazine") + (gunItem.hasBulletInBarrel(stack) ? 1 : 0));
+            data.setAmmo(data.magazine() + (gunItem.hasBulletInBarrel(stack) ? 1 : 0));
         }
     }
 
@@ -117,11 +113,13 @@ public abstract class GunItem extends Item {
         Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         UUID uuid = new UUID(slot.toString().hashCode(), 0);
         if (slot == EquipmentSlot.MAINHAND) {
+            var data = GunData.from(stack);
             map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,
-                            -0.01f - 0.005f * (GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight")),
-                            AttributeModifier.Operation.MULTIPLY_BASE));
+            map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(
+                    uuid, ModUtils.ATTRIBUTE_MODIFIER,
+                    -0.01f - 0.005f * data.weight(),
+                    AttributeModifier.Operation.MULTIPLY_BASE
+            ));
         }
         return map;
     }
@@ -176,50 +174,11 @@ public abstract class GunItem extends Item {
                 GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 0);
                 GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 0);
 
-                int mag = GunsTool.getGunIntTag(stack, "Magazine") + GunsTool.getGunIntTag(stack, "CustomMagazine");
-                GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, GunsTool.getGunIntTag(stack, "Ammo") + 2));
+                var data = GunData.from(stack);
+                int mag = data.magazine();
+                GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, data.getAmmo() + 2));
             }
         }
-    }
-
-    private void handleGunAttachment(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
-
-        double scopeWeight = switch (tag.getInt("Scope")) {
-            case 1 -> 0.5;
-            case 2 -> 1;
-            case 3 -> 1.5;
-            default -> 0;
-        };
-
-        double barrelWeight = switch (tag.getInt("Barrel")) {
-            case 1 -> 0.5;
-            case 2 -> 1;
-            default -> 0;
-        };
-
-        double magazineWeight = switch (tag.getInt("Magazine")) {
-            case 1 -> 1;
-            case 2 -> 2;
-            default -> 0;
-        };
-
-        double stockWeight = switch (tag.getInt("Stock")) {
-            case 1 -> -2;
-            case 2 -> 1.5;
-            default -> 0;
-        };
-
-        double gripWeight = switch (tag.getInt("Grip")) {
-            case 1, 2 -> 0.25;
-            case 3 -> 1;
-            default -> 0;
-        };
-
-        double soundRadius = tag.getInt("Barrel") == 2 ? 0.6 : 1;
-
-        GunsTool.setGunDoubleTag(stack, "CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
-        GunsTool.setGunDoubleTag(stack, "CustomSoundRadius", soundRadius);
     }
 
     public boolean canApplyPerk(Perk perk) {
@@ -393,6 +352,120 @@ public abstract class GunItem extends Item {
      */
     public int getAvailableFireModes() {
         return 0;
+    }
+
+    /**
+     * 获取额外伤害加成
+     */
+    public double getCustomDamage(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外爆头伤害加成
+     */
+    public double getCustomHeadshot(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外护甲穿透加成
+     */
+    public double getCustomBypassArmor(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外弹匣容量加成
+     */
+    public int getCustomMagazine(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外缩放倍率加成
+     */
+    public double getCustomZoom(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外RPM加成
+     */
+    public int getCustomRPM(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外总重量加成
+     */
+    public double getCustomWeight(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+
+        double scopeWeight = switch (tag.getInt("Scope")) {
+            case 1 -> 0.5;
+            case 2 -> 1;
+            case 3 -> 1.5;
+            default -> 0;
+        };
+
+        double barrelWeight = switch (tag.getInt("Barrel")) {
+            case 1 -> 0.5;
+            case 2 -> 1;
+            default -> 0;
+        };
+
+        double magazineWeight = switch (tag.getInt("Magazine")) {
+            case 1 -> 1;
+            case 2 -> 2;
+            default -> 0;
+        };
+
+        double stockWeight = switch (tag.getInt("Stock")) {
+            case 1 -> -2;
+            case 2 -> 1.5;
+            default -> 0;
+        };
+
+        double gripWeight = switch (tag.getInt("Grip")) {
+            case 1, 2 -> 0.25;
+            case 3 -> 1;
+            default -> 0;
+        };
+
+        return scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight;
+    }
+
+    /**
+     * 获取额外弹速加成
+     */
+    public double getCustomVelocity(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 获取额外音效半径加成
+     */
+    public double getCustomSoundRadius(ItemStack stack) {
+        return stack.getOrCreateTag().getCompound("Attachments").getInt("Barrel") == 2 ? 0.6 : 1;
+    }
+
+    public int getCustomBoltActionTime(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 是否允许缩放
+     */
+    public boolean canAdjustZoom(ItemStack stack) {
+        return false;
+    }
+
+    /**
+     * 是否允许切换瞄具
+     */
+    public boolean canSwitchScope(ItemStack stack) {
+        return false;
     }
 
     /**

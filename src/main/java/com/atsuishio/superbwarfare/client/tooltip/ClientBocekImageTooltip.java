@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -25,7 +24,7 @@ public class ClientBocekImageTooltip extends ClientGunImageTooltip {
             slug = true;
         }
 
-        double total = GunsTool.getGunDoubleTag(stack, "Damage") * TooltipTool.perkDamage(stack);
+        double total = getGunData().damage() * TooltipTool.perkDamage(stack);
 
         if (slug) {
             return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)

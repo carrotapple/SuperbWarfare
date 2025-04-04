@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
@@ -55,7 +56,8 @@ public class FireMessage {
 
         if (type == 0) {
             var tag = stack.getOrCreateTag();
-            if (tag.getDouble("prepare") == 0 && GunsTool.getGunBooleanTag(stack, "Reloading") && GunsTool.getGunIntTag(stack, "Ammo") > 0) {
+            var data = GunData.from(stack);
+            if (tag.getDouble("prepare") == 0 && data.isReloading() && data.getAmmo() > 0) {
                 tag.putDouble("force_stop", 1);
             }
 
@@ -88,16 +90,17 @@ public class FireMessage {
 
     private static void handleGunBolt(Player player, ItemStack stack) {
         if (!stack.is(ModTags.Items.GUN)) return;
+        var data = GunData.from(stack);
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTime") > 0
-                && GunsTool.getGunIntTag(stack, "Ammo") > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
+        if (data.boltActionTime() > 0
+                && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
                 && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading")
                 || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                && !data.isReloading()
                 && !GunsTool.getGunBooleanTag(stack, "Charging")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction")) {
-                GunsTool.setGunIntTag(stack, "BoltActionTick", GunsTool.getGunIntTag(stack, "BoltActionTime") + 1);
+                GunsTool.setGunIntTag(stack, "BoltActionTick", data.boltActionTime() + 1);
                 GunEventHandler.playGunBoltSounds(player);
             }
         }
@@ -122,23 +125,24 @@ public class FireMessage {
     public static void spawnBullet(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
+        var data = GunData.from(stack);
 
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot");
+        float headshot = (float) data.headshot();
         float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power", 6) * (float) perkSpeed(stack);
-        float bypassArmorRate = (float) GunsTool.getGunDoubleTag(stack, "BypassesArmor");
+        float bypassArmorRate = (float) data.bypassArmor();
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
         float spread;
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
-            damage = 0.08333333 * GunsTool.getGunDoubleTag(stack, "Damage") *
+            damage = 0.08333333 * data.damage() *
                     GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
-                    GunsTool.getGunDoubleTag(stack, "Damage") *
+                    data.damage() *
                     GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         }
 

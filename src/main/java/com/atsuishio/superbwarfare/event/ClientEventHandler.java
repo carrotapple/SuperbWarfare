@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
@@ -131,7 +132,7 @@ public class ClientEventHandler {
     public static boolean holdFireVehicle = false;
 
     public static boolean zoomVehicle = false;
-    public static int burstFireSize = 0;
+    public static int burstFireAmount = 0;
 
     public static int customRpm = 0;
 
@@ -215,6 +216,7 @@ public class ClientEventHandler {
     }
 
     static short keysCache = 0;
+
     @SubscribeEvent
     public static void handleClientTick(TickEvent.ClientTickEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -222,10 +224,12 @@ public class ClientEventHandler {
             return;
         }
         ItemStack stack = player.getMainHandItem();
+
         if (stack.is(ModItems.MINIGUN.get())) {
+            var data = GunData.from(stack);
             if (holdFire || zoom) {
                 miniGunRot = Math.min(miniGunRot + 5, 21);
-                float rpm = (float) GunsTool.getGunIntTag(stack, "RPM") / 3600;
+                float rpm = (float) data.rpm() / 3600;
                 player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
             }
         }
@@ -308,6 +312,7 @@ public class ClientEventHandler {
 
     public static void handleGunMelee(Player player, ItemStack stack) {
         if (stack.getItem() instanceof GunItem gunItem) {
+            var data = GunData.from(stack);
             if (gunItem.hasMeleeAttack(stack) && gunMelee == 0 && drawTime < 0.01
                     && ModKeyMappings.MELEE.isDown()
                     && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
@@ -315,7 +320,7 @@ public class ClientEventHandler {
                     && !notInGame()
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                    && !data.isReloading()
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && !GunsTool.getGunBooleanTag(stack, "Charging")) {
                 gunMelee = 36;
@@ -396,14 +401,15 @@ public class ClientEventHandler {
             gunSpread = 0;
             return;
         }
+        var data = GunData.from(stack);
 
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        int mode = GunsTool.getGunIntTag(stack, "FireMode");
+        int mode = data.getFireMode();
 
         // 精准度
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
-        double basicDev = GunsTool.getGunDoubleTag(stack, "Spread");
+        double basicDev = data.spread();
         double walk = isMoving() ? 0.3 * basicDev : 0;
         double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
@@ -432,7 +438,7 @@ public class ClientEventHandler {
         gunSpread = Mth.lerp(0.14 * times, gunSpread, spread);
 
         // 开火部分
-        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
+        double weight = data.weight();
         double speed = 1 - (0.04 * weight);
 
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && !zoom) {
@@ -441,7 +447,7 @@ public class ClientEventHandler {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
         }
 
-        int rpm = GunsTool.getGunIntTag(stack, "RPM") + customRpm;
+        int rpm = data.rpm() + customRpm;
         if (rpm == 0) {
             rpm = 600;
         }
@@ -465,7 +471,7 @@ public class ClientEventHandler {
             revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }
 
-        if ((holdFire || burstFireSize > 0)
+        if ((holdFire || burstFireAmount > 0)
                 && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !holdFireVehicle
                 && (stack.is(ModTags.Items.NORMAL_GUN)
@@ -474,9 +480,9 @@ public class ClientEventHandler {
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
                 && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                && !data.isReloading()
                 && !GunsTool.getGunBooleanTag(stack, "Charging")
-                && GunsTool.getGunIntTag(stack, "Ammo") > 0
+                && data.getAmmo() > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction")
                 && revolverPre())
@@ -552,24 +558,25 @@ public class ClientEventHandler {
 
     public static void shootClient(Player player) {
         ItemStack stack = player.getMainHandItem();
+        var data = GunData.from(stack);
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (GunsTool.getGunIntTag(stack, "Ammo") > 0) {
-                int mode = GunsTool.getGunIntTag(stack, "FireMode");
+            if (data.getAmmo() > 0) {
+                int mode = data.getFireMode();
                 if (mode != 2) {
                     holdFire = false;
                 }
 
                 if (mode == 1) {
-                    if (GunsTool.getGunIntTag(stack, "Ammo") == 1) {
-                        burstFireSize = 1;
+                    if (data.getAmmo() == 1) {
+                        burstFireAmount = 1;
                     }
-                    if (burstFireSize == 1) {
+                    if (burstFireAmount == 1) {
                         cantFireTime = 30;
                     }
                 }
 
-                if (burstFireSize > 0) {
-                    burstFireSize--;
+                if (burstFireAmount > 0) {
+                    burstFireAmount--;
                 }
 
                 if (stack.is(ModItems.DEVOTION.get())) {
@@ -586,7 +593,7 @@ public class ClientEventHandler {
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && GunsTool.getGunIntTag(stack, "Ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                if (data.boltActionTime() > 0 && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
 
@@ -631,11 +638,12 @@ public class ClientEventHandler {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+        var data = GunData.from(stack);
 
         ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
         fireRecoilTime = 10;
 
-        float gunRecoilY = (float) GunsTool.getGunDoubleTag(stack, "RecoilY") * 10;
+        var gunRecoilY = data.recoilY() * 10;
 
         recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
@@ -852,7 +860,8 @@ public class ClientEventHandler {
             default -> 0.8;
         };
 
-        double customWeight = GunsTool.getGunDoubleTag(stack, "CustomWeight");
+        var data = GunData.from(stack);
+        double customWeight = data.customWeight();
 
         if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
@@ -1070,9 +1079,10 @@ public class ClientEventHandler {
     private static void handleWeaponZoom(LivingEntity entity) {
         if (!(entity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
+        var data = GunData.from(stack);
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
 
-        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
+        double weight = data.weight();
         double speed = 1.5 - (0.07 * weight);
 
         if (zoom
@@ -1100,7 +1110,8 @@ public class ClientEventHandler {
         float pitch = event.getPitch();
         float roll = event.getRoll();
         ItemStack stack = entity.getMainHandItem();
-        double amplitude = 15000 * GunsTool.getGunDoubleTag(stack, "RecoilY") * GunsTool.getGunDoubleTag(stack, "RecoilX");
+        var data = GunData.from(stack);
+        double amplitude = 15000 * data.recoilY() * data.recoilX();
 
         if (fireRecoilTime > 0) {
             firePosTimer = 0.001;
@@ -1135,7 +1146,7 @@ public class ClientEventHandler {
         double rpm = 1;
 
         if (stack.is(ModItems.MINIGUN.get())) {
-            rpm = (double) GunsTool.getGunIntTag(stack, "RPM") / 1800;
+            rpm = (double) data.rpm() / 1800;
         }
 
         float[] shake = {0, 0};
@@ -1219,15 +1230,16 @@ public class ClientEventHandler {
             gripRecoilY = 1.25;
         }
 
-        double customWeight = GunsTool.getGunDoubleTag(stack, "CustomWeight");
+        var data = GunData.from(stack);
+        double customWeight = data.customWeight();
 
         double rpm = 1;
 
         if (stack.is(ModItems.MINIGUN.get())) {
-            rpm = (double) GunsTool.getGunIntTag(stack, "RPM") / 1800;
+            rpm = (double) data.rpm() / 1800;
         }
 
-        float gunRecoilX = (float) GunsTool.getGunDoubleTag(stack, "RecoilX") * 60;
+        float gunRecoilX = (float) data.recoilX() * 60;
 
         recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
         recoilY = 0;
@@ -1527,14 +1539,15 @@ public class ClientEventHandler {
             lungeDraw = 30;
             lungeSprint = 0;
             lungeAttack = 0;
-            burstFireSize = 0;
+            burstFireAmount = 0;
         }
     }
 
     private static void handleWeaponDraw(LivingEntity entity) {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         ItemStack stack = entity.getMainHandItem();
-        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
+        var data = GunData.from(stack);
+        double weight = data.weight();
         double speed = 3.2 - (0.13 * weight);
         drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
     }

@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -52,6 +53,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -146,6 +148,7 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
@@ -190,17 +193,18 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
     @Override
     public void fireOnPress(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (GunsTool.getGunBooleanTag(stack, "Reloading")) return;
-        if (player.getCooldowns().isOnCooldown(stack.getItem()) || GunsTool.getGunIntTag(stack, "Ammo") <= 0) return;
+        var data = GunData.from(stack);
+        if (data.isReloading()) return;
+        if (player.getCooldowns().isOnCooldown(stack.getItem()) || data.getAmmo() <= 0) return;
 
         boolean zooming = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
-        double spread = GunsTool.getGunDoubleTag(stack, "Spread");
+        double spread = data.spread();
 
         if (player.level() instanceof ServerLevel serverLevel) {
             GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, serverLevel,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage"),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage"),
-                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius"));
+                    (float) data.damage(),
+                    (float) data.explosionDamage(),
+                    (float) data.explosionRadius());
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -210,11 +214,11 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
 
             gunGrenadeEntity.setNoGravity(PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
 
-            float velocity = (float) GunsTool.getGunDoubleTag(stack, "Velocity");
+            float velocity = (float) data.velocity();
             int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
             if (perkLevel > 0) {
-                gunGrenadeEntity.setExplosionRadius((float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius") * 0.5f);
-                gunGrenadeEntity.setDamage((float) GunsTool.getGunDoubleTag(stack, "Damage") * (1.1f + perkLevel * 0.1f));
+                gunGrenadeEntity.setExplosionRadius((float) data.explosionRadius() * 0.5f);
+                gunGrenadeEntity.setDamage((float) data.explosionDamage() * (1.1f + perkLevel * 0.1f));
                 velocity *= 1.2f;
             }
 
@@ -239,6 +243,6 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 2);
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
+        data.setAmmo(data.getAmmo() - 1);
     }
 }

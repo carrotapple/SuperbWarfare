@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -53,12 +54,13 @@ public class ShootMessage {
 
     public static void pressAction(Player player, double spared) {
         ItemStack stack = player.getMainHandItem();
+        var data = GunData.from(stack);
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);
+            int projectileAmount = data.projectileAmount();
 
-            if (GunsTool.getGunIntTag(stack, "Ammo") > 0) {
+            if (data.getAmmo() > 0) {
                 // 空仓挂机
-                if (GunsTool.getGunIntTag(stack, "Ammo") == 1) {
+                if (data.getAmmo() == 1) {
                     GunsTool.setGunBooleanTag(stack, "HoldOpen", true);
                 }
 
@@ -67,15 +69,15 @@ public class ShootMessage {
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && GunsTool.getGunIntTag(stack, "Ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                if (data.boltActionTime() > 0 && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
 
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
+                data.setAmmo(data.getAmmo() - 1);
 
                 stack.getOrCreateTag().putDouble("empty", 1);
 
-                if (stack.getItem() == ModItems.M_60.get() && GunsTool.getGunIntTag(stack, "Ammo") <= 5) {
+                if (stack.getItem() == ModItems.M_60.get() && data.getAmmo() <= 5) {
                     GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
                 }
 
@@ -118,7 +120,7 @@ public class ShootMessage {
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
                 if (!player.level().isClientSide() && player instanceof ServerPlayer) {
-                    float soundRadius = (float) GunsTool.getGunDoubleTag(stack, "SoundRadius");
+                    float soundRadius = (float) data.soundRadius();
 
                     player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), soundRadius * 0.2f, pitch);
                     player.playSound(ModSounds.MINIGUN_FAR.get(), soundRadius * 0.5f, pitch);

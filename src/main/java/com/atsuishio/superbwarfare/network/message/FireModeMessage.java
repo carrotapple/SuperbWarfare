@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -45,8 +46,8 @@ public class FireModeMessage {
     public static void changeFireMode(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof GunItem gunItem) {
-            CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
-            int fireMode = data.getInt("FireMode");
+            var data = GunData.from(stack);
+            int fireMode = data.getFireMode();
 
             CompoundTag tag = stack.getOrCreateTag();
 
@@ -55,12 +56,12 @@ public class FireModeMessage {
 
             if (fireMode == 0) {
                 if ((mode & 2) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 1);
+                    data.setFireMode(1);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 4) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 2);
+                    data.setFireMode(2);
                     playChangeModeSound(player);
                     return;
                 }
@@ -68,12 +69,12 @@ public class FireModeMessage {
 
             if (fireMode == 1) {
                 if ((mode & 4) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 2);
+                    data.setFireMode(2);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 1) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 0);
+                    data.setFireMode(0);
                     playChangeModeSound(player);
                     return;
                 }
@@ -81,12 +82,12 @@ public class FireModeMessage {
 
             if (fireMode == 2) {
                 if ((mode & 1) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 0);
+                    data.setFireMode(0);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 2) != 0) {
-                    GunsTool.setGunIntTag(stack, "FireMode", 1);
+                    data.setFireMode(1);
                     playChangeModeSound(player);
                     return;
                 }

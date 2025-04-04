@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
@@ -60,7 +61,8 @@ public class GunsTool {
             CompoundTag tag = stack.getOrCreateTag();
             CompoundTag data = tag.getCompound("GunData");
 
-            gunsData.get(location).forEach(data::putDouble);
+            // gunsData.get(location).forEach(data::putDouble);
+
             data.putBoolean("Init", true);
             stack.addTagElement("GunData", data);
         }
@@ -72,8 +74,8 @@ public class GunsTool {
         initGun(stack, location);
 
         if (fillAmmo) {
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
-                    + GunsTool.getGunIntTag(stack, "CustomMagazine"));
+            var data = GunData.from(stack);
+            data.setAmmo(data.magazine());
         }
     }
 
@@ -131,13 +133,14 @@ public class GunsTool {
     public static void reload(Player player, ItemStack stack, AmmoType type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
         if (!(stack.getItem() instanceof GunItem)) return;
+        var data = GunData.from(stack);
 
-        int mag = GunsTool.getGunIntTag(stack, "Magazine") + GunsTool.getGunIntTag(stack, "CustomMagazine");
-        int ammo = GunsTool.getGunIntTag(stack, "Ammo");
+        int mag = data.magazine();
+        int ammo = data.getAmmo();
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记
-        if (ammo == 0 && GunsTool.getGunIntTag(stack, "BoltActionTime") > 0 && !stack.is(ModTags.Items.REVOLVER)) {
+        if (ammo == 0 && data.boltActionTime() > 0 && !stack.is(ModTags.Items.REVOLVER)) {
             GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
         }
 
@@ -151,7 +154,7 @@ public class GunsTool {
 
         int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);
 
-        GunsTool.setGunIntTag(stack, "Ammo", needToAdd);
+        data.setAmmo(needToAdd);
         tag.putBoolean("is_normal_reloading", false);
         tag.putBoolean("is_empty_reloading", false);
     }

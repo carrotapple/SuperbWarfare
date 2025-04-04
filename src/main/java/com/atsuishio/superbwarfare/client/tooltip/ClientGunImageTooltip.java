@@ -4,12 +4,12 @@ import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,6 +26,10 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected final int width;
     protected final int height;
     protected final ItemStack stack;
+
+    protected GunData getGunData() {
+        return GunData.from(stack);
+    }
 
     public ClientGunImageTooltip(GunImageComponent tooltip) {
         this.width = tooltip.width;
@@ -62,7 +66,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderBypassAndHeadshotTooltip() {
-        return GunsTool.getGunDoubleTag(stack, "BypassesArmor") > 0 || GunsTool.getGunDoubleTag(stack, "Headshot") > 0;
+        return getGunData().bypassArmor() > 0 || getGunData().headshot() > 0;
     }
 
     protected boolean shouldRenderEditTooltip() {
@@ -89,7 +93,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器伤害的文本组件
      */
     protected Component getDamageComponent() {
-        double damage = GunsTool.getGunDoubleTag(stack, "Damage") * TooltipTool.perkDamage(stack);
+        double damage = getGunData().damage() * TooltipTool.perkDamage(stack);
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ? " + "
@@ -103,7 +107,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         if (this.stack.getItem() instanceof GunItem gunItem && gunItem.isAutoWeapon(this.stack)) {
             return Component.translatable("des.superbwarfare.guns.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(FormatTool.format0D(GunsTool.getGunIntTag(stack, "RPM")))
+                    .append(Component.literal(FormatTool.format0D(getGunData().rpm()))
                             .withStyle(ChatFormatting.GREEN));
         }
         return Component.literal("");
@@ -122,8 +126,8 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器等级文本组件
      */
     protected Component getLevelComponent() {
-        int level = GunsTool.getGunIntTag(stack, "Level");
-        double rate = GunsTool.getGunDoubleTag(stack, "Exp") / (20 * Math.pow(level, 2) + 160 * level + 20);
+        int level = getGunData().getLevel();
+        double rate = getGunData().getExp() / (20 * Math.pow(level, 2) + 160 * level + 20);
 
         ChatFormatting formatting;
         if (level < 10) {
@@ -149,7 +153,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器强化点数文本组件
      */
     protected Component getUpgradePointComponent() {
-        int upgradePoint = Mth.floor(GunsTool.getGunDoubleTag(stack, "UpgradePoint"));
+        int upgradePoint = Mth.floor(getGunData().getUpgradePoint());
         return Component.translatable("des.superbwarfare.guns.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));
@@ -175,7 +179,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
             perkBypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
-        double bypassRate = Math.max(GunsTool.getGunDoubleTag(stack, "BypassesArmor") + perkBypassArmorRate, 0);
+        double bypassRate = Math.max(getGunData().bypassArmor() + perkBypassArmorRate, 0);
 
         return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -186,7 +190,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器爆头倍率文本组件
      */
     protected Component getHeadshotComponent() {
-        double headshot = GunsTool.getGunDoubleTag(stack, "Headshot");
+        double headshot = getGunData().headshot();
         return Component.translatable("des.superbwarfare.guns.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format1D(headshot, "x")).withStyle(ChatFormatting.AQUA));

@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.renderer.item.MarlinItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -101,15 +102,14 @@ public class MarlinItem extends GunItem implements GeoItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+        var data = GunData.from(stack);
 
         if (transformType != null && transformType.firstPerson()) {
-
-
             if (player.isSprinting()
                     && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
                     && ClientEventHandler.drawTime < 0.01
-                    && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
+                    && !data.isReloading()) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run_fast"));
                 } else {

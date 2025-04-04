@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
@@ -134,8 +135,8 @@ public class PlayerEventHandler {
         int sprintCost;
 
         if (stack.is(ModTags.Items.GUN)) {
-            double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
-            sprintCost = (int) (5 + 0.2 * weight);
+            var data = GunData.from(stack);
+            sprintCost = (int) (5 + 0.2 * data.weight());
         } else {
             sprintCost = 5;
         }
@@ -227,8 +228,9 @@ public class PlayerEventHandler {
 
     private static void handleSpecialWeaponAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
+        var data = GunData.from(stack);
 
-        if ((stack.is(ModItems.RPG.get()) || stack.is(ModItems.BOCEK.get())) && GunsTool.getGunIntTag(stack, "Ammo") == 1) {
+        if ((stack.is(ModItems.RPG.get()) || stack.is(ModItems.BOCEK.get())) && data.getAmmo() == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
         }
     }
@@ -291,6 +293,7 @@ public class PlayerEventHandler {
 
         for (ItemStack stack : player.getInventory().items) {
             if (stack.is(ModTags.Items.GUN)) {
+                var data = GunData.from(stack);
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
                     var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
@@ -310,25 +313,24 @@ public class PlayerEventHandler {
                         GunsTool.reload(player, stack, AmmoType.HEAVY);
                     }
 
-                    if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo") == 0) {
-                        GunsTool.setGunIntTag(stack, "Ammo", 1);
+                    if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && data.getAmmo() == 0) {
+                        data.setAmmo(1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.M_79.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo") == 0) {
-                        GunsTool.setGunIntTag(stack, "Ammo", 1);
+                    if (stack.getItem() == ModItems.M_79.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && data.getAmmo() == 0) {
+                        data.setAmmo(1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.RPG.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo") == 0) {
-                        GunsTool.setGunIntTag(stack, "Ammo", 1);
+                    if (stack.getItem() == ModItems.RPG.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && data.getAmmo() == 0) {
+                        data.setAmmo(1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.JAVELIN.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo") == 0) {
-                        GunsTool.setGunIntTag(stack, "Ammo", 1);
+                    if (stack.getItem() == ModItems.JAVELIN.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && data.getAmmo() == 0) {
+                        data.setAmmo(1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
                 } else {
-                    GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine")
-                            + GunsTool.getGunIntTag(stack, "CustomMagazine"));
+                    data.setAmmo(data.magazine());
                 }
                 GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
@@ -376,8 +378,9 @@ public class PlayerEventHandler {
 
         if (left.is(ModTags.Items.GUN) && right.getItem() == ModItems.SHORTCUT_PACK.get()) {
             ItemStack output = left.copy();
+            var data = GunData.from(output);
 
-            GunsTool.setGunDoubleTag(output, "UpgradePoint", GunsTool.getGunDoubleTag(output, "UpgradePoint") + 1);
+            data.setUpgradePoint(data.getUpgradePoint() + 1);
 
             event.setOutput(output);
             event.setCost(10);

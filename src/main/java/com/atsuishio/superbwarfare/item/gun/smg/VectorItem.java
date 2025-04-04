@@ -37,6 +37,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -132,31 +133,33 @@ public class VectorItem extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-
-        int customMag = switch (magType) {
-            case 1 -> 20;
-            case 2 -> 57;
-            default -> 0;
-        };
 
         if (scopeType == 3) {
             CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
             tag.putInt("Scope", 0);
         }
+    }
 
-        double customZoom = switch (scopeType) {
-            case 0, 1 -> 0;
-            case 2 -> 0.75;
-            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
+    @Override
+    public double getCustomZoom(ItemStack stack) {
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        if (scopeType == 2) return 0.75;
+        return GunsTool.getGunDoubleTag(stack, "CustomZoom");
+    }
+
+    @Override
+    public int getCustomMagazine(ItemStack stack) {
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        return switch (magType) {
+            case 1 -> 20;
+            case 2 -> 57;
+            default -> 0;
         };
-
-        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        GunsTool.setGunDoubleTag(stack, "CustomMagazine", customMag);
     }
 
     @Override

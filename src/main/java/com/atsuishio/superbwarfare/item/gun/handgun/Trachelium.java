@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.client.renderer.item.TracheliumItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -39,6 +40,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -247,13 +249,11 @@ public class Trachelium extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        var tag = stack.getOrCreateTag();
-        GunsTool.setGunIntTag(stack, "BoltActionTime", tag.getBoolean("DA") ? 12 : 0);
 
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
         int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
         CompoundTag tags = stack.getOrCreateTag().getCompound("Attachments");
 
@@ -264,27 +264,64 @@ public class Trachelium extends GunItem implements GeoItem {
         if (scopeType == 3) {
             tags.putInt("Scope", 0);
         }
+    }
 
-        if (scopeType > 0 || gripType > 0) {
-            GunsTool.setGunDoubleTag(stack, "CustomVelocity", 15);
-            GunsTool.setGunDoubleTag(stack, "BypassesArmor", 0.4);
-            GunsTool.setGunDoubleTag(stack, "Damage", 21);
-            GunsTool.setGunDoubleTag(stack, "Headshot", 2.5);
-        } else {
-            GunsTool.setGunDoubleTag(stack, "CustomVelocity", 0);
-            GunsTool.setGunDoubleTag(stack, "BypassesArmor", 0.3);
-            GunsTool.setGunDoubleTag(stack, "Damage", 19);
-            GunsTool.setGunDoubleTag(stack, "Headshot", 2);
+    @Override
+    public int getCustomBoltActionTime(ItemStack stack) {
+        return GunData.from(stack).getTag().getBoolean("DA") ? 12 : 0;
+    }
+
+    @Override
+    public boolean canSwitchScope(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 2;
+    }
+
+    private boolean useSpecialAttributes(ItemStack stack) {
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        return scopeType > 0 || gripType > 0;
+    }
+
+    @Override
+    public double getCustomDamage(ItemStack stack) {
+        if (useSpecialAttributes(stack)) {
+            return 2;
         }
+        return super.getCustomDamage(stack);
+    }
 
-        double customZoom = switch (scopeType) {
+    @Override
+    public double getCustomZoom(ItemStack stack) {
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        return switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75;
             default -> 1;
         };
+    }
 
-        GunsTool.setGunBooleanTag(stack, "CanSwitchScope", scopeType == 2);
-        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
+    @Override
+    public double getCustomVelocity(ItemStack stack) {
+        if (useSpecialAttributes(stack)) {
+            return 15;
+        }
+        return super.getCustomVelocity(stack);
+    }
+
+    @Override
+    public double getCustomHeadshot(ItemStack stack) {
+        if (useSpecialAttributes(stack)) {
+            return 0.5;
+        }
+        return super.getCustomHeadshot(stack);
+    }
+
+    @Override
+    public double getCustomBypassArmor(ItemStack stack) {
+        if (useSpecialAttributes(stack)) {
+            return 0.1;
+        }
+        return super.getCustomBypassArmor(stack);
     }
 
     @Override

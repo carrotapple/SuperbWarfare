@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.client.tooltip.component.SentinelImageCompone
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -184,7 +185,7 @@ public class SentinelItem extends GunItem implements GeoItem {
                     if (energyStored > 0) {
                         energy.extractEnergy(1, false);
                         GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0.2857142857142857
-                                * GunsTool.getGunDoubleTag(stack, "Damage"));
+                                * GunData.from(stack).damage());
                     } else {
                         GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0);
                     }

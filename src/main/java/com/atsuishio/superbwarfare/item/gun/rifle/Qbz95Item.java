@@ -36,6 +36,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -159,30 +160,36 @@ public class Qbz95Item extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
         int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-
         if (magType == 1) {
             CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
             tag.putInt("Magazine", 2);
         }
+    }
 
-        int customMag = magType == 2 ? 30 : 0;
+    @Override
+    public int getCustomMagazine(ItemStack stack) {
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        return magType == 2 ? 30 : 0;
+    }
 
-        double customZoom = switch (scopeType) {
+    @Override
+    public double getCustomZoom(ItemStack stack) {
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        return switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.15;
             default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
         };
+    }
 
-        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
-        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
+    @Override
+    public boolean canAdjustZoom(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
     }
 
     @Override

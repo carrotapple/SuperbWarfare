@@ -20,12 +20,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -145,27 +143,27 @@ public class Ntw20Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    public boolean canAdjustZoom(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
+    }
 
+    @Override
+    public double getCustomZoom(ItemStack stack) {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-
-        int customMag = switch (magType) {
-            case 1 -> 3;
-            case 2 -> 6;
-            default -> 0;
-        };
-
-        double customZoom = switch (scopeType) {
+        return switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.25;
             default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
         };
+    }
 
-        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
-        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
+    @Override
+    public int getCustomMagazine(ItemStack stack) {
+        return switch (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE)) {
+            case 1 -> 3;
+            case 2 -> 6;
+            default -> 0;
+        };
     }
 
     @Override

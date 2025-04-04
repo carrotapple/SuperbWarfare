@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -267,7 +268,8 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
     @Override
     public void fireOnPress(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (GunsTool.getGunBooleanTag(stack, "Reloading")) return;
+        var data = GunData.from(stack);
+        if (data.isReloading()) return;
 
         int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
@@ -275,7 +277,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 .orElse(false);
 
         if (player.getCooldowns().isOnCooldown(stack.getItem())
-                || GunsTool.getGunIntTag(stack, "Ammo") <= 0
+                || data.getAmmo() <= 0
                 || !hasEnoughEnergy
         ) return;
 
@@ -283,7 +285,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player instanceof ServerPlayer serverPlayer) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
-            double spread = GunsTool.getGunDoubleTag(stack, "Spread");
+            double spread = data.spread();
             int volt = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
             int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
 
@@ -292,17 +294,17 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
             var level = serverPlayer.level();
             TaserBulletEntity taserBulletProjectile = new TaserBulletEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage"), volt, wireLength);
+                    (float) data.damage(), volt, wireLength);
 
             taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-            taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity"),
+            taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) data.velocity(),
                     (float) (zoom ? 0.1 : spread));
             level.addFreshEntity(taserBulletProjectile);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo") - 1);
+        data.setAmmo(data.getAmmo() - 1);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
         stack.getOrCreateTag().putBoolean("shoot", true);
     }

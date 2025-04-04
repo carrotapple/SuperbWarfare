@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoSupplierItem;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.AmmoType;
@@ -60,6 +61,7 @@ public class AmmoBarOverlay {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.banHand(player))) {
             PoseStack poseStack = event.getGuiGraphics().pose();
+            var data = GunData.from(stack);
 
             // 渲染图标
             event.getGuiGraphics().blit(gunItem.getGunIcon(),
@@ -96,7 +98,7 @@ public class AmmoBarOverlay {
                 // 渲染加特林射速
                 event.getGuiGraphics().drawString(
                         Minecraft.getInstance().font,
-                        GunsTool.getGunIntTag(stack, "RPM") + " RPM",
+                        data.rpm() + " RPM",
                         w - 111f,
                         h - 20,
                         0xFFFFFF,
@@ -384,7 +386,7 @@ public class AmmoBarOverlay {
     }
 
     private static ResourceLocation getFireMode(ItemStack stack) {
-        return switch (GunsTool.getGunIntTag(stack, "FireMode")) {
+        return switch (GunData.from(stack).getFireMode()) {
             case 1 -> BURST;
             case 2 -> AUTO;
             default -> SEMI;

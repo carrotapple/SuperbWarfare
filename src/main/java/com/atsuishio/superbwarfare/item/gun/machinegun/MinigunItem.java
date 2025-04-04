@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
@@ -43,6 +44,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class MinigunItem extends GunItem implements GeoItem {
+    @Override
+    public int getCustomRPM(ItemStack stack) {
+        return GunData.from(stack).getData().getInt("CustomRPM");
+    }
 
     private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -197,7 +202,8 @@ public class MinigunItem extends GunItem implements GeoItem {
         return switch (perk.type) {
             case AMMO -> perk != ModPerks.MICRO_MISSILE.get() && perk != ModPerks.LONGER_WIRE.get();
             case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
-            case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get() || perk == ModPerks.VORPAL_WEAPON.get();
+            case DAMAGE ->
+                    perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get() || perk == ModPerks.VORPAL_WEAPON.get();
         };
     }
 

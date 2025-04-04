@@ -19,13 +19,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -53,7 +52,7 @@ public class AK12Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new AK12ItemRenderer();
@@ -153,29 +152,28 @@ public class AK12Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    public boolean canAdjustZoom(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
+    }
 
+    @Override
+    public double getCustomZoom(ItemStack stack) {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
-        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-
-        int customMag = switch (magType) {
-            case 1 -> 15;
-            case 2 -> 45;
-            default -> 0;
-        };
-
-        double customZoom = switch (scopeType) {
+        return switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.15;
             default -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
         };
+    }
 
-        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
-        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
+    @Override
+    public int getCustomMagazine(ItemStack stack) {
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        return switch (magType) {
+            case 1 -> 15;
+            case 2 -> 45;
+            default -> 0;
+        };
     }
 
     @Override

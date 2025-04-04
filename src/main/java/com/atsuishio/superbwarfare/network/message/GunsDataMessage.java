@@ -19,7 +19,8 @@ public class GunsDataMessage {
 
     public static void encode(GunsDataMessage message, FriendlyByteBuf buffer) {
         buffer.writeMap(message.gunsData, FriendlyByteBuf::writeUtf,
-                (k, v) -> buffer.writeMap(v, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeDouble));
+                (k, v) -> buffer.writeMap(v, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeDouble)
+        );
     }
 
     public static GunsDataMessage decode(FriendlyByteBuf buffer) {

@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -58,7 +58,8 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int rpm = GunsTool.getGunIntTag(stack, "RPM");
+        var data = GunData.from(stack);
+        int rpm = data.rpm();
 
         gun.setRotZ(gun.getRotZ() + times * -0.07f * ((float) rpm / 1200) * ClientEventHandler.miniGunRot);
 
