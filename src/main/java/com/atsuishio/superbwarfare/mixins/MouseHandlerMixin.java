@@ -49,7 +49,7 @@ public class MouseHandlerMixin {
             float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
             if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                return original / Math.max((1 + (0.2 * (data.minZoom() - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
+                return original / Math.max((1 + (0.2 * (data.zoom() - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
             }
         }
 
