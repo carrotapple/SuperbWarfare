@@ -293,11 +293,7 @@ public class Trachelium extends GunItem implements GeoItem {
     @Override
     public double getCustomZoom(ItemStack stack) {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        return switch (scopeType) {
-            case 0, 1 -> 0;
-            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75;
-            default -> 1;
-        };
+        return scopeType == 2 ? (stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75) : 0;
     }
 
     @Override

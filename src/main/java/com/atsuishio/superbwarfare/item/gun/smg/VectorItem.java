@@ -148,8 +148,7 @@ public class VectorItem extends GunItem implements GeoItem {
     @Override
     public double getCustomZoom(ItemStack stack) {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        if (scopeType == 2) return 0.75;
-        return GunsTool.getGunDoubleTag(stack, "CustomZoom");
+        return scopeType == 2 ? (stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75) : 0;
     }
 
     @Override

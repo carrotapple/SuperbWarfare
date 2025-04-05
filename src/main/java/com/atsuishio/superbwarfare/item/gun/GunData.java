@@ -181,15 +181,17 @@ public class GunData {
     }
 
     public double defaultZoom() {
-        return getGunData("DefaultZoom", 1);
+        return getGunData("DefaultZoom", 1.25);
     }
 
     public double minZoom() {
-        return getGunData("MinZoom", 1);
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        return scopeType == 3 ? getGunData("MinZoom", 1.25) : 1.25;
     }
 
     public double maxZoom() {
-        return getGunData("MaxZoom", 1);
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        return scopeType == 3 ? getGunData("MaxZoom", 1) : 114514;
     }
 
     public double zoom() {

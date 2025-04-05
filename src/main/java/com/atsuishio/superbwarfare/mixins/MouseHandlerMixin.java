@@ -8,7 +8,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.item.gun.GunData;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -44,6 +44,18 @@ public class MouseHandlerMixin {
         }
 
         ItemStack stack = mc.player.getMainHandItem();
+        if (stack.is(ModTags.Items.GUN)) {
+            var data = GunData.from(stack);
+            float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
+
+            if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+                return original / Math.max((1 + (0.2 * (data.minZoom() - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
+            }
+        }
+
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
+        }
 
         if (isFreeCam(player)) {
             return 0;
@@ -79,21 +91,6 @@ public class MouseHandlerMixin {
 
         if (player.getVehicle() instanceof Tom6Entity) {
             return 0.3;
-        }
-
-        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-            return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
-        }
-
-        if (!stack.is(ModTags.Items.GUN)) {
-            return original;
-        }
-
-        double zoom = 1.25 + GunsTool.getGunDoubleTag(stack, "CustomZoom");
-        float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
-
-        if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            return original / Math.max((1 + (0.2 * (zoom - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
         }
 
         return original;

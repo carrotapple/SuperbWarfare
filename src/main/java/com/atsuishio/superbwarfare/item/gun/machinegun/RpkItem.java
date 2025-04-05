@@ -8,21 +8,25 @@ import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -33,6 +37,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -42,7 +47,7 @@ public class RpkItem extends GunItem implements GeoItem {
     public static ItemDisplayContext transformType;
 
     public RpkItem() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+        super(new Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
     @Override
@@ -73,20 +78,68 @@ public class RpkItem extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
+        boolean drum = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2;
+        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 1 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 2;
+
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
+            if (drum) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_drum_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_drum"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
+                }
+            }
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+            if (drum) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+                }
+            }
         }
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run"));
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.run_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run"));
+                }
             }
+        }
+
+        if (grip) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle_grip"));
+        } else {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
+        }
+    }
+
+    private PlayState editPredicate(AnimationState<RpkItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.edit"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
@@ -94,9 +147,35 @@ public class RpkItem extends GunItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        ;
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
+    }
+
+    @Override
+    public int getCustomMagazine(ItemStack stack) {
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        return switch (magType) {
+            case 1 -> 20;
+            case 2 -> 60;
+            default -> 0;
+        };
+    }
+
+    @Override
+    public double getCustomZoom(ItemStack stack) {
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        return switch (scopeType) {
+            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75;
+            case 3 -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
+            default -> 0;
+        };
+    }
+
+    @Override
+    public boolean canAdjustZoom(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
     }
 
     @Override
@@ -125,6 +204,24 @@ public class RpkItem extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+
+        if (gripType == 3) {
+            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+            tag.putInt("Grip", 0);
+        }
+    }
+
+    @Override
+    public boolean canSwitchScope(ItemStack stack) {
+        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 2;
+    }
+
+    @Override
     public boolean isMagazineReload(ItemStack stack) {
         return true;
     }
@@ -145,7 +242,42 @@ public class RpkItem extends GunItem implements GeoItem {
     }
 
     @Override
+    public boolean isCustomizable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCustomBarrel(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCustomGrip(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCustomMagazine(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCustomScope(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCustomStock(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public boolean canEjectShell(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasBipod(ItemStack stack) {
         return true;
     }
 
