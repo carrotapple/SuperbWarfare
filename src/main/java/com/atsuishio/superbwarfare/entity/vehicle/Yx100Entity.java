@@ -266,7 +266,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
             if (reloadCoolDown > 0 && (
                     (entityData.get(LOADED_AMMO_TYPE) == 0 && (hasCreativeAmmo || countItem(ModItems.AP_5_INCHES.get()) > 0)) ||
-                    (entityData.get(LOADED_AMMO_TYPE) == 1 && (hasCreativeAmmo || countItem(ModItems.HE_5_INCHES.get()) > 0))
+                            (entityData.get(LOADED_AMMO_TYPE) == 1 && (hasCreativeAmmo || countItem(ModItems.HE_5_INCHES.get()) > 0))
             )) {
                 reloadCoolDown--;
             }
@@ -448,7 +448,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                     }
                 }
 
-
                 Level level = player.level();
                 final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
@@ -464,7 +463,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 Vector4f worldPosition = transformPosition(transform, -0.12f, 0.15f, 2f);
 
                 if (this.entityData.get(MG_AMMO) > 0 || hasCreativeAmmo) {
-                    var projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player);
+                    var projectileRight = ((ProjectileWeapon) getWeapon(0)).create(player).setGunItemId(this.getType().getDescriptionId() + ".1");
 
                     projectileRight.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
                     projectileRight.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 36,
@@ -509,7 +508,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             Vector4f worldPosition = transformPosition(transform, 0, -0.25f, 0);
 
             var projectile = (ProjectileWeapon) getWeapon(1);
-            var projectileEntity = projectile.create(player);
+            var projectileEntity = projectile.create(player).setGunItemId(this.getType().getDescriptionId() + ".2");
 
             projectileEntity.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
             projectileEntity.shoot(getGunnerVector(1).x, getGunnerVector(1).y + 0.005f, getGunnerVector(1).z, 20, 0.3f);
@@ -694,7 +693,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             r2 = a / 90f;
         } else {
             if (a < 0) {
-                r2 = - (180f + a) / 90f;
+                r2 = -(180f + a) / 90f;
             } else {
                 r2 = (180f - a) / 90f;
             }
@@ -748,7 +747,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             r2 = a / 90f;
         } else {
             if (a < 0) {
-                r2 = - (180f + a) / 90f;
+                r2 = -(180f + a) / 90f;
             } else {
                 r2 = (180f - a) / 90f;
             }
@@ -791,7 +790,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 r2 = a / 90f;
             } else {
                 if (a < 0) {
-                    r2 = - (180f + a) / 90f;
+                    r2 = -(180f + a) / 90f;
                 } else {
                     r2 = (180f - a) / 90f;
                 }
@@ -822,7 +821,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 r2 = a / 90f;
             } else {
                 if (a < 0) {
-                    r2 = - (180f + a) / 90f;
+                    r2 = -(180f + a) / 90f;
                 } else {
                     r2 = (180f - a) / 90f;
                 }
@@ -853,7 +852,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                 r2 = a / 90f;
             } else {
                 if (a < 0) {
-                    r2 = - (180f + a) / 90f;
+                    r2 = -(180f + a) / 90f;
                 } else {
                     r2 = (180f - a) / 90f;
                 }
@@ -938,7 +937,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         if (player == getNthEntity(0)) {
             if (getWeaponIndex(0) == 0) {
                 return this.entityData.get(LOADED_AP) > 0 && getEnergy() > VehicleConfig.YX_100_SHOOT_COST.get();
-            }  else if (getWeaponIndex(0) == 1) {
+            } else if (getWeaponIndex(0) == 1) {
                 return this.entityData.get(LOADED_HE) > 0 && getEnergy() > VehicleConfig.YX_100_SHOOT_COST.get();
             } else if (getWeaponIndex(0) == 2) {
                 return (this.entityData.get(MG_AMMO) > 0 || InventoryTool.hasCreativeAmmoBox(player)) && !cannotFireCoax;

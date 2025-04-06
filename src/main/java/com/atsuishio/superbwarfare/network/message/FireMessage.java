@@ -149,7 +149,8 @@ public class FireMessage {
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
-                .zoom(zoom);
+                .zoom(zoom)
+                .setGunItemId(stack);
 
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
