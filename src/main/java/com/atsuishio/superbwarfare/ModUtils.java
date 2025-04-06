@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare;
 
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
+import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.ClientConfig;
 import com.atsuishio.superbwarfare.config.CommonConfig;
 import com.atsuishio.superbwarfare.config.ServerConfig;
-import com.atsuishio.superbwarfare.event.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;

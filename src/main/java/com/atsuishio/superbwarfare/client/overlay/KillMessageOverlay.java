@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
@@ -23,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -211,6 +213,8 @@ public class KillMessageOverlay {
                             -32,
                             8
                     );
+                } else if (ModList.get().isLoaded("tacz")) {
+                    renderItem = TACZGunEventHandler.taczCompatRender(record.stack, gui, itemIconW, top);
                 }
             }
         } else {
@@ -231,6 +235,8 @@ public class KillMessageOverlay {
                         -32,
                         8
                 );
+            } else if (ModList.get().isLoaded("tacz")) {
+                renderItem = TACZGunEventHandler.taczCompatRender(record.stack, gui, itemIconW, top);
             }
 
             // TODO 如果是特殊武器击杀，则渲染对应图标
@@ -299,7 +305,7 @@ public class KillMessageOverlay {
         if (record.headshot) {
             icon = HEADSHOT;
         } else {
-            if (DamageTypeTool.isGunDamage(record.damageType)) {
+            if (DamageTypeTool.isCompatGunDamage(record.damageType)) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标

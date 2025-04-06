@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 
@@ -42,4 +44,11 @@ public class DamageTypeTool {
                 || source.is(ModDamageTypes.LASER) || source.is(ModDamageTypes.LASER_HEADSHOT);
     }
 
+    public static boolean isCompatGunDamage(ResourceKey<DamageType> damageType) {
+        return isGunDamage(damageType)
+                || damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("tacz", "bullet"))
+                || damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("tacz", "bullet_void"))
+                || damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("tacz", "bullet_ignore_armor"))
+                || damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("tacz", "bullet_void_ignore_armor"));
+    }
 }
