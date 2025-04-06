@@ -116,6 +116,7 @@ public class ModItems {
     public static final RegistryObject<Item> SMALL_SHELL = AMMO.register("small_shell", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET_70 = AMMO.register("rocket_70", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WIRE_GUIDE_MISSILE = AMMO.register("wire_guide_missile", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SWARM_DRONE = AMMO.register("swarm_drone", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> BEAM_TEST = AMMO.register("beam_test", BeamTest::new);
 
     /**
