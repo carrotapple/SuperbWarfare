@@ -109,8 +109,6 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         cross3.setScaleX((float) (1f + (0.1 * zp)));
         cross3.setScaleY((float) (1f + (0.1 * zp)));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() <= 1.4);
-
         CoreGeoBone shen;
         if (zt < 0.5) {
             shen = getAnimationProcessor().getBone("fireRootNormal");

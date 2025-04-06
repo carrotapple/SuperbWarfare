@@ -186,45 +186,51 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
             double y = blockHitResult.getLocation().y;
             double z = blockHitResult.getLocation().z;
 
-            BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
-            if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
-                this.discard();
-                causeExplode(blockHitResult.getLocation());
-                return;
-            }
+            if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
+                BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
 
-            float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
-            this.durability -= (int) hardness;
+                if (hardness == -1) {
+                    this.discard();
+                    causeExplode(blockHitResult.getLocation());
+                    return;
+                }
 
-            if (ExplosionConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
-                BlockPos blockPos = BlockPos.containing(x, y, z);
-                Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
-                this.level().destroyBlock(blockPos, true);
-            }
+                this.durability -= (int) hardness;
 
-            if (blockState.is(ModBlocks.SANDBAG.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
-                this.durability -= 10;
-            }
+                if (hardness <= 50) {
+                    BlockPos blockPos = BlockPos.containing(x, y, z);
+                    Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
+                    this.level().destroyBlock(blockPos, true);
+                }
 
-            if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(Blocks.COPPER_BLOCK)) {
-                this.durability -= 5;
-            }
+                if (blockState.is(ModBlocks.SANDBAG.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
+                    this.durability -= 10;
+                }
 
-            if (blockState.is(Blocks.GOLD_BLOCK)) {
-                this.durability -= 3;
-            }
+                if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(Blocks.COPPER_BLOCK)) {
+                    this.durability -= 5;
+                }
 
-            if (this.durability <= 0) {
-                causeExplode(blockHitResult.getLocation());
-            } else {
-                if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                if (blockState.is(Blocks.GOLD_BLOCK)) {
+                    this.durability -= 3;
+                }
+
+                if (this.durability <= 0) {
+                    causeExplode(blockHitResult.getLocation());
+                } else {
                     if (this.firstHit) {
                         ParticleTool.cannonHitParticles(this.level(), this.position(), this);
                         causeExplode(blockHitResult.getLocation());
                         this.firstHit = false;
                     }
+                    apExplode(blockHitResult);
                 }
-                apExplode(blockHitResult);
+            } else {
+                if (this.durability > 0) {
+                    apExplode(blockHitResult);
+                }
+                causeExplode(blockHitResult.getLocation());
             }
         }
     }

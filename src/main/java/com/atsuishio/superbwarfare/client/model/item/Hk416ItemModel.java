@@ -107,8 +107,6 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         scope2.setScaleZ(1f - (0.8f * (float) zp));
         scope3.setScaleZ(1f - (0.5f * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
-
         CoreGeoBone shen;
         if (zt < 0.5) {
             shen = getAnimationProcessor().getBone("fireRootNormal");

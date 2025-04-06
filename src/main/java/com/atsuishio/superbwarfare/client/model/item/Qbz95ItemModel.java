@@ -120,8 +120,6 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         button3.setScaleX(1f - (0.5f * (float) zp));
         button6.setScaleX(1f - (0.8f * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() < 3.1);
-
         CoreGeoBone shen;
         if (zt < 0.5) {
             shen = getAnimationProcessor().getBone("fireRootNormal");

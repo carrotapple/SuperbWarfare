@@ -106,27 +106,21 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
         }
 
         if (name.equals("Cross1")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                    || !ClientEventHandler.zoom
-                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
         }
 
         if (name.equals("Cross2")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                    || !ClientEventHandler.zoom
-                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
                     || itemStack.getOrCreateTag().getBoolean("ScopeAlt"));
         }
 
         if (name.equals("CrossAlt")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                    || !ClientEventHandler.zoom
-                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
                     || !(itemStack.getOrCreateTag().getBoolean("ScopeAlt")));
         }
 
         if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
-            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos > 0.7  && ClientEventHandler.zoom);
         }
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);

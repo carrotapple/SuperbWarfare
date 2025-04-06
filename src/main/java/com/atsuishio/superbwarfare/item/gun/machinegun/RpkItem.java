@@ -167,7 +167,7 @@ public class RpkItem extends GunItem implements GeoItem {
     public double getCustomZoom(ItemStack stack) {
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
         return switch (scopeType) {
-            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75;
+            case 2 -> 1.55;
             case 3 -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
             default -> 0;
         };
@@ -214,11 +214,6 @@ public class RpkItem extends GunItem implements GeoItem {
             CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
             tag.putInt("Grip", 0);
         }
-    }
-
-    @Override
-    public boolean canSwitchScope(ItemStack stack) {
-        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 2;
     }
 
     @Override

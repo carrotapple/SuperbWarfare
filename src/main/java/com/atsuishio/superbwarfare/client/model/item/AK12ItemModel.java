@@ -109,8 +109,6 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         scope2.setScaleZ(1f - (0.3f * (float) zp));
         scope3.setScaleZ(1f - (0.7f * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.85));
-
         CoreGeoBone shen;
         if (zt < 0.5) {
             shen = getAnimationProcessor().getBone("fireRootNormal");

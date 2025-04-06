@@ -86,11 +86,11 @@ public class MosinNagantItemRenderer extends GeoItemRenderer<MosinNagantItem> {
         if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("rex")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7  || !ClientEventHandler.zoom);
         }
 
         if (name.equals("jia") || name.equals("b1") || name.equals("b2")) {
-            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden"));
+            bone.setHidden(ClientEventHandler.zoomPos > 0.7);
         }
 
         if (name.equals("flare")) {

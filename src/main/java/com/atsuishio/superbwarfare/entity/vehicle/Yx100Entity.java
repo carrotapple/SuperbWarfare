@@ -99,7 +99,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .explosionDamage(VehicleConfig.YX_100_AP_CANNON_EXPLOSION_DAMAGE.get())
                                 .fireProbability(0)
                                 .fireTime(0)
-                                .durability(60)
+                                .durability(100)
                                 .velocity(40)
                                 .sound(ModSounds.INTO_MISSILE.get())
                                 .ammo(ModItems.AP_5_INCHES.get())
@@ -111,7 +111,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .explosionDamage(VehicleConfig.YX_100_HE_CANNON_EXPLOSION_DAMAGE.get())
                                 .fireProbability(0.18F)
                                 .fireTime(2)
-                                .durability(1)
+                                .durability(0)
                                 .velocity(25)
                                 .sound(ModSounds.INTO_CANNON.get())
                                 .ammo(ModItems.HE_5_INCHES.get())
@@ -292,11 +292,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int) (2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
         }
 
-        collideBlock();
-        if (this.getDeltaMovement().length() > 0.075) {
-            collideHardBlock();
-        }
-
         turretAngle(5, 5);
         gunnerAngle(15, 15);
         lowHealthWarning();
@@ -306,6 +301,10 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         this.refreshDimensions();
     }
 
+    @Override
+    public boolean canCollideHardBlock() {
+        return getDeltaMovement().horizontalDistance() > 0.05 || this.entityData.get(POWER) > 0.1;
+    }
 
     private void handleAmmo() {
         if (getWeaponIndex(0) == 0 || getWeaponIndex(0) == 1) {
@@ -649,7 +648,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     public Vec3 driverZoomPos(float ticks) {
         Matrix4f transform = getTurretTransform(ticks);
-        Vector4f worldPosition = transformPosition(transform, 0, 0, 0.6076875f);
+        Vector4f worldPosition = transformPosition(transform, 0, 1.2f, 0.6076875f);
         return new Vec3(worldPosition.x, worldPosition.y, worldPosition.z);
     }
 

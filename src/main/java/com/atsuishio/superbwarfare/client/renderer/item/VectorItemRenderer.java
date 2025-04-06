@@ -88,15 +88,11 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
         if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("Cross1")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                    || !ClientEventHandler.zoom
-                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
         }
 
         if (name.equals("Cross2")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                    || !ClientEventHandler.zoom
-                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
         }
 
         if (name.equals("tuoxin")) {

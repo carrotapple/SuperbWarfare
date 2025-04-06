@@ -101,7 +101,7 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
         }
 
         if (name.equals("holo")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || !ClientEventHandler.zoom);
         }
 
         AtomicBoolean flag = new AtomicBoolean(false);

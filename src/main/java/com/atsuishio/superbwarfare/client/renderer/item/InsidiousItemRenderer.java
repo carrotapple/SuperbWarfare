@@ -106,7 +106,7 @@ public class InsidiousItemRenderer extends GeoItemRenderer<InsidiousItem> {
         }
 
         if (name.equals("cross")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7  || !ClientEventHandler.zoom);
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

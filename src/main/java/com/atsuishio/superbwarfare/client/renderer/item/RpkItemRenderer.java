@@ -88,29 +88,15 @@ public class RpkItemRenderer extends GeoItemRenderer<RpkItem> {
             if (!itemStack.is(ModTags.Items.GUN)) return;
 
             if (name.equals("Cross1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
 
             if (name.equals("Cross2")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
-                        || itemStack.getOrCreateTag().getBoolean("ScopeAlt"));
-            }
-
-            if (name.equals("CrossAlt")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
-                        || !(itemStack.getOrCreateTag().getBoolean("ScopeAlt")));
+                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
             }
 
             if (name.equals("Cross3")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
             }
 
             if (name.equals("humu1")) {
@@ -121,14 +107,14 @@ public class RpkItemRenderer extends GeoItemRenderer<RpkItem> {
                 bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.GRIP) == 0);
             }
 
-            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt")
-                    && (name.equals("glass") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan"))) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+                    && (name.equals("hide2") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing"))) {
+                bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
             }
 
             if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
                     && (name.equals("jing") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing"))) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+                bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
             }
 
             if (name.equals("flare")) {
@@ -139,6 +125,11 @@ public class RpkItemRenderer extends GeoItemRenderer<RpkItem> {
                     bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+                }
+                if ((GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3) && ClientEventHandler.zoom) {
+                    bone.setPosY(-2);
+                } else {
+                    bone.setPosY(0);
                 }
             }
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);

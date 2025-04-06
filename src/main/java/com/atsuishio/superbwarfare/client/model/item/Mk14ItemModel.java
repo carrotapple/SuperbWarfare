@@ -138,8 +138,6 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         action.setPosZ(2.5f * (float) fp);
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.5));
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));

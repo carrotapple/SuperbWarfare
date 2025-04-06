@@ -85,8 +85,6 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
             qiangshen.setScaleZ(1);
         }
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.4));
-
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.4f * fp + 0.44f * fr));
         shen.setPosZ((float) (2.825 * fp + 0.17f * fr + 1.175 * fpz));

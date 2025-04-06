@@ -74,7 +74,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         holo.setPosY(0.09f);
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.4));
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.4f * fp + 0.44f * fr));

@@ -159,6 +159,8 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> RPK_FIRE_1P = REGISTRY.register("rpk_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_fire_1p")));
     public static final RegistryObject<SoundEvent> RPK_FIRE_3P = REGISTRY.register("rpk_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_fire_3p")));
+    public static final RegistryObject<SoundEvent> RPK_FIRE_1P_S = REGISTRY.register("rpk_fire_1p_s", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_fire_1p_s")));
+    public static final RegistryObject<SoundEvent> RPK_FIRE_3P_S = REGISTRY.register("rpk_fire_3p_s", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_fire_3p_s")));
     public static final RegistryObject<SoundEvent> RPK_FAR = REGISTRY.register("rpk_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_far")));
     public static final RegistryObject<SoundEvent> RPK_VERYFAR = REGISTRY.register("rpk_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_veryfar")));
     public static final RegistryObject<SoundEvent> RPK_RELOAD_NORMAL = REGISTRY.register("rpk_reload_normal", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("rpk_reload_normal")));

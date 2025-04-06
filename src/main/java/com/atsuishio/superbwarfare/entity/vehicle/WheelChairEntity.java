@@ -329,12 +329,4 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/wheel_chair_icon.png");
     }
-
-    @Override
-    public void collideBlock() {
-    }
-
-    @Override
-    public void collideHardBlock() {
-    }
 }
