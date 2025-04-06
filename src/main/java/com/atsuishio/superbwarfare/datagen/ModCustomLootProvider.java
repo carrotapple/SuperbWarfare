@@ -8,15 +8,30 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.function.BiConsumer;
 
-public class ModContainerLootProvider implements LootTableSubProvider {
+public class ModCustomLootProvider implements LootTableSubProvider {
+
+    public static ResourceLocation containers(String name) {
+        return ModUtils.loc("containers/" + name);
+    }
+
+    public static ResourceLocation chests(String name) {
+        return ModUtils.loc("chests/" + name);
+    }
 
     @Override
     public void generate(BiConsumer<ResourceLocation, LootTable.Builder> pOutput) {
-        pOutput.accept(ModUtils.loc("containers/blueprints"),
+        pOutput.accept(chests("ancient_cpu"),
+                LootTable.lootTable()
+                        .withPool(singleItem(ModItems.ANCIENT_CPU.get(), 1, 1, 1, 1)
+                                .when(() -> LootItemRandomChanceCondition.randomChance(0.4f).build()))
+                );
+
+        pOutput.accept(containers("blueprints"),
                 LootTable.lootTable()
                         .withPool(multiItems(1, 0,
                                 new PoolTriple(ModItems.GLOCK_17_BLUEPRINT.get(), 60, 0),
