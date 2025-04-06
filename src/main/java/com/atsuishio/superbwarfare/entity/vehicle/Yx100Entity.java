@@ -303,7 +303,12 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public boolean canCollideHardBlock() {
-        return getDeltaMovement().horizontalDistance() > 0.05 || this.entityData.get(POWER) > 0.1;
+        return getDeltaMovement().horizontalDistance() > 0.05 || Mth.abs(this.entityData.get(POWER)) > 0.1;
+    }
+
+    @Override
+    public boolean canCollideBlockBeastly() {
+        return getDeltaMovement().horizontalDistance() > 0.3;
     }
 
     private void handleAmmo() {

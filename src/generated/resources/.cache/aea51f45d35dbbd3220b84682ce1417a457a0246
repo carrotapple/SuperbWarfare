@@ -1,7 +1,7 @@
-// 1.20.1	2025-03-27T02:14:05.4200013	Tags for minecraft:block mod id superbwarfare
+// 1.20.1	2025-04-06T21:34:59.1849681	Tags for minecraft:block mod id superbwarfare
 0acfd31854bf15f2c108138b3df7206bd2593e6b data/minecraft/tags/blocks/mineable/axe.json
 2130375fae100923a56ea877f5d3ff572beacdfe data/minecraft/tags/blocks/mineable/pickaxe.json
 3da7f021790388a122717f16f51c7ec5232eebcb data/minecraft/tags/blocks/mineable/shovel.json
 f42a8c01336e64b74da966f03d45ee0d60ac5d6b data/minecraft/tags/blocks/needs_iron_tool.json
-4fd66f3a19e8b9b77c5a2ef30848dec69e26e47b data/superbwarfare/tags/blocks/hard_collision.json
-2f52d564d89eb8a125f3dba5d99ec7cb3bc8d7ba data/superbwarfare/tags/blocks/soft_collision.json
+bdf60d09b52c0e69c5937e1a8104cf8ecd569d55 data/superbwarfare/tags/blocks/hard_collision.json
+cd07dbf901fbaa3bd63ed8e4691f9b629c0e8690 data/superbwarfare/tags/blocks/soft_collision.json
