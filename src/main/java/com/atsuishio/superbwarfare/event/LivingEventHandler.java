@@ -52,6 +52,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
@@ -96,7 +97,6 @@ public class LivingEventHandler {
         killIndication(event);
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
-        handlePlayerDeathDropAmmo(event.getEntity());
         giveKillExpToWeapon(event);
 
         if (event.getEntity() instanceof Player player) {
@@ -664,31 +664,30 @@ public class LivingEventHandler {
             var data = GunData.from(stack);
             int mag = data.magazine();
             int ammo = data.getAmmo();
-                    int ammoReload = (int) Math.min(mag, mag * rate);
-                    int ammoNeed = Math.min(mag - ammo, ammoReload);
+            int ammoReload = (int) Math.min(mag, mag * rate);
+            int ammoNeed = Math.min(mag - ammo, ammoReload);
 
-                    boolean flag = InventoryTool.hasCreativeAmmoBox(player);
+            boolean flag = InventoryTool.hasCreativeAmmoBox(player);
 
-                    if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                        int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
-                        if (flag) {
-                            ammoFinal = ammoNeed;
-                        } else {
-                            capability.rifleAmmo -= ammoFinal;
-                        }
-                        data.setAmmo(Math.min(mag, ammo + ammoFinal));
-                    } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                        int ammoFinal = Math.min(capability.handgunAmmo, ammoNeed);
-                        if (flag) {
-                            ammoFinal = ammoNeed;
-                        } else {
-                            capability.handgunAmmo -= ammoFinal;
-                        }
-                        data.setAmmo(Math.min(mag, ammo + ammoFinal));
-                    }
-                    capability.syncPlayerVariables(player);
+            if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
+                if (flag) {
+                    ammoFinal = ammoNeed;
+                } else {
+                    capability.rifleAmmo -= ammoFinal;
                 }
-        );
+                data.setAmmo(Math.min(mag, ammo + ammoFinal));
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                int ammoFinal = Math.min(capability.handgunAmmo, ammoNeed);
+                if (flag) {
+                    ammoFinal = ammoNeed;
+                } else {
+                    capability.handgunAmmo -= ammoFinal;
+                }
+                data.setAmmo(Math.min(mag, ammo + ammoFinal));
+            }
+            capability.syncPlayerVariables(player);
+        });
     }
 
     private static void handleFieldDoctor(ItemStack stack, LivingHurtEvent event, Player player) {
@@ -732,39 +731,6 @@ public class LivingEventHandler {
         GunsTool.setPerkIntTag(stack, "DesperadoTime", 90 + level * 10);
     }
 
-    /**
-     * 开启死亡掉落时掉落一个弹药盒
-     */
-    private static void handlePlayerDeathDropAmmo(LivingEntity entity) {
-        if (!entity.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player) {
-            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-
-            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo + cap.heavyAmmo > 0;
-
-            if (drop) {
-                ItemStack stack = new ItemStack(ModItems.AMMO_BOX.get());
-                CompoundTag tag = stack.getOrCreateTag();
-
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
-                    for (var type : AmmoType.values()) {
-                        type.set(tag, type.get(cap));
-                        type.set(capability, 0);
-                    }
-                    tag.putBoolean("IsDrop", true);
-
-                    capability.syncPlayerVariables(player);
-                });
-
-                if (player.level() instanceof ServerLevel level) {
-                    ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + 1, player.getZ(), stack);
-                    itemEntity.setPickUpDelay(10);
-                    level.addFreshEntity(itemEntity);
-                }
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
         if (!VehicleConfig.VEHICLE_ITEM_PICKUP.get()) return;
@@ -779,25 +745,55 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
+        // 死亡掉落弹药盒
+        if (event.getEntity() instanceof Player player && !player.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
+
+            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo + cap.heavyAmmo > 0;
+
+            if (drop) {
+                var stack = new ItemStack(ModItems.AMMO_BOX.get());
+
+                for (var type : AmmoType.values()) {
+                    type.set(stack, type.get(cap));
+                    type.set(cap, 0);
+                }
+
+                stack.getOrCreateTag().putBoolean("All", true);
+                stack.getOrCreateTag().putBoolean("IsDrop", true);
+
+                cap.syncPlayerVariables(player);
+                event.getDrops().add(new ItemEntity(player.level(), player.getX(), player.getY() + 1, player.getZ(), stack));
+            }
+        }
+
         DamageSource source = event.getSource();
         if (source == null) return;
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
-        ItemStack stack = player.getMainHandItem();
+        ItemStack mainHandItem = player.getMainHandItem();
 
+        // 创生物收集掉落物
         if (player.getVehicle() instanceof ContainerMobileVehicleEntity containerMobileVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
+            var removed = new ArrayList<ItemEntity>();
+
             drops.forEach(itemEntity -> {
-                ItemStack item = itemEntity.getItem();
-                if (!HopperBlockEntity.addItem(containerMobileVehicleEntity, itemEntity)) {
-                    player.drop(item, false);
+                ItemStack stack = itemEntity.getItem();
+
+                InventoryTool.insertItem(containerMobileVehicleEntity.getItemStacks(), stack);
+
+                if (stack.getCount() <= 0) {
+                    player.drop(stack, false);
+                    removed.add(itemEntity);
                 }
             });
-            event.setCanceled(true);
+
+            drops.removeAll(removed);
             return;
         }
 
-        if (stack.is(ModTags.Items.GUN) && PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0 && (DamageTypeTool.isGunDamage(source) || DamageTypeTool.isExplosionDamage(source))) {
+        if (mainHandItem.is(ModTags.Items.GUN) && PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), mainHandItem) > 0 && (DamageTypeTool.isGunDamage(source) || DamageTypeTool.isExplosionDamage(source))) {
             var drops = event.getDrops();
             drops.forEach(itemEntity -> {
                 ItemStack item = itemEntity.getItem();
