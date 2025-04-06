@@ -25,7 +25,8 @@ import java.util.function.Supplier;
 public class SmallContainerBlockItem extends BlockItem implements GeoItem {
 
     public static final List<Supplier<ItemStack>> SMALL_CONTAINER_LOOT_TABLES = List.of(
-            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints"))
+            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints")),
+            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/common"))
     );
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

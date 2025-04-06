@@ -256,5 +256,7 @@ public class ModVillagers {
 
         rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
                 SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints")), 10, 0, 0.05f));
+        rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 10),
+                SmallContainerBlockItem.createInstance(ModUtils.loc("containers/common")), 10, 0, 0.05f));
     }
 }
