@@ -1,4 +1,4 @@
-// 1.20.1	2025-04-06T22:24:01.2716267	Loot Tables
+// 1.20.1	2025-04-06T23:28:04.7806947	Loot Tables
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
 811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
 1bd82f36748620ba596356795d6bf498ed12bd7b data/superbwarfare/loot_tables/blocks/charging_station.json
@@ -20,5 +20,8 @@ a223f61202cf9937e8be5b90791925bba09d17b9 data/superbwarfare/loot_tables/blocks/s
 66dd0e24fc30c75599eb6ff39dba80c9fe020011 data/superbwarfare/loot_tables/blocks/small_container.json
 83112ebff477e322bd3d23ed4653c7c02b230473 data/superbwarfare/loot_tables/blocks/steel_block.json
 71fc892124b5343e10688cabc2fb7c87d83cfef8 data/superbwarfare/loot_tables/blocks/tungsten_block.json
-6e2346c664cd643bff31c0a26e463c6c8dd46e37 data/superbwarfare/loot_tables/chests/ancient_cpu.json
+efdfb87ebe609e34f8d64b283022e2fc2ee051f5 data/superbwarfare/loot_tables/chests/ancient_cpu.json
+031ebfa016c816ebbd03dcf03f169599eed3e9d4 data/superbwarfare/loot_tables/chests/blue_print_common.json
+eef164cceb825ad572fc9d2eaef4631f9ec13c7f data/superbwarfare/loot_tables/chests/blue_print_epic.json
+f28f40e6bca3090625550f4c62d5f2a1384fe3ba data/superbwarfare/loot_tables/chests/blue_print_rare.json
 7e75ff103ccdbcf6be6f61413a4173115195f0a9 data/superbwarfare/loot_tables/containers/blueprints.json
