@@ -42,10 +42,10 @@ public class AdjustZoomFovMessage {
             var data = GunData.from(stack);
 
             if (stack.is(ModItems.MINIGUN.get())) {
-                double minRpm = 300;
-                double maxRpm = 2400;
+                double minRpm = 300 - 1200;
+                double maxRpm = 2400 - 1200;
 
-                GunsTool.setGunIntTag(stack, "CustomRPM", (int) Mth.clamp(GunsTool.getGunIntTag(stack, "CustomRPM") - 1200 + 50 * message.scroll, minRpm, maxRpm));
+                GunsTool.setGunIntTag(stack, "CustomRPM", (int) Mth.clamp(GunsTool.getGunIntTag(stack, "CustomRPM") + 50 * message.scroll, minRpm, maxRpm));
                 if (GunsTool.getGunIntTag(stack, "CustomRPM") == 1150 - 1200) {
                     GunsTool.setGunIntTag(stack, "CustomRPM", 1145 - 1200);
                 }
