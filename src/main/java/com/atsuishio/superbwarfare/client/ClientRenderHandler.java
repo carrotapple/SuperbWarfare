@@ -1,5 +1,8 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.client.overlay.AmmoBarOverlay;
+import com.atsuishio.superbwarfare.client.overlay.AmmoCountOverlay;
+import com.atsuishio.superbwarfare.client.overlay.ArmorPlateOverlay;
 import com.atsuishio.superbwarfare.client.renderer.block.ChargingStationBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.FuMO25BlockEntityRenderer;
@@ -10,6 +13,7 @@ import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,5 +39,12 @@ public class ClientRenderHandler {
         event.registerBlockEntityRenderer(ModBlockEntities.FUMO_25.get(), context -> new FuMO25BlockEntityRenderer());
         event.registerBlockEntityRenderer(ModBlockEntities.CHARGING_STATION.get(), context -> new ChargingStationBlockEntityRenderer());
         event.registerBlockEntityRenderer(ModBlockEntities.SMALL_CONTAINER.get(), context -> new SmallContainerBlockEntityRenderer());
+    }
+
+    @SubscribeEvent
+    public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll(ArmorPlateOverlay.ID, new ArmorPlateOverlay());
+        event.registerBelowAll(AmmoBarOverlay.ID, new AmmoBarOverlay());
+        event.registerBelowAll(AmmoCountOverlay.ID, new AmmoCountOverlay());
     }
 }

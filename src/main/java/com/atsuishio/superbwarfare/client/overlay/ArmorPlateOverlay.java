@@ -3,20 +3,17 @@ package com.atsuishio.superbwarfare.client.overlay;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.init.ModTags;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class ArmorPlateOverlay {
+public class ArmorPlateOverlay implements IGuiOverlay {
+
+    public static final String ID = ModUtils.MODID + "_armor_plate";
 
     private static final ResourceLocation ICON = ModUtils.loc("textures/screens/armor_plate_icon.png");
     private static final ResourceLocation LEVEL1 = ModUtils.loc("textures/screens/armor_plate_level1.png");
@@ -26,14 +23,13 @@ public class ArmorPlateOverlay {
     private static final ResourceLocation LEVEL2_FRAME = ModUtils.loc("textures/screens/armor_plate_level2_frame.png");
     private static final ResourceLocation LEVEL3_FRAME = ModUtils.loc("textures/screens/armor_plate_level3_frame.png");
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderGui(RenderGuiEvent.Pre event) {
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
         if (!DisplayConfig.ARMOR_PLATE_HUD.get()) return;
 
-        int h = event.getWindow().getGuiScaledHeight();
-        GuiGraphics guiGraphics = event.getGuiGraphics();
+        var mc = gui.getMinecraft();
 
-        Player player = Minecraft.getInstance().player;
+        Player player = mc.player;
         if (player == null) return;
         if (player.isSpectator()) return;
 
@@ -65,13 +61,13 @@ public class ArmorPlateOverlay {
 
         guiGraphics.pose().pushPose();
         // 渲染图标
-        guiGraphics.blit(ICON, 10, h - 13, 0, 0, 8, 8, 8, 8);
+        guiGraphics.blit(ICON, 10, screenHeight - 13, 0, 0, 8, 8, 8, 8);
 
         // 渲染框架
-        guiGraphics.blit(frame, 20, h - 12, 0, 0, length, 6, length, 6);
+        guiGraphics.blit(frame, 20, screenHeight - 12, 0, 0, length, 6, length, 6);
 
         // 渲染盔甲值
-        guiGraphics.blit(texture, 20, h - 12, 0, 0, (int) amount, 6, length, 6);
+        guiGraphics.blit(texture, 20, screenHeight - 12, 0, 0, (int) amount, 6, length, 6);
 
         guiGraphics.pose().popPose();
     }
