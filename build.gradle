@@ -19,7 +19,7 @@ def getGitCommitHash() {
     }
 }
 
-version = "${mod_version}-SNAPSHOT-${getGitCommitHash()}"
+version = "${minecraft_version}-${mod_version}-${getGitCommitHash()}"
 group = 'com.atsushio.superbwarfare'
 
 base {
