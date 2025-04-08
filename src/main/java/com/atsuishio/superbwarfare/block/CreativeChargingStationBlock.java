@@ -2,9 +2,17 @@ package com.atsuishio.superbwarfare.block;
 
 import com.atsuishio.superbwarfare.block.entity.CreativeChargingStationBlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,7 +21,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class CreativeChargingStationBlock extends BaseEntityBlock {
@@ -23,6 +35,37 @@ public class CreativeChargingStationBlock extends BaseEntityBlock {
     public CreativeChargingStationBlock() {
         super(Properties.of().sound(SoundType.METAL).strength(3.0f).requiresCorrectToolForDrops());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        pTooltip.add(Component.translatable("des.superbwarfare.creative_charging_station").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
+        ItemStack stack = player.getItemInHand(hand);
+        var cap = stack.getCapability(ForgeCapabilities.ENERGY).resolve();
+        if (cap.isEmpty()) return InteractionResult.FAIL;
+        var energy = cap.get();
+        if (energy.canReceive() && energy.getEnergyStored() < energy.getMaxEnergyStored()) {
+            energy.receiveEnergy(Integer.MAX_VALUE, false);
+            if (!level.isClientSide) {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.creative_charging_station.charge.success").withStyle(ChatFormatting.GREEN), true);
+            }
+            return InteractionResult.SUCCESS;
+        } else if (energy.canExtract()) {
+            energy.extractEnergy(Integer.MAX_VALUE, false);
+            if (!level.isClientSide) {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.creative_charging_station.extract.success").withStyle(ChatFormatting.GREEN), true);
+            }
+            return InteractionResult.SUCCESS;
+        } else {
+            if (!level.isClientSide) {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.creative_charging_station.fail").withStyle(ChatFormatting.RED), true);
+            }
+            return InteractionResult.FAIL;
+        }
     }
 
     @Override
