@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
+import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
@@ -244,7 +245,6 @@ public class ClientEventHandler {
         handleLungeAttack(player, stack);
         handleGunMelee(player, stack);
 
-
         var options = Minecraft.getInstance().options;
         short keys = 0;
 
@@ -283,6 +283,7 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             handleVariableDecrease();
             aimAtVillager(player);
+            CrossHairOverlay.handleRenderDamageIndicator();
         }
     }
 
@@ -810,7 +811,7 @@ public class ClientEventHandler {
                 float pitch = yx100.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - yx100.getEntityData().get(HEAT)));
                 player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
                 player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
-            } else if (type == 0){
+            } else if (type == 0) {
                 if (yx100.getWeaponIndex(0) == 0 || yx100.getWeaponIndex(0) == 1) {
                     player.playSound(ModSounds.YX_100_FIRE_1P.get(), 1f, 1);
                 } else if (yx100.getWeaponIndex(0) == 2) {

@@ -18,30 +18,30 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Math;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class Yx100SwarmDroneHudOverlay {
-    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
+@OnlyIn(Dist.CLIENT)
+public class Yx100SwarmDroneHudOverlay implements IGuiOverlay {
+
+    public static final String ID = ModUtils.MODID + "_yx100_swarm_drone_hud";
+
     private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/frame/frame_lock.png");
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        Minecraft mc = Minecraft.getInstance();
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Minecraft mc = gui.getMinecraft();
         Player player = mc.player;
-        GuiGraphics guiGraphics = event.getGuiGraphics();
         PoseStack poseStack = guiGraphics.pose();
 
         if (!shouldRenderCrossHair(player)) return;
 
         Entity cannon = player.getVehicle();
         if (cannon == null) return;
+
+        poseStack.pushPose();
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -54,14 +54,14 @@ public class Yx100SwarmDroneHudOverlay {
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                 float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
 
-                float f = (float) Math.min(w, h);
-                float f1 = Math.min((float) w / f, (float) h / f) * fovAdjust;
+                float f = (float) Math.min(screenWidth, screenHeight);
+                float f1 = Math.min((float) screenWidth / f, (float) screenHeight / f) * fovAdjust;
                 int i = Mth.floor(f * f1);
                 int j = Mth.floor(f * f1);
-                int k = (w - i) / 2;
-                int l = (h - j) / 2;
+                int k = (screenWidth - i) / 2;
+                int l = (screenHeight - j) / 2;
                 RenderHelper.preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
-                VehicleHudOverlay.renderKillIndicator(guiGraphics, w, h);
+                VehicleHudOverlay.renderKillIndicator(guiGraphics, screenWidth, screenHeight);
                 Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 384, 6);
 
                 float fovAdjust2 = (float) (Minecraft.getInstance().options.fov().get() / 30) - 1;
@@ -73,8 +73,8 @@ public class Yx100SwarmDroneHudOverlay {
                 }
 
                 if (naerestEntity != null) {
-                    Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
-                    Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), naerestEntity.xo, naerestEntity.getX()), Mth.lerp(event.getPartialTick(), naerestEntity.yo + naerestEntity.getEyeHeight(), naerestEntity.getEyeY()), Mth.lerp(event.getPartialTick(), naerestEntity.zo, naerestEntity.getZ()));
+                    Vec3 playerVec = new Vec3(Mth.lerp(partialTick, player.xo, player.getX()), Mth.lerp(partialTick, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTick, player.zo, player.getZ()));
+                    Vec3 pos = new Vec3(Mth.lerp(partialTick, naerestEntity.xo, naerestEntity.getX()), Mth.lerp(partialTick, naerestEntity.yo + naerestEntity.getEyeHeight(), naerestEntity.getEyeY()), Mth.lerp(partialTick, naerestEntity.zo, naerestEntity.getZ()));
                     Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(playerVec) * (1 - 1.0 / zoom));
 
                     var cPos = playerVec.add(lookAngle);
@@ -90,6 +90,8 @@ public class Yx100SwarmDroneHudOverlay {
                 }
             }
         }
+
+        poseStack.popPose();
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

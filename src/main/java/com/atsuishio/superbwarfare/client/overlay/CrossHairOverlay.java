@@ -27,8 +27,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
@@ -186,16 +184,7 @@ public class CrossHairOverlay implements IGuiOverlay {
         }
     }
 
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
-
-        handleRenderDamageIndicator();
-    }
-
-    private static void handleRenderDamageIndicator() {
+    public static void handleRenderDamageIndicator() {
         HEAD_INDICATOR = Math.max(0, HEAD_INDICATOR - 1);
         HIT_INDICATOR = Math.max(0, HIT_INDICATOR - 1);
         KILL_INDICATOR = Math.max(0, KILL_INDICATOR - 1);

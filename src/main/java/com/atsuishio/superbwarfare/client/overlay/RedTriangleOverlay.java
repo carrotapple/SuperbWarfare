@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -15,20 +16,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class RedTriangleOverlay {
+@OnlyIn(Dist.CLIENT)
+public class RedTriangleOverlay implements IGuiOverlay {
+
+    public static final String ID = ModUtils.MODID + "_red_triangle";
 
     private static final ResourceLocation TRIANGLE = ModUtils.loc("textures/screens/red_triangle.png");
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        Minecraft mc = Minecraft.getInstance();
-        PoseStack poseStack = event.getGuiGraphics().pose();
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Minecraft mc = gui.getMinecraft();
+        PoseStack poseStack = guiGraphics.pose();
 
         Player player = mc.player;
         if (player == null) return;
@@ -40,9 +42,9 @@ public class RedTriangleOverlay {
 
         Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
         if (idf == null) return;
-        Vec3 playerVec = new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(event.getPartialTick(), player.zo, player.getZ()));
+        Vec3 playerVec = new Vec3(Mth.lerp(partialTick, player.xo, player.getX()), Mth.lerp(partialTick, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTick, player.zo, player.getZ()));
         double distance = idf.position().distanceTo(playerVec);
-        Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), idf.xo, idf.getX()), Mth.lerp(event.getPartialTick(), idf.yo + idf.getEyeHeight() + 0.5 + 0.07 * distance, idf.getEyeY() + 0.5 + 0.07 * distance), Mth.lerp(event.getPartialTick(), idf.zo, idf.getZ()));
+        Vec3 pos = new Vec3(Mth.lerp(partialTick, idf.xo, idf.getX()), Mth.lerp(partialTick, idf.yo + idf.getEyeHeight() + 0.5 + 0.07 * distance, idf.getEyeY() + 0.5 + 0.07 * distance), Mth.lerp(partialTick, idf.zo, idf.getZ()));
         Vec3 point = RenderHelper.worldToScreen(pos, playerVec);
         if (point == null) return;
 

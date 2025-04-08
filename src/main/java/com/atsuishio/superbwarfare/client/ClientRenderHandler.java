@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.overlay.*;
 import com.atsuishio.superbwarfare.client.renderer.block.ChargingStationBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
@@ -41,6 +42,12 @@ public class ClientRenderHandler {
 
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll(JavelinHudOverlay.ID, new JavelinHudOverlay());
+        event.registerBelow(ModUtils.loc(JavelinHudOverlay.ID), VehicleHudOverlay.ID, new VehicleHudOverlay());
+        event.registerBelowAll(KillMessageOverlay.ID, new KillMessageOverlay());
+        event.registerBelowAll(VehicleTeamOverlay.ID, new VehicleTeamOverlay());
+        event.registerBelowAll(VehicleMgHudOverlay.ID, new VehicleMgHudOverlay());
+        event.registerBelowAll(Yx100SwarmDroneHudOverlay.ID, new Yx100SwarmDroneHudOverlay());
         event.registerBelowAll(AmmoBarOverlay.ID, new AmmoBarOverlay());
         event.registerBelowAll(AmmoCountOverlay.ID, new AmmoCountOverlay());
         event.registerBelowAll(ArmorPlateOverlay.ID, new ArmorPlateOverlay());
@@ -49,10 +56,11 @@ public class ClientRenderHandler {
         event.registerBelowAll(CrossHairOverlay.ID, new CrossHairOverlay());
         event.registerBelowAll(DroneHudOverlay.ID, new DroneHudOverlay());
         event.registerBelowAll(GrenadeLauncherOverlay.ID, new GrenadeLauncherOverlay());
+        event.registerBelowAll(RedTriangleOverlay.ID, new RedTriangleOverlay());
         event.registerBelowAll(HandsomeFrameOverlay.ID, new HandsomeFrameOverlay());
+        event.registerBelowAll(SpyglassRangeOverlay.ID, new SpyglassRangeOverlay());
         event.registerBelowAll(HelicopterHudOverlay.ID, new HelicopterHudOverlay());
 
         event.registerBelowAll(MortarInfoOverlay.ID, new MortarInfoOverlay());
-        event.registerBelowAll(JavelinHudOverlay.ID, new JavelinHudOverlay());
     }
 }
