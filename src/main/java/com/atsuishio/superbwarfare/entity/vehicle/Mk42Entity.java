@@ -13,10 +13,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.InventoryTool;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -156,19 +153,22 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
         int targetX = stack.getOrCreateTag().getInt("TargetX");
         int targetY = stack.getOrCreateTag().getInt("TargetY");
         int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+        var isDepressed = stack.getOrCreateTag().getBoolean("IsDepressed");
+
+        if (!RangeTool.canReach(15, 0.2F, this.getEyePosition(), new Vec3(targetX, targetY, targetZ), -14.9, 85, isDepressed))
+            return;
+
         this.look(new Vec3(targetX, targetY, targetZ));
+        entityData.set(PITCH, (float) -RangeTool.calculateAngle(15, 0.2F, this.getEyePosition(), new Vec3(targetX, targetY, targetZ), isDepressed));
     }
 
     private void look(Vec3 pTarget) {
         Vec3 vec3 = this.getEyePosition();
         double d0 = pTarget.x - vec3.x;
-        double d1 = pTarget.y - vec3.y;
         double d2 = pTarget.z - vec3.z;
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        double distance = pTarget.distanceTo(vec3);
         entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
-        entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))) - (float) (distance * 0.008f));
     }
+
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);

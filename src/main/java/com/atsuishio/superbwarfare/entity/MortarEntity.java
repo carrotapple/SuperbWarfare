@@ -1,13 +1,13 @@
 package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
+import com.atsuishio.superbwarfare.tools.RangeTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.particles.ParticleTypes;
@@ -183,24 +183,26 @@ public class MortarEntity extends VehicleEntity implements GeoEntity {
         double targetX = stack.getOrCreateTag().getDouble("TargetX");
         double targetY = stack.getOrCreateTag().getDouble("TargetY");
         double targetZ = stack.getOrCreateTag().getDouble("TargetZ");
+        boolean isDepressed = stack.getOrCreateTag().getBoolean("IsDepressed");
 
-        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(targetX, targetY, targetZ));
-
-        double[] angles = new double[2];
-        boolean flag = RangeHelper.canReachTarget(11.4, 0.146, 0.99,
-                new Vec3(this.getX(), this.getEyeY(), this.getZ()),
-                new Vec3(targetX, targetY, targetZ),
-                angles);
-
-        if (flag) {
-            entityData.set(PITCH, (float) -angles[1]);
+        if (!RangeTool.canReach(11.4, 0.146, this.getEyePosition(), new Vec3(targetX, targetY, targetZ), 20, 89, isDepressed)) {
+            return false;
         }
 
-        return flag;
+        this.look(new Vec3(targetX, targetY, targetZ));
+
+        entityData.set(PITCH, (float) -RangeTool.calculateAngle(
+                11.4, 0.146,
+                this.getEyePosition(),
+                new Vec3(targetX, targetY, targetZ),
+                isDepressed
+        ));
+
+        return true;
     }
 
-    private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        Vec3 vec3 = pAnchor.apply(this);
+    private void look(Vec3 pTarget) {
+        Vec3 vec3 = EntityAnchorArgument.Anchor.EYES.apply(this);
         double d0 = (pTarget.x - vec3.x) * 0.2;
         double d2 = (pTarget.z - vec3.z) * 0.2;
         entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));

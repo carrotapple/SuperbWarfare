@@ -286,19 +286,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             }
 
             int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun);
-            var data = GunData.from(gun);
+            var oldData = GunData.from(gun);
 
             if (level <= 0) {
-                this.upgradePoint.set((int) data.getUpgradePoint());
+                this.upgradePoint.set((int) oldData.getUpgradePoint());
                 return;
             }
 
-            ItemStack output = gun.copy();
-            PerkHelper.removePerkByType(output, perkItem.getPerk().type);
-            data.setUpgradePoint(Math.min(MAX_UPGRADE_POINT, level - 1 + data.getUpgradePoint()));
-            this.upgradePoint.set((int) data.getUpgradePoint());
+            ItemStack newStack = gun.copy();
+            var newData = GunData.from(newStack);
 
-            this.container.setItem(INPUT_SLOT, output);
+            PerkHelper.removePerkByType(newStack, perkItem.getPerk().type);
+            newData.setUpgradePoint(Math.min(MAX_UPGRADE_POINT, level - 1 + newData.getUpgradePoint()));
+            this.upgradePoint.set((int) newData.getUpgradePoint());
+
+            this.container.setItem(INPUT_SLOT, newStack);
             this.container.setChanged();
         }
     }

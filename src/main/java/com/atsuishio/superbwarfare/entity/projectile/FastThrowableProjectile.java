@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -33,6 +34,25 @@ public abstract class FastThrowableProjectile extends ThrowableItemProjectile im
     @Override
     public void tick() {
         super.tick();
+
+        Vec3 vec3 = this.getDeltaMovement();
+        float friction;
+        if (this.isInWater()) {
+            friction = 0.8F;
+        } else {
+            friction = 0.99F;
+        }
+
+        // 撤销重力影响
+        vec3 = vec3.add(0, this.getGravity(), 0);
+        // 重新计算动量
+        this.setDeltaMovement(vec3.scale(1 / friction));
+
+        // 重新应用重力
+        Vec3 vec31 = this.getDeltaMovement();
+        this.setDeltaMovement(vec31.x, vec31.y - (double) this.getGravity(), vec31.z);
+
+        // 同步动量
         this.syncMotion();
     }
 

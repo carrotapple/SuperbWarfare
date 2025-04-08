@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.tools.FormatTool;
+import com.atsuishio.superbwarfare.tools.RangeTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,7 +32,7 @@ public class MortarInfoOverlay implements IGuiOverlay {
                             .append(Component.literal(FormatTool.format1D(mortar.getYRot(), "°"))),
                     screenWidth / 2 - 90, screenHeight / 2 - 16, -1, false);
             guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.range")
-                            .append(Component.literal(FormatTool.format1D((int) RangeHelper.getRange(-mortar.getXRot()), "m"))),
+                            .append(Component.literal(FormatTool.format1D((int) RangeTool.getRange(-mortar.getXRot(), 11.4, 0.146), "m"))),
                     screenWidth / 2 - 90, screenHeight / 2 - 6, -1, false);
         }
     }

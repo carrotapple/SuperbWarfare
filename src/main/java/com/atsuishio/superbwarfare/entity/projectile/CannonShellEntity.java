@@ -243,7 +243,7 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
                     1, 0, 0, 0, 0.001, true);
 
             // 更新需要加载的区块
-            ChunkLoadTool.updateLoadedChunks(serverLevel, this,  this.loadedChunks);
+            ChunkLoadTool.updateLoadedChunks(serverLevel, this, this.loadedChunks);
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
@@ -324,7 +324,7 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
 
     @Override
     protected float getGravity() {
-        return 0.05F;
+        return 0.2F;
     }
 
     @Override
