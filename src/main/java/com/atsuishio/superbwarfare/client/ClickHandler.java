@@ -161,6 +161,7 @@ public class ClickHandler {
                 && player.getVehicle() instanceof VehicleEntity vehicle
                 && vehicle instanceof WeaponVehicleEntity weaponVehicle
                 && weaponVehicle.hasWeapon(vehicle.getSeatIndex(player))
+                && weaponVehicle.banHand(player)
         ) {
             int index = vehicle.getSeatIndex(player);
             ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(index, -scroll, true));
@@ -377,7 +378,7 @@ public class ClickHandler {
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
 
-        if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player))) {
+        if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player)) && iVehicle.banHand(player)) {
             ClientEventHandler.zoomVehicle = true;
             return;
         }

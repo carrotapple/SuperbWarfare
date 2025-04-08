@@ -52,7 +52,10 @@ public class ZoomMessage {
                         && vehicle instanceof WeaponVehicleEntity weaponEntity
                         && vehicle instanceof VehicleEntity vehicleEntity
                         && weaponEntity.hasWeapon(vehicleEntity.getSeatIndex(player))
-                ) SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                        && weaponEntity.banHand(player)
+                ) {
+                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                }
 
             }
 
@@ -67,7 +70,10 @@ public class ZoomMessage {
                         && vehicle instanceof WeaponVehicleEntity weaponEntity
                         && vehicle instanceof VehicleEntity vehicleEntity
                         && weaponEntity.hasWeapon(vehicleEntity.getSeatIndex(player))
-                ) SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                        && weaponEntity.banHand(player)
+                ) {
+                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                }
 
 
                 if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {

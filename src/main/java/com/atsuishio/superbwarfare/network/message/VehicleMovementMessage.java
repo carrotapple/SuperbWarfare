@@ -32,8 +32,7 @@ public record VehicleMovementMessage(short keys) {
                 ItemStack stack = player.getMainHandItem();
 
                 VehicleEntity vehicle = null;
-                if (entity instanceof MobileVehicleEntity mobileVehicleEntity) {
-                    if (mobileVehicleEntity.getFirstPassenger() != player) return;
+                if (entity instanceof MobileVehicleEntity mobileVehicleEntity && mobileVehicleEntity.getFirstPassenger() == player) {
                     vehicle = mobileVehicleEntity;
                 } else if (stack.is(ModItems.MONITOR.get())
                         && ItemNBTTool.getBoolean(stack, "Using", false)
