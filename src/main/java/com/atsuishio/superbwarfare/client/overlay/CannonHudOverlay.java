@@ -28,26 +28,25 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Math;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator;
 import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator3P;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class CannonHudOverlay {
+@OnlyIn(Dist.CLIENT)
+public class CannonHudOverlay implements IGuiOverlay {
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        Minecraft mc = Minecraft.getInstance();
+    public static final String ID = ModUtils.MODID + "_cannon_hud";
+
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Minecraft mc = gui.getMinecraft();
         Player player = mc.player;
-        GuiGraphics guiGraphics = event.getGuiGraphics();
+
         PoseStack poseStack = guiGraphics.pose();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
@@ -64,34 +63,34 @@ public class CannonHudOverlay {
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             RenderSystem.setShaderColor(1, 1, 1, 1);
 
-            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/compass_white.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * (Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()))), 0, 256, 16, 512, 16);
-            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/roll_ind_white.png"), w / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass_white.png"), (float) screenWidth / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * (Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()))), 0, 256, 16, 512, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/roll_ind_white.png"), screenWidth / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
 
-            String angle = FormatTool.DECIMAL_FORMAT_1ZZ.format(Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
+            String angle = FormatTool.DECIMAL_FORMAT_1ZZ.format(Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
             int width = Minecraft.getInstance().font.width(angle);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(angle), w / 2 - width / 2, 40, -1, false);
+            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(angle), screenWidth / 2 - width / 2, 40, -1, false);
 
-            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), w / 2 + 166, h / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), screenWidth / 2 + 166, screenHeight / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
 
-            String pitch = FormatTool.DECIMAL_FORMAT_1ZZ.format(-Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()));
+            String pitch = FormatTool.DECIMAL_FORMAT_1ZZ.format(-Mth.lerp(partialTick, cannon.xRotO, cannon.getXRot()));
             int widthP = Minecraft.getInstance().font.width(pitch);
 
             poseStack.pushPose();
 
-            event.getGuiGraphics().pose().translate(0, Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()) * 0.7, 0);
-            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_pitch_ind.png"), w / 2 + 158, h / 2 - 4, 0, 0.0F, 8, 8, 8, 8);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(pitch), w / 2 + 157 - widthP, h / 2 - 4, -1, false);
+            guiGraphics.pose().translate(0, Mth.lerp(partialTick, cannon.xRotO, cannon.getXRot()) * 0.7, 0);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch_ind.png"), screenWidth / 2 + 158, screenHeight / 2 - 4, 0, 0.0F, 8, 8, 8, 8);
+            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(pitch), screenWidth / 2 + 157 - widthP, screenHeight / 2 - 4, -1, false);
             poseStack.popPose();
 
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle) {
                 float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
 
-                float f = (float) Math.min(w, h);
-                float f1 = Math.min((float) w / f, (float) h / f) * fovAdjust;
+                float f = (float) Math.min(screenWidth, screenHeight);
+                float f1 = Math.min((float) screenWidth / f, (float) screenHeight / f) * fovAdjust;
                 int i = Mth.floor(f * f1);
                 int j = Mth.floor(f * f1);
-                int k = (w - i) / 2;
-                int l = (h - j) / 2;
+                int k = (screenWidth - i) / 2;
+                int l = (screenHeight - j) / 2;
                 if (ClientEventHandler.zoomVehicle) {
                     Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
                     boolean lookAtEntity = false;
@@ -108,34 +107,34 @@ public class CannonHudOverlay {
                         entityRange = player.distanceTo(living);
                     }
                     if (lookAtEntity) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
                                         .append(Component.literal(FormatTool.format1D(entityRange, "m ") + lookingEntity.getDisplayName().getString())),
-                                w / 2 + 14, h / 2 - 20, -1, false);
+                                screenWidth / 2 + 14, screenHeight / 2 - 20, -1, false);
                     } else {
                         if (blockRange > 511) {
-                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal("---m")), w / 2 + 14, h / 2 - 20, -1, false);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
+                                    .append(Component.literal("---m")), screenWidth / 2 + 14, screenHeight / 2 - 20, -1, false);
                         } else {
-                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
                                             .append(Component.literal(FormatTool.format1D(blockRange, "m"))),
-                                    w / 2 + 14, h / 2 - 20, -1, false);
+                                    screenWidth / 2 + 14, screenHeight / 2 - 20, -1, false);
                         }
                     }
                     if (cannon instanceof AnnihilatorEntity) {
-                        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
                     } else {
-                        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
                     }
-                    float diffY = -Mth.wrapDegrees(Mth.lerp(event.getPartialTick(), player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
+                    float diffY = -Mth.wrapDegrees(Mth.lerp(partialTick, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
 
-                    preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/indicator.png"), w / 2 - 4.3f + 0.45f * diffY, h / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/indicator.png"), screenWidth / 2 - 4.3f + 0.45f * diffY, screenHeight / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
                 } else {
-                    preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
                 }
-                renderKillIndicator(guiGraphics, w, h);
+                renderKillIndicator(guiGraphics, screenWidth, screenHeight);
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
-                Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(event.getPartialTick(), player.xo, player.getX()), Mth.lerp(event.getPartialTick(), player.yo, player.getY()),
-                        Mth.lerp(event.getPartialTick(), player.zo, player.getZ())).add(cannon.getViewVector(event.getPartialTick()).scale(128)), cameraPos);
+                Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(partialTick, player.xo, player.getX()), Mth.lerp(partialTick, player.yo, player.getY()),
+                        Mth.lerp(partialTick, player.zo, player.getZ())).add(cannon.getViewVector(partialTick).scale(128)), cameraPos);
 
                 // 第三人称准星
                 if (p != null) {

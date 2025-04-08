@@ -24,16 +24,18 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class CrossHairOverlay {
+@OnlyIn(Dist.CLIENT)
+public class CrossHairOverlay implements IGuiOverlay {
+
+    public static final String ID = ModUtils.MODID + "_cross_hair";
 
     private static final ResourceLocation REX_HORIZONTAL = ModUtils.loc("textures/screens/rex_horizontal.png");
     private static final ResourceLocation REX_VERTICAL = ModUtils.loc("textures/screens/rex_vertical.png");
@@ -45,12 +47,9 @@ public class CrossHairOverlay {
     private static float scopeScale = 1f;
     public static float gunRot;
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-
-        Player player = Minecraft.getInstance().player;
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Player player = gui.getMinecraft().player;
         if (player == null) {
             return;
         }
@@ -59,8 +58,6 @@ public class CrossHairOverlay {
             return;
         if (!player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)))
             return;
-
-        GuiGraphics guiGraphics = event.getGuiGraphics();
 
         ItemStack stack = player.getMainHandItem();
         double spread = ClientEventHandler.gunSpread + 1 * ClientEventHandler.firePos;
@@ -82,39 +79,39 @@ public class CrossHairOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         scopeScale = (float) Mth.lerp(0.5F * deltaFrame, scopeScale, 1 + 1.5f * spread);
-        float minLength = (float) Math.min(w, h);
-        float scaledMinLength = Math.min((float) w / minLength, (float) h / minLength) * 0.012f * scopeScale;
+        float minLength = (float) Math.min(screenWidth, screenHeight);
+        float scaledMinLength = Math.min((float) screenWidth / minLength, (float) screenHeight / minLength) * 0.012f * scopeScale;
         float finLength = Mth.floor(minLength * scaledMinLength);
-        float finPosX = ((w - finLength) / 2) + moveX;
-        float finPosY = ((h - finLength) / 2) + moveY;
+        float finPosX = ((screenWidth - finLength) / 2) + moveX;
+        float finPosY = ((screenHeight - finLength) / 2) + moveY;
 
         if (shouldRenderCrossHair(player) || (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && stack.is(ModItems.MINIGUN.get())) || (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && (ClientEventHandler.zoomTime > 0 || ClientEventHandler.pullPos > 0))) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-                        normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
+                        normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);
                     } else {
                         shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
                     }
                 } else {
-                    normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
+                    normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);
                 }
             }
         }
 
         if (stack.is(ModItems.BOCEK.get())) {
-            if (ClientEventHandler.zoomPos < 0.7 ) {
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+            if (ClientEventHandler.zoomPos < 0.7) {
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                 if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
                         if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-                            normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
+                            normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);
                         } else {
                             shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
                         }
                     } else {
-                        normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
+                        normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);
                     }
                 }
             }
@@ -122,7 +119,7 @@ public class CrossHairOverlay {
 
         // 在开启伤害指示器时才进行渲染
         if (DisplayConfig.KILL_INDICATION.get() && !(player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player)) {
-            renderKillIndicator(guiGraphics, w, h, moveX, moveY);
+            renderKillIndicator(guiGraphics, screenWidth, screenHeight, moveX, moveY);
         }
 
         RenderSystem.depthMask(true);

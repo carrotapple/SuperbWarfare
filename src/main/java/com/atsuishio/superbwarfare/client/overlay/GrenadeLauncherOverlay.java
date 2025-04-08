@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,27 +14,24 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class GrenadeLauncherOverlay {
+@OnlyIn(Dist.CLIENT)
+public class GrenadeLauncherOverlay implements IGuiOverlay {
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        Player player = Minecraft.getInstance().player;
+    public static final String ID = ModUtils.MODID + "_grenade_launcher";
+
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Player player = gui.getMinecraft().player;
 
         if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
         if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
             return;
         if (!shouldRenderCrossHair(player)) return;
-
-        GuiGraphics guiGraphics = event.getGuiGraphics();
 
         guiGraphics.pose().pushPose();
 
@@ -45,7 +42,7 @@ public class GrenadeLauncherOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        guiGraphics.blit(ModUtils.loc("textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+        guiGraphics.blit(ModUtils.loc("textures/screens/rex.png"), screenWidth / 2 - 16, screenHeight / 2 - 16, 0, 0, 32, 32, 32, 32);
 
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
@@ -59,7 +56,7 @@ public class GrenadeLauncherOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.SECONDARY_CATACLYSM.get())
+                && (player.getMainHandItem().is(ModTags.Items.LAUNCHER_GRENADE))
                 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof CannonEntity))
                 && !ClientEventHandler.zoom;
     }

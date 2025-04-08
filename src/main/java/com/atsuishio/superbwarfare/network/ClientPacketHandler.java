@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
-import com.atsuishio.superbwarfare.client.overlay.DroneUIOverlay;
+import com.atsuishio.superbwarfare.client.overlay.DroneHudOverlay;
 import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -53,7 +53,7 @@ public class ClientPacketHandler {
 
     public static void handleSimulationDistanceMessage(int distance, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            DroneUIOverlay.MAX_DISTANCE = distance * 16;
+            DroneHudOverlay.MAX_DISTANCE = distance * 16;
         }
     }
 

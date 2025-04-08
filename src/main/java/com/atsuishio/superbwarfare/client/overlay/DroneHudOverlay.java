@@ -24,10 +24,9 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.List;
 
@@ -35,23 +34,21 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.AMMO;
 import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.KAMIKAZE_MODE;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class DroneUIOverlay {
+@OnlyIn(Dist.CLIENT)
+public class DroneHudOverlay implements IGuiOverlay {
+
+    public static final String ID = ModUtils.MODID + "_drone_hud";
 
     public static int MAX_DISTANCE = 256;
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-
-        Minecraft mc = Minecraft.getInstance();
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Minecraft mc = gui.getMinecraft();
         Player player = mc.player;
 
         if (player == null) return;
 
-        GuiGraphics guiGraphics = event.getGuiGraphics();
         PoseStack poseStack = guiGraphics.pose();
 
         ItemStack stack = player.getMainHandItem();
@@ -66,12 +63,12 @@ public class DroneUIOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-            guiGraphics.blit(ModUtils.loc("textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
-            guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
+            guiGraphics.blit(ModUtils.loc("textures/screens/drone.png"), screenWidth / 2 - 16, screenHeight / 2 - 16, 0, 0, 32, 32, 32, 32);
+            guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), screenWidth / 2 + 100, screenHeight / 2 - 64, 0, 0, 64, 129, 64, 129);
 
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) screenWidth / 2 + 100, (float) (screenHeight / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
             guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(ClientEventHandler.droneFovLerp, "x")),
-                    w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
+                    screenWidth / 2 + 144, screenHeight / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
 
             DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
@@ -98,44 +95,44 @@ public class DroneUIOverlay {
                 // 超出距离警告
                 if (distance > MAX_DISTANCE - 48) {
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.warning"),
-                            w / 2 - 18, h / 2 - 47, -65536, false);
+                            screenWidth / 2 - 18, screenHeight / 2 - 47, -65536, false);
                     color = -65536;
                 }
 
                 // 距离
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.distance")
                                 .append(Component.literal(FormatTool.format1D(distance, "m"))),
-                        w / 2 + 10, h / 2 + 33, color, false);
+                        screenWidth / 2 + 10, screenHeight / 2 + 33, color, false);
 
                 // 血量
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.health")
                                 .append(Component.literal(FormatTool.format1D(entity.getHealth()) + " / " + FormatTool.format1D(entity.getMaxHealth()))),
-                        w / 2 - 77, h / 2 + 33, -1, false);
+                        screenWidth / 2 - 77, screenHeight / 2 + 33, -1, false);
                 if (entity.getEntityData().get(KAMIKAZE_MODE) == 0) {
                     // 弹药
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.ammo")
                                     .append(Component.literal(FormatTool.format1D(entity.getEntityData().get(AMMO), " / 6"))),
-                            w / 2 + 12, h / 2 - 37, -1, false);
+                            screenWidth / 2 + 12, screenHeight / 2 - 37, -1, false);
                 } else {
                     // 神风
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.kamikaze"),
-                            w / 2 + 12, h / 2 - 37, -65536, false);
+                            screenWidth / 2 + 12, screenHeight / 2 - 37, -65536, false);
                 }
 
                 if (lookAtEntity) {
                     // 实体距离
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                     .append(Component.literal(FormatTool.format1D(entityRange, "m ") + lookingEntity.getDisplayName().getString())),
-                            w / 2 + 12, h / 2 - 28, color, false);
+                            screenWidth / 2 + 12, screenHeight / 2 - 28, color, false);
                 } else {
                     // 方块距离
                     if (blockRange > 500) {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal("---m")), w / 2 + 12, h / 2 - 28, color, false);
+                                .append(Component.literal("---m")), screenWidth / 2 + 12, screenHeight / 2 - 28, color, false);
                     } else {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                         .append(Component.literal(FormatTool.format1D(blockRange, "m"))),
-                                w / 2 + 12, h / 2 - 28, color, false);
+                                screenWidth / 2 + 12, screenHeight / 2 - 28, color, false);
                     }
                 }
 
@@ -145,8 +142,8 @@ public class DroneUIOverlay {
                 double zoom = 0.975 * ClientEventHandler.droneFovLerp + 0.06 * fovAdjust2;
 
                 for (var e : entities) {
-                    Vec3 droneVec = new Vec3(Mth.lerp(event.getPartialTick(), entity.xo, entity.getX()), Mth.lerp(event.getPartialTick(), entity.yo + entity.getEyeHeight(), entity.getEyeY()), Mth.lerp(event.getPartialTick(), entity.zo, entity.getZ()));
-                    Vec3 pos = new Vec3(Mth.lerp(event.getPartialTick(), e.xo, e.getX()), Mth.lerp(event.getPartialTick(), e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(event.getPartialTick(), e.zo, e.getZ()));
+                    Vec3 droneVec = new Vec3(Mth.lerp(partialTick, entity.xo, entity.getX()), Mth.lerp(partialTick, entity.yo + entity.getEyeHeight(), entity.getEyeY()), Mth.lerp(partialTick, entity.zo, entity.getZ()));
+                    Vec3 pos = new Vec3(Mth.lerp(partialTick, e.xo, e.getX()), Mth.lerp(partialTick, e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(partialTick, e.zo, e.getZ()));
 
                     Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(droneVec) * (1 - 1.0 / zoom));
 

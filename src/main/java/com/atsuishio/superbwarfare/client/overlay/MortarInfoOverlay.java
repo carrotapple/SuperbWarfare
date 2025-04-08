@@ -1,41 +1,39 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class MortarInfoOverlay {
+public class MortarInfoOverlay implements IGuiOverlay {
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        Player player = Minecraft.getInstance().player;
+    public static final String ID = ModUtils.MODID + "_mortar_info";
+
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        Player player = gui.getMinecraft().player;
         Entity lookingEntity = null;
         if (player != null) {
             lookingEntity = TraceTool.findLookingEntity(player, 6);
         }
         if (lookingEntity instanceof MortarEntity mortar) {
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
+            guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
                             .append(Component.literal(FormatTool.format1D(-mortar.getXRot(), "°"))),
-                    w / 2 - 90, h / 2 - 26, -1, false);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.yaw")
+                    screenWidth / 2 - 90, screenHeight / 2 - 26, -1, false);
+            guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.yaw")
                             .append(Component.literal(FormatTool.format1D(mortar.getYRot(), "°"))),
-                    w / 2 - 90, h / 2 - 16, -1, false);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.range")
+                    screenWidth / 2 - 90, screenHeight / 2 - 16, -1, false);
+            guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.range")
                             .append(Component.literal(FormatTool.format1D((int) RangeHelper.getRange(-mortar.getXRot()), "m"))),
-                    w / 2 - 90, h / 2 - 6, -1, false);
+                    screenWidth / 2 - 90, screenHeight / 2 - 6, -1, false);
         }
     }
 }

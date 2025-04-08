@@ -1,8 +1,6 @@
 package com.atsuishio.superbwarfare.client;
 
-import com.atsuishio.superbwarfare.client.overlay.AmmoBarOverlay;
-import com.atsuishio.superbwarfare.client.overlay.AmmoCountOverlay;
-import com.atsuishio.superbwarfare.client.overlay.ArmorPlateOverlay;
+import com.atsuishio.superbwarfare.client.overlay.*;
 import com.atsuishio.superbwarfare.client.renderer.block.ChargingStationBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.FuMO25BlockEntityRenderer;
@@ -43,8 +41,18 @@ public class ClientRenderHandler {
 
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerBelowAll(ArmorPlateOverlay.ID, new ArmorPlateOverlay());
         event.registerBelowAll(AmmoBarOverlay.ID, new AmmoBarOverlay());
         event.registerBelowAll(AmmoCountOverlay.ID, new AmmoCountOverlay());
+        event.registerBelowAll(ArmorPlateOverlay.ID, new ArmorPlateOverlay());
+        event.registerBelowAll(ArmRendererFixOverlay.ID, new ArmRendererFixOverlay());
+        event.registerBelowAll(CannonHudOverlay.ID, new CannonHudOverlay());
+        event.registerBelowAll(CrossHairOverlay.ID, new CrossHairOverlay());
+        event.registerBelowAll(DroneHudOverlay.ID, new DroneHudOverlay());
+        event.registerBelowAll(GrenadeLauncherOverlay.ID, new GrenadeLauncherOverlay());
+        event.registerBelowAll(HandsomeFrameOverlay.ID, new HandsomeFrameOverlay());
+        event.registerBelowAll(HelicopterHudOverlay.ID, new HelicopterHudOverlay());
+
+        event.registerBelowAll(MortarInfoOverlay.ID, new MortarInfoOverlay());
+        event.registerBelowAll(JavelinHudOverlay.ID, new JavelinHudOverlay());
     }
 }
