@@ -64,13 +64,13 @@ public class CannonHudOverlay implements IGuiOverlay {
             RenderSystem.setShaderColor(1, 1, 1, 1);
 
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass_white.png"), (float) screenWidth / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * (Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()))), 0, 256, 16, 512, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/roll_ind_white.png"), screenWidth / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/roll_ind_white.png"), (float) screenWidth / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
 
             String angle = FormatTool.DECIMAL_FORMAT_1ZZ.format(Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
             int width = Minecraft.getInstance().font.width(angle);
             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(angle), screenWidth / 2 - width / 2, 40, -1, false);
 
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), screenWidth / 2 + 166, screenHeight / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), (float) screenWidth / 2 + 166, (float) screenHeight / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
 
             String pitch = FormatTool.DECIMAL_FORMAT_1ZZ.format(-Mth.lerp(partialTick, cannon.xRotO, cannon.getXRot()));
             int widthP = Minecraft.getInstance().font.width(pitch);
@@ -78,7 +78,7 @@ public class CannonHudOverlay implements IGuiOverlay {
             poseStack.pushPose();
 
             guiGraphics.pose().translate(0, Mth.lerp(partialTick, cannon.xRotO, cannon.getXRot()) * 0.7, 0);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch_ind.png"), screenWidth / 2 + 158, screenHeight / 2 - 4, 0, 0.0F, 8, 8, 8, 8);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_pitch_ind.png"), (float) screenWidth / 2 + 158, (float) screenHeight / 2 - 4, 0, 0.0F, 8, 8, 8, 8);
             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(pitch), screenWidth / 2 + 157 - widthP, screenHeight / 2 - 4, -1, false);
             poseStack.popPose();
 
@@ -127,7 +127,7 @@ public class CannonHudOverlay implements IGuiOverlay {
                     }
                     float diffY = -Mth.wrapDegrees(Mth.lerp(partialTick, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
 
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/indicator.png"), screenWidth / 2 - 4.3f + 0.45f * diffY, screenHeight / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/indicator.png"), (float) screenWidth / 2 - 4.3f + 0.45f * diffY, (float) screenHeight / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
                 } else {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
                 }

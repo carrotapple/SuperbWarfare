@@ -24,6 +24,9 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -71,6 +74,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 import static com.atsuishio.superbwarfare.tools.SeekTool.baseFilter;
 
@@ -282,9 +286,9 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
             float dis = laserLengthEntity(root);
 
             if (dis < laserLength(root)) {
-                this.entityData.set(LASER_LENGTH , dis);
+                this.entityData.set(LASER_LENGTH, dis);
             } else {
-                this.entityData.set(LASER_LENGTH , laserLength(root));
+                this.entityData.set(LASER_LENGTH, laserLength(root));
                 hitBlock(root);
             }
 
@@ -320,9 +324,9 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
             float dis = laserLengthEntity(root);
 
             if (dis < laserLength(root)) {
-                this.entityData.set(LASER_LENGTH , dis);
+                this.entityData.set(LASER_LENGTH, dis);
             } else {
-                this.entityData.set(LASER_LENGTH , laserLength(root));
+                this.entityData.set(LASER_LENGTH, laserLength(root));
                 hitBlock(root);
             }
 
@@ -389,11 +393,11 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                             Vec3 vec = pos.scale(pos.distanceTo(target.position()));
                             if (getWeaponIndex(0) == 0) {
                                 findNearEntity(target.getEyePosition());
-                                sendParticle(serverLevel, ParticleTypes.END_ROD, vec.x, vec.y , vec.z, 24, 0, 0, 0, 0.2, true);
-                                sendParticle(serverLevel, ParticleTypes.LAVA, vec.x, vec.y , vec.z, 8, 0, 0, 0, 0.4, true);
+                                sendParticle(serverLevel, ParticleTypes.END_ROD, vec.x, vec.y, vec.z, 24, 0, 0, 0, 0.2, true);
+                                sendParticle(serverLevel, ParticleTypes.LAVA, vec.x, vec.y, vec.z, 8, 0, 0, 0, 0.4, true);
                             } else {
-                                sendParticle(serverLevel, ParticleTypes.END_ROD, vec.x, vec.y , vec.z, 4, 0, 0, 0, 0.05, true);
-                                sendParticle(serverLevel, ParticleTypes.LAVA, vec.x, vec.y , vec.z, 2, 0, 0, 0, 0.15, true);
+                                sendParticle(serverLevel, ParticleTypes.END_ROD, vec.x, vec.y, vec.z, 4, 0, 0, 0, 0.05, true);
+                                sendParticle(serverLevel, ParticleTypes.LAVA, vec.x, vec.y, vec.z, 2, 0, 0, 0, 0.15, true);
                             }
 
                             if (getFirstPassenger() != null && !getFirstPassenger().level().isClientSide() && getFirstPassenger() instanceof ServerPlayer player) {
@@ -422,10 +426,10 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                 for (float i = 0; i < dis; i += 0.2f) {
                     Vec3 toVec = vec.vectorTo(e.getEyePosition()).normalize();
                     Vec3 pos = vec.add(toVec.scale(i));
-                    sendParticle(serverLevel, ParticleTypes.END_ROD, pos.x, pos.y , pos.z, 1, 0, 0, 0, 0, true);
+                    sendParticle(serverLevel, ParticleTypes.END_ROD, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0, true);
                 }
 
-                sendParticle(serverLevel, ParticleTypes.LAVA, e.getX(), e.getEyeY() , e.getZ(), 4, 0, 0, 0, 0.15, true);
+                sendParticle(serverLevel, ParticleTypes.LAVA, e.getX(), e.getEyeY(), e.getZ(), 4, 0, 0, 0, 0.15, true);
                 e.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), this, this.getFirstPassenger()), (float) (aoeDamage - Mth.clamp(dis / range, 0, 0.75) * aoeDamage));
 
                 if (getFirstPassenger() != null && !getFirstPassenger().level().isClientSide() && getFirstPassenger() instanceof ServerPlayer player) {
@@ -744,5 +748,28 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/prism_tank_icon.png");
+    }
+
+    @Override
+    public void renderFirstPersonOverlay(GuiGraphics guiGraphics, Font font, LocalPlayer player, int screenWidth, int screenHeight, float scale) {
+        float minWH = (float) Math.min(screenWidth, screenHeight);
+        float scaledMinWH = Mth.floor(minWH * scale);
+        float centerW = ((screenWidth - scaledMinWH) / 2);
+        float centerH = ((screenHeight - scaledMinWH) / 2);
+
+        // 准心
+        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+
+        // 武器名称+过热
+        double heat = 1 - this.getEntityData().get(HEAT) / 100.0F;
+        guiGraphics.drawString(font, Component.literal("LASER   " + (this.getEntityData().get(HEAT) + 25) + " ℃"), screenWidth / 2 - 33, screenHeight - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+    }
+
+    @Override
+    public void renderThirdPersonOverlay(GuiGraphics guiGraphics, Font font, LocalPlayer player, int screenWidth, int screenHeight, float scale) {
+        super.renderThirdPersonOverlay(guiGraphics, font, player, screenWidth, screenHeight, scale);
+
+        double heat = this.getEntityData().get(HEAT) / 100.0F;
+        guiGraphics.drawString(font, Component.literal("LASER " + (this.getEntityData().get(HEAT) + 25) + " ℃"), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
     }
 }
