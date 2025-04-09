@@ -885,14 +885,8 @@ public class ClientEventHandler {
         if (level != null &&
                 (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked"))) {
             handleDroneCamera(event, living);
-        } else {
-            var effect = Minecraft.getInstance().gameRenderer.currentEffect();
-            if (effect != null && effect.getName().equals(ModUtils.MODID + ":shaders/post/scan_pincushion.json")) {
-                Minecraft.getInstance().gameRenderer.shutdownEffect();
-            }
         }
 
-        float times = Minecraft.getInstance().getDeltaFrameTime();
         LocalPlayer player = Minecraft.getInstance().player;
 
         float yaw = event.getYaw();
@@ -943,18 +937,11 @@ public class ClientEventHandler {
 
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
-        float yaw = event.getYaw();
 
         DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
             event.setRoll(drone.getRoll((float) event.getPartialTick()) * (1 - (drone.getPitch((float) event.getPartialTick()) / 90)));
-        }
-
-        if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
-            if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
-                Minecraft.getInstance().gameRenderer.loadEffect(ModUtils.loc("shaders/post/scan_pincushion.json"));
-            }
         }
     }
 

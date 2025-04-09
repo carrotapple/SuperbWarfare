@@ -41,6 +41,7 @@ public class DroneHudOverlay implements IGuiOverlay {
 
     public static int MAX_DISTANCE = 256;
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/frame/frame.png");
+    private static final ResourceLocation TV_FRAME = ModUtils.loc("textures/screens/land/tv_frame.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -65,6 +66,9 @@ public class DroneHudOverlay implements IGuiOverlay {
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             guiGraphics.blit(ModUtils.loc("textures/screens/drone.png"), screenWidth / 2 - 16, screenHeight / 2 - 16, 0, 0, 32, 32, 32, 32);
             guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), screenWidth / 2 + 100, screenHeight / 2 - 64, 0, 0, 64, 129, 64, 129);
+            int addW = (screenWidth / screenHeight) * 48;
+            int addH = (screenWidth / screenHeight) * 27;
+            preciseBlit(guiGraphics, TV_FRAME, (float) -addW / 2, (float) -addH / 2, 10, 0, 0.0F, screenWidth + addW, screenHeight + addH, screenWidth + addW, screenHeight + addH);
 
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) screenWidth / 2 + 100, (float) (screenHeight / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
             guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(ClientEventHandler.droneFovLerp, "x")),

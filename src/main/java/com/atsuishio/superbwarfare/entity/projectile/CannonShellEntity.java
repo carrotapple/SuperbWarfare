@@ -56,19 +56,21 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
     private int durability = 40;
     private boolean firstHit = true;
     public Set<Long> loadedChunks = new HashSet<>();
+    private float gravity = 0.1f;
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public CannonShellEntity(LivingEntity entity, Level world, float damage, float radius, float explosionDamage, float fireProbability, int fireTime) {
+    public CannonShellEntity(LivingEntity entity, Level world, float damage, float radius, float explosionDamage, float fireProbability, int fireTime, float gravity) {
         super(ModEntities.CANNON_SHELL.get(), entity, world);
         this.damage = damage;
         this.radius = radius;
         this.explosionDamage = explosionDamage;
         this.fireProbability = fireProbability;
         this.fireTime = fireTime;
+        this.gravity = gravity;
     }
 
     public CannonShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -324,7 +326,7 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
 
     @Override
     protected float getGravity() {
-        return 0.2F;
+        return gravity;
     }
 
     @Override
