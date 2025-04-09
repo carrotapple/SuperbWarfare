@@ -83,7 +83,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
         pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> energy.set(e.getEnergyStored())
         );
-        return energy.get() != 0 && energy.get() != MAX_ENERGY;
+        return energy.get() != 0;
     }
 
     @Override
