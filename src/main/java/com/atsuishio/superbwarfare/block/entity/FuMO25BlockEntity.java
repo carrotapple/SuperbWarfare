@@ -33,6 +33,10 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -209,6 +213,18 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoB
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    private PlayState predicate(AnimationState<FuMO25BlockEntity> event) {
+        if (this.getBlockState().getValue(FuMO25Block.POWERED)) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.fumo_25.rot"));
+        }
+        return PlayState.STOP;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "controller", 0, this::predicate));
+    }
+
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ENERGY) {
@@ -227,10 +243,6 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoB
     public void reviveCaps() {
         super.reviveCaps();
         this.energyHandler = LazyOptional.of(() -> new EnergyStorage(MAX_ENERGY));
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
     }
 
     @Override

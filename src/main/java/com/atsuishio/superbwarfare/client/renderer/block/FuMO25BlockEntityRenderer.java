@@ -1,14 +1,10 @@
 package com.atsuishio.superbwarfare.client.renderer.block;
 
-import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.model.block.FuMO25Model;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 
@@ -30,14 +26,5 @@ public class FuMO25BlockEntityRenderer extends GeoBlockRenderer<FuMO25BlockEntit
     @Override
     public int getViewDistance() {
         return 512;
-    }
-
-    @Override
-    public void renderRecursively(PoseStack poseStack, FuMO25BlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        String name = bone.getName();
-        if (name.equals("mian") && animatable.getBlockState().getValue(FuMO25Block.POWERED)) {
-            bone.setRotY((System.currentTimeMillis() % 36000000) / 1200f);
-        }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }
