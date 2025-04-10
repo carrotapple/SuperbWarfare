@@ -65,22 +65,15 @@ public class ModVariables {
             event.getOriginal().revive();
             PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
-            clone.zoom = original.zoom;
-            clone.holdFire = original.holdFire;
             clone.rifleAmmo = original.rifleAmmo;
             clone.handgunAmmo = original.handgunAmmo;
             clone.shotgunAmmo = original.shotgunAmmo;
             clone.sniperAmmo = original.sniperAmmo;
             clone.heavyAmmo = original.heavyAmmo;
-            clone.bowPullHold = original.bowPullHold;
-            clone.bowPull = original.bowPull;
             clone.playerDoubleJump = original.playerDoubleJump;
             clone.tacticalSprint = original.tacticalSprint;
             clone.tacticalSprintTime = original.tacticalSprintTime;
             clone.tacticalSprintExhaustion = original.tacticalSprintExhaustion;
-            clone.breath = original.breath;
-            clone.breathTime = original.breathTime;
-            clone.breathExhaustion = original.breathExhaustion;
             clone.edit = original.edit;
 
             if (event.getEntity().level().isClientSide()) return;
@@ -205,22 +198,16 @@ public class ModVariables {
     }
 
     public static class PlayerVariables {
-        public boolean zoom = false;
-        public boolean holdFire = false;
         public int rifleAmmo = 0;
         public int handgunAmmo = 0;
         public int shotgunAmmo = 0;
         public int sniperAmmo = 0;
         public int heavyAmmo = 0;
-        public boolean bowPullHold = false;
-        public boolean bowPull = false;
         public boolean playerDoubleJump = false;
         public boolean tacticalSprint = false;
         public int tacticalSprintTime = 600;
         public boolean tacticalSprintExhaustion = false;
-        public boolean breath = false;
-        public int breathTime = 160;
-        public boolean breathExhaustion = false;
+
         public boolean edit = false;
 
         public void syncPlayerVariables(Entity entity) {
@@ -230,22 +217,14 @@ public class ModVariables {
 
         public Tag writeNBT() {
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean("Zoom", zoom);
-            nbt.putBoolean("HoldFire", holdFire);
-
             for (var type : AmmoType.values()) {
                 type.set(nbt, type.get(this));
             }
 
-            nbt.putBoolean("BowPullHold", bowPullHold);
-            nbt.putBoolean("BowPull", bowPull);
             nbt.putBoolean("DoubleJump", playerDoubleJump);
             nbt.putBoolean("TacticalSprint", tacticalSprint);
             nbt.putInt("TacticalSprintTime", tacticalSprintTime);
             nbt.putBoolean("TacticalSprintExhaustion", tacticalSprintExhaustion);
-            nbt.putBoolean("Breath", breath);
-            nbt.putInt("BreathTime", breathTime);
-            nbt.putBoolean("BreathExhaustion", breathExhaustion);
             nbt.putBoolean("EditMode", edit);
 
             return nbt;
@@ -254,22 +233,14 @@ public class ModVariables {
         public void readNBT(Tag tag) {
             CompoundTag nbt = (CompoundTag) tag;
 
-            zoom = nbt.getBoolean("Zoom");
-            holdFire = nbt.getBoolean("HoldFire");
-
             for (var type : AmmoType.values()) {
                 type.set(this, type.get(nbt));
             }
 
-            bowPullHold = nbt.getBoolean("BowPullHold");
-            bowPull = nbt.getBoolean("BowPull");
             playerDoubleJump = nbt.getBoolean("DoubleJump");
             tacticalSprint = nbt.getBoolean("TacticalSprint");
             tacticalSprintTime = nbt.getInt("TacticalSprintTime");
             tacticalSprintExhaustion = nbt.getBoolean("TacticalSprintExhaustion");
-            breath = nbt.getBoolean("Breath");
-            breathTime = nbt.getInt("BreathTime");
-            breathExhaustion = nbt.getBoolean("BreathExhaustion");
             edit = nbt.getBoolean("EditMode");
         }
     }
@@ -308,22 +279,15 @@ public class ModVariables {
                 }
 
                 PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
-                variables.zoom = message.data.zoom;
-                variables.holdFire = message.data.holdFire;
                 variables.rifleAmmo = message.data.rifleAmmo;
                 variables.handgunAmmo = message.data.handgunAmmo;
                 variables.shotgunAmmo = message.data.shotgunAmmo;
                 variables.sniperAmmo = message.data.sniperAmmo;
                 variables.heavyAmmo = message.data.heavyAmmo;
-                variables.bowPullHold = message.data.bowPullHold;
-                variables.bowPull = message.data.bowPull;
                 variables.playerDoubleJump = message.data.playerDoubleJump;
                 variables.tacticalSprint = message.data.tacticalSprint;
                 variables.tacticalSprintTime = message.data.tacticalSprintTime;
                 variables.tacticalSprintExhaustion = message.data.tacticalSprintExhaustion;
-                variables.breath = message.data.breath;
-                variables.breathTime = message.data.breathTime;
-                variables.breathExhaustion = message.data.breathExhaustion;
                 variables.edit = message.data.edit;
             });
         }

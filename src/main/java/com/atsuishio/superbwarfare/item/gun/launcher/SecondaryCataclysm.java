@@ -14,7 +14,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -312,20 +311,19 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
     }
 
     @Override
-    public void fireOnPress(Player player) {
+    public void fireOnPress(Player player, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
         if (data.isReloading()) return;
         if (player.getCooldowns().isOnCooldown(stack.getItem()) || data.getAmmo() <= 0) return;
 
-        boolean zooming = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         double spread = data.spread();
 
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
                 .map(storage -> storage.getEnergyStored() >= 3000)
                 .orElse(false);
 
-        boolean isChargedFire = zooming && hasEnoughEnergy;
+        boolean isChargedFire = zoom && hasEnoughEnergy;
 
         if (player.level() instanceof ServerLevel serverLevel) {
             GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, serverLevel,
@@ -353,7 +351,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
 
             gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
             gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (isChargedFire ? 4 : 1) * velocity,
-                    (float) (zooming ? 0.1 : spread));
+                    (float) (zoom ? 0.1 : spread));
             serverLevel.addFreshEntity(gunGrenadeEntity);
 
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,

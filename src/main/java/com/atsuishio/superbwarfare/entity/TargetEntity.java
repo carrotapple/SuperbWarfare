@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.entity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -158,12 +157,10 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
                 player.addItem(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
             }
         } else {
-            if (!(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
-                this.setXRot(0);
-                this.xRotO = this.getXRot();
-                this.entityData.set(DOWN_TIME, 0);
-            }
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
+            this.setXRot(0);
+            this.xRotO = this.getXRot();
+            this.entityData.set(DOWN_TIME, 0);
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());

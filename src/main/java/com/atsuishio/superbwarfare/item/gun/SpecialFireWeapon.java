@@ -15,7 +15,7 @@ public interface SpecialFireWeapon {
      * @param player 玩家
      */
 
-    default void fireOnPress(Player player) {
+    default void fireOnPress(Player player, boolean zoom) {
     }
 
     /**
@@ -23,7 +23,7 @@ public interface SpecialFireWeapon {
      *
      * @param player 玩家
      */
-    default void fireOnRelease(Player player) {
+    default void fireOnRelease(Player player, double power, boolean zoom) {
     }
 
 }

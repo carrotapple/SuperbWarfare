@@ -13,7 +13,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -199,7 +198,7 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnPress(Player player) {
+    public void fireOnPress(Player player, boolean zoom) {
         Level level = player.level();
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
@@ -210,7 +209,6 @@ public class RpgItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 || data.getAmmo() <= 0
         ) return;
 
-        boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
         double spread = data.spread();
 
         if (player.level() instanceof ServerLevel serverLevel) {

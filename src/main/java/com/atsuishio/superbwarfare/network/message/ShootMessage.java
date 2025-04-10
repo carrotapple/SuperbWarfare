@@ -29,30 +29,33 @@ import java.util.function.Supplier;
 public class ShootMessage {
 
     private final double spread;
+    private final boolean zoom;
 
-    public ShootMessage(double spread) {
+    public ShootMessage(double spread, boolean zoom) {
         this.spread = spread;
+        this.zoom = zoom;
     }
 
     public static ShootMessage decode(FriendlyByteBuf buffer) {
-        return new ShootMessage(buffer.readDouble());
+        return new ShootMessage(buffer.readDouble(), buffer.readBoolean());
     }
 
     public static void encode(ShootMessage message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.spread);
+        buffer.writeBoolean(message.zoom);
     }
 
     public static void handler(ShootMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.spread);
+                pressAction(context.getSender(), message.spread, message.zoom);
             }
         });
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player player, double spared) {
+    public static void pressAction(Player player, double spared, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
@@ -98,7 +101,7 @@ public class ShootMessage {
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
                 for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
-                    GunEventHandler.gunShoot(player, spared);
+                    GunEventHandler.gunShoot(player, spared, zoom);
                 }
 
                 GunEventHandler.playGunSounds(player);
@@ -131,7 +134,7 @@ public class ShootMessage {
                     }
                 }
 
-                GunEventHandler.gunShoot(player, spared);
+                GunEventHandler.gunShoot(player, spared, false);
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;

@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -12,7 +11,6 @@ import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -56,7 +54,6 @@ public class PlayerEventHandler {
         }
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.zoom = false;
             capability.tacticalSprintExhaustion = false;
             capability.tacticalSprintTime = 600;
             capability.syncPlayerVariables(player);
@@ -86,45 +83,12 @@ public class PlayerEventHandler {
             if (stack.is(ModTags.Items.GUN)) {
                 handlePlayerSprint(player);
                 handleSpecialWeaponAmmo(player);
-                handleBocekPulling(player);
 
             }
 
             handleGround(player);
             handleSimulationDistance(player);
             handleTacticalSprint(player);
-            handleBreath(player);
-        }
-    }
-
-    private static void handleBreath(Player player) {
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
-                        .orElse(new ModVariables.PlayerVariables()).breathTime - 1, 0, 100);
-                capability.syncPlayerVariables(player);
-            });
-        } else {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
-                        .orElse(new ModVariables.PlayerVariables()).breathTime + 1, 0, 100);
-                capability.syncPlayerVariables(player);
-            });
-        }
-
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime == 0) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathExhaustion = true;
-                capability.breath = false;
-                capability.syncPlayerVariables(player);
-            });
-        }
-
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime == 100) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathExhaustion = false;
-                capability.syncPlayerVariables(player);
-            });
         }
     }
 
@@ -195,24 +159,25 @@ public class PlayerEventHandler {
      * 判断玩家是否在奔跑
      */
     private static void handlePlayerSprint(Player player) {
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
-            player.getPersistentData().putDouble("noRun", 10);
-        }
+        if (player.level().isClientSide) {
+            if (ClientEventHandler.holdFire) {
+                player.getPersistentData().putDouble("noRun", 10);
+            }
 
-        if (player.isShiftKeyDown()
-                || player.isPassenger()
-                || player.isInWater()
-                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-            player.getPersistentData().putDouble("noRun", 3);
-        }
+            if (player.isShiftKeyDown()
+                    || player.isPassenger()
+                    || player.isInWater()
+                    || ClientEventHandler.zoom) {
+                player.getPersistentData().putDouble("noRun", 3);
+            }
 
-        if (player.getPersistentData().getDouble("noRun") > 0) {
-            player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
-        }
+            if (player.getPersistentData().getDouble("noRun") > 0) {
+                player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
+            }
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
-                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
-            player.setSprinting(false);
+            if (ClientEventHandler.zoom || ClientEventHandler.holdFire) {
+                player.setSprinting(false);
+            }
         }
     }
 
@@ -231,49 +196,6 @@ public class PlayerEventHandler {
 
         if ((stack.is(ModItems.RPG.get()) || stack.is(ModItems.BOCEK.get())) && data.getAmmo() == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
-        }
-    }
-
-    private static void handleBocekPulling(Player player) {
-        ItemStack stack = player.getMainHandItem();
-
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPullHold) {
-            if (stack.getItem() == ModItems.BOCEK.get()
-                    && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0
-                    && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && GunsTool.getGunDoubleTag(stack, "Power") < 12
-            ) {
-                GunsTool.setGunDoubleTag(stack, "Power", GunsTool.getGunDoubleTag(stack, "Power") + 1);
-
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.bowPull = true;
-                    capability.tacticalSprint = false;
-                    capability.syncPlayerVariables(player);
-                });
-                player.setSprinting(false);
-            }
-            if (GunsTool.getGunDoubleTag(stack, "Power") == 1) {
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.BOCEK_PULL_1P.get(), 2f, 1f);
-                    player.level().playSound(null, player.blockPosition(), ModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
-                }
-            }
-        } else {
-            if (stack.getItem() == ModItems.BOCEK.get()) {
-                GunsTool.setGunDoubleTag(stack, "Power", 0);
-            }
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.bowPull = false;
-                capability.syncPlayerVariables(player);
-            });
-        }
-
-        if (GunsTool.getGunDoubleTag(stack, "Power") > 0) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprint = false;
-                capability.syncPlayerVariables(player);
-            });
-            player.setSprinting(false);
         }
     }
 

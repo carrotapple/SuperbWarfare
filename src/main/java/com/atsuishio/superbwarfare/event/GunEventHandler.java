@@ -185,7 +185,7 @@ public class GunEventHandler {
         }
     }
 
-    public static void gunShoot(Player player, double spared) {
+    public static void gunShoot(Player player, double spared, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
 
@@ -196,7 +196,6 @@ public class GunEventHandler {
             float velocity = (float) ((data.velocity() + GunsTool.getGunDoubleTag(stack, "CustomVelocity")) * perkSpeed(stack));
             int projectileAmount = data.projectileAmount();
             float bypassArmorRate = (float) data.bypassArmor();
-            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
             var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
             if (perk != null && perk.descriptionId.equals("butterfly_bullet")) {

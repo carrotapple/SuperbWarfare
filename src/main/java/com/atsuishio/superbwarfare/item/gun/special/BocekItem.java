@@ -10,8 +10,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -34,7 +32,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -181,28 +178,21 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnRelease(Player player) {
+    public void fireOnRelease(Player player, double power, boolean zoom) {
         if (player.level().isClientSide()) return;
 
         ItemStack stack = player.getMainHandItem();
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
-        if (player instanceof ServerPlayer serverPlayer) {
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
-
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-        }
-
-        if (GunsTool.getGunDoubleTag(stack, "Power") >= 6) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false))) {
-                spawnBullet(player);
+        if (power * 12 >= 6) {
+            if (zoom) {
+                spawnBullet(player, power, true);
 
                 SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
                 player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
             } else {
                 for (int i = 0; i < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 10); i++) {
-                    spawnBullet(player);
+                    spawnBullet(player, power, false);
                 }
 
                 SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
@@ -219,7 +209,6 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
             player.getCooldowns().addCooldown(stack.getItem(), 7);
             GunsTool.setGunIntTag(stack, "ArrowEmpty", 7);
-            GunsTool.setGunDoubleTag(stack, "Power", 0);
 
             if (!InventoryTool.hasCreativeAmmoBox(player) && !player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
@@ -228,10 +217,10 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnPress(Player player) {
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.bowPullHold = true;
-            capability.syncPlayerVariables(player);
-        });
+    public void fireOnPress(Player player, boolean zoom) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
+        }
     }
 }

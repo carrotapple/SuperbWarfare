@@ -397,14 +397,6 @@ public class LivingEventHandler {
                             data.putInt("ChargeTime", 0);
                         }
 
-                        if (oldStack.is(ModItems.BOCEK.get())) {
-                            GunsTool.setGunIntTag(newStack, "Power", 0);
-                            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.bowPullHold = false;
-                                capability.syncPlayerVariables(player);
-                            });
-                        }
-
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             capability.edit = false;
                             capability.syncPlayerVariables(player);
@@ -440,14 +432,6 @@ public class LivingEventHandler {
                         if (newStack.is(ModItems.SENTINEL.get())) {
                             GunsTool.setGunBooleanTag(newStack, "Charging", false);
                             GunsTool.setGunIntTag(newStack, "ChargeTime", 0);
-                        }
-
-                        if (newStack.is(ModItems.BOCEK.get())) {
-                            GunsTool.setGunIntTag(newStack, "Power", 0);
-                            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.bowPullHold = false;
-                                capability.syncPlayerVariables(player);
-                            });
                         }
 
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);

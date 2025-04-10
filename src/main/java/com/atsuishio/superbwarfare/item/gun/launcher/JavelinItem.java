@@ -15,7 +15,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -313,7 +312,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnRelease(Player player) {
+    public void fireOnRelease(Player player, double power, boolean zoom) {
         var tag = player.getMainHandItem().getOrCreateTag();
         fire(player);
         tag.putBoolean("Seeking", false);
@@ -326,16 +325,12 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnPress(Player player) {
+    public void fireOnPress(Player player, boolean zoom) {
         var stack = player.getMainHandItem();
         var data = GunData.from(stack);
         var tag = data.getTag();
 
-        if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
-                .map(c -> c.zoom)
-                .orElse(false)
-                || data.getAmmo() <= 0
-        ) return;
+        if (!zoom || data.getAmmo() <= 0) return;
 
         Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
 

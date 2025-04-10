@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -68,22 +70,15 @@ public class FireMessage {
 
             // 按下开火
             if (!(stack.getItem() instanceof SpecialFireWeapon specialFireWeapon)) return;
-            specialFireWeapon.fireOnPress(player);
-
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.holdFire = true;
-                capability.syncPlayerVariables(player);
-            });
+            specialFireWeapon.fireOnPress(player, ClientEventHandler.zoom);
         } else if (type == 1) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.bowPullHold = false;
-                capability.holdFire = false;
-                capability.syncPlayerVariables(player);
-            });
-
             // 松开开火
             if (stack.getItem() instanceof SpecialFireWeapon specialFireWeapon) {
-                specialFireWeapon.fireOnRelease(player);
+                if (specialFireWeapon instanceof BocekItem) {
+                    specialFireWeapon.fireOnRelease(player, ClientEventHandler.bowTimer, ClientEventHandler.zoom);
+                } else {
+                    specialFireWeapon.fireOnRelease(player, 0, ClientEventHandler.zoom);
+                }
             }
         }
     }
@@ -122,28 +117,26 @@ public class FireMessage {
         return 1;
     }
 
-    public static void spawnBullet(Player player) {
+    public static void spawnBullet(Player player, double power, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
         var data = GunData.from(stack);
 
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         float headshot = (float) data.headshot();
-        float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power", 6) * (float) perkSpeed(stack);
+        float velocity = (float) (24 * power * (float) perkSpeed(stack));
         float bypassArmorRate = (float) data.bypassArmor();
         double damage;
-        boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
         float spread;
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+        if (zoom) {
             spread = 0.01f;
             damage = 0.08333333 * data.damage() *
-                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
+                    12 * power * perkDamage(stack);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
-                    data.damage() *
-                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
+                    data.damage() * 12 * power * perkDamage(stack);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())

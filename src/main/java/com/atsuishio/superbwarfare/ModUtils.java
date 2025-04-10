@@ -157,7 +157,6 @@ public class ModUtils {
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(GunReforgeMessage.class, GunReforgeMessage::encode, GunReforgeMessage::decode, GunReforgeMessage::handler);
         addNetworkMessage(SetPerkLevelMessage.class, SetPerkLevelMessage::encode, SetPerkLevelMessage::decode, SetPerkLevelMessage::handler);
-        addNetworkMessage(BreathMessage.class, BreathMessage::encode, BreathMessage::decode, BreathMessage::handler);
         addNetworkMessage(ModVariables.SavedDataSyncMessage.class, ModVariables.SavedDataSyncMessage::buffer, ModVariables.SavedDataSyncMessage::new, ModVariables.SavedDataSyncMessage::handler);
         addNetworkMessage(ModVariables.PlayerVariablesSyncMessage.class, ModVariables.PlayerVariablesSyncMessage::buffer, ModVariables.PlayerVariablesSyncMessage::new, ModVariables.PlayerVariablesSyncMessage::handler);
         addNetworkMessage(ModVariables.PlayerVariablesSyncMessage.class, ModVariables.PlayerVariablesSyncMessage::buffer, ModVariables.PlayerVariablesSyncMessage::new, ModVariables.PlayerVariablesSyncMessage::handler);
