@@ -345,6 +345,7 @@ public class ClickHandler {
                 player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
             } else {
                 player.playSound(ModSounds.BOCEK_PULL_1P.get(), 1, 1);
+                handTimer = 0;
             }
 
             if (!gunItem.useBackpackAmmo(stack) && data.getAmmo() <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
@@ -353,7 +354,7 @@ public class ClickHandler {
                     ClientEventHandler.burstFireAmount = 0;
                 }
             } else {
-                ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+                ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0, handTimer, zoom));
                 if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                         && !data.isReloading()
                         && !GunsTool.getGunBooleanTag(stack, "Charging")
@@ -373,7 +374,7 @@ public class ClickHandler {
     }
 
     public static void handleWeaponFireRelease() {
-        ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
+        ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1, handTimer, zoom));
         ClientEventHandler.holdFire = false;
         ClientEventHandler.holdFireVehicle = false;
         ClientEventHandler.customRpm = 0;
