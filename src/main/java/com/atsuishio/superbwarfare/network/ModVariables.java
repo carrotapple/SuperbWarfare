@@ -70,7 +70,6 @@ public class ModVariables {
             clone.shotgunAmmo = original.shotgunAmmo;
             clone.sniperAmmo = original.sniperAmmo;
             clone.heavyAmmo = original.heavyAmmo;
-            clone.playerDoubleJump = original.playerDoubleJump;
             clone.edit = original.edit;
 
             if (event.getEntity().level().isClientSide()) return;
@@ -200,7 +199,6 @@ public class ModVariables {
         public int shotgunAmmo = 0;
         public int sniperAmmo = 0;
         public int heavyAmmo = 0;
-        public boolean playerDoubleJump = false;
 
         public boolean edit = false;
 
@@ -215,7 +213,6 @@ public class ModVariables {
                 type.set(nbt, type.get(this));
             }
 
-            nbt.putBoolean("DoubleJump", playerDoubleJump);
             nbt.putBoolean("EditMode", edit);
 
             return nbt;
@@ -227,8 +224,6 @@ public class ModVariables {
             for (var type : AmmoType.values()) {
                 type.set(this, type.get(nbt));
             }
-
-            playerDoubleJump = nbt.getBoolean("DoubleJump");
             edit = nbt.getBoolean("EditMode");
         }
     }
@@ -272,7 +267,6 @@ public class ModVariables {
                 variables.shotgunAmmo = message.data.shotgunAmmo;
                 variables.sniperAmmo = message.data.sniperAmmo;
                 variables.heavyAmmo = message.data.heavyAmmo;
-                variables.playerDoubleJump = message.data.playerDoubleJump;
                 variables.edit = message.data.edit;
             });
         }

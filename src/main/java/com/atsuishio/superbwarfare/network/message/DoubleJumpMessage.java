@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,18 +12,18 @@ import java.util.function.Supplier;
 
 public class DoubleJumpMessage {
 
-    private final boolean canDoubleJump;
+    private final int empty;
 
-    public DoubleJumpMessage(boolean canDoubleJump) {
-        this.canDoubleJump = canDoubleJump;
+    public DoubleJumpMessage(int empty) {
+        this.empty = empty;
     }
 
     public static DoubleJumpMessage decode(FriendlyByteBuf buffer) {
-        return new DoubleJumpMessage(buffer.readBoolean());
+        return new DoubleJumpMessage(buffer.readInt());
     }
 
     public static void encode(DoubleJumpMessage message, FriendlyByteBuf buffer) {
-        buffer.writeBoolean(message.canDoubleJump);
+        buffer.writeInt(message.empty);
     }
 
     public static void handler(DoubleJumpMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -37,13 +36,7 @@ public class DoubleJumpMessage {
                 double x = player.getX();
                 double y = player.getY();
                 double z = player.getZ();
-
                 level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
-
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.playerDoubleJump = message.canDoubleJump;
-                    capability.syncPlayerVariables(player);
-                });
             }
         });
         context.setPacketHandled(true);

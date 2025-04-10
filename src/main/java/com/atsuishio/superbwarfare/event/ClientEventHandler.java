@@ -170,6 +170,8 @@ public class ClientEventHandler {
     public static float cameraRoll;
     public static float cantSprint = 0;
 
+    public static boolean canDoubleJump = false;
+
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -283,6 +285,10 @@ public class ClientEventHandler {
         if (keys != keysCache) {
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(keys));
             keysCache = keys;
+        }
+
+        if (player.onGround() && canDoubleJump) {
+            canDoubleJump = false;
         }
 
         if (event.phase == TickEvent.Phase.END) {

@@ -418,11 +418,11 @@ public class ClickHandler {
             return;
         }
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).playerDoubleJump) {
+        if (canDoubleJump) {
             player.setDeltaMovement(new Vec3(player.getLookAngle().x, 0.8, player.getLookAngle().z));
             level.playLocalSound(x, y, z, ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
-
-            ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(false));
+            ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0));
+            canDoubleJump = false;
         }
     }
 

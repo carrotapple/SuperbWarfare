@@ -74,17 +74,7 @@ public class PlayerEventHandler {
                 handleSpecialWeaponAmmo(player);
             }
 
-            handleGround(player);
             handleSimulationDistance(player);
-        }
-    }
-
-    private static void handleGround(Player player) {
-        if (player.onGround()) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.playerDoubleJump = false;
-                capability.syncPlayerVariables(player);
-            });
         }
     }
 
