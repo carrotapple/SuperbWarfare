@@ -130,9 +130,10 @@ public class ClientEventHandler {
 
     public static boolean zoom = false;
     public static boolean breath = false;
-    public static int breathTime = 0;
-    public static double breathSwitchTime = 0;
-    public static boolean breathExhaustion = false;
+    public static boolean tacticalSprint = false;
+    public static float stamina = 0;
+    public static double switchTime = 0;
+    public static boolean exhaustion = false;
     public static boolean holdFireVehicle = false;
 
     public static boolean zoomVehicle = false;
@@ -167,6 +168,7 @@ public class ClientEventHandler {
     public static float cameraPitch;
     public static float cameraYaw;
     public static float cameraRoll;
+    public static float cantSprint = 0;
 
 
     @SubscribeEvent
@@ -227,6 +229,7 @@ public class ClientEventHandler {
         if (player == null) {
             return;
         }
+
         ItemStack stack = player.getMainHandItem();
 
         if (stack.is(ModItems.MINIGUN.get())) {
@@ -286,39 +289,92 @@ public class ClientEventHandler {
             handleVariableDecrease();
             aimAtVillager(player);
             CrossHairOverlay.handleRenderDamageIndicator();
-            gunBreath();
+            staminaSystem();
+            handlePlayerSprint();
         }
     }
 
-    //屏息
-    public static void gunBreath() {
-        if (!breathExhaustion && zoom) {
+    //耐力
+    public static void staminaSystem() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+
+        if (!exhaustion && zoom) {
             breath = ModKeyMappings.BREATH.isDown();
         }
 
+        tacticalSprint = !exhaustion && !zoom && isMoving() && player.isSprinting() && player.getVehicle() == null && player.onGround();
+
+        ItemStack stack = player.getMainHandItem();
+
+        float sprintCost;
+
+        if (stack.is(ModTags.Items.GUN)) {
+            var data = GunData.from(stack);
+            sprintCost = (float) (0.5 + 0.02 * data.weight());
+        } else {
+            sprintCost = 0.5f;
+        }
+
         if (breath) {
-            breathTime++;
-        } else if (breathTime > 0) {
-            breathTime--;
+            stamina += 0.5f;
+        } else if (tacticalSprint) {
+            stamina += sprintCost;
+        } else if (stamina > 0) {
+            stamina = Math.max(stamina - 0.5f, 0);
         }
 
-        if (breathTime >= 100) {
-            breathExhaustion = true;
+        if (stamina >= 100) {
+            exhaustion = true;
             breath = false;
+            tacticalSprint = false;
         }
 
-        if (breathExhaustion && breathTime == 0) {
-            breathExhaustion = false;
+        if (exhaustion && stamina <= 0) {
+            exhaustion = false;
         }
 
-        if (ModKeyMappings.BREATH.isDown() && zoom) {
-            breathSwitchTime = Math.min(breathSwitchTime + 0.5, 5);
-        } else if (breathSwitchTime > 0 && breathTime == 0) {
-            breathSwitchTime -= 0.15;
+        if (ModKeyMappings.BREATH.isDown() || tacticalSprint) {
+            switchTime = Math.min(switchTime + 0.65, 5);
+        } else if (switchTime > 0 && stamina == 0) {
+            switchTime = Math.max(switchTime - 0.15, 0);
         }
 
         if (!zoom) {
             breath = false;
+        } else {
+            tacticalSprint = false;
+        }
+
+        if (tacticalSprint && player.onGround()) {
+            player.setDeltaMovement(player.getDeltaMovement().multiply(1.2, 1, 1.2));
+        }
+    }
+
+    /**
+     * 禁止玩家奔跑
+     */
+    private static void handlePlayerSprint() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+
+        if (player.isShiftKeyDown()
+                || player.isPassenger()
+                || player.isInWater()
+                || ClientEventHandler.zoom) {
+            cantSprint = 3;
+        }
+
+        if (cantSprint > 0) {
+            cantSprint --;
+        }
+
+        if (ClientEventHandler.zoom || ClientEventHandler.holdFire) {
+            player.setSprinting(false);
         }
     }
 
@@ -475,7 +531,7 @@ public class ClientEventHandler {
         double weight = data.weight();
         double speed = 1 - (0.04 * weight);
 
-        if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && !zoom) {
+        if (cantSprint == 0 && player.isSprinting() && !zoom) {
             cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
         } else {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
@@ -684,6 +740,8 @@ public class ClientEventHandler {
         if (shellIndex < 5) {
             shellIndex++;
         }
+
+        cantSprint = 10;
 
         shellIndexTime[shellIndex] = 0.001;
 
@@ -1110,7 +1168,7 @@ public class ClientEventHandler {
                 && drawTime < 0.01
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 5);
+                cantSprint = 5;
             }
             if (cantFireTime <= 10) {
                 zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
@@ -1557,6 +1615,7 @@ public class ClientEventHandler {
             bowTimer = 0;
             handTimer = 0;
             handPos = 0;
+            cantSprint = 20;
         }
     }
 

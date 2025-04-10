@@ -85,7 +85,7 @@ public class CrossHairOverlay implements IGuiOverlay {
 
         if (shouldRenderCrossHair(player) || (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && stack.is(ModItems.MINIGUN.get())) || (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && (ClientEventHandler.zoomTime > 0 || ClientEventHandler.pullPos > 0))) {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-            if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
+            if (!player.isSprinting() || ClientEventHandler.cantSprint > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
                         normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);
@@ -101,7 +101,7 @@ public class CrossHairOverlay implements IGuiOverlay {
         if (stack.is(ModItems.BOCEK.get())) {
             if (ClientEventHandler.zoomPos < 0.7) {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
+                if (!player.isSprinting() || ClientEventHandler.cantSprint > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
                         if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
                             normalCrossHair(guiGraphics, screenWidth, screenHeight, spread, moveX, moveY);

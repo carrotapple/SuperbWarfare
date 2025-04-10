@@ -17,9 +17,9 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 @OnlyIn(Dist.CLIENT)
-public class BreathOverlay implements IGuiOverlay {
+public class StaminaOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_breath";
+    public static final String ID = ModUtils.MODID + "_stamina";
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -38,15 +38,15 @@ public class BreathOverlay implements IGuiOverlay {
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        RenderSystem.setShaderColor(1, 1, 1, (float) Mth.clamp(ClientEventHandler.breathSwitchTime, 0, 1));
+        RenderSystem.setShaderColor(1, 1, 1, (float) Mth.clamp(ClientEventHandler.switchTime, 0, 1));
 
         guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight / 2 + 100, screenWidth / 2 + 64, screenHeight / 2 + 101, -90, -16777216);
-        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight / 2 + 100, screenWidth / 2 + 64 - (int) (1.28 * ClientEventHandler.breathTime), screenHeight / 2 + 101, -90, -1);
+        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight / 2 + 100, screenWidth / 2 + 64 - (int) (1.28 * ClientEventHandler.stamina), screenHeight / 2 + 101, -90, -1);
         guiGraphics.pose().popPose();
     }
 
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
-        return ClientEventHandler.breathSwitchTime > 0;
+        return ClientEventHandler.switchTime > 0;
     }
 }

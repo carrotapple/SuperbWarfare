@@ -17,7 +17,7 @@ public class PoseTool {
                 || GunsTool.getGunBooleanTag(stack, "Reloading")
                 || GunsTool.getGunBooleanTag(stack, "Charging")) {
             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
-        } else if (entityLiving.isSprinting() && entityLiving.onGround() && entityLiving.getPersistentData().getDouble("noRun") == 0) {
+        } else if (entityLiving.isSprinting() && entityLiving.onGround()) {
             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
         } else {
             return HumanoidModel.ArmPose.BOW_AND_ARROW;

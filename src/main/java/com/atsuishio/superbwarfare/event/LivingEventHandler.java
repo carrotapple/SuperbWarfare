@@ -406,7 +406,6 @@ public class LivingEventHandler {
                     if (newStack.getItem() instanceof GunItem) {
                         var newData = GunData.from(newStack);
 
-                        player.getPersistentData().putDouble("noRun", 40);
                         newStack.getOrCreateTag().putBoolean("draw", true);
                         if (newData.boltActionTime() > 0) {
                             GunsTool.setGunIntTag(newStack, "BoltActionTick", 0);
@@ -442,11 +441,6 @@ public class LivingEventHandler {
                         if (player.level() instanceof ServerLevel) {
                             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new DrawClientMessage(true));
                         }
-
-                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.tacticalSprint = false;
-                            capability.syncPlayerVariables(player);
-                        });
                     }
                 }
             }

@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -108,14 +107,14 @@ public class K98Item extends GunItem implements GeoItem {
         var data = GunData.from(stack);
 
         if (player.isSprinting() && player.onGround()
-                && player.getPersistentData().getDouble("noRun") == 0
+                && ClientEventHandler.cantSprint == 0
                 && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && stack.getOrCreateTag().getInt("reload_stage") != 1
                 && stack.getOrCreateTag().getInt("reload_stage") != 2
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
                 && ClientEventHandler.drawTime < 0.01
                 && !data.isReloading()) {
-            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
+            if (ClientEventHandler.tacticalSprint && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));

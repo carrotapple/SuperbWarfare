@@ -71,9 +71,6 @@ public class ModVariables {
             clone.sniperAmmo = original.sniperAmmo;
             clone.heavyAmmo = original.heavyAmmo;
             clone.playerDoubleJump = original.playerDoubleJump;
-            clone.tacticalSprint = original.tacticalSprint;
-            clone.tacticalSprintTime = original.tacticalSprintTime;
-            clone.tacticalSprintExhaustion = original.tacticalSprintExhaustion;
             clone.edit = original.edit;
 
             if (event.getEntity().level().isClientSide()) return;
@@ -204,9 +201,6 @@ public class ModVariables {
         public int sniperAmmo = 0;
         public int heavyAmmo = 0;
         public boolean playerDoubleJump = false;
-        public boolean tacticalSprint = false;
-        public int tacticalSprintTime = 600;
-        public boolean tacticalSprintExhaustion = false;
 
         public boolean edit = false;
 
@@ -222,9 +216,6 @@ public class ModVariables {
             }
 
             nbt.putBoolean("DoubleJump", playerDoubleJump);
-            nbt.putBoolean("TacticalSprint", tacticalSprint);
-            nbt.putInt("TacticalSprintTime", tacticalSprintTime);
-            nbt.putBoolean("TacticalSprintExhaustion", tacticalSprintExhaustion);
             nbt.putBoolean("EditMode", edit);
 
             return nbt;
@@ -238,9 +229,6 @@ public class ModVariables {
             }
 
             playerDoubleJump = nbt.getBoolean("DoubleJump");
-            tacticalSprint = nbt.getBoolean("TacticalSprint");
-            tacticalSprintTime = nbt.getInt("TacticalSprintTime");
-            tacticalSprintExhaustion = nbt.getBoolean("TacticalSprintExhaustion");
             edit = nbt.getBoolean("EditMode");
         }
     }
@@ -285,9 +273,6 @@ public class ModVariables {
                 variables.sniperAmmo = message.data.sniperAmmo;
                 variables.heavyAmmo = message.data.heavyAmmo;
                 variables.playerDoubleJump = message.data.playerDoubleJump;
-                variables.tacticalSprint = message.data.tacticalSprint;
-                variables.tacticalSprintTime = message.data.tacticalSprintTime;
-                variables.tacticalSprintExhaustion = message.data.tacticalSprintExhaustion;
                 variables.edit = message.data.edit;
             });
         }

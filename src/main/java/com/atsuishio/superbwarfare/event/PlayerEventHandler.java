@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
-import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunData;
@@ -15,9 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,12 +49,6 @@ public class PlayerEventHandler {
             return;
         }
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.tacticalSprintExhaustion = false;
-            capability.tacticalSprintTime = 600;
-            capability.syncPlayerVariables(player);
-        });
-
         handleRespawnReload(player);
         handleRespawnAutoArmor(player);
 
@@ -81,103 +71,11 @@ public class PlayerEventHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             if (stack.is(ModTags.Items.GUN)) {
-                handlePlayerSprint(player);
                 handleSpecialWeaponAmmo(player);
-
             }
 
             handleGround(player);
             handleSimulationDistance(player);
-            handleTacticalSprint(player);
-        }
-    }
-
-    private static void handleTacticalSprint(Player player) {
-        ItemStack stack = player.getMainHandItem();
-
-        int sprintCost;
-
-        if (stack.is(ModTags.Items.GUN)) {
-            var data = GunData.from(stack);
-            sprintCost = (int) (5 + 0.2 * data.weight());
-        } else {
-            sprintCost = 5;
-        }
-
-        if (!player.isSprinting()) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprint = false;
-                capability.syncPlayerVariables(player);
-            });
-            player.getPersistentData().putBoolean("canTacticalSprint", true);
-        }
-
-        if (player.isSprinting()
-                && !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).tacticalSprintExhaustion
-                && player.getPersistentData().getBoolean("canTacticalSprint")) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprint = true;
-                capability.syncPlayerVariables(player);
-            });
-            player.getPersistentData().putBoolean("canTacticalSprint", false);
-        }
-
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprintCost, 0, 1000);
-                capability.syncPlayerVariables(player);
-            });
-
-            if (MiscConfig.ALLOW_TACTICAL_SPRINT.get()) {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
-            }
-        } else {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 7, 0, 1000);
-                capability.syncPlayerVariables(player);
-            });
-        }
-
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime == 0) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintExhaustion = true;
-                capability.tacticalSprint = false;
-                capability.syncPlayerVariables(player);
-            });
-        }
-
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime == 1000) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintExhaustion = false;
-                capability.syncPlayerVariables(player);
-            });
-            player.getPersistentData().putBoolean("canTacticalSprint", true);
-        }
-    }
-
-    /**
-     * 判断玩家是否在奔跑
-     */
-    private static void handlePlayerSprint(Player player) {
-        if (player.level().isClientSide) {
-            if (ClientEventHandler.holdFire) {
-                player.getPersistentData().putDouble("noRun", 10);
-            }
-
-            if (player.isShiftKeyDown()
-                    || player.isPassenger()
-                    || player.isInWater()
-                    || ClientEventHandler.zoom) {
-                player.getPersistentData().putDouble("noRun", 3);
-            }
-
-            if (player.getPersistentData().getDouble("noRun") > 0) {
-                player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
-            }
-
-            if (ClientEventHandler.zoom || ClientEventHandler.holdFire) {
-                player.setSprinting(false);
-            }
         }
     }
 
