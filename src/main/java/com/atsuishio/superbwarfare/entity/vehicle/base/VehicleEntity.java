@@ -50,6 +50,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PacketDistributor;
@@ -948,6 +950,7 @@ public abstract class VehicleEntity extends Entity {
         return getEyePosition();
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void renderFirstPersonOverlay(GuiGraphics guiGraphics, Font font, LocalPlayer player, int screenWidth, int screenHeight, float scale) {
         if (!(this instanceof WeaponVehicleEntity weaponVehicle)) return;
 
@@ -975,7 +978,7 @@ public abstract class VehicleEntity extends Entity {
         preciseBlit(guiGraphics, texture, centerW, centerH, 0, 0, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void renderThirdPersonOverlay(GuiGraphics guiGraphics, Font font, LocalPlayer player, int screenWidth, int screenHeight, float scale) {
     }
-
 }
