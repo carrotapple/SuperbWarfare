@@ -4,10 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.C4Entity;
-import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
-import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
-import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
-import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
+import com.atsuishio.superbwarfare.entity.projectile.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -243,6 +240,9 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                         return 1.5f * damage;
                     }
                     if (source.getDirectEntity() instanceof GunGrenadeEntity) {
+                        return 2f * damage;
+                    }
+                    if (source.getDirectEntity() instanceof MortarShellEntity) {
                         return 2f * damage;
                     }
                     return damage;
