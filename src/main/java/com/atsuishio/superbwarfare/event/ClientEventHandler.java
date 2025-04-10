@@ -1527,6 +1527,10 @@ public class ClientEventHandler {
             lungeSprint = 0;
             lungeAttack = 0;
             burstFireAmount = 0;
+            pullTimer = 0;
+            bowTimer = 0;
+            handTimer = 0;
+            handPos = 0;
         }
     }
 
