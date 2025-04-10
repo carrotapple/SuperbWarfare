@@ -40,8 +40,8 @@ public class StaminaOverlay implements IGuiOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, (float) Mth.clamp(ClientEventHandler.switchTime, 0, 1));
 
-        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight / 2 + 100, screenWidth / 2 + 64, screenHeight / 2 + 101, -90, -16777216);
-        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight / 2 + 100, screenWidth / 2 + 64 - (int) (1.28 * ClientEventHandler.stamina), screenHeight / 2 + 101, -90, -1);
+        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight - 48, screenWidth / 2 + 64, screenHeight - 49, -90, -16777216);
+        guiGraphics.fill(RenderType.guiOverlay(), screenWidth / 2 - 64, screenHeight - 48, screenWidth / 2 + 64 - (int) (1.28 * ClientEventHandler.stamina), screenHeight - 49, -90, -1);
         guiGraphics.pose().popPose();
     }
 
