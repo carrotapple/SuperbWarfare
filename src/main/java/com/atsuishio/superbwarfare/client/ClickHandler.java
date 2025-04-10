@@ -281,9 +281,6 @@ public class ClickHandler {
                 }
             }
 
-            if (key == ModKeyMappings.BREATH.getKey().getValue()) {
-//                ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(true));
-            }
         } else {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 return;
@@ -300,12 +297,6 @@ public class ClickHandler {
 
             if (key == ModKeyMappings.SWITCH_ZOOM.getKey().getValue() && !switchZoom) {
                 handleWeaponZoomRelease();
-            }
-
-            if (event.getAction() == GLFW.GLFW_RELEASE) {
-                if (key == ModKeyMappings.BREATH.getKey().getValue()) {
-//                    ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(false));
-                }
             }
         }
     }
@@ -340,7 +331,11 @@ public class ClickHandler {
                 && !notInGame()
         ) {
             var data = GunData.from(stack);
-            player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
+            if (!stack.is(ModItems.BOCEK.get())) {
+                player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
+            } else {
+                player.playSound(ModSounds.BOCEK_PULL_1P.get(), 1, 1);
+            }
 
             if (!gunItem.useBackpackAmmo(stack) && data.getAmmo() <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {

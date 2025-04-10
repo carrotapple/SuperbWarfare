@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -32,6 +33,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -181,6 +183,12 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
     public void fireOnRelease(Player player, double power, boolean zoom) {
         if (player.level().isClientSide()) return;
 
+        if (player instanceof ServerPlayer serverPlayer) {
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+        }
+
         ItemStack stack = player.getMainHandItem();
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
@@ -218,9 +226,5 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
     @Override
     public void fireOnPress(Player player, boolean zoom) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
-            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
-        }
     }
 }

@@ -103,8 +103,6 @@ public class ClientEventHandler {
 
     public static double droneFov = 1;
     public static double droneFovLerp = 1;
-
-    public static double breathTime = 0;
     public static double fov = 0;
     public static double pullTimer = 0;
     public static double bowTimer = 0;
@@ -132,6 +130,9 @@ public class ClientEventHandler {
 
     public static boolean zoom = false;
     public static boolean breath = false;
+    public static int breathTime = 0;
+    public static double breathSwitchTime = 0;
+    public static boolean breathExhaustion = false;
     public static boolean holdFireVehicle = false;
 
     public static boolean zoomVehicle = false;
@@ -285,6 +286,39 @@ public class ClientEventHandler {
             handleVariableDecrease();
             aimAtVillager(player);
             CrossHairOverlay.handleRenderDamageIndicator();
+            gunBreath();
+        }
+    }
+
+    //屏息
+    public static void gunBreath() {
+        if (!breathExhaustion && zoom) {
+            breath = ModKeyMappings.BREATH.isDown();
+        }
+
+        if (breath) {
+            breathTime++;
+        } else if (breathTime > 0) {
+            breathTime--;
+        }
+
+        if (breathTime >= 100) {
+            breathExhaustion = true;
+            breath = false;
+        }
+
+        if (breathExhaustion && breathTime == 0) {
+            breathExhaustion = false;
+        }
+
+        if (ModKeyMappings.BREATH.isDown() && zoom) {
+            breathSwitchTime = Math.min(breathSwitchTime + 0.5, 5);
+        } else if (breathSwitchTime > 0 && breathTime == 0) {
+            breathSwitchTime -= 0.15;
+        }
+
+        if (!zoom) {
+            breath = false;
         }
     }
 
@@ -923,7 +957,6 @@ public class ClientEventHandler {
             handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom(living);
-            handlePlayerBreath(living);
             handleWeaponFire(event, living);
             handleWeaponShell();
             handleGunRecoil();
@@ -1275,12 +1308,6 @@ public class ClientEventHandler {
         if (recoilTime >= 2.5) recoilTime = 0;
     }
 
-    private static void handlePlayerBreath(LivingEntity entity) {
-        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
-
-        breathTime = Mth.lerp(0.2f * times, breathTime, breath ? 1 : 0);
-    }
-
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         if (entity.hasEffect(ModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
             event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
@@ -1395,12 +1422,12 @@ public class ClientEventHandler {
 
             var data = GunData.from(stack);
 
-            customZoom = Mth.lerp(0.6 * times, customZoom, data.zoom());
+            customZoom = Mth.lerp(0.6 * times, customZoom, data.zoom() + (breath ? 0.75 : 0));
 
             if (mc.options.getCameraType().isFirstPerson()) {
-                event.setFOV(event.getFOV() / (1.0 + p * (customZoom - 1)) * (1 - 0.4 * breathTime));
+                event.setFOV(event.getFOV() / (1.0 + p * (customZoom - 1)));
             } else if (mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK)
-                event.setFOV(event.getFOV() / (1.0 + p * 0.01) * (1 - 0.4 * breathTime));
+                event.setFOV(event.getFOV() / (1.0 + p * 0.01));
             fov = event.getFOV();
 
             // 智慧芯片
