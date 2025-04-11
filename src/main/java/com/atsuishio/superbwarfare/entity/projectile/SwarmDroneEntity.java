@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -180,6 +180,13 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
         if (result.getEntity() instanceof SwarmDroneEntity) {
             return;
         }
+        if (this.getOwner() instanceof LivingEntity living) {
+            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            }
+        }
         if (this.level() instanceof ServerLevel) {
             causeMissileExplode(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.explosionDamage, this.explosionRadius);
         }
@@ -212,6 +219,9 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
 
             if (guide_type == 0 && entity!= null) {
                 targetPos = entity.getEyePosition();
+                this.entityData.set(TARGET_X, (float) targetPos.x);
+                this.entityData.set(TARGET_Y, (float) targetPos.y);
+                this.entityData.set(TARGET_Z, (float) targetPos.z);
             } else {
                 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y), this.entityData.get(TARGET_Z));
             }
@@ -249,14 +259,6 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     }
 
     public void causeMissileExplode(@Nullable DamageSource source, float damage, float radius) {
-        if (this.getOwner() instanceof LivingEntity living) {
-            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-
-                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        }
-
         CustomExplosion explosion = new CustomExplosion(level(), this, source, damage,
                 this.getX(), this.getY(), this.getZ(), radius, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
         explosion.explode();
