@@ -5,8 +5,10 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -135,5 +137,43 @@ public class RenderHelper {
         bufferBuilder.vertex(matrix4f, pX1, pY2, pBlitOffset).color(r, g, b, 1f).uv(pMinU, pMaxV).endVertex();
         bufferBuilder.vertex(matrix4f, pX2, pY2, pBlitOffset).color(r, g, b, 1f).uv(pMaxU, pMaxV).endVertex();
         bufferBuilder.vertex(matrix4f, pX2, pY1, pBlitOffset).color(r, g, b, 1f).uv(pMaxU, pMinV).endVertex();
+    }
+
+    /**
+     * Fills a rectangle with the specified color and z-level using the given render type and coordinates as the
+     * boundaries.
+     *
+     * @param pRenderType the render type to use.
+     * @param pMinX       the minimum x-coordinate of the rectangle.
+     * @param pMinY       the minimum y-coordinate of the rectangle.
+     * @param pMaxX       the maximum x-coordinate of the rectangle.
+     * @param pMaxY       the maximum y-coordinate of the rectangle.
+     * @param pZ          the z-level of the rectangle.
+     * @param pColor      the color to fill the rectangle with.
+     */
+    public static void fill(GuiGraphics guiGraphics, RenderType pRenderType, float pMinX, float pMinY, float pMaxX, float pMaxY, float pZ, int pColor) {
+        Matrix4f matrix4f = guiGraphics.pose().last().pose();
+        if (pMinX < pMaxX) {
+            float i = pMinX;
+            pMinX = pMaxX;
+            pMaxX = i;
+        }
+
+        if (pMinY < pMaxY) {
+            float j = pMinY;
+            pMinY = pMaxY;
+            pMaxY = j;
+        }
+
+        float f3 = (float) FastColor.ARGB32.alpha(pColor) / 255.0F;
+        float f = (float) FastColor.ARGB32.red(pColor) / 255.0F;
+        float f1 = (float) FastColor.ARGB32.green(pColor) / 255.0F;
+        float f2 = (float) FastColor.ARGB32.blue(pColor) / 255.0F;
+        VertexConsumer vertexconsumer = guiGraphics.bufferSource().getBuffer(pRenderType);
+        vertexconsumer.vertex(matrix4f, pMinX, pMinY, pZ).color(f, f1, f2, f3).endVertex();
+        vertexconsumer.vertex(matrix4f, pMinX, pMaxY, pZ).color(f, f1, f2, f3).endVertex();
+        vertexconsumer.vertex(matrix4f, pMaxX, pMaxY, pZ).color(f, f1, f2, f3).endVertex();
+        vertexconsumer.vertex(matrix4f, pMaxX, pMinY, pZ).color(f, f1, f2, f3).endVertex();
+        guiGraphics.flush();
     }
 }
