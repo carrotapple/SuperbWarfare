@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.weapon;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.projectile.SwarmDroneEntity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -9,7 +9,7 @@ public class SwarmDroneWeapon extends VehicleWeapon {
     public float explosionDamage = 125, explosionRadius = 6;
 
     public SwarmDroneWeapon() {
-        this.icon = ModUtils.loc("textures/screens/vehicle_weapon/swarm_drone.png");
+        this.icon = Mod.loc("textures/screens/vehicle_weapon/swarm_drone.png");
     }
 
     public SwarmDroneWeapon explosionDamage(float explosionDamage) {

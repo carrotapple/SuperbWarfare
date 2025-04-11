@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
@@ -66,7 +66,7 @@ public class CustomExplosion extends Explosion {
         final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4 * radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
             if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage, 3 * pRadius, 50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
         }
     }
@@ -77,7 +77,7 @@ public class CustomExplosion extends Explosion {
         final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
             if (target instanceof ServerPlayer serverPlayer && !(target == pSource && pSource.getVehicle() != null)) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(5 + 0.02 * damage, 0.75 * pRadius,2 + 0.002 * damage, pToBlowX, pToBlowY, pToBlowZ));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(5 + 0.02 * damage, 0.75 * pRadius, 2 + 0.002 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
         }
     }

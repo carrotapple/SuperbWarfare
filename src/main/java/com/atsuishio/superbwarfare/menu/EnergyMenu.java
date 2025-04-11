@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.menu;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyDataSlot;
 import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
@@ -10,14 +10,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE)
 public abstract class EnergyMenu extends AbstractContainerMenu {
 
     private final List<ContainerEnergyDataSlot> containerEnergyDataSlots = Lists.newArrayList();
@@ -46,7 +45,7 @@ public abstract class EnergyMenu extends AbstractContainerMenu {
 
         if (!pairs.isEmpty()) {
             PacketDistributor.PacketTarget target = PacketDistributor.NMLIST.with(this.usingPlayers.stream().map(serverPlayer -> serverPlayer.connection.connection)::toList);
-            ModUtils.PACKET_HANDLER.send(target, new ContainerDataMessage(this.containerId, pairs));
+            Mod.PACKET_HANDLER.send(target, new ContainerDataMessage(this.containerId, pairs));
         }
 
         super.broadcastChanges();
@@ -69,7 +68,7 @@ public abstract class EnergyMenu extends AbstractContainerMenu {
             for (int i = 0; i < menu.containerEnergyDataSlots.size(); ++i) {
                 toSync.add(new ContainerDataMessage.Pair(i, menu.containerEnergyDataSlots.get(i).get()));
             }
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ContainerDataMessage(menu.containerId, toSync));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ContainerDataMessage(menu.containerId, toSync));
         }
     }
 

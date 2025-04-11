@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.gun.heavy;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.Ntw20Renderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -167,7 +167,7 @@ public class Ntw20Item extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/ntw_20_icon.png");
+        return Mod.loc("textures/gun_icon/ntw_20_icon.png");
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.item.armor;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.renderer.armor.UsHelmetPastgArmorRenderer;
 import com.atsuishio.superbwarfare.init.ModAttributes;
 import com.atsuishio.superbwarfare.tiers.ModArmorMaterial;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,7 +51,7 @@ public class UsHelmetPastg extends ArmorItem implements GeoItem {
         UUID uuid = new UUID(slot.toString().hashCode(), 0);
         if (slot == EquipmentSlot.HEAD) {
             map = HashMultimap.create(map);
-            map.put(ModAttributes.BULLET_RESISTANCE.get(), new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,
+            map.put(ModAttributes.BULLET_RESISTANCE.get(), new AttributeModifier(uuid, Mod.ATTRIBUTE_MODIFIER,
                     0.2 * Math.max(0, 1 - (double) stack.getDamageValue() / stack.getMaxDamage()), AttributeModifier.Operation.ADDITION));
         }
         return map;

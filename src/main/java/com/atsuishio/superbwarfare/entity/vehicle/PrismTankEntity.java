@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
@@ -273,7 +273,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                 final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
                 for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(5), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                     if (target instanceof ServerPlayer serverPlayer) {
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(8, 4, 7, this.getX(), this.getEyeY(), this.getZ()));
+                        Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(8, 4, 7, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
             }
@@ -312,7 +312,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(5, 3, 3, this.getX(), this.getEyeY(), this.getZ()));
+                    Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(5, 3, 3, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
 
@@ -398,7 +398,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                             if (getFirstPassenger() != null && !getFirstPassenger().level().isClientSide() && getFirstPassenger() instanceof ServerPlayer player) {
                                 var holder = Holder.direct(ModSounds.INDICATION.get());
                                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
-                                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+                                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                             }
                         }
                     }
@@ -430,7 +430,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                 if (getFirstPassenger() != null && !getFirstPassenger().level().isClientSide() && getFirstPassenger() instanceof ServerPlayer player) {
                     var holder = Holder.direct(ModSounds.INDICATION.get());
                     player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+                    Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                 }
             }
         }
@@ -743,7 +743,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/prism_tank_icon.png");
+        return Mod.loc("textures/vehicle_icon/prism_tank_icon.png");
     }
 
     @Override
@@ -754,7 +754,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
         float centerH = ((screenHeight - scaledMinWH) / 2);
 
         // 准心
-        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+        preciseBlit(guiGraphics, Mod.loc("textures/screens/land/lav_missile_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
 
         // 武器名称+过热
         double heat = 1 - this.getEntityData().get(HEAT) / 100.0F;

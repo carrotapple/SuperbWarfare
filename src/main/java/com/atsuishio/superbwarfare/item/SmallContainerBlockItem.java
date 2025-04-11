@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.renderer.item.SmallContainerBlockItemRenderer;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModBlocks;
@@ -25,8 +25,8 @@ import java.util.function.Supplier;
 public class SmallContainerBlockItem extends BlockItem implements GeoItem {
 
     public static final List<Supplier<ItemStack>> SMALL_CONTAINER_LOOT_TABLES = List.of(
-            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints")),
-            () -> SmallContainerBlockItem.createInstance(ModUtils.loc("containers/common"))
+            () -> SmallContainerBlockItem.createInstance(Mod.loc("containers/blueprints")),
+            () -> SmallContainerBlockItem.createInstance(Mod.loc("containers/common"))
     );
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

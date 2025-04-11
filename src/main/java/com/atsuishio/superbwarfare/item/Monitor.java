@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.network.message.ResetCameraTypeMessage;
@@ -51,7 +51,7 @@ public class Monitor extends Item {
         ItemNBTTool.setBoolean(itemstack, LINKED, false);
         itemstack.getOrCreateTag().putString(LINKED_DRONE, "none");
         if (player instanceof ServerPlayer serverPlayer) {
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ResetCameraTypeMessage(0));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ResetCameraTypeMessage(0));
         }
     }
 

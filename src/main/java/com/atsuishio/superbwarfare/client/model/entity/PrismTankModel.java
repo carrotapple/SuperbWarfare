@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.vehicle.PrismTankEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
@@ -14,7 +14,7 @@ public class PrismTankModel extends GeoModel<PrismTankEntity> {
 
     @Override
     public ResourceLocation getModelResource(PrismTankEntity entity) {
-        return ModUtils.loc("geo/prism_tank.geo.json");
+        return Mod.loc("geo/prism_tank.geo.json");
 //        Player player = Minecraft.getInstance().player;
 //
 //        int distance = 0;
@@ -32,6 +32,6 @@ public class PrismTankModel extends GeoModel<PrismTankEntity> {
 
     @Override
     public ResourceLocation getTextureResource(PrismTankEntity entity) {
-        return ModUtils.loc("textures/entity/prism_tank.png");
+        return Mod.loc("textures/entity/prism_tank.png");
     }
 }

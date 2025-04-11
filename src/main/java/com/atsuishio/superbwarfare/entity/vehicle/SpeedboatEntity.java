@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.*;
@@ -71,7 +71,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                                 .damage(VehicleConfig.HEAVY_MACHINE_GUN_DAMAGE.get())
                                 .headShot(2)
                                 .zoom(false)
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png"))
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/gun_12_7mm.png"))
                 }
         };
     }
@@ -243,7 +243,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
             if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
             }
         }
 
@@ -578,7 +578,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/speedboat_icon.png");
+        return Mod.loc("textures/vehicle_icon/speedboat_icon.png");
     }
 
     @Override

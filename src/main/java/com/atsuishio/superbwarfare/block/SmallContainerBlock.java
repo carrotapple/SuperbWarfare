@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.block;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.block.entity.SmallContainerBlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -84,8 +84,8 @@ public class SmallContainerBlock extends BaseEntityBlock {
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
         if (tag != null) {
             String lootTable = tag.getString("LootTable");
-            if (lootTable.startsWith(ModUtils.MODID + ":containers/")) {
-                var split = lootTable.split(ModUtils.MODID + ":containers/");
+            if (lootTable.startsWith(Mod.MODID + ":containers/")) {
+                var split = lootTable.split(Mod.MODID + ":containers/");
                 if (split.length == 2) {
                     lootTable = "loot." + split[1];
                 }

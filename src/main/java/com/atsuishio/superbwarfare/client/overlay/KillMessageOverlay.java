@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
@@ -36,24 +36,24 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 @OnlyIn(Dist.CLIENT)
 public class KillMessageOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_kill_message";
+    public static final String ID = Mod.MODID + "_kill_message";
 
-    private static final ResourceLocation HEADSHOT = ModUtils.loc("textures/screens/damage_types/headshot.png");
+    private static final ResourceLocation HEADSHOT = Mod.loc("textures/screens/damage_types/headshot.png");
 
-    private static final ResourceLocation KNIFE = ModUtils.loc("textures/screens/damage_types/knife.png");
-    private static final ResourceLocation EXPLOSION = ModUtils.loc("textures/screens/damage_types/explosion.png");
-    private static final ResourceLocation CLAYMORE = ModUtils.loc("textures/screens/damage_types/claymore.png");
-    private static final ResourceLocation GENERIC = ModUtils.loc("textures/screens/damage_types/generic.png");
-    private static final ResourceLocation BEAST = ModUtils.loc("textures/screens/damage_types/beast.png");
-    private static final ResourceLocation BLEEDING = ModUtils.loc("textures/screens/damage_types/bleeding.png");
-    private static final ResourceLocation SHOCK = ModUtils.loc("textures/screens/damage_types/shock.png");
-    private static final ResourceLocation BLOOD_CRYSTAL = ModUtils.loc("textures/screens/damage_types/blood_crystal.png");
-    private static final ResourceLocation BURN = ModUtils.loc("textures/screens/damage_types/burn.png");
-    private static final ResourceLocation DRONE = ModUtils.loc("textures/screens/damage_types/drone.png");
-    private static final ResourceLocation LASER = ModUtils.loc("textures/screens/damage_types/laser.png");
-    private static final ResourceLocation VEHICLE = ModUtils.loc("textures/screens/damage_types/vehicle_strike.png");
+    private static final ResourceLocation KNIFE = Mod.loc("textures/screens/damage_types/knife.png");
+    private static final ResourceLocation EXPLOSION = Mod.loc("textures/screens/damage_types/explosion.png");
+    private static final ResourceLocation CLAYMORE = Mod.loc("textures/screens/damage_types/claymore.png");
+    private static final ResourceLocation GENERIC = Mod.loc("textures/screens/damage_types/generic.png");
+    private static final ResourceLocation BEAST = Mod.loc("textures/screens/damage_types/beast.png");
+    private static final ResourceLocation BLEEDING = Mod.loc("textures/screens/damage_types/bleeding.png");
+    private static final ResourceLocation SHOCK = Mod.loc("textures/screens/damage_types/shock.png");
+    private static final ResourceLocation BLOOD_CRYSTAL = Mod.loc("textures/screens/damage_types/blood_crystal.png");
+    private static final ResourceLocation BURN = Mod.loc("textures/screens/damage_types/burn.png");
+    private static final ResourceLocation DRONE = Mod.loc("textures/screens/damage_types/drone.png");
+    private static final ResourceLocation LASER = Mod.loc("textures/screens/damage_types/laser.png");
+    private static final ResourceLocation VEHICLE = Mod.loc("textures/screens/damage_types/vehicle_strike.png");
 
-    private static final ResourceLocation WORLD_PEACE_STAFF = ModUtils.loc("textures/gun_icon/compat/world_peace_staff.png");
+    private static final ResourceLocation WORLD_PEACE_STAFF = Mod.loc("textures/gun_icon/compat/world_peace_staff.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {

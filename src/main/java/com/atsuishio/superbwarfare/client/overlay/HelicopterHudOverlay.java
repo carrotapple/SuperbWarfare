@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
@@ -40,7 +40,7 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntit
 @OnlyIn(Dist.CLIENT)
 public class HelicopterHudOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_helicopter_hud";
+    public static final String ID = Mod.MODID + "_helicopter_hud";
 
     private static float scopeScale = 1;
     private static float lerpVy = 1;
@@ -79,23 +79,23 @@ public class HelicopterHudOverlay implements IGuiOverlay {
             float l = ((screenHeight - j) / 2);
 
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
                 renderDriverAngle(guiGraphics, player, mobileVehicle, k, l, i, j, partialTick);
 
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) screenWidth / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/compass.png"), (float) screenWidth / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
 
                 poseStack.pushPose();
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(partialTick)), screenWidth / 2f, screenHeight / 2f, 0);
                 float pitch = iHelicopterEntity.getRotX(partialTick);
 
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_line.png"), (float) screenWidth / 2 - 128, (float) screenHeight / 2 - 512 - 5.475f * pitch, 0, 0, 256, 1024, 256, 1024);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/heli_line.png"), (float) screenWidth / 2 - 128, (float) screenHeight / 2 - 512 - 5.475f * pitch, 0, 0, 256, 1024, 256, 1024);
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(iHelicopterEntity.getRotZ(partialTick)), screenWidth / 2f, screenHeight / 2f - 56, 0);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), (float) screenWidth / 2 - 8, (float) screenHeight / 2 - 88, 0, 0, 16, 16, 16, 16);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/roll_ind.png"), (float) screenWidth / 2 - 8, (float) screenHeight / 2 - 88, 0, 0, 16, 16, 16, 16);
                 poseStack.popPose();
 
-                guiGraphics.blit(ModUtils.loc("textures/screens/helicopter/heli_power_ruler.png"), screenWidth / 2 + 100, screenHeight / 2 - 64, 0, 0, 64, 128, 64, 128);
+                guiGraphics.blit(Mod.loc("textures/screens/helicopter/heli_power_ruler.png"), screenWidth / 2 + 100, screenHeight / 2 - 64, 0, 0, 64, 128, 64, 128);
 
                 double height = mobileVehicle.position().distanceTo((Vec3.atLowerCornerOf(mobileVehicle.level().clip(new ClipContext(mobileVehicle.position(), mobileVehicle.position().add(new Vec3(0, -1, 0).scale(100)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, mobileVehicle)).getBlockPos())));
@@ -104,14 +104,14 @@ public class HelicopterHudOverlay implements IGuiOverlay {
 
                 float power = iHelicopterEntity.getPower();
                 lerpPower = Mth.lerp(0.001f * partialTick, lerpPower, power);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_power.png"), (float) screenWidth / 2 + 130f, ((float) screenHeight / 2 - 64 + 124 - power * 980), 0, 0, 4, power * 980, 4, power * 980);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/heli_power.png"), (float) screenWidth / 2 + 130f, ((float) screenHeight / 2 - 64 + 124 - power * 980), 0, 0, 4, power * 980, 4, power * 980);
                 lerpVy = (float) Mth.lerp(0.021f * partialTick, lerpVy, mobileVehicle.getDeltaMovement().y());
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) screenWidth / 2 + 138, ((float) screenHeight / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/heli_vy_move.png"), (float) screenWidth / 2 + 138, ((float) screenHeight / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(lerpVy * 20, "m/s")),
                         screenWidth / 2 + 146, (int) (screenHeight / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (lerpVy * 20 < -24 || ((lerpVy * 20 < -10 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(mobileVehicle.getY())),
                         screenWidth / 2 + 104, screenHeight / 2, 0x66FF00, false);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) screenWidth / 2 - 144, (float) screenHeight / 2 - 6, 0, 0, 50, 18, 50, 18);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/speed_frame.png"), (float) screenWidth / 2 - 144, (float) screenHeight / 2 - 6, 0, 0, 50, 18, 50, 18);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72, "km/h")),
                         screenWidth / 2 - 140, screenHeight / 2, 0x66FF00, false);
 
@@ -168,12 +168,12 @@ public class HelicopterHudOverlay implements IGuiOverlay {
                 float y = (float) p.y;
 
                 if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                    preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
                     renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
                 } else if (mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                     poseStack.pushPose();
                     poseStack.rotateAround(Axis.ZP.rotationDegrees(iHelicopterEntity.getRotZ(partialTick)), x, y, 0);
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                    preciseBlit(guiGraphics, Mod.loc("textures/screens/drone.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
                     renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
 
                     poseStack.pushPose();
@@ -211,7 +211,7 @@ public class HelicopterHudOverlay implements IGuiOverlay {
         float diffY = Mth.wrapDegrees(Mth.lerp(ticks, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(ticks, heli.yRotO, heli.getYRot())) * 0.35f;
         float diffX = Mth.wrapDegrees(Mth.lerp(ticks, player.xRotO, player.getXRot()) - Mth.lerp(ticks, heli.xRotO, heli.getXRot())) * 0.072f;
 
-        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_driver_angle.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
+        preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/heli_driver_angle.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
     }
 
     public static Matrix4f getVehicleTransform(VehicleEntity vehicle, float partialTicks) {

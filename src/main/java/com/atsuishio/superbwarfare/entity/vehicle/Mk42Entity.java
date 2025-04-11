@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
@@ -92,7 +92,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                                 .durability(60)
                                 .gravity(shellGravity)
                                 .sound(ModSounds.CANNON_RELOAD.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         new CannonShellWeapon()
                                 .hitDamage(VehicleConfig.MK42_HE_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.MK42_HE_EXPLOSION_DAMAGE.get())
@@ -102,7 +102,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
                                 .fireTime(2)
                                 .gravity(shellGravity)
                                 .sound(ModSounds.CANNON_RELOAD.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/he_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/he_shell.png")),
                 }
         };
     }
@@ -360,7 +360,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
+                    Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
         }
@@ -454,6 +454,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, CannonEntity
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/sherman_icon.png");
+        return Mod.loc("textures/vehicle_icon/sherman_icon.png");
     }
 }

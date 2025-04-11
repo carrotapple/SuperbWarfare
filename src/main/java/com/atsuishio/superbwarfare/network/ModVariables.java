@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.tools.AmmoType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
@@ -20,13 +20,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
 public class ModVariables {
 
     @SubscribeEvent
@@ -34,7 +33,7 @@ public class ModVariables {
         event.register(PlayerVariables.class);
     }
 
-    @Mod.EventBusSubscriber
+    @net.minecraftforge.fml.common.Mod.EventBusSubscriber
     public static class EventBusVariableHandlers {
         @SubscribeEvent
         public static void onPlayerLoggedInSyncPlayerVariables(PlayerEvent.PlayerLoggedInEvent event) {
@@ -83,7 +82,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
             SavedData worldData = WorldVariables.get(event.getEntity().level());
             if (worldData != null)
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
         }
 
         @SubscribeEvent
@@ -91,12 +90,12 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
             SavedData worldData = WorldVariables.get(event.getEntity().level());
             if (worldData != null)
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
         }
     }
 
     public static class WorldVariables extends SavedData {
-        public static final String DATA_NAME = ModUtils.MODID + "_world_variables";
+        public static final String DATA_NAME = Mod.MODID + "_world_variables";
 
         public static WorldVariables load(CompoundTag tag) {
             WorldVariables data = new WorldVariables();
@@ -115,7 +114,7 @@ public class ModVariables {
         public void syncData(LevelAccessor world) {
             this.setDirty();
             if (world instanceof Level level && !level.isClientSide())
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(level::dimension), new SavedDataSyncMessage(1, this));
+                Mod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(level::dimension), new SavedDataSyncMessage(1, this));
         }
 
         static WorldVariables clientSide = new WorldVariables();
@@ -166,12 +165,12 @@ public class ModVariables {
     public static final Capability<PlayerVariables> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
-    @Mod.EventBusSubscriber
+    @net.minecraftforge.fml.common.Mod.EventBusSubscriber
     private static class PlayerVariablesProvider implements ICapabilitySerializable<Tag> {
         @SubscribeEvent
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof Player && !(event.getObject() instanceof FakePlayer))
-                event.addCapability(ModUtils.loc("player_variables"), new PlayerVariablesProvider());
+                event.addCapability(Mod.loc("player_variables"), new PlayerVariablesProvider());
         }
 
         private final PlayerVariables playerVariables = new PlayerVariables();
@@ -204,7 +203,7 @@ public class ModVariables {
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
+                Mod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
         }
 
         public Tag writeNBT() {

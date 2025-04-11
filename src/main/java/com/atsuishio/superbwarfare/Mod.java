@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -40,15 +39,15 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mod(ModUtils.MODID)
-public class ModUtils {
+@net.minecraftforge.fml.common.Mod(Mod.MODID)
+public class Mod {
 
     public static final String MODID = "superbwarfare";
     public static final String ATTRIBUTE_MODIFIER = "superbwarfare_attribute_modifier";
 
-    public static final Logger LOGGER = LogManager.getLogger(ModUtils.class);
+    public static final Logger LOGGER = LogManager.getLogger(Mod.class);
 
-    public ModUtils() {
+    public Mod() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.capability;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class LaserCapability {
 
-    public static ResourceLocation ID = ModUtils.loc("laser_capability");
+    public static ResourceLocation ID = Mod.loc("laser_capability");
 
     public interface ILaserCapability extends INBTSerializable<CompoundTag> {
 

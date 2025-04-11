@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.init;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.item.SmallContainerBlockItem;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -17,18 +17,17 @@ import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ModUtils.MODID)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID)
 public class ModVillagers {
 
-    public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, ModUtils.MODID);
-    public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, ModUtils.MODID);
+    public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, Mod.MODID);
+    public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, Mod.MODID);
 
     public static final RegistryObject<PoiType> ARMORY_POI = POI_TYPES.register("armory",
             () -> new PoiType(ImmutableSet.copyOf(ModBlocks.REFORGING_TABLE.get().getStateDefinition().getPossibleStates()), 1, 1));
@@ -247,7 +246,7 @@ public class ModVillagers {
     }
 
     private static Holder<Item> getItemHolder(String name) {
-        return ForgeRegistries.ITEMS.getHolder(new ResourceLocation(ModUtils.MODID, name)).orElse(new Holder.Direct<>(ItemStack.EMPTY.getItem()));
+        return ForgeRegistries.ITEMS.getHolder(new ResourceLocation(Mod.MODID, name)).orElse(new Holder.Direct<>(ItemStack.EMPTY.getItem()));
     }
 
     @SubscribeEvent
@@ -255,8 +254,8 @@ public class ModVillagers {
         List<VillagerTrades.ItemListing> rareTrades = event.getRareTrades();
 
         rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
-                SmallContainerBlockItem.createInstance(ModUtils.loc("containers/blueprints")), 10, 0, 0.05f));
+                SmallContainerBlockItem.createInstance(Mod.loc("containers/blueprints")), 10, 0, 0.05f));
         rareTrades.add(new BasicItemListing(new ItemStack(Items.EMERALD, 10),
-                SmallContainerBlockItem.createInstance(ModUtils.loc("containers/common")), 10, 0, 0.05f));
+                SmallContainerBlockItem.createInstance(Mod.loc("containers/common")), 10, 0, 0.05f));
     }
 }

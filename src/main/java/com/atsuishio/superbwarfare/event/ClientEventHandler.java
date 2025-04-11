@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
@@ -10,8 +10,8 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
@@ -56,7 +56,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
@@ -69,7 +68,7 @@ import java.util.function.Supplier;
 import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.HEAT;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
 
     public static double zoomTime = 0;
@@ -283,7 +282,7 @@ public class ClientEventHandler {
         }
 
         if (keys != keysCache) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(keys));
+            Mod.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(keys));
             keysCache = keys;
         }
 
@@ -420,7 +419,7 @@ public class ClientEventHandler {
             if (gunMelee == 22) {
                 Entity lookingEntity = TraceTool.findMeleeEntity(player, player.getEntityReach());
                 if (lookingEntity != null) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new MeleeAttackMessage(lookingEntity.getUUID()));
+                    Mod.PACKET_HANDLER.sendToServer(new MeleeAttackMessage(lookingEntity.getUUID()));
                 }
             }
         }
@@ -447,12 +446,12 @@ public class ClientEventHandler {
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {
-                ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
+                Mod.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
                 lungeDraw = 30;
             } else if ((blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) && lungeSprint == 0) {
-                ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
+                Mod.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
                 lungeDraw = 30;
@@ -641,7 +640,7 @@ public class ClientEventHandler {
                     && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
 
             if (canAttack) {
-                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(1, lookingEntity.getUUID(), TraceTool.laserHeadshot));
+                Mod.PACKET_HANDLER.sendToServer(new LaserShootMessage(1, lookingEntity.getUUID(), TraceTool.laserHeadshot));
             }
         }
     }
@@ -711,7 +710,7 @@ public class ClientEventHandler {
                 double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-                ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1));
+                Mod.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1));
             }
 
             handleClientShoot();
@@ -730,7 +729,7 @@ public class ClientEventHandler {
         if (!stack.is(ModTags.Items.GUN)) return;
         var data = GunData.from(stack);
 
-        ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread, zoom));
+        Mod.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread, zoom));
         fireRecoilTime = 10;
 
         var gunRecoilY = data.recoilY() * 10;
@@ -781,7 +780,7 @@ public class ClientEventHandler {
             );
 
             if (charged.get()) {
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_1p"));
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, "sentinel_charge_fire_1p"));
                 if (sound1p != null) {
                     player.playSound(sound1p, 2f, (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
                 }
@@ -797,7 +796,7 @@ public class ClientEventHandler {
 
         int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
 
-        SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(ModUtils.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
+        SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
 
         if (sound1p != null) {
             player.playSound(sound1p, 4f, (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
@@ -806,7 +805,7 @@ public class ClientEventHandler {
         double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                 ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-        ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
+        Mod.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
             if (gunItem.canEjectShell(stack)) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     player.playSound(ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
@@ -849,7 +848,7 @@ public class ClientEventHandler {
                 }
 
                 if (clientTimerVehicle.getProgress() >= cooldown) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(pVehicle.getSeatIndex(player)));
+                    Mod.PACKET_HANDLER.sendToServer(new VehicleFireMessage(pVehicle.getSeatIndex(player)));
                     playVehicleClientSounds(player, iVehicle, pVehicle.getSeatIndex(player));
                     clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
                 }
@@ -1648,7 +1647,7 @@ public class ClientEventHandler {
                 List<Entity> entities = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
                 for (var e : entities) {
                     if (e == player) {
-                        ModUtils.PACKET_HANDLER.sendToServer(new AimVillagerMessage(villager.getId()));
+                        Mod.PACKET_HANDLER.sendToServer(new AimVillagerMessage(villager.getId()));
                         aimVillagerCountdown = 80;
                     }
                 }

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
@@ -33,10 +33,10 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 @OnlyIn(Dist.CLIENT)
 public class CrossHairOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_cross_hair";
+    public static final String ID = Mod.MODID + "_cross_hair";
 
-    private static final ResourceLocation REX_HORIZONTAL = ModUtils.loc("textures/screens/rex_horizontal.png");
-    private static final ResourceLocation REX_VERTICAL = ModUtils.loc("textures/screens/rex_vertical.png");
+    private static final ResourceLocation REX_HORIZONTAL = Mod.loc("textures/screens/rex_horizontal.png");
+    private static final ResourceLocation REX_VERTICAL = Mod.loc("textures/screens/rex_vertical.png");
 
     public static int HIT_INDICATOR = 0;
     public static int HEAD_INDICATOR = 0;
@@ -84,7 +84,7 @@ public class CrossHairOverlay implements IGuiOverlay {
         float finPosY = ((screenHeight - finLength) / 2) + moveY;
 
         if (shouldRenderCrossHair(player) || (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && stack.is(ModItems.MINIGUN.get())) || (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && (ClientEventHandler.zoomTime > 0 || ClientEventHandler.pullPos > 0))) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || ClientEventHandler.cantSprint > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
@@ -100,7 +100,7 @@ public class CrossHairOverlay implements IGuiOverlay {
 
         if (stack.is(ModItems.BOCEK.get())) {
             if (ClientEventHandler.zoomPos < 0.7) {
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                preciseBlit(guiGraphics, Mod.loc("textures/screens/point.png"), screenWidth / 2f - 7.5f + moveX, screenHeight / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                 if (!player.isSprinting() || ClientEventHandler.cantSprint > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
                         if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
@@ -140,7 +140,7 @@ public class CrossHairOverlay implements IGuiOverlay {
     }
 
     private static void shotgunCrossHair(GuiGraphics guiGraphics, float finPosX, float finPosY, float finLength) {
-        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
+        preciseBlit(guiGraphics, Mod.loc("textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
     }
 
     private static boolean shouldRenderCrossHair(Player player) {
@@ -160,15 +160,15 @@ public class CrossHairOverlay implements IGuiOverlay {
         float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
 
         if (HIT_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/hit_marker.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         if (VEHICLE_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/hit_marker_vehicle.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         if (HEAD_INDICATOR > 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/headshot_mark.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         if (KILL_INDICATOR > 0) {
@@ -177,10 +177,10 @@ public class CrossHairOverlay implements IGuiOverlay {
             float posX2 = w / 2f - 7.5f + 2 - rate + moveX;
             float posY2 = h / 2f - 7.5f + 2 - rate + moveY;
 
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
         }
     }
 

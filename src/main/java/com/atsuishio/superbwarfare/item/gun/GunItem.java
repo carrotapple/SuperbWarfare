@@ -1,9 +1,10 @@
 package com.atsuishio.superbwarfare.item.gun;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber
 public abstract class GunItem extends Item {
 
     public GunItem(Properties properties) {
@@ -116,7 +116,7 @@ public abstract class GunItem extends Item {
             var data = GunData.from(stack);
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(
-                    uuid, ModUtils.ATTRIBUTE_MODIFIER,
+                    uuid, Mod.ATTRIBUTE_MODIFIER,
                     -0.01f - 0.005f * data.weight(),
                     AttributeModifier.Operation.MULTIPLY_BASE
             ));
@@ -134,7 +134,7 @@ public abstract class GunItem extends Item {
     }
 
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/default_icon.png");
+        return Mod.loc("textures/gun_icon/default_icon.png");
     }
 
     public String getGunDisplayName() {

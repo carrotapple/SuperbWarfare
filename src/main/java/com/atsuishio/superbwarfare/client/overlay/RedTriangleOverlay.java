@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -23,9 +23,9 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 @OnlyIn(Dist.CLIENT)
 public class RedTriangleOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_red_triangle";
+    public static final String ID = Mod.MODID + "_red_triangle";
 
-    private static final ResourceLocation TRIANGLE = ModUtils.loc("textures/screens/red_triangle.png");
+    private static final ResourceLocation TRIANGLE = Mod.loc("textures/screens/red_triangle.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {

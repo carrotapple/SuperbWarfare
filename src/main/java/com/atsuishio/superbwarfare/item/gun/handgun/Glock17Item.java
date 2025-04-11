@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.gun.handgun;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.Glock17ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -120,7 +120,7 @@ public class Glock17Item extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/glock_icon.png");
+        return Mod.loc("textures/gun_icon/glock_icon.png");
     }
 
     @Override

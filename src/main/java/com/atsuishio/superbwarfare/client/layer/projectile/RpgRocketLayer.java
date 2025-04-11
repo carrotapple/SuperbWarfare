@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.layer.projectile;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class RpgRocketLayer extends GeoRenderLayer<RpgRocketEntity> {
-	private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/entity/rpg_rocket_e.png");
+	private static final ResourceLocation LAYER = new ResourceLocation(Mod.MODID, "textures/entity/rpg_rocket_e.png");
 
 	public RpgRocketLayer(GeoRenderer<RpgRocketEntity> entityRenderer) {
 		super(entityRenderer);

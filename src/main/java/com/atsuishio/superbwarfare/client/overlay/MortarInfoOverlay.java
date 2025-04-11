@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.RangeTool;
@@ -15,7 +15,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class MortarInfoOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_mortar_info";
+    public static final String ID = Mod.MODID + "_mortar_info";
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {

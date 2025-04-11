@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.gun.rifle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.InsidiousItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -102,7 +102,7 @@ public class InsidiousItem extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/insidious_icon.png");
+        return Mod.loc("textures/gun_icon/insidious_icon.png");
     }
 
     @Override

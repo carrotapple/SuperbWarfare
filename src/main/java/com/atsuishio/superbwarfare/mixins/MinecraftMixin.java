@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.network.message.ChangeVehicleSeatMessage;
@@ -54,7 +54,7 @@ public class MinecraftMixin {
             ci.cancel();
             options.keyHotbarSlots[index].consumeClick();
 
-            ModUtils.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
+            Mod.PACKET_HANDLER.sendToServer(new ChangeVehicleSeatMessage(index));
             vehicle.changeSeat(player, index);
 
             return;
@@ -70,7 +70,7 @@ public class MinecraftMixin {
             if (!options.keyShift.isDown()
                     && weaponVehicle.hasWeapon(seatIndex)
                     && weaponVehicle.getWeaponIndex(seatIndex) != index) {
-                ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
+                Mod.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
             }
         }
     }

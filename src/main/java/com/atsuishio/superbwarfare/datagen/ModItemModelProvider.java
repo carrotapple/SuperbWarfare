@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.datagen;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.data.PackOutput;
@@ -16,7 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 @SuppressWarnings({"ConstantConditions", "UnusedReturnValue", "SameParameterValue", "unused"})
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, ModUtils.MODID, existingFileHelper);
+        super(output, Mod.MODID, existingFileHelper);
     }
 
     @Override
@@ -169,31 +169,31 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item, String location) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", ModUtils.loc("item/" + location + item.getId().getPath()));
+                .texture("layer0", Mod.loc("item/" + location + item.getId().getPath()));
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item, String location, String renderType) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", ModUtils.loc("item/" + location + item.getId().getPath())).renderType(renderType);
+                .texture("layer0", Mod.loc("item/" + location + item.getId().getPath())).renderType(renderType);
     }
 
     public void evenSimplerBlockItem(RegistryObject<Block> block) {
-        this.withExistingParent(ModUtils.MODID + ":" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath(),
+        this.withExistingParent(Mod.MODID + ":" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath(),
                 modLoc("block/" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath()));
     }
 
     private ItemModelBuilder gunBlueprintItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", ModUtils.loc("item/gun_blueprint"));
+                .texture("layer0", Mod.loc("item/gun_blueprint"));
     }
 
     private ItemModelBuilder cannonBlueprintItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", ModUtils.loc("item/cannon_blueprint"));
+                .texture("layer0", Mod.loc("item/cannon_blueprint"));
     }
 
     private ItemModelBuilder handheldItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/handheld"))
-                .texture("layer0", ModUtils.loc("item/" + item.getId().getPath()));
+                .texture("layer0", Mod.loc("item/" + item.getId().getPath()));
     }
 }

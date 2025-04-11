@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.tools;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
 import com.google.gson.stream.JsonReader;
@@ -16,7 +16,6 @@ import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -24,7 +23,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = ModUtils.MODID)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID)
 public class GunsTool {
 
     public static HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
@@ -50,7 +49,7 @@ public class GunsTool {
                 reader.endObject();
                 reader.close();
             } catch (Exception e) {
-                ModUtils.LOGGER.error(e.getMessage());
+                Mod.LOGGER.error(e.getMessage());
             }
         }
     }
@@ -103,7 +102,7 @@ public class GunsTool {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
         }
     }
 
@@ -116,7 +115,7 @@ public class GunsTool {
     public static void datapackSync(OnDatapackSyncEvent event) {
         initJsonData(event.getPlayerList().getServer().getResourceManager());
 
-        event.getPlayerList().getPlayers().forEach(player -> ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData)));
+        event.getPlayerList().getPlayers().forEach(player -> Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData)));
     }
 
     public static void reload(Player player, ItemStack stack, AmmoType type) {

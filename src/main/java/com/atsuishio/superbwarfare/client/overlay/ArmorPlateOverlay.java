@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,15 +16,15 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 @OnlyIn(Dist.CLIENT)
 public class ArmorPlateOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_armor_plate";
+    public static final String ID = Mod.MODID + "_armor_plate";
 
-    private static final ResourceLocation ICON = ModUtils.loc("textures/screens/armor_plate_icon.png");
-    private static final ResourceLocation LEVEL1 = ModUtils.loc("textures/screens/armor_plate_level1.png");
-    private static final ResourceLocation LEVEL2 = ModUtils.loc("textures/screens/armor_plate_level2.png");
-    private static final ResourceLocation LEVEL3 = ModUtils.loc("textures/screens/armor_plate_level3.png");
-    private static final ResourceLocation LEVEL1_FRAME = ModUtils.loc("textures/screens/armor_plate_level1_frame.png");
-    private static final ResourceLocation LEVEL2_FRAME = ModUtils.loc("textures/screens/armor_plate_level2_frame.png");
-    private static final ResourceLocation LEVEL3_FRAME = ModUtils.loc("textures/screens/armor_plate_level3_frame.png");
+    private static final ResourceLocation ICON = Mod.loc("textures/screens/armor_plate_icon.png");
+    private static final ResourceLocation LEVEL1 = Mod.loc("textures/screens/armor_plate_level1.png");
+    private static final ResourceLocation LEVEL2 = Mod.loc("textures/screens/armor_plate_level2.png");
+    private static final ResourceLocation LEVEL3 = Mod.loc("textures/screens/armor_plate_level3.png");
+    private static final ResourceLocation LEVEL1_FRAME = Mod.loc("textures/screens/armor_plate_level1_frame.png");
+    private static final ResourceLocation LEVEL2_FRAME = Mod.loc("textures/screens/armor_plate_level2_frame.png");
+    private static final ResourceLocation LEVEL3_FRAME = Mod.loc("textures/screens/armor_plate_level3_frame.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {

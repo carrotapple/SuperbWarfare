@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -22,17 +22,17 @@ public class InsidiousItemModel extends GeoModel<InsidiousItem> {
 
     @Override
     public ResourceLocation getAnimationResource(InsidiousItem animatable) {
-        return ModUtils.loc("animations/insidious.animation.json");
+        return Mod.loc("animations/insidious.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(InsidiousItem animatable) {
-        return ModUtils.loc("geo/insidious.geo.json");
+        return Mod.loc("geo/insidious.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(InsidiousItem animatable) {
-        return ModUtils.loc("textures/item/insidious.png");
+        return Mod.loc("textures/item/insidious.png");
     }
 
     @Override

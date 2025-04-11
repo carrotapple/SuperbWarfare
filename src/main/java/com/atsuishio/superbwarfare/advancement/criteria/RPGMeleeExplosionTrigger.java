@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.advancement.criteria;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RPGMeleeExplosionTrigger extends SimpleCriterionTrigger<RPGMeleeExplosionTrigger.TriggerInstance> {
 
-    public static final ResourceLocation ID = ModUtils.loc("rpg_melee_explosion");
+    public static final ResourceLocation ID = Mod.loc("rpg_melee_explosion");
 
     @Override
     @ParametersAreNonnullByDefault

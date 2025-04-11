@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.datagen;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.google.common.collect.Lists;
 import net.minecraft.data.loot.LootTableSubProvider;
@@ -24,15 +24,15 @@ import java.util.function.BiConsumer;
 public class ModCustomLootProvider implements LootTableSubProvider {
 
     public static ResourceLocation containers(String name) {
-        return ModUtils.loc("containers/" + name);
+        return Mod.loc("containers/" + name);
     }
 
     public static ResourceLocation chests(String name) {
-        return ModUtils.loc("chests/" + name);
+        return Mod.loc("chests/" + name);
     }
 
     public static ResourceLocation special(String name) {
-        return ModUtils.loc("special/" + name);
+        return Mod.loc("special/" + name);
     }
 
     @Override

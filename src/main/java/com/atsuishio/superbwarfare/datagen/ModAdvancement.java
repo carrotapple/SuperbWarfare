@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.datagen;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
@@ -20,8 +20,8 @@ import java.util.function.UnaryOperator;
  */
 public class ModAdvancement {
 
-    public static final ResourceLocation MAIN_BACKGROUND = ModUtils.loc("textures/block/sandbag.png");
-    public static final ResourceLocation LEGENDARY_BACKGROUND = ModUtils.loc("textures/block/steel_block.png");
+    public static final ResourceLocation MAIN_BACKGROUND = Mod.loc("textures/block/sandbag.png");
+    public static final ResourceLocation LEGENDARY_BACKGROUND = Mod.loc("textures/block/steel_block.png");
 
     private final Advancement.Builder builder;
     private ModAdvancement parent;
@@ -55,7 +55,7 @@ public class ModAdvancement {
     }
 
     private String title() {
-        return ModUtils.MODID + ".advancement." + group.path + "." + id;
+        return Mod.MODID + ".advancement." + group.path + "." + id;
     }
 
     private Component titleComponent() {
@@ -73,7 +73,7 @@ public class ModAdvancement {
         if (parent != null) {
             builder.parent(parent.result);
         }
-        result = builder.save(t, ModUtils.loc(group.path + "/" + id).toString());
+        result = builder.save(t, Mod.loc(group.path + "/" + id).toString());
     }
 
     enum Type {

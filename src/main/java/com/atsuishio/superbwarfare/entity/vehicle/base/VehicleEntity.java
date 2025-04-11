@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
@@ -467,7 +467,7 @@ public abstract class VehicleEntity extends Entity {
             var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
             if (attacker instanceof ServerPlayer player && pHealAmount > 0 && this.getHealth() > 0 && send && !(this instanceof DroneEntity)) {
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getEyeY(), player.getZ(), 0.25f + (2.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()));
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(3, 5));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(3, 5));
             }
 
             if (pHealAmount > 0 && this.getHealth() > 0 && send) {
@@ -842,7 +842,7 @@ public abstract class VehicleEntity extends Entity {
     }
 
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/gun_icon/default_icon.png");
+        return Mod.loc("textures/gun_icon/default_icon.png");
     }
 
     public boolean allowFreeCam() {
@@ -961,7 +961,7 @@ public abstract class VehicleEntity extends Entity {
         float centerH = ((screenHeight - scaledMinWH) / 2);
 
         // 默认武器准心渲染
-        var texture = ModUtils.loc(switch (weaponVehicle.getWeaponIndex(0)) {
+        var texture = Mod.loc(switch (weaponVehicle.getWeaponIndex(0)) {
             case 0 -> "textures/screens/land/lav_cannon_cross.png";
             case 1 -> "textures/screens/land/lav_gun_cross.png";
             case 2 -> "textures/screens/land/lav_missile_cross.png";

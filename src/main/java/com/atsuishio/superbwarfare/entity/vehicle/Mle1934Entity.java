@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
@@ -84,7 +84,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
                                 .durability(70)
                                 .gravity(shellGravity)
                                 .sound(ModSounds.CANNON_RELOAD.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         new CannonShellWeapon()
                                 .hitDamage(VehicleConfig.MLE1934_HE_DAMAGE.get())
                                 .explosionDamage(VehicleConfig.MLE1934_HE_EXPLOSION_DAMAGE.get())
@@ -94,7 +94,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
                                 .fireTime(5)
                                 .gravity(shellGravity)
                                 .sound(ModSounds.CANNON_RELOAD.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/he_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/he_shell.png")),
                 }
         };
     }
@@ -396,7 +396,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                ModUtils.queueServerWork(44, () -> SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_RELOAD.get(), 2, 1));
+                Mod.queueServerWork(44, () -> SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_RELOAD.get(), 2, 1));
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
@@ -414,7 +414,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
+                    Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
         }
@@ -516,6 +516,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/mle1934_icon.png");
+        return Mod.loc("textures/vehicle_icon/mle1934_icon.png");
     }
 }

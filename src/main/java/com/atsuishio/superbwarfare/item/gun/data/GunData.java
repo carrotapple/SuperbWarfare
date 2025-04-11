@@ -1,5 +1,6 @@
-package com.atsuishio.superbwarfare.item.gun;
+package com.atsuishio.superbwarfare.item.gun.data;
 
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;

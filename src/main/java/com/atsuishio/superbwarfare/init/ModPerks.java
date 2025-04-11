@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.init;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -9,24 +9,23 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
 public class ModPerks {
 
     @SubscribeEvent
     public static void registry(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<Perk>().setName(new ResourceLocation(ModUtils.MODID, "perk")));
+        event.create(new RegistryBuilder<Perk>().setName(new ResourceLocation(Mod.MODID, "perk")));
     }
 
     /**
      * Ammo Perks
      */
-    public static final DeferredRegister<Perk> AMMO_PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
+    public static final DeferredRegister<Perk> AMMO_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
 
     public static final RegistryObject<Perk> AP_BULLET = AMMO_PERKS.register("ap_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).damageRate(0.9f).speedRate(1.2f).slug(true).rgb(230, 70, 35)));
@@ -51,7 +50,7 @@ public class ModPerks {
     /**
      * Functional Perks
      */
-    public static final DeferredRegister<Perk> FUNC_PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
+    public static final DeferredRegister<Perk> FUNC_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
 
     public static final RegistryObject<Perk> HEAL_CLIP = FUNC_PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = FUNC_PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
@@ -65,7 +64,7 @@ public class ModPerks {
     /**
      * Damage Perks
      */
-    public static final DeferredRegister<Perk> DAMAGE_PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
+    public static final DeferredRegister<Perk> DAMAGE_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
 
     public static final RegistryObject<Perk> KILL_CLIP = DAMAGE_PERKS.register("kill_clip", () -> new Perk("kill_clip", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> GUTSHOT_STRAIGHT = DAMAGE_PERKS.register("gutshot_straight", () -> new Perk("gutshot_straight", Perk.Type.DAMAGE));

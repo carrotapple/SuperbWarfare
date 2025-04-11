@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.layer.gun;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.item.gun.machinegun.RpkItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class RpkLayer extends GeoRenderLayer<RpkItem> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/rpk_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(Mod.MODID, "textures/item/rpk_e.png");
 
     public RpkLayer(GeoRenderer<RpkItem> entityRenderer) {
         super(entityRenderer);

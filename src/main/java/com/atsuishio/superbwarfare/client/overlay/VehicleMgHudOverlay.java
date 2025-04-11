@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity;
@@ -38,7 +38,7 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntit
 @OnlyIn(Dist.CLIENT)
 public class VehicleMgHudOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_vehicle_mg_hud";
+    public static final String ID = Mod.MODID + "_vehicle_mg_hud";
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -72,7 +72,7 @@ public class VehicleMgHudOverlay implements IGuiOverlay {
                 int j = Mth.floor(f * f1);
                 int k = (screenWidth - i) / 2;
                 int l = (screenHeight - j) / 2;
-                RenderHelper.preciseBlit(guiGraphics, ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                RenderHelper.preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
                 VehicleHudOverlay.renderKillIndicator(guiGraphics, screenWidth, screenHeight);
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
                 Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(partialTick, player.xo, player.getX()), Mth.lerp(partialTick, player.yo + player.getEyeHeight(), player.getEyeY()),
@@ -85,7 +85,7 @@ public class VehicleMgHudOverlay implements IGuiOverlay {
                     float y = (float) p.y;
 
                     poseStack.pushPose();
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x - 12, y - 12, 0, 0, 24, 24, 24, 24);
+                    preciseBlit(guiGraphics, Mod.loc("textures/screens/drone.png"), x - 12, y - 12, 0, 0, 24, 24, 24, 24);
                     renderKillIndicator3P(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
 
                     poseStack.pushPose();

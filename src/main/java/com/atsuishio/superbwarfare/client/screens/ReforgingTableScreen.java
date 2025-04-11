@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.screens;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
 import com.atsuishio.superbwarfare.network.message.GunReforgeMessage;
 import com.atsuishio.superbwarfare.network.message.SetPerkLevelMessage;
@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTableMenu> {
 
-    private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/reforging_table.png");
+    private static final ResourceLocation TEXTURE = Mod.loc("textures/gui/reforging_table.png");
 
     public ReforgingTableScreen(ReforgingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -118,7 +118,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         public void onPress() {
-            ModUtils.PACKET_HANDLER.sendToServer(new GunReforgeMessage(0));
+            Mod.PACKET_HANDLER.sendToServer(new GunReforgeMessage(0));
         }
 
         @Override
@@ -164,7 +164,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
                 }
             }
 
-            ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), true));
+            Mod.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), true));
         }
 
         @Override
@@ -210,7 +210,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
                 }
             }
 
-            ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), false));
+            Mod.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), false));
         }
 
         @Override

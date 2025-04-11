@@ -1,13 +1,13 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
@@ -27,15 +27,15 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 @OnlyIn(Dist.CLIENT)
 public class AmmoBarOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_ammo_bar";
+    public static final String ID = Mod.MODID + "_ammo_bar";
 
-    private static final ResourceLocation LINE = ModUtils.loc("textures/gun_icon/fire_mode/line.png");
-    private static final ResourceLocation SEMI = ModUtils.loc("textures/gun_icon/fire_mode/semi.png");
-    private static final ResourceLocation BURST = ModUtils.loc("textures/gun_icon/fire_mode/burst.png");
-    private static final ResourceLocation AUTO = ModUtils.loc("textures/gun_icon/fire_mode/auto.png");
-    private static final ResourceLocation TOP = ModUtils.loc("textures/gun_icon/fire_mode/top.png");
-    private static final ResourceLocation DIR = ModUtils.loc("textures/gun_icon/fire_mode/dir.png");
-    private static final ResourceLocation MOUSE = ModUtils.loc("textures/gun_icon/fire_mode/mouse.png");
+    private static final ResourceLocation LINE = Mod.loc("textures/gun_icon/fire_mode/line.png");
+    private static final ResourceLocation SEMI = Mod.loc("textures/gun_icon/fire_mode/semi.png");
+    private static final ResourceLocation BURST = Mod.loc("textures/gun_icon/fire_mode/burst.png");
+    private static final ResourceLocation AUTO = Mod.loc("textures/gun_icon/fire_mode/auto.png");
+    private static final ResourceLocation TOP = Mod.loc("textures/gun_icon/fire_mode/top.png");
+    private static final ResourceLocation DIR = Mod.loc("textures/gun_icon/fire_mode/dir.png");
+    private static final ResourceLocation MOUSE = Mod.loc("textures/gun_icon/fire_mode/mouse.png");
 
     private static boolean hasCreativeAmmo() {
         Player player = Minecraft.getInstance().player;

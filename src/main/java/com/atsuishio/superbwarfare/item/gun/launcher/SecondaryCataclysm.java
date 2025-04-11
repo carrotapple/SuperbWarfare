@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.gun.launcher;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SecondaryCataclysmRenderer;
@@ -11,9 +11,9 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -259,7 +259,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/secondary_cataclysm_icon.png");
+        return Mod.loc("textures/gun_icon/secondary_cataclysm_icon.png");
     }
 
     @Override
@@ -284,7 +284,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.ATTACK_DAMAGE,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, 19, AttributeModifier.Operation.ADDITION));
+                    new AttributeModifier(uuid, Mod.ATTRIBUTE_MODIFIER, 19, AttributeModifier.Operation.ADDITION));
         }
         return map;
     }
@@ -375,7 +375,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
             }
 
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
         data.setAmmo(data.getAmmo() - 1);

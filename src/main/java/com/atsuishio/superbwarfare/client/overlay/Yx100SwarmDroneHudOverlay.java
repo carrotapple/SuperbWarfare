@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.Yx100Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -26,9 +26,9 @@ import org.joml.Math;
 @OnlyIn(Dist.CLIENT)
 public class Yx100SwarmDroneHudOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_yx100_swarm_drone_hud";
+    public static final String ID = Mod.MODID + "_yx100_swarm_drone_hud";
 
-    private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/frame/frame_lock.png");
+    private static final ResourceLocation FRAME_LOCK = Mod.loc("textures/screens/frame/frame_lock.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -60,7 +60,7 @@ public class Yx100SwarmDroneHudOverlay implements IGuiOverlay {
                 int j = Mth.floor(f * f1);
                 int k = (screenWidth - i) / 2;
                 int l = (screenHeight - j) / 2;
-                RenderHelper.preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                RenderHelper.preciseBlit(guiGraphics, Mod.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                 VehicleHudOverlay.renderKillIndicator(guiGraphics, screenWidth, screenHeight);
                 Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 384, 6);
 

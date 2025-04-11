@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.gun.special;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.renderer.item.BocekItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.BocekImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -146,7 +146,7 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return ModUtils.loc("textures/gun_icon/bocek_icon.png");
+        return Mod.loc("textures/gun_icon/bocek_icon.png");
     }
 
     @Override
@@ -185,7 +185,7 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
         if (player instanceof ServerPlayer serverPlayer) {
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
         ItemStack stack = player.getMainHandItem();
@@ -221,9 +221,5 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
         }
-    }
-
-    @Override
-    public void fireOnPress(Player player, boolean zoom) {
     }
 }

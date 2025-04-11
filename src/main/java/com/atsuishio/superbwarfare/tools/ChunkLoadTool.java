@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -34,12 +34,12 @@ public class ChunkLoadTool {
 
         chunksToLoad.forEach(chunk -> {
             var chunkPos = new ChunkPos(chunk);
-            ForgeChunkManager.forceChunk(level, ModUtils.MODID, entity, chunkPos.x, chunkPos.z, true, false);
+            ForgeChunkManager.forceChunk(level, Mod.MODID, entity, chunkPos.x, chunkPos.z, true, false);
         });
 
         chunksToUnload.forEach(chunk -> {
             var chunkPos = new ChunkPos(chunk);
-            ForgeChunkManager.forceChunk(level, ModUtils.MODID, entity, chunkPos.x, chunkPos.z, false, false);
+            ForgeChunkManager.forceChunk(level, Mod.MODID, entity, chunkPos.x, chunkPos.z, false, false);
         });
 
         loadedChunks.clear();
@@ -52,7 +52,7 @@ public class ChunkLoadTool {
     public static void unloadAllChunks(ServerLevel level, Entity entity, Set<Long> loadedChunks) {
         loadedChunks.forEach(chunk -> {
             var chunkPos = new ChunkPos(chunk);
-            ForgeChunkManager.forceChunk(level, ModUtils.MODID, entity, chunkPos.x, chunkPos.z, false, false);
+            ForgeChunkManager.forceChunk(level, Mod.MODID, entity, chunkPos.x, chunkPos.z, false, false);
         });
     }
 }

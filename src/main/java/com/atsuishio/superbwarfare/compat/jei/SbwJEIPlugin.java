@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.compat.jei;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -24,7 +24,7 @@ public class SbwJEIPlugin implements IModPlugin {
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return ModUtils.loc("jei_plugin");
+        return Mod.loc("jei_plugin");
     }
 
     @Override

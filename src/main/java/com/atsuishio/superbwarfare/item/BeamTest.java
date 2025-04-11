@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.LaserHandler;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
@@ -106,7 +106,7 @@ public class BeamTest extends Item {
                 player.playSound(ModSounds.CHARGE_RIFLE_FIRE_BOOM_3P.get(), 4, 1);
             }
             if (player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(10,10,30, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(10, 10, 30, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
             }
         }
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
@@ -123,7 +123,7 @@ public class BeamTest extends Item {
                 && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
 
         if (canAttack) {
-            ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(45 , lookingEntity.getUUID(), TraceTool.laserHeadshot));
+            Mod.PACKET_HANDLER.sendToServer(new LaserShootMessage(45, lookingEntity.getUUID(), TraceTool.laserHeadshot));
         }
     }
 

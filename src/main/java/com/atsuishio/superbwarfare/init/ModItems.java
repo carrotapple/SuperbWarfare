@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.init;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.item.*;
 import com.atsuishio.superbwarfare.item.armor.*;
 import com.atsuishio.superbwarfare.item.common.BlueprintItem;
@@ -46,7 +46,7 @@ public class ModItems {
     /**
      * guns
      */
-    public static final DeferredRegister<Item> GUNS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final DeferredRegister<Item> GUNS = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
     public static final RegistryObject<Item> TASER = GUNS.register("taser", TaserItem::new);
     public static final RegistryObject<Item> GLOCK_17 = GUNS.register("glock_17", Glock17Item::new);
@@ -87,7 +87,7 @@ public class ModItems {
     /**
      * Ammo
      */
-    public static final DeferredRegister<Item> AMMO = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final DeferredRegister<Item> AMMO = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
     public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", () -> new AmmoSupplierItem(AmmoType.HANDGUN, 1, new Item.Properties()));
     public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", () -> new AmmoSupplierItem(AmmoType.RIFLE, 1, new Item.Properties()));
@@ -122,7 +122,7 @@ public class ModItems {
     /**
      * items
      */
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
     public static final RegistryObject<Item> ANCIENT_CPU = ITEMS.register("ancient_cpu", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
@@ -254,7 +254,7 @@ public class ModItems {
     /**
      * Block
      */
-    public static final DeferredRegister<Item> BLOCKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final DeferredRegister<Item> BLOCKS = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
     public static final RegistryObject<Item> GALENA_ORE = block(ModBlocks.GALENA_ORE);
     public static final RegistryObject<Item> DEEPSLATE_GALENA_ORE = block(ModBlocks.DEEPSLATE_GALENA_ORE);
@@ -285,7 +285,7 @@ public class ModItems {
     /**
      * Perk Items
      */
-    public static final DeferredRegister<Item> PERKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final DeferredRegister<Item> PERKS = DeferredRegister.create(ForgeRegistries.ITEMS, Mod.MODID);
 
     public static void registerPerkItems() {
         ModPerks.AMMO_PERKS.getEntries().stream().filter(p -> p != ModPerks.AP_BULLET)

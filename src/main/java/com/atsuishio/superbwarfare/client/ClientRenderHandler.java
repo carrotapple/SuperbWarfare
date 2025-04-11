@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.overlay.*;
 import com.atsuishio.superbwarfare.client.renderer.block.ChargingStationBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
@@ -14,9 +14,8 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientRenderHandler {
 
     @SubscribeEvent
@@ -43,7 +42,7 @@ public class ClientRenderHandler {
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerBelowAll(JavelinHudOverlay.ID, new JavelinHudOverlay());
-        event.registerBelow(ModUtils.loc(JavelinHudOverlay.ID), VehicleHudOverlay.ID, new VehicleHudOverlay());
+        event.registerBelow(Mod.loc(JavelinHudOverlay.ID), VehicleHudOverlay.ID, new VehicleHudOverlay());
         event.registerBelowAll(StaminaOverlay.ID, new StaminaOverlay());
         event.registerBelowAll(KillMessageOverlay.ID, new KillMessageOverlay());
         event.registerBelowAll(VehicleTeamOverlay.ID, new VehicleTeamOverlay());

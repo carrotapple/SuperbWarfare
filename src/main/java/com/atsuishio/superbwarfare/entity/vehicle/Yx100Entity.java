@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.C4Entity;
@@ -112,7 +112,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .gravity(0.1f)
                                 .sound(ModSounds.INTO_MISSILE.get())
                                 .ammo(ModItems.AP_5_INCHES.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/ap_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/ap_shell.png")),
                         // HE
                         new CannonShellWeapon()
                                 .hitDamage(VehicleConfig.YX_100_HE_CANNON_DAMAGE.get())
@@ -125,7 +125,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .gravity(0.1f)
                                 .sound(ModSounds.INTO_CANNON.get())
                                 .ammo(ModItems.HE_5_INCHES.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/he_shell.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/he_shell.png")),
                         // 同轴重机枪
                         new ProjectileWeapon()
                                 .damage(VehicleConfig.HEAVY_MACHINE_GUN_DAMAGE.get())
@@ -134,7 +134,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .bypassArmorRate(0.4f)
                                 .ammo(ModItems.HEAVY_AMMO.get())
                                 .sound(ModSounds.INTO_CANNON.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
                 },
                 new VehicleWeapon[]{
                         // 机枪
@@ -144,7 +144,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
                                 .zoom(false)
                                 .bypassArmorRate(0.4f)
                                 .ammo(ModItems.HEAVY_AMMO.get())
-                                .icon(ModUtils.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
+                                .icon(Mod.loc("textures/screens/vehicle_weapon/gun_12_7mm.png")),
                 },
                 new VehicleWeapon[]{
                         // 蜂群无人机
@@ -494,7 +494,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
                 for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(8), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                     if (target instanceof ServerPlayer serverPlayer) {
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(10, 8, 60, this.getX(), this.getEyeY(), this.getZ()));
+                        Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(10, 8, 60, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
             } else if (getWeaponIndex(0) == 2) {
@@ -573,7 +573,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 4, 6, this.getX(), this.getEyeY(), this.getZ()));
+                    Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 4, 6, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
 
@@ -1176,7 +1176,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/yx_100_icon.png");
+        return Mod.loc("textures/vehicle_icon/yx_100_icon.png");
     }
 
     @Override
@@ -1195,13 +1195,13 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         // 准心
         if (this.getWeaponIndex(0) == 0) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_ap.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/land/tank_cannon_cross_ap.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
         } else if (this.getWeaponIndex(0) == 1) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/tank_cannon_cross_he.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/land/tank_cannon_cross_he.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
         } else if (this.getWeaponIndex(0) == 2) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/land/lav_gun_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
         } else if (this.getWeaponIndex(0) == 3) {
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
+            preciseBlit(guiGraphics, Mod.loc("textures/screens/land/lav_missile_cross.png"), centerW, centerH, 0, 0.0F, scaledMinWH, scaledMinWH, scaledMinWH, scaledMinWH);
         }
 
         // 武器名称

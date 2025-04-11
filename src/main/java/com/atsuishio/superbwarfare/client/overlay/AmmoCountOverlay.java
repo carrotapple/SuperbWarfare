@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoSupplierItem;
@@ -24,7 +24,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 @OnlyIn(Dist.CLIENT)
 public class AmmoCountOverlay implements IGuiOverlay {
 
-    public static final String ID = ModUtils.MODID + "_ammo_count";
+    public static final String ID = Mod.MODID + "_ammo_count";
 
     private static final AnimationTimer ammoInfoTimer = new AnimationTimer(500, 2000)
             .forwardAnimation(AnimationCurves.EASE_OUT_EXPO)
