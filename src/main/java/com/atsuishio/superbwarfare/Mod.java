@@ -158,7 +158,6 @@ public class Mod {
         addNetworkMessage(SetPerkLevelMessage.class, SetPerkLevelMessage::encode, SetPerkLevelMessage::decode, SetPerkLevelMessage::handler);
         addNetworkMessage(ModVariables.SavedDataSyncMessage.class, ModVariables.SavedDataSyncMessage::buffer, ModVariables.SavedDataSyncMessage::new, ModVariables.SavedDataSyncMessage::handler);
         addNetworkMessage(ModVariables.PlayerVariablesSyncMessage.class, ModVariables.PlayerVariablesSyncMessage::buffer, ModVariables.PlayerVariablesSyncMessage::new, ModVariables.PlayerVariablesSyncMessage::handler);
-        addNetworkMessage(ModVariables.PlayerVariablesSyncMessage.class, ModVariables.PlayerVariablesSyncMessage::buffer, ModVariables.PlayerVariablesSyncMessage::new, ModVariables.PlayerVariablesSyncMessage::handler);
         addNetworkMessage(ShootMessage.class, ShootMessage::encode, ShootMessage::decode, ShootMessage::handler);
         addNetworkMessage(LaserShootMessage.class, LaserShootMessage::encode, LaserShootMessage::decode, LaserShootMessage::handler);
         addNetworkMessage(ShootClientMessage.class, ShootClientMessage::encode, ShootClientMessage::decode, ShootClientMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -184,6 +183,7 @@ public class Mod {
         addNetworkMessage(RadarSetTargetMessage.class, RadarSetTargetMessage::encode, RadarSetTargetMessage::decode, RadarSetTargetMessage::handler);
         addNetworkMessage(ChangeVehicleSeatMessage.class, ChangeVehicleSeatMessage::encode, ChangeVehicleSeatMessage::decode, ChangeVehicleSeatMessage::handler);
         addNetworkMessage(ClientMotionSyncMessage.class, ClientMotionSyncMessage::encode, ClientMotionSyncMessage::decode, ClientMotionSyncMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        addNetworkMessage(TacticalSprintMessage.class, TacticalSprintMessage::encode, TacticalSprintMessage::decode, TacticalSprintMessage::handler);
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));

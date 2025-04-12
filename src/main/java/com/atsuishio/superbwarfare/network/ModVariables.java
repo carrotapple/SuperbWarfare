@@ -70,6 +70,7 @@ public class ModVariables {
             clone.sniperAmmo = original.sniperAmmo;
             clone.heavyAmmo = original.heavyAmmo;
             clone.edit = original.edit;
+            clone.tacticalSprint = original.tacticalSprint;
 
             if (event.getEntity().level().isClientSide()) return;
 
@@ -125,7 +126,6 @@ public class ModVariables {
             return clientSide;
         }
     }
-
 
     public static class SavedDataSyncMessage {
         private final int type;
@@ -199,6 +199,7 @@ public class ModVariables {
         public int sniperAmmo = 0;
         public int heavyAmmo = 0;
 
+        public boolean tacticalSprint = false;
         public boolean edit = false;
 
         public void syncPlayerVariables(Entity entity) {
@@ -212,6 +213,7 @@ public class ModVariables {
                 type.set(nbt, type.get(this));
             }
 
+            nbt.putBoolean("TacticalSprint", tacticalSprint);
             nbt.putBoolean("EditMode", edit);
 
             return nbt;
@@ -219,10 +221,11 @@ public class ModVariables {
 
         public void readNBT(Tag tag) {
             CompoundTag nbt = (CompoundTag) tag;
-
             for (var type : AmmoType.values()) {
                 type.set(this, type.get(nbt));
             }
+
+            tacticalSprint = nbt.getBoolean("TacticalSprint");
             edit = nbt.getBoolean("EditMode");
         }
     }
@@ -266,6 +269,7 @@ public class ModVariables {
                 variables.shotgunAmmo = message.data.shotgunAmmo;
                 variables.sniperAmmo = message.data.sniperAmmo;
                 variables.heavyAmmo = message.data.heavyAmmo;
+                variables.tacticalSprint = message.data.tacticalSprint;
                 variables.edit = message.data.edit;
             });
         }
