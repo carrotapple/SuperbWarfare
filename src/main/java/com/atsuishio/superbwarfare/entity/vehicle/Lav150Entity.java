@@ -214,6 +214,8 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         this.terrainCompat(2.7f, 3.61f);
         inertiaRotate(1.25f);
 
+        releaseSmokeDecoy();
+
         this.refreshDimensions();
     }
 
@@ -643,5 +645,10 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
             double heat2 = this.getEntityData().get(COAX_HEAT) / 100.0F;
             guiGraphics.drawString(font, Component.literal("7.62MM COAX " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : this.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
         }
+    }
+
+    @Override
+    public boolean hasDecoy() {
+        return true;
     }
 }

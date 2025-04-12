@@ -241,6 +241,8 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         this.terrainCompat(4f, 5f);
         inertiaRotate(1);
 
+        releaseSmokeDecoy();
+
         lowHealthWarning();
         this.refreshDimensions();
     }
@@ -720,5 +722,10 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
         } else {
             guiGraphics.drawString(font, Component.literal("9M113 " + this.getEntityData().get(LOADED_MISSILE) + " " + (InventoryTool.hasCreativeAmmoBox(player) ? "∞" : this.getEntityData().get(MISSILE_COUNT))), 30, -9, -1, false);
         }
+    }
+
+    @Override
+    public boolean hasDecoy() {
+        return true;
     }
 }

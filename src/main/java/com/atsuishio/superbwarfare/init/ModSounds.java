@@ -438,5 +438,6 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> INSIDIOUS_FAR = REGISTRY.register("insidious_far", () -> SoundEvent.createVariableRangeEvent(Mod.loc("insidious_far")));
     public static final RegistryObject<SoundEvent> INSIDIOUS_VERYFAR = REGISTRY.register("insidious_veryfar", () -> SoundEvent.createVariableRangeEvent(Mod.loc("insidious_veryfar")));
     public static final RegistryObject<SoundEvent> INSIDIOUS_RELOAD_EMPTY = REGISTRY.register("insidious_reload_empty", () -> SoundEvent.createVariableRangeEvent(Mod.loc("insidious_reload_empty")));
+    public static final RegistryObject<SoundEvent> SMOKE_FIRE = REGISTRY.register("smoke_fire", () -> SoundEvent.createVariableRangeEvent(Mod.loc("smoke_fire")));
 }
 

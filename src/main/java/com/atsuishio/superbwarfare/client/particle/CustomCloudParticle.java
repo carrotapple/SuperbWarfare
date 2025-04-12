@@ -8,14 +8,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomCloudParticle extends TextureSheetParticle {
-    public static FireStarParticleProvider provider(SpriteSet spriteSet) {
-        return new FireStarParticleProvider(spriteSet);
+    public static CustomCloudParticleProvider provider(SpriteSet spriteSet) {
+        return new CustomCloudParticleProvider(spriteSet);
     }
 
-    public static class FireStarParticleProvider implements ParticleProvider<SimpleParticleType> {
+    public static class CustomCloudParticleProvider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 
-        public FireStarParticleProvider(SpriteSet spriteSet) {
+        public CustomCloudParticleProvider(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 

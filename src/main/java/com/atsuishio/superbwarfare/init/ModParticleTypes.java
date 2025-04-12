@@ -13,5 +13,6 @@ public class ModParticleTypes {
     public static final RegistryObject<SimpleParticleType> FIRE_STAR = REGISTRY.register("fire_star", () -> new SimpleParticleType(false));
     public static final RegistryObject<SimpleParticleType> BULLET_HOLE = REGISTRY.register("bullet_hole", () -> new SimpleParticleType(false));
     public static final RegistryObject<SimpleParticleType> CUSTOM_CLOUD = REGISTRY.register("custom_cloud", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> CUSTOM_SMOKE = REGISTRY.register("custom_smoke", () -> new SimpleParticleType(false));
 }
 

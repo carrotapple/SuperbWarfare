@@ -229,6 +229,8 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
         this.terrainCompat(4.6375f, 5.171875f);
         inertiaRotate(1);
 
+        releaseSmokeDecoy();
+
         lowHealthWarning();
         this.refreshDimensions();
     }
@@ -767,5 +769,10 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
 
         double heat = this.getEntityData().get(HEAT) / 100.0F;
         guiGraphics.drawString(font, Component.literal("LASER " + (this.getEntityData().get(HEAT) + 25) + " ℃"), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+    }
+
+    @Override
+    public boolean hasDecoy() {
+        return true;
     }
 }

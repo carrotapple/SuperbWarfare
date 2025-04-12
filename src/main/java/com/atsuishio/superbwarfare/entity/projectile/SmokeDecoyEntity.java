@@ -1,8 +1,9 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModParticleTypes;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -17,18 +18,18 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class FlareDecoyEntity extends Entity implements DecoyEntity {
+public class SmokeDecoyEntity extends Entity implements DecoyEntity {
 
-    public FlareDecoyEntity(EntityType<? extends FlareDecoyEntity> type, Level world) {
+    public SmokeDecoyEntity(EntityType<? extends SmokeDecoyEntity> type, Level world) {
         super(type, world);
     }
 
-    public FlareDecoyEntity(LivingEntity entity, Level level) {
-        super(ModEntities.FLARE_DECOY.get(), level);
+    public SmokeDecoyEntity(LivingEntity entity, Level level) {
+        super(ModEntities.SMOKE_DECOY.get(), level);
     }
 
-    public FlareDecoyEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(ModEntities.FLARE_DECOY.get(), level);
+    public SmokeDecoyEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.SMOKE_DECOY.get(), level);
     }
 
     @Override
@@ -51,15 +52,17 @@ public class FlareDecoyEntity extends Entity implements DecoyEntity {
     @Override
     public void tick() {
         super.tick();
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.02, 0.0));
         this.move(MoverType.SELF, this.getDeltaMovement());
-        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, this.xo, this.yo, this.zo,
-                    1, 0, 0, 0, 0.02, true);
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo,
-                    1, 0, 0, 0, 0.02, true);
+        if (tickCount == 4) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ModParticleTypes.CUSTOM_SMOKE.get(), this.xo, this.yo, this.zo,
+                        100, 0, 0, 0, 0.07, true);
+            }
+            this.level().playSound(null, this, ModSounds.SMOKE_FIRE.get(), this.getSoundSource(), 1, random.nextFloat() * 0.05f + 1);
+            this.setDeltaMovement(Vec3.ZERO);
         }
-        if (this.tickCount > 200 || this.isInWater() || this.onGround()) {
+
+        if (this.tickCount > 400) {
             this.discard();
         }
     }

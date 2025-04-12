@@ -68,13 +68,11 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public boolean engineStart;
     public boolean engineStartOver;
 
     public double velocity;
-    public int decoyReloadCoolDown;
     public int fireIndex;
     public int holdTick;
     public int holdPowerTick;
@@ -119,7 +117,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         super.defineSynchedData();
         this.entityData.define(LOADED_ROCKET, 0);
         this.entityData.define(PROPELLER_ROT, 0f);
-        this.entityData.define(DECOY_COUNT, 3);
     }
 
     @Override
@@ -127,7 +124,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedRocket", this.entityData.get(LOADED_ROCKET));
         compound.putFloat("PropellerRot", this.entityData.get(PROPELLER_ROT));
-        compound.putInt("DecoyCount", this.entityData.get(DECOY_COUNT));
     }
 
     @Override
@@ -135,7 +131,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_ROCKET, compound.getInt("LoadedRocket"));
         this.entityData.set(PROPELLER_ROT, compound.getFloat("PropellerRot"));
-        this.entityData.set(DECOY_COUNT, compound.getInt("DecoyCount"));
     }
 
     @Override
@@ -195,9 +190,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             if (reloadCoolDown > 0) {
                 reloadCoolDown--;
             }
-            if (decoyReloadCoolDown > 0) {
-                decoyReloadCoolDown--;
-            }
             handleAmmo();
         }
 
@@ -245,31 +237,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             this.entityData.set(AMMO, ammoCount);
         } else {
             this.entityData.set(AMMO, this.getEntityData().get(LOADED_ROCKET));
-        }
-    }
-
-    public void releaseDecoy() {
-        if (decoyInputDown) {
-            if (this.entityData.get(DECOY_COUNT) > 0 && this.level() instanceof ServerLevel) {
-                Entity passenger = getFirstPassenger();
-                for (int i = 0; i < 4; i++) {
-                    FlareDecoyEntity flareDecoyEntity = new FlareDecoyEntity((LivingEntity) passenger, this.level());
-                    flareDecoyEntity.setPos(this.getX() + this.getDeltaMovement().x, this.getY() + 0.5 + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
-                    flareDecoyEntity.decoyShoot(this, this.getViewVector(1).yRot((45 + 90 * i) * Mth.DEG_TO_RAD), 0.8f, 8);
-                    this.level().addFreshEntity(flareDecoyEntity);
-                }
-                this.level().playSound(null, this, ModSounds.DECOY_FIRE.get(), this.getSoundSource(), 1, 1);
-                if (this.getEntityData().get(DECOY_COUNT) == 3) {
-                    decoyReloadCoolDown = 300;
-                }
-                this.getEntityData().set(DECOY_COUNT, this.getEntityData().get(DECOY_COUNT) - 1);
-            }
-            decoyInputDown = false;
-        }
-        if (this.entityData.get(DECOY_COUNT) < 3 && decoyReloadCoolDown == 0 && this.level() instanceof ServerLevel) {
-            this.entityData.set(DECOY_COUNT, this.entityData.get(DECOY_COUNT) + 1);
-            this.level().playSound(null, this, ModSounds.DECOY_RELOAD.get(), this.getSoundSource(), 1, 1);
-            decoyReloadCoolDown = 300;
         }
     }
 

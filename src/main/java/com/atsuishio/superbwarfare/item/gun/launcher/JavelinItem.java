@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.JavelinItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.LauncherImageComponent;
-import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
+import com.atsuishio.superbwarfare.entity.projectile.DecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -163,11 +163,11 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
                 List<Entity> decoy = SeekTool.seekLivingEntities(player, player.level(), 512, 8);
                 for (var e : decoy) {
-                    if (e instanceof FlareDecoyEntity flareDecoy) {
-                        tag.putString("TargetEntity", flareDecoy.getStringUUID());
-                        tag.putDouble("TargetPosX", flareDecoy.getX());
-                        tag.putDouble("TargetPosY", flareDecoy.getEyeY());
-                        tag.putDouble("TargetPosZ", flareDecoy.getZ());
+                    if (e instanceof DecoyEntity decoyEntity) {
+                        tag.putString("TargetEntity", decoyEntity.getStringUUID());
+                        tag.putDouble("TargetPosX", decoyEntity.getPosition().x);
+                        tag.putDouble("TargetPosY", decoyEntity.getPosition().y);
+                        tag.putDouble("TargetPosZ", decoyEntity.getPosition().z);
                     }
                 }
 
