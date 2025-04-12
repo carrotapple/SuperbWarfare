@@ -311,7 +311,7 @@ public class ClientEventHandler {
             return;
         }
 
-        tacticalSprint = !exhaustion && !zoom && isMoving() && player.isSprinting() && player.getVehicle() == null && player.onGround() && !player.getAbilities().flying;
+        tacticalSprint = !exhaustion && !zoom && isMoving() && player.isSprinting() && player.getVehicle() == null && !player.getAbilities().flying;
 
         ItemStack stack = player.getMainHandItem();
 
@@ -1119,7 +1119,7 @@ public class ClientEventHandler {
                 }
             }
 
-            if (isMoving()) {
+            if (isMoving() && !entity.isSprinting()) {
                 moveYTime += 1.2 * onGround * times * moveSpeed;
                 moveXTime += 1.2 * onGround * times * moveSpeed;
                 moveFadeTime = Mth.lerp(0.13 * times , moveFadeTime , 1);
