@@ -141,7 +141,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
-        float numR = (float) (1 - 0.92 * zt);
+        float numR = (float) (1 - 0.98 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
         if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
