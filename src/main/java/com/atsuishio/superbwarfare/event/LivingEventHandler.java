@@ -678,6 +678,30 @@ public class LivingEventHandler {
                     capability.handgunAmmo -= ammoFinal;
                 }
                 data.setAmmo(Math.min(mag, ammo + ammoFinal));
+            } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                int ammoFinal = Math.min(capability.shotgunAmmo, ammoNeed);
+                if (flag) {
+                    ammoFinal = ammoNeed;
+                } else {
+                    capability.shotgunAmmo -= ammoFinal;
+                }
+                data.setAmmo(Math.min(mag, ammo + ammoFinal));
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                int ammoFinal = Math.min(capability.sniperAmmo, ammoNeed);
+                if (flag) {
+                    ammoFinal = ammoNeed;
+                } else {
+                    capability.sniperAmmo -= ammoFinal;
+                }
+                data.setAmmo(Math.min(mag, ammo + ammoFinal));
+            } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
+                int ammoFinal = Math.min(capability.heavyAmmo, ammoNeed);
+                if (flag) {
+                    ammoFinal = ammoNeed;
+                } else {
+                    capability.heavyAmmo -= ammoFinal;
+                }
+                data.setAmmo(Math.min(mag, ammo + ammoFinal));
             }
             capability.syncPlayerVariables(player);
         });
