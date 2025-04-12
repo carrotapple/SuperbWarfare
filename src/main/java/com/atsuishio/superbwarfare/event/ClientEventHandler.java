@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
@@ -302,7 +303,7 @@ public class ClientEventHandler {
         }
     }
 
-    //耐力
+    // 耐力
     public static void staminaSystem() {
         if (notInGame()) return;
 
@@ -312,6 +313,10 @@ public class ClientEventHandler {
         }
 
         tacticalSprint = !exhaustion && !zoom && isMoving() && player.isSprinting() && player.getVehicle() == null && !player.getAbilities().flying;
+
+        if (!MiscConfig.ALLOW_TACTICAL_SPRINT.get()) {
+            tacticalSprint = false;
+        }
 
         ItemStack stack = player.getMainHandItem();
 
@@ -342,11 +347,11 @@ public class ClientEventHandler {
             exhaustion = false;
         }
 
-            if ((ModKeyMappings.BREATH.isDown() && zoom) || (tacticalSprint)) {
-                switchTime = Math.min(switchTime + 0.65, 5);
-            } else if (switchTime > 0 && stamina == 0) {
-                switchTime = Math.max(switchTime - 0.15, 0);
-            }
+        if ((ModKeyMappings.BREATH.isDown() && zoom) || (tacticalSprint)) {
+            switchTime = Math.min(switchTime + 0.65, 5);
+        } else if (switchTime > 0 && stamina == 0) {
+            switchTime = Math.max(switchTime - 0.15, 0);
+        }
 
         if (zoom) {
             tacticalSprint = false;
@@ -374,7 +379,7 @@ public class ClientEventHandler {
         }
 
         if (cantSprint > 0) {
-            cantSprint --;
+            cantSprint--;
         }
 
         if (ClientEventHandler.zoom || ClientEventHandler.holdFire) {
@@ -1017,7 +1022,7 @@ public class ClientEventHandler {
 
         if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
-            handleWeaponMove(living );
+            handleWeaponMove(living);
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
             handleWeaponShell();
@@ -1122,9 +1127,9 @@ public class ClientEventHandler {
             if (isMoving() && !entity.isSprinting() && firePosTimer == 0) {
                 moveYTime += 1.2 * onGround * times * moveSpeed;
                 moveXTime += 1.2 * onGround * times * moveSpeed;
-                moveFadeTime = Mth.lerp(0.13 * times , moveFadeTime , 1);
+                moveFadeTime = Mth.lerp(0.13 * times, moveFadeTime, 1);
             } else {
-                moveFadeTime = Mth.lerp(0.1 * times , moveFadeTime , 0);
+                moveFadeTime = Mth.lerp(0.1 * times, moveFadeTime, 0);
             }
 
 
