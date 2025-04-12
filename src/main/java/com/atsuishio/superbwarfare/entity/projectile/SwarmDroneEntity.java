@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -47,6 +48,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity {
 
@@ -56,6 +58,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     public static final EntityDataAccessor<Float> TARGET_Z = SynchedEntityData.defineId(SwarmDroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SwarmDroneEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private boolean distracted = false;
 
     private float explosionDamage = 80f;
     private float explosionRadius = 5f;
@@ -203,8 +206,15 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     @Override
     public void tick() {
         super.tick();
-
         Entity entity = EntityFindUtil.findEntity(this.level(), entityData.get(TARGET_UUID));
+        List<Entity> decoy = SeekTool.seekLivingEntities(this, this.level(), 32, 90);
+
+        for (var e : decoy) {
+            if (e instanceof DecoyEntity decoyEntity && !distracted) {
+                this.entityData.set(TARGET_UUID, decoyEntity.getStringUUID());
+                distracted = true;
+            }
+        }
 
         if (this.tickCount == 1) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
