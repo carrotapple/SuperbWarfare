@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
@@ -40,7 +41,7 @@ public class PlayerEventHandler {
             stack.getOrCreateTag().putBoolean("Using", false);
         }
         for (ItemStack pStack : player.getInventory().items) {
-            if (pStack.is(ModTags.Items.GUN)) {
+            if (pStack.getItem() instanceof GunItem) {
                 var data = GunData.from(pStack);
                 data.draw.set(true);
             }
@@ -59,7 +60,7 @@ public class PlayerEventHandler {
         handleRespawnAutoArmor(player);
 
         for (ItemStack pStack : player.getInventory().items) {
-            if (pStack.is(ModTags.Items.GUN)) {
+            if (pStack.getItem() instanceof GunItem) {
                 GunData.from(pStack).draw.set(true);
             }
         }
@@ -76,7 +77,7 @@ public class PlayerEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (event.phase == TickEvent.Phase.END) {
-            if (stack.is(ModTags.Items.GUN)) {
+            if (stack.getItem() instanceof GunItem) {
                 handleSpecialWeaponAmmo(player);
             }
 
@@ -110,7 +111,7 @@ public class PlayerEventHandler {
         if (!GameplayConfig.RESPAWN_RELOAD.get()) return;
 
         for (ItemStack stack : player.getInventory().items) {
-            if (stack.is(ModTags.Items.GUN)) {
+            if (stack.getItem() instanceof GunItem) {
                 var data = GunData.from(stack);
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
                     var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
@@ -211,7 +212,7 @@ public class PlayerEventHandler {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
 
-        if (left.is(ModTags.Items.GUN) && right.getItem() == ModItems.SHORTCUT_PACK.get()) {
+        if (left.getItem() instanceof GunItem && right.getItem() == ModItems.SHORTCUT_PACK.get()) {
             ItemStack output = left.copy();
             var data = GunData.from(output);
 

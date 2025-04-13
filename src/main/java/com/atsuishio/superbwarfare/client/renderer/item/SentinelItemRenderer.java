@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.layer.gun.SentinelLayer;
 import com.atsuishio.superbwarfare.client.layer.gun.SentinelLightLayer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -87,7 +87,7 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
         Player player = mc.player;
         if (player == null) return;
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(ModTags.Items.GUN)) return;
+        if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("flare")) {
             if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {

@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.client.layer.gun.TracheliumLayer;
 import com.atsuishio.superbwarfare.client.layer.gun.TracheliumLightLayer;
 import com.atsuishio.superbwarfare.client.model.item.TracheliumItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.handgun.Trachelium;
@@ -88,7 +88,7 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
         Player player = mc.player;
         if (player == null) return;
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(ModTags.Items.GUN)) return;
+        if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("humu")) {
             bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 0 && GunData.from(itemStack).attachment.get(AttachmentType.GRIP) == 0);
@@ -121,7 +121,7 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
         }
 
         if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
-            bone.setHidden(ClientEventHandler.zoomPos > 0.7  && ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
         }
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);

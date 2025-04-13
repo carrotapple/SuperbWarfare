@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.handgun.Trachelium;
@@ -59,7 +59,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
 
         float times = 0.4f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         double zt = ClientEventHandler.zoomTime;
@@ -106,7 +106,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
 
         gun.setPosX((float) (3.48f * zp));
         gun.setPosY((float) (posY * zp - 0.2f * zpz));
-        gun.setPosZ((float)(posZ * zp + 0.2f * zpz) + posZAlt);
+        gun.setPosZ((float) (posZ * zp + 0.2f * zpz) + posZAlt);
         gun.setScaleZ((float) (1f - scaleZ * zp));
 
         scope2.setScaleZ(1f - (0.7f * (float) zp));

@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.BocekLayer;
 import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -86,7 +86,7 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         if (player == null) return;
 
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(ModTags.Items.GUN)) return;
+        if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("holo")) {
             bone.setHidden(ClientEventHandler.zoomPos < 0.7 || ClientEventHandler.pullPos < 0.7 || !ClientEventHandler.zoom);

@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.M4Layer;
 import com.atsuishio.superbwarfare.client.model.item.M4ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.M4Item;
@@ -86,7 +86,7 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
         Player player = mc.player;
         if (player == null) return;
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(ModTags.Items.GUN)) return;
+        if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("Cross1")) {
             bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);

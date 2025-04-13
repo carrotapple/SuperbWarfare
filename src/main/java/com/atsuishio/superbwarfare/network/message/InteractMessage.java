@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ public class InteractMessage {
         Level level = player.level();
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN)) {
+        if (stack.getItem() instanceof GunItem) {
             double blockRange = player.getBlockReach();
             double entityRange = player.getBlockReach();
 

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -32,13 +32,10 @@ public class SwitchScopeMessage {
             }
 
             ItemStack stack = player.getMainHandItem();
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
+            if (!(stack.getItem() instanceof GunItem)) return;
+
             var tag = stack.getOrCreateTag();
-
             tag.putBoolean("ScopeAlt", !tag.getBoolean("ScopeAlt"));
-
         });
         context.get().setPacketHandled(true);
     }

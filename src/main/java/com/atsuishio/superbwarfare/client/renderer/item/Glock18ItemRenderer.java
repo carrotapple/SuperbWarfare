@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.layer.gun.Glock18Layer;
 import com.atsuishio.superbwarfare.client.layer.gun.Glock18LightLayer;
 import com.atsuishio.superbwarfare.client.model.item.Glock18ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -85,7 +85,7 @@ public class Glock18ItemRenderer extends GeoItemRenderer<Glock18Item> {
         Player player = mc.player;
         if (player == null) return;
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(ModTags.Items.GUN)) return;
+        if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("flare")) {
             if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {

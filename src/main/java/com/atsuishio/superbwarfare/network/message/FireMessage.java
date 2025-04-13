@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
@@ -54,7 +55,7 @@ public class FireMessage {
     public static void pressAction(Player player, int type, double power, boolean zoom) {
         if (player.isSpectator()) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
 
         handleGunBolt(player, stack);
 
@@ -85,7 +86,7 @@ public class FireMessage {
     }
 
     private static void handleGunBolt(Player player, ItemStack stack) {
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
         var data = GunData.from(stack);
 
         if (data.defaultActionTime() > 0
@@ -119,7 +120,7 @@ public class FireMessage {
     public static void spawnBullet(Player player, double power, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
         var data = GunData.from(stack);
 
         var perk = data.perk.get(Perk.Type.AMMO);

@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.HomemadeShotgunLayer;
 import com.atsuishio.superbwarfare.client.model.item.HomemadeShotgunItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.shotgun.HomemadeShotgunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -83,7 +83,7 @@ public class HomemadeShotgunItemRenderer extends GeoItemRenderer<HomemadeShotgun
         Player player = mc.player;
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
-            if (!itemStack.is(ModTags.Items.GUN)) return;
+            if (!(itemStack.getItem() instanceof GunItem)) return;
 
             if (name.equals("flare")) {
                 if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {

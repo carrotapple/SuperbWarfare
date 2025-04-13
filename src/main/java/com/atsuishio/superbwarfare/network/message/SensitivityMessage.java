@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,9 +33,7 @@ public class SensitivityMessage {
             }
 
             ItemStack stack = player.getMainHandItem();
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
+            if (!(stack.getItem() instanceof GunItem)) return;
 
             if (message.add) {
                 stack.getOrCreateTag().putInt("sensitivity", Math.min(10, stack.getOrCreateTag().getInt("sensitivity") + 1));

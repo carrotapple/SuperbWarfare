@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.AK47Layer;
 import com.atsuishio.superbwarfare.client.model.item.AK47ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.AK47Item;
@@ -86,7 +86,7 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
         Player player = mc.player;
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
-            if (!itemStack.is(ModTags.Items.GUN)) return;
+            if (!(itemStack.getItem() instanceof GunItem)) return;
 
             if (name.equals("Cross1")) {
                 bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);

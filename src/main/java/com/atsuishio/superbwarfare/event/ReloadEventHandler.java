@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.event.modevent.ReloadEvent;
 import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,7 @@ public class ReloadEventHandler {
     public static void onPreReload(ReloadEvent.Pre event) {
         Player player = event.player;
         ItemStack stack = event.stack;
-        if (player == null || !stack.is(ModTags.Items.GUN)) {
+        if (player == null || !(stack.getItem() instanceof GunItem)) {
             return;
         }
 
@@ -37,7 +37,7 @@ public class ReloadEventHandler {
     public static void onPostReload(ReloadEvent.Post event) {
         Player player = event.player;
         ItemStack stack = event.stack;
-        if (player == null || !stack.is(ModTags.Items.GUN)) {
+        if (player == null || !(stack.getItem() instanceof GunItem)) {
             return;
         }
 

@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ public class MouseHandlerMixin {
         }
 
         ItemStack stack = mc.player.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN)) {
+        if (stack.getItem() instanceof GunItem) {
             var data = GunData.from(stack);
             float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 

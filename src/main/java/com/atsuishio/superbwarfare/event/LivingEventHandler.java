@@ -140,7 +140,7 @@ public class LivingEventHandler {
 
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
 
         var data = GunData.from(stack);
         var perk = data.perk.get(Perk.Type.AMMO);
@@ -214,7 +214,7 @@ public class LivingEventHandler {
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
         if (event.getEntity() instanceof TargetEntity) return;
 
         var data = GunData.from(stack);
@@ -239,7 +239,7 @@ public class LivingEventHandler {
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
         if (event.getEntity() instanceof TargetEntity) return;
 
         var data = GunData.from(stack);
@@ -278,7 +278,7 @@ public class LivingEventHandler {
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
         if (event.getEntity() instanceof TargetEntity) return;
 
         var data = GunData.from(stack);
@@ -358,9 +358,9 @@ public class LivingEventHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
-                        || (newStack.is(ModTags.Items.GUN) && !GunData.from(newStack).initialized())
-                        || (oldStack.is(ModTags.Items.GUN) && !GunData.from(newStack).initialized())
-                        || (newStack.is(ModTags.Items.GUN) && oldStack.is(ModTags.Items.GUN) && !Objects.equals(GunsTool.getGunUUID(newStack), GunsTool.getGunUUID(oldStack)))
+                        || (newStack.getItem() instanceof GunItem && !GunData.from(newStack).initialized())
+                        || (oldStack.getItem() instanceof GunItem && !GunData.from(newStack).initialized())
+                        || (newStack.getItem() instanceof GunItem && oldStack.getItem() instanceof GunItem && !Objects.equals(GunsTool.getGunUUID(newStack), GunsTool.getGunUUID(oldStack)))
                 ) {
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);
@@ -487,7 +487,7 @@ public class LivingEventHandler {
         }
 
         ItemStack stack = attacker.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) {
+        if (!(stack.getItem() instanceof GunItem)) {
             return;
         }
 
@@ -544,7 +544,7 @@ public class LivingEventHandler {
         }
 
         ItemStack stack = attacker.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) {
+        if (!(stack.getItem() instanceof GunItem)) {
             return;
         }
 
@@ -798,7 +798,7 @@ public class LivingEventHandler {
             return;
         }
 
-        if (mainHandItem.is(ModTags.Items.GUN) && GunData.from(mainHandItem).perk.getLevel(ModPerks.POWERFUL_ATTRACTION) > 0 && (DamageTypeTool.isGunDamage(source) || DamageTypeTool.isExplosionDamage(source))) {
+        if (mainHandItem.getItem() instanceof GunItem && GunData.from(mainHandItem).perk.getLevel(ModPerks.POWERFUL_ATTRACTION) > 0 && (DamageTypeTool.isGunDamage(source) || DamageTypeTool.isExplosionDamage(source))) {
             var drops = event.getDrops();
             drops.forEach(itemEntity -> {
                 ItemStack item = itemEntity.getItem();
@@ -822,7 +822,7 @@ public class LivingEventHandler {
         }
 
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
 
         int level = GunData.from(stack).perk.getLevel(ModPerks.POWERFUL_ATTRACTION);
         if (level > 0) {
