@@ -140,6 +140,8 @@ public class LivingEventHandler {
 
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
+        if (!stack.is(ModTags.Items.GUN)) return;
+
         var data = GunData.from(stack);
         var perk = data.perk.get(Perk.Type.AMMO);
 
