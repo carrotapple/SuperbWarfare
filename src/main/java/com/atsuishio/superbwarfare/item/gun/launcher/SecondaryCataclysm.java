@@ -137,15 +137,15 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, SpecialFireW
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
         var data = GunData.from(stack);
 
-        if (data.reload.stage() == 1 && GunData.from(stack).reload.prepareTimer.get() > 0) {
+        if (data.reload.stage() == 1 && data.reload.prepareLoadTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.prepare"));
         }
 
-        if (GunData.from(stack).loadIndex.get() == 0 && data.reload.stage() == 2) {
+        if (data.loadIndex.get() == 0 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.iterativeload"));
         }
 
-        if (GunData.from(stack).loadIndex.get() == 1 && data.reload.stage() == 2) {
+        if (data.loadIndex.get() == 1 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.iterativeload2"));
         }
 

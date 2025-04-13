@@ -80,7 +80,7 @@ public class M870Item extends GunItem implements GeoItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
         }
 
-        if (data.reload.stage() == 1 && GunData.from(stack).reload.prepareTimer.get() > 0) {
+        if (data.reload.stage() == 1 && data.reload.prepareLoadTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.preparealt"));
         }
 
@@ -88,11 +88,11 @@ public class M870Item extends GunItem implements GeoItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
         }
 
-        if (GunData.from(stack).loadIndex.get() == 0 && data.reload.stage() == 2) {
+        if (data.loadIndex.get() == 0 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
         }
 
-        if (GunData.from(stack).loadIndex.get() == 1 && data.reload.stage() == 2) {
+        if (data.loadIndex.get() == 1 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
         }
 
