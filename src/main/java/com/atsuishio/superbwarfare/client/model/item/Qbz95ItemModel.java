@@ -5,8 +5,9 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.Qbz95Item;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -72,7 +73,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int type = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
 
         float posYAlt = switch (type) {
             case 2 -> 0.85f;
@@ -155,12 +156,12 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
         r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
-        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
+        if (GunData.from(stack).holdOpen.get()) {
             bolt.setPosZ(5f);
         }
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        int BarrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+        int BarrelType = GunData.from(stack).attachment.get(AttachmentType.BARREL);
 
         if (BarrelType == 1) {
             flare.setPosZ(-2);
@@ -184,7 +185,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         lHandRotZ = Mth.lerp(1.5f * times, lHandRotZ, isZooming ? 2.9228f : leftHand.getRotZ());
 
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             leftHand.setPosX(lHandPosX);
             leftHand.setPosY(lHandPosY);
             leftHand.setPosZ(lHandPosZ);

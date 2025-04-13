@@ -10,10 +10,10 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -132,11 +132,12 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
+            var data = GunData.from(stack);
+            data.maxAmmo.set(getAmmoCount(player));
         }
 
-        if (GunsTool.getGunIntTag(stack, "ArrowEmpty") > 0) {
-            GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(stack, "ArrowEmpty") - 1);
+        if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0) {
+            GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") - 1);
         }
     }
 
@@ -189,7 +190,9 @@ public class BocekItem extends GunItem implements GeoItem, SpecialFireWeapon {
         }
 
         ItemStack stack = player.getMainHandItem();
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        var data = GunData.from(stack);
+        var perk = data.perk.get(Perk.Type.AMMO);
 
         if (power * 12 >= 6) {
             if (zoom) {

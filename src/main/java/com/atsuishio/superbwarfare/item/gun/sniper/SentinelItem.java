@@ -12,7 +12,6 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -22,13 +21,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -122,19 +119,19 @@ public class SentinelItem extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+        if (GunData.from(stack).bolt.actionTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_empty"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+        if (GunData.from(stack).reload.normal()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
         }
 
-        if (GunsTool.getGunBooleanTag(stack, "Charging")) {
+        if (GunData.from(stack).charging()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
         }
 
@@ -149,9 +146,9 @@ public class SentinelItem extends GunItem implements GeoItem {
 
         if (player.isSprinting() && player.onGround()
                 && ClientEventHandler.cantSprint == 0
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !GunsTool.getGunBooleanTag(stack, "Charging") && ClientEventHandler.drawTime < 0.01) {
-            if (ClientEventHandler.tacticalSprint && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
+                && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())
+                && !GunData.from(stack).charging() && ClientEventHandler.drawTime < 0.01) {
+            if (ClientEventHandler.tacticalSprint && GunData.from(stack).bolt.actionTimer.get() == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run"));
@@ -170,26 +167,16 @@ public class SentinelItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+    public double getCustomDamage(ItemStack stack) {
+        var data = GunData.from(stack);
+        return stack.getCapability(ForgeCapabilities.ENERGY)
+                .map(cap -> cap.getEnergyStored() > 0 ? 0.2857142857142857 * data.rawDamage() : 0)
+                .orElse(0D);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
-
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                energy -> {
-                    int energyStored = energy.getEnergyStored();
-                    if (energyStored > 0) {
-                        energy.extractEnergy(1, false);
-                        GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0.2857142857142857
-                                * GunData.from(stack).damage());
-                    } else {
-                        GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0);
-                    }
-                }
-        );
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override

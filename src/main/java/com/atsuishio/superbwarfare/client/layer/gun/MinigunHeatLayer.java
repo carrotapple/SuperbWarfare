@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.layer.gun;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.ModRenderTypes;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -31,7 +32,8 @@ public class MinigunHeatLayer extends GeoRenderLayer<MinigunItem> {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-        float heat = (float) stack.getOrCreateTag().getDouble("heat");
+
+        float heat = (float) GunData.from(stack).data().getDouble("heat");
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, heat / 55, heat / 55, heat / 55, 1);
     }
 }

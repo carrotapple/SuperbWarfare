@@ -44,7 +44,7 @@ public class ZoomMessage {
             if (message.type == 0) {
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.edit = false;
-                    capability.syncPlayerVariables(player);
+                    capability.sync(player);
                 });
 
                 if (player.isPassenger()
@@ -67,7 +67,6 @@ public class ZoomMessage {
                 ) {
                     SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                 }
-
 
                 if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
                     var handItem = player.getMainHandItem();

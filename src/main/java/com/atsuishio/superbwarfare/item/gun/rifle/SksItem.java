@@ -7,9 +7,9 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -34,6 +34,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -79,11 +81,11 @@ public class SksItem extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload_empty"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+        if (GunData.from(stack).reload.normal()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload_normal"));
         }
 
@@ -110,12 +112,13 @@ public class SksItem extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (stack.getOrCreateTag().getBoolean("draw")) {
-            stack.getOrCreateTag().putBoolean("draw", false);
-
-            if (GunsTool.getGunIntTag(stack, "Ammo") == 0) {
-                GunsTool.setGunBooleanTag(stack, "HoldOpen", true);
+        var data = GunData.from(stack);
+        if (data.draw.get()) {
+            data.draw.set(false);
+            if (data.ammo.get() == 0) {
+                data.holdOpen.set(true);
             }
         }
         super.inventoryTick(stack, level, entity, slot, selected);
@@ -159,5 +162,12 @@ public class SksItem extends GunItem implements GeoItem {
     @Override
     public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
+    }
+
+    @Override
+    public void addReloadTimeBehavior(Map<Integer, Consumer<GunData>> behaviors) {
+        super.addReloadTimeBehavior(behaviors);
+
+        behaviors.put(14, data -> data.holdOpen.set(false));
     }
 }

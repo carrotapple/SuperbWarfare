@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -39,36 +38,39 @@ public class AdjustZoomFovMessage {
 
             ItemStack stack = player.getMainHandItem();
             if (!stack.is(ModTags.Items.GUN)) return;
-            var data = GunData.from(stack);
+            var gun = GunData.from(stack);
+            var data = gun.data();
 
             if (stack.is(ModItems.MINIGUN.get())) {
                 double minRpm = 300 - 1200;
                 double maxRpm = 2400 - 1200;
 
-                GunsTool.setGunIntTag(stack, "CustomRPM", (int) Mth.clamp(GunsTool.getGunIntTag(stack, "CustomRPM") + 50 * message.scroll, minRpm, maxRpm));
-                if (GunsTool.getGunIntTag(stack, "CustomRPM") == 1150 - 1200) {
-                    GunsTool.setGunIntTag(stack, "CustomRPM", 1145 - 1200);
+                var customRPM = data.getInt("CustomRPM");
+                data.putInt("CustomRPM", (int) Mth.clamp(customRPM + 50 * message.scroll, minRpm, maxRpm));
+
+                if (customRPM == 1150 - 1200) {
+                    data.putInt("CustomRPM", 1145 - 1200);
                 }
 
-                if (GunsTool.getGunIntTag(stack, "CustomRPM") == 1195 - 1200) {
-                    GunsTool.setGunIntTag(stack, "CustomRPM", 0);
+                if (customRPM == 1195 - 1200) {
+                    data.putInt("CustomRPM", 0);
                 }
 
-                if (GunsTool.getGunIntTag(stack, "CustomRPM") == 1095 - 1200) {
-                    GunsTool.setGunIntTag(stack, "CustomRPM", 1100 - 1200);
+                if (customRPM == 1095 - 1200) {
+                    data.putInt("CustomRPM", 1100 - 1200);
                 }
-                player.displayClientMessage(Component.literal("RPM: " + FormatTool.format0D(GunsTool.getGunIntTag(stack, "CustomRPM") + 1200)), true);
-                int rpm = GunsTool.getGunIntTag(stack, "CustomRPM");
-                if (rpm > minRpm && rpm < maxRpm) {
+
+                player.displayClientMessage(Component.literal("RPM: " + FormatTool.format0D(customRPM + 1200)), true);
+                if (customRPM > minRpm && customRPM < maxRpm) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
                 }
             } else {
-                double minZoom = data.minZoom() - 1.25;
-                double maxZoom = data.maxZoom() - 1.25;
-                double customZoom = GunsTool.getGunDoubleTag(stack, "CustomZoom");
-                GunsTool.setGunDoubleTag(stack, "CustomZoom", Mth.clamp(customZoom + 0.5 * message.scroll, minZoom, maxZoom));
-                if (GunsTool.getGunDoubleTag(stack, "CustomZoom") > minZoom &&
-                        GunsTool.getGunDoubleTag(stack, "CustomZoom") < maxZoom) {
+                double minZoom = gun.minZoom() - 1.25;
+                double maxZoom = gun.maxZoom() - 1.25;
+                double customZoom = data.getDouble("CustomZoom");
+                data.putDouble("CustomZoom", Mth.clamp(customZoom + 0.5 * message.scroll, minZoom, maxZoom));
+
+                if (customZoom > minZoom && customZoom < maxZoom) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
                 }
             }

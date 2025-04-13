@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -7,7 +8,7 @@ import software.bernie.geckolib.cache.object.GeoBone;
 public class ItemModelHelper {
 
     public static void handleGunAttachments(GeoBone bone, ItemStack stack, String name) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+        CompoundTag tag = GunData.from(stack).attachment();
 
         splitBoneName(bone, name, "Scope", tag);
         splitBoneName(bone, name, "Magazine", tag);

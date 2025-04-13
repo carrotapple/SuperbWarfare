@@ -24,7 +24,7 @@ public record TacticalSprintMessage(boolean sprint) {
             if (player == null) return;
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.tacticalSprint = message.sprint;
-                capability.syncPlayerVariables(player);
+                capability.sync(player);
             });
         });
         context.setPacketHandled(true);

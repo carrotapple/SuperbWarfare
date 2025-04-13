@@ -7,10 +7,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,7 +62,9 @@ public class CrossHairOverlay implements IGuiOverlay {
         float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
         float moveX = 0;
         float moveY = 0;
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        var data = GunData.from(stack);
+        var perk = data.perk.get(Perk.Type.AMMO);
 
         if (DisplayConfig.FLOAT_CROSS_HAIR.get() && player.getVehicle() == null) {
             moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);

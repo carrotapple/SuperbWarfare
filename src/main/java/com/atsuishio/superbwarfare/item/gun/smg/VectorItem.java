@@ -7,10 +7,11 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -76,9 +77,9 @@ public class VectorItem extends GunItem implements GeoItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
-        boolean drum = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2;
+        boolean drum = GunData.from(stack).attachment.get(AttachmentType.MAGAZINE) == 2;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             if (drum) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty_drum"));
             } else {
@@ -86,7 +87,7 @@ public class VectorItem extends GunItem implements GeoItem {
             }
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+        if (GunData.from(stack).reload.normal()) {
             if (drum) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal_drum"));
             } else {
@@ -136,23 +137,23 @@ public class VectorItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
 
         if (scopeType == 3) {
-            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+            CompoundTag tag = GunData.from(stack).attachment();
             tag.putInt("Scope", 0);
         }
     }
 
     @Override
     public double getCustomZoom(ItemStack stack) {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
         return scopeType == 2 ? (stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75) : 0;
     }
 
     @Override
     public int getCustomMagazine(ItemStack stack) {
-        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        int magType = GunData.from(stack).attachment.get(AttachmentType.MAGAZINE);
         return switch (magType) {
             case 1 -> 20;
             case 2 -> 57;

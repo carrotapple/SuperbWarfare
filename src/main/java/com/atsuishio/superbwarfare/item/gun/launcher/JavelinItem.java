@@ -39,6 +39,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -58,6 +59,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,7 +75,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new JavelinItemRenderer();
@@ -100,7 +102,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.javelin.reload"));
         }
 
@@ -153,11 +155,12 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player && selected) {
             var tag = stack.getOrCreateTag();
-            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
+            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
 
@@ -261,7 +264,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         Level level = player.level();
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
-        CompoundTag tag = data.getTag();
+        CompoundTag tag = data.tag();
 
         if (tag.getInt("SeekTime") < 20) return;
 
@@ -280,9 +283,9 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
                     tag.getInt("GuideType"),
                     new Vec3(tag.getDouble("TargetPosX"), tag.getDouble("TargetPosY"), tag.getDouble("TargetPosZ")));
 
-            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+            var dmgPerk = GunData.from(stack).perk.get(Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                int perkLevel = GunData.from(stack).perk.getLevel(dmgPerk);
                 missileEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
@@ -307,7 +310,7 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 10);
-        data.setAmmo(data.getAmmo() - 1);
+        data.ammo.set(data.ammo.get() - 1);
     }
 
     @Override
@@ -327,9 +330,9 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
     public void fireOnPress(Player player, boolean zoom) {
         var stack = player.getMainHandItem();
         var data = GunData.from(stack);
-        var tag = data.getTag();
+        var tag = data.tag();
 
-        if (!zoom || data.getAmmo() <= 0) return;
+        if (!zoom || data.ammo.get() <= 0) return;
 
         Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
 
@@ -348,5 +351,10 @@ public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
         }
         tag.putBoolean("Seeking", true);
         tag.putInt("SeekTime", 0);
+    }
+
+    @Override
+    public Item getCustomAmmoItem() {
+        return ModItems.JAVELIN_MISSILE.get();
     }
 }

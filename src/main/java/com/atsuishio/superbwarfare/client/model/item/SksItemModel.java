@@ -5,8 +5,8 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.rifle.SksItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -92,7 +92,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1.2f);
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
-        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
+        if (GunData.from(stack).holdOpen.get()) {
             shell.setScaleX(0);
             shell.setScaleY(0);
             shell.setScaleZ(0);

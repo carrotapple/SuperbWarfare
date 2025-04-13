@@ -5,9 +5,9 @@ import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -77,7 +77,7 @@ public class JavelinHudOverlay implements IGuiOverlay {
             float j1 = l + j;
             preciseBlit(guiGraphics, Mod.loc("textures/screens/javelin/javelin_hud.png"), k, l, 0, 0.0F, i, j, i, j);
             preciseBlit(guiGraphics, Mod.loc(stack.getOrCreateTag().getBoolean("TopMode") ? "textures/screens/javelin/top.png" : "textures/screens/javelin/dir.png"), k, l, 0, 0.0F, i, j, i, j);
-            preciseBlit(guiGraphics, Mod.loc(GunsTool.getGunIntTag(stack, "Ammo") > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
+            preciseBlit(guiGraphics, Mod.loc(GunData.from(stack).ammo.get() > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
             if (stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 20) {
                 preciseBlit(guiGraphics, Mod.loc("textures/screens/javelin/seek.png"), k, l, 0, 0.0F, i, j, i, j);
             }

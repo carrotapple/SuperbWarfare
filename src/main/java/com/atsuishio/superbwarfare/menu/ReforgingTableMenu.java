@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.perk.PerkInstance;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -18,8 +18,10 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ReforgingTableMenu extends AbstractContainerMenu {
 
@@ -87,7 +89,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
         if (slot.hasItem()) {
@@ -148,13 +150,13 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(@NotNull Player pPlayer) {
         return this.access.evaluate((level, pos) -> level.getBlockState(pos).is(ModBlocks.REFORGING_TABLE.get())
                 && pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D, true);
     }
 
     @Override
-    public void removed(Player pPlayer) {
+    public void removed(@NotNull Player pPlayer) {
         this.access.execute((level, pos) -> {
             ItemStack gun = this.container.getItem(INPUT_SLOT);
             ItemStack copy = gun.copy();
@@ -162,11 +164,12 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             for (int i = 0; i < this.container.getContainerSize(); ++i) {
                 ItemStack itemstack = this.container.getItem(i);
 
-                if (itemstack.getItem() instanceof PerkItem perkItem) {
-                    if (!copy.isEmpty() && PerkHelper.getItemPerkLevel(perkItem.getPerk(), copy) > 0) {
-                        continue;
-                    }
-                }
+                if (copy.getItem() instanceof GunItem
+                        && itemstack.getItem() instanceof PerkItem perkItem
+                        && !copy.isEmpty()
+                        && GunData.from(copy).perk.getLevel(perkItem) > 0
+                ) continue;
+
 
                 if (!itemstack.isEmpty()) {
                     pPlayer.getInventory().placeItemBackInInventory(itemstack);
@@ -206,13 +209,13 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
         var data = GunData.from(stack);
 
-        double oldPoint = data.getUpgradePoint();
+        double oldPoint = data.upgradePoint.get();
         int point = (int) oldPoint;
         int newPoint = this.upgradePoint.get();
         int delta = newPoint - point;
 
         if (delta != 0) {
-            data.setUpgradePoint(oldPoint + delta);
+            data.upgradePoint.set(oldPoint + delta);
         }
     }
 
@@ -233,27 +236,25 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         ItemStack result = gun.copy();
+        var data = GunData.from(result);
 
-        if (!ammo.isEmpty() && ammo.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(perkItem.getPerk())) {
-                PerkHelper.setPerk(result, perkItem.getPerk(), this.ammoPerkLevel.get());
-                this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
+        List.of(ammo, func, damage).forEach(item -> {
+            if (!item.isEmpty()
+                    && item.getItem() instanceof PerkItem perkItem
+                    && gunItem.canApplyPerk(perkItem.getPerk())
+            ) {
+                data.perk.set(new PerkInstance(perkItem.getPerk(), (short) switch (perkItem.getPerk().type) {
+                    case AMMO -> this.ammoPerkLevel.get();
+                    case FUNCTIONAL -> this.funcPerkLevel.get();
+                    case DAMAGE -> this.damagePerkLevel.get();
+                }));
+                this.container.setItem(switch (perkItem.getPerk().type) {
+                    case AMMO -> AMMO_PERK_SLOT;
+                    case FUNCTIONAL -> FUNC_PERK_SLOT;
+                    case DAMAGE -> DAMAGE_PERK_SLOT;
+                }, ItemStack.EMPTY);
             }
-        }
-
-        if (!func.isEmpty() && func.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(perkItem.getPerk())) {
-                PerkHelper.setPerk(result, perkItem.getPerk(), this.funcPerkLevel.get());
-                this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
-            }
-        }
-
-        if (!damage.isEmpty() && damage.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(perkItem.getPerk())) {
-                PerkHelper.setPerk(result, perkItem.getPerk(), this.damagePerkLevel.get());
-                this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
-            }
-        }
+        });
 
         handleUpgradePoint(result);
 
@@ -285,22 +286,22 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                 case DAMAGE -> this.damagePerkLevel.set(0);
             }
 
-            int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun);
-            var oldData = GunData.from(gun);
+            var inputData = GunData.from(gun);
+            int level = inputData.perk.getLevel(perkItem);
 
             if (level <= 0) {
-                this.upgradePoint.set((int) oldData.getUpgradePoint());
+                this.upgradePoint.set((int) inputData.upgradePoint.get());
                 return;
             }
 
-            ItemStack newStack = gun.copy();
-            var newData = GunData.from(newStack);
+            ItemStack output = gun.copy();
+            var outputData = GunData.from(output);
+            outputData.perk.remove(perkItem.getPerk());
 
-            PerkHelper.removePerkByType(newStack, perkItem.getPerk().type);
-            newData.setUpgradePoint(Math.min(MAX_UPGRADE_POINT, level - 1 + newData.getUpgradePoint()));
-            this.upgradePoint.set((int) newData.getUpgradePoint());
+            inputData.upgradePoint.set(Math.min(MAX_UPGRADE_POINT, level - 1 + inputData.upgradePoint.get()));
+            this.upgradePoint.set((int) inputData.upgradePoint.get());
 
-            this.container.setItem(INPUT_SLOT, newStack);
+            this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
         }
     }
@@ -331,28 +332,26 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (!(stack.getItem() instanceof GunItem)) return;
         var data = GunData.from(stack);
 
-        int point = (int) data.getUpgradePoint();
+        int point = (int) data.upgradePoint.get();
         this.upgradePoint.set(Mth.clamp(point, 0, MAX_UPGRADE_POINT));
 
-        var ammoPerk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (ammoPerk != null) {
-            this.ammoPerkLevel.set(PerkHelper.getItemPerkLevel(ammoPerk, stack));
-            var ammoPerkItem = PerkHelper.getPerkItem(ammoPerk);
-            ammoPerkItem.ifPresent(registryObject -> this.container.setItem(AMMO_PERK_SLOT, registryObject.get().getDefaultInstance()));
-        }
+        for (var type : Perk.Type.values()) {
+            var perkInstance = data.perk.getInstance(type);
+            if (perkInstance != null) {
+                switch (type) {
+                    case AMMO -> this.ammoPerkLevel.set(perkInstance.level());
+                    case FUNCTIONAL -> this.funcPerkLevel.set(perkInstance.level());
+                    case DAMAGE -> this.damagePerkLevel.set(perkInstance.level());
+                }
 
-        var funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
-        if (funcPerk != null) {
-            this.funcPerkLevel.set(PerkHelper.getItemPerkLevel(funcPerk, stack));
-            var funcPerkItem = PerkHelper.getPerkItem(funcPerk);
-            funcPerkItem.ifPresent(registryObject -> this.container.setItem(FUNC_PERK_SLOT, registryObject.get().getDefaultInstance()));
-        }
+                var ammoPerkItem = perkInstance.perk().getItem().get();
 
-        var damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-        if (damagePerk != null) {
-            this.damagePerkLevel.set(PerkHelper.getItemPerkLevel(damagePerk, stack));
-            var damagePerkItem = PerkHelper.getPerkItem(damagePerk);
-            damagePerkItem.ifPresent(registryObject -> this.container.setItem(DAMAGE_PERK_SLOT, registryObject.get().getDefaultInstance()));
+                this.container.setItem(switch (type) {
+                    case AMMO -> AMMO_PERK_SLOT;
+                    case FUNCTIONAL -> FUNC_PERK_SLOT;
+                    case DAMAGE -> DAMAGE_PERK_SLOT;
+                }, ammoPerkItem.getDefaultInstance());
+            }
         }
 
         this.container.setChanged();
@@ -362,31 +361,26 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     /**
      * 拿走输入槽中的枪械时，如果Perk槽中存在放入枪械时生成的Perk物品，则将其移除，如果是没有的Perk则无视
      *
-     * @param pStack 输入的枪械
+     * @param stack 输入的枪械
      */
-    private void onTakeGun(ItemStack pStack) {
-        if (!(pStack.getItem() instanceof GunItem)) {
-            return;
-        }
+    private void onTakeGun(ItemStack stack) {
+        if (!(stack.getItem() instanceof GunItem)) return;
 
-        var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
-        if (ammoPerk != null) {
-            if (this.container.getItem(AMMO_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == ammoPerk) {
-                this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
-            }
-        }
+        var data = GunData.from(stack);
 
-        var funcPerk = PerkHelper.getPerkByType(pStack, Perk.Type.FUNCTIONAL);
-        if (funcPerk != null) {
-            if (this.container.getItem(FUNC_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == funcPerk) {
-                this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
-            }
-        }
+        for (var type : Perk.Type.values()) {
+            var perk = data.perk.get(type);
+            var slot = switch (type) {
+                case AMMO -> AMMO_PERK_SLOT;
+                case FUNCTIONAL -> FUNC_PERK_SLOT;
+                case DAMAGE -> DAMAGE_PERK_SLOT;
+            };
 
-        var damagePerk = PerkHelper.getPerkByType(pStack, Perk.Type.DAMAGE);
-        if (damagePerk != null) {
-            if (this.container.getItem(DAMAGE_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == damagePerk) {
-                this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
+            if (perk != null &&
+                    this.container.getItem(slot).getItem() instanceof PerkItem perkItem
+                    && perkItem.getPerk() == perk
+            ) {
+                this.container.setItem(slot, ItemStack.EMPTY);
             }
         }
 
@@ -447,13 +441,13 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         @Override
-        public void onTake(Player pPlayer, ItemStack pStack) {
+        public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
             super.onTake(pPlayer, pStack);
             onTakeGun(pStack);
         }
 
         @Override
-        public void setByPlayer(ItemStack pStack) {
+        public void setByPlayer(@NotNull ItemStack pStack) {
             onPlaceGun(pStack);
             super.setByPlayer(pStack);
         }
@@ -467,7 +461,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             this.type = type;
         }
 
-        public boolean mayPlace(ItemStack pStack) {
+        public boolean mayPlace(@NotNull ItemStack pStack) {
             var slot = switch (type) {
                 case AMMO -> AMMO_PERK_SLOT;
                 case FUNCTIONAL -> FUNC_PERK_SLOT;

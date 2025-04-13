@@ -6,8 +6,9 @@ import com.atsuishio.superbwarfare.client.layer.gun.VectorLayer;
 import com.atsuishio.superbwarfare.client.model.item.VectorItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -88,19 +89,19 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
         if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("Cross1")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
         }
 
         if (name.equals("Cross2")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2);
         }
 
         if (name.equals("tuoxin")) {
-            bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.STOCK) == 0);
+            bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.STOCK) == 0);
         }
 
         if (name.equals("flare")) {
-            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunData.from(itemStack).attachment.get(AttachmentType.BARREL) == 2) {
                 bone.setHidden(true);
             } else {
                 bone.setHidden(false);

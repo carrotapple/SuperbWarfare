@@ -56,7 +56,7 @@ public class AmmoBox extends Item {
                     ammoType.set(tag, 0);
                 }
             }
-            capability.syncPlayerVariables(player);
+            capability.sync(player);
 
             if (!level.isClientSide()) {
                 level.playSound(null, player.blockPosition(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 1, 1);

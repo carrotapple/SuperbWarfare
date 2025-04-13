@@ -6,10 +6,12 @@ import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
+import com.atsuishio.superbwarfare.item.gun.data.DefaultGunData;
 import com.atsuishio.superbwarfare.menu.EnergyMenu;
 import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
+import com.google.gson.Gson;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
@@ -25,9 +27,14 @@ import java.util.function.Supplier;
 
 public class ClientPacketHandler {
 
+    private static final Gson GSON = new Gson();
+
     public static void handleGunsDataMessage(GunsDataMessage message, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            GunsTool.gunsData = message.gunsData;
+            GunsTool.gunsData.clear();
+            for (var entry : message.gunsData.entrySet()) {
+                GunsTool.gunsData.put(entry.getKey(), GSON.fromJson(entry.getValue(), DefaultGunData.class));
+            }
         }
     }
 

@@ -15,8 +15,6 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -348,19 +346,20 @@ public class ClickHandler {
                 handTimer = 0;
             }
 
-            if (!gunItem.useBackpackAmmo(stack) && data.getAmmo() <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
+            if (!gunItem.useBackpackAmmo(stack) && data.ammo.get() <= 0 && data.reload.time() == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
                     Mod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
                     ClientEventHandler.burstFireAmount = 0;
                 }
             } else {
                 Mod.PACKET_HANDLER.sendToServer(new FireMessage(0, handTimer, zoom));
-                if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                        && !data.isReloading()
-                        && !GunsTool.getGunBooleanTag(stack, "Charging")
-                        && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction"))
-                        && drawTime < 0.01) {
-                    if (data.getFireMode() == 1) {
+                if ((!(data.reload.normal() || data.reload.empty())
+                        && !data.reloading()
+                        && !data.charging()
+                        && !data.bolt.needed.get())
+                        && drawTime < 0.01
+                ) {
+                    if (data.fireMode.get() == 1) {
                         if (ClientEventHandler.burstFireAmount == 0) {
                             ClientEventHandler.burstFireAmount = data.burstAmount();
                         }
@@ -389,7 +388,7 @@ public class ClickHandler {
         }
 
         ClientEventHandler.zoom = true;
-        int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
+        int level = GunData.from(stack).perk.getLevel(ModPerks.INTELLIGENT_CHIP);
         if (level > 0) {
             if (ClientEventHandler.entity == null) {
                 ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 20);

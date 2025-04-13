@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.model.item.RpgItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -84,7 +85,7 @@ public class RpgItemRenderer extends GeoItemRenderer<RpgItem> {
         if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("Rockets")) {
-            bone.setHidden(itemStack.getOrCreateTag().getBoolean("empty"));
+            bone.setHidden(GunData.from(itemStack).isEmpty.get());
         }
 
         if (name.equals("flare")) {

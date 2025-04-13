@@ -9,10 +9,10 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -29,6 +29,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -59,7 +60,7 @@ public class Trachelium extends GunItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new TracheliumItemRenderer();
@@ -86,8 +87,8 @@ public class Trachelium extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        boolean stock = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK) == 2;
-        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) > 0 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) > 0;
+        boolean stock = GunData.from(stack).attachment.get(AttachmentType.STOCK) == 2;
+        boolean grip = GunData.from(stack).attachment.get(AttachmentType.GRIP) > 0 || GunData.from(stack).attachment.get(AttachmentType.SCOPE) > 0;
 
         if (ClientEventHandler.firePosTimer > 0 && ClientEventHandler.firePosTimer < 1.7) {
             if (stock) {
@@ -126,10 +127,10 @@ public class Trachelium extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        boolean stock = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK) == 2;
-        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) > 0 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) > 0;
+        boolean stock = GunData.from(stack).attachment.get(AttachmentType.STOCK) == 2;
+        boolean grip = GunData.from(stack).attachment.get(AttachmentType.GRIP) > 0 || GunData.from(stack).attachment.get(AttachmentType.SCOPE) > 0;
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+        if (GunData.from(stack).bolt.actionTimer.get() > 0) {
             if (stock) {
                 if (grip) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action_stock_grip"));
@@ -145,7 +146,7 @@ public class Trachelium extends GunItem implements GeoItem {
             }
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             if (stock) {
                 if (grip) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload_stock_grip"));
@@ -252,9 +253,9 @@ public class Trachelium extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-        CompoundTag tags = stack.getOrCreateTag().getCompound("Attachments");
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
+        int stockType = GunData.from(stack).attachment.get(AttachmentType.STOCK);
+        CompoundTag tags = GunData.from(stack).attachment();
 
         if (stockType == 1) {
             tags.putInt("Stock", 2);
@@ -267,17 +268,17 @@ public class Trachelium extends GunItem implements GeoItem {
 
     @Override
     public int getCustomBoltActionTime(ItemStack stack) {
-        return GunData.from(stack).getTag().getBoolean("DA") ? 12 : 0;
+        return GunData.from(stack).DA.get() ? 12 : 0;
     }
 
     @Override
     public boolean canSwitchScope(ItemStack stack) {
-        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 2;
+        return GunData.from(stack).attachment.get(AttachmentType.SCOPE) == 2;
     }
 
     private boolean useSpecialAttributes(ItemStack stack) {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
+        int gripType = GunData.from(stack).attachment.get(AttachmentType.GRIP);
         return scopeType > 0 || gripType > 0;
     }
 
@@ -291,7 +292,7 @@ public class Trachelium extends GunItem implements GeoItem {
 
     @Override
     public double getCustomZoom(ItemStack stack) {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
         return scopeType == 2 ? (stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75) : 0;
     }
 

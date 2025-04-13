@@ -45,7 +45,7 @@ import java.util.function.Consumer;
 public class MinigunItem extends GunItem implements GeoItem {
     @Override
     public int getCustomRPM(ItemStack stack) {
-        return GunData.from(stack).getData().getInt("CustomRPM");
+        return GunData.from(stack).data().getInt("CustomRPM");
     }
 
     private static final String TAG_HEAT = "heat";
@@ -136,8 +136,8 @@ public class MinigunItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
 
         float yRot = entity.getYRot();
         if (yRot < 0) {
@@ -164,7 +164,9 @@ public class MinigunItem extends GunItem implements GeoItem {
             cooldown = -0.1;
         }
 
-        if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && itemstack.getOrCreateTag().getDouble("heat") > 4 && entity.isInWaterOrRain()) {
+        var tag = GunData.from(stack).data();
+
+        if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && tag.getDouble("heat") > 4 && entity.isInWaterOrRain()) {
             if (entity.isInWater()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP,
                         entity.getX() + leftPos.x,
@@ -179,10 +181,10 @@ public class MinigunItem extends GunItem implements GeoItem {
                     1, 0.1, 0.1, 0.1, 0.002, true, serverPlayer);
         }
 
-        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.05 - cooldown, 0, 55));
+        tag.putDouble("heat", Mth.clamp(tag.getDouble("heat") - 0.05 - cooldown, 0, 55));
 
-        if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {
-            itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));
+        if (tag.getDouble("overheat") > 0) {
+            tag.putDouble("overheat", (tag.getDouble("overheat") - 1));
         }
     }
 

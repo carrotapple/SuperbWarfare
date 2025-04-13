@@ -7,6 +7,8 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -78,15 +80,15 @@ public class Ntw20Item extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+        if (GunData.from(stack).bolt.actionTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_empty"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+        if (GunData.from(stack).reload.normal()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_normal"));
         }
 
@@ -101,9 +103,9 @@ public class Ntw20Item extends GunItem implements GeoItem {
 
         if (player.isSprinting() && player.onGround()
                 && ClientEventHandler.cantSprint == 0
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())
                 && ClientEventHandler.drawTime < 0.01) {
-            if (ClientEventHandler.tacticalSprint && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
+            if (ClientEventHandler.tacticalSprint && GunData.from(stack).bolt.actionTimer.get() == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
@@ -143,12 +145,12 @@ public class Ntw20Item extends GunItem implements GeoItem {
 
     @Override
     public boolean canAdjustZoom(ItemStack stack) {
-        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
+        return GunData.from(stack).attachment.get(AttachmentType.SCOPE) == 3;
     }
 
     @Override
     public double getCustomZoom(ItemStack stack) {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
         return switch (scopeType) {
             case 2 -> 2.25;
             case 3 -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
@@ -158,7 +160,7 @@ public class Ntw20Item extends GunItem implements GeoItem {
 
     @Override
     public int getCustomMagazine(ItemStack stack) {
-        return switch (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE)) {
+        return switch (GunData.from(stack).attachment.get(AttachmentType.MAGAZINE)) {
             case 1 -> 3;
             case 2 -> 6;
             default -> 0;

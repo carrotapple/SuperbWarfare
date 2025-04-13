@@ -16,7 +16,6 @@ import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
@@ -71,7 +70,7 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new M79ItemRenderer();
@@ -98,7 +97,7 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
         }
 
@@ -150,7 +149,7 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
+            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
         }
     }
 
@@ -192,8 +191,8 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
     public void fireOnPress(Player player, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
-        if (data.isReloading()) return;
-        if (player.getCooldowns().isOnCooldown(stack.getItem()) || data.getAmmo() <= 0) return;
+        if (data.reloading()) return;
+        if (player.getCooldowns().isOnCooldown(stack.getItem()) || data.ammo.get() <= 0) return;
 
         double spread = data.spread();
 
@@ -203,16 +202,16 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
                     (float) data.explosionDamage(),
                     (float) data.explosionRadius());
 
-            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+            var dmgPerk = GunData.from(stack).perk.get(Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                int perkLevel = GunData.from(stack).perk.getLevel(dmgPerk);
                 gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
-            gunGrenadeEntity.setNoGravity(PerkHelper.getPerkByType(stack, Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
+            gunGrenadeEntity.setNoGravity(GunData.from(stack).perk.get(Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
 
             float velocity = (float) data.velocity();
-            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.MICRO_MISSILE.get(), stack);
+            int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.MICRO_MISSILE);
             if (perkLevel > 0) {
                 gunGrenadeEntity.setExplosionRadius((float) data.explosionRadius() * 0.5f);
                 gunGrenadeEntity.setDamage((float) data.explosionDamage() * (1.1f + perkLevel * 0.1f));
@@ -240,6 +239,11 @@ public class M79Item extends GunItem implements GeoItem, SpecialFireWeapon {
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 2);
-        data.setAmmo(data.getAmmo() - 1);
+        data.ammo.set(data.ammo.get() - 1);
+    }
+
+    @Override
+    public Item getCustomAmmoItem() {
+        return ModItems.GRENADE_40MM.get();
     }
 }

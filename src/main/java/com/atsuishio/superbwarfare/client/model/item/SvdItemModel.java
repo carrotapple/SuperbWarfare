@@ -5,8 +5,9 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.sniper.SvdItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -59,10 +60,10 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        int type = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
+        int stockType = GunData.from(stack).attachment.get(AttachmentType.STOCK);
+        int barrelType = GunData.from(stack).attachment.get(AttachmentType.BARREL);
+        int gripType = GunData.from(stack).attachment.get(AttachmentType.GRIP);
 
         float posX = switch (type) {
             case 0, 1 -> 1.701f;
@@ -134,7 +135,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         bolt.setPosZ(4.5f * (float) fp);
 
-        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
+        if (GunData.from(stack).holdOpen.get()) {
             bolt.setPosZ(3.5f);
         }
 

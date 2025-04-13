@@ -5,8 +5,9 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.Mk14Item;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -60,10 +61,10 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        int type = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
+        int stockType = GunData.from(stack).attachment.get(AttachmentType.STOCK);
+        int barrelType = GunData.from(stack).attachment.get(AttachmentType.BARREL);
+        int gripType = GunData.from(stack).attachment.get(AttachmentType.GRIP);
 
         float posY = switch (type) {
             case 0 -> 1.68f;
@@ -149,7 +150,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
-        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
+        if (GunData.from(stack).holdOpen.get()) {
             action.setPosZ(2.5f);
             shell.setScaleX(0);
             shell.setScaleY(0);

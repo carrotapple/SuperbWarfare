@@ -2,8 +2,9 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.tools.SoundTool;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -38,41 +39,40 @@ public class EditMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+        var data = GunData.from(stack);
 
-        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
         switch (type) {
             case 0 -> {
-                int att = tag.getInt("Scope");
+                int att = data.attachment.get(AttachmentType.SCOPE);
                 att++;
                 att %= 4;
-                tag.putInt("Scope", att);
+                data.attachment.set(AttachmentType.SCOPE, att);
             }
             case 1 -> {
-                int att = tag.getInt("Barrel");
+                int att = data.attachment.get(AttachmentType.BARREL);
                 att++;
                 att %= 3;
-                tag.putInt("Barrel", att);
+                data.attachment.set(AttachmentType.BARREL, att);
             }
             case 2 -> {
-                int att = tag.getInt("Magazine");
+                int att = data.attachment.get(AttachmentType.MAGAZINE);
                 att++;
                 att %= 3;
-                tag.putInt("Magazine", att);
+                data.attachment.set(AttachmentType.MAGAZINE, att);
             }
             case 3 -> {
-                int att = tag.getInt("Stock");
+                int att = data.attachment.get(AttachmentType.STOCK);
                 att++;
                 att %= 3;
-                tag.putInt("Stock", att);
+                data.attachment.set(AttachmentType.STOCK, att);
             }
             case 4 -> {
-                int att = tag.getInt("Grip");
+                int att = data.attachment.get(AttachmentType.GRIP);
                 att++;
                 att %= 4;
-                tag.putInt("Grip", att);
+                data.attachment.set(AttachmentType.GRIP, att);
             }
         }
-        stack.addTagElement("Attachments", tag);
         SoundTool.playLocalSound(player, ModSounds.EDIT.get(), 1f, 1f);
     }
 }

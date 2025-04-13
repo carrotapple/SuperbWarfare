@@ -43,7 +43,7 @@ public class AmmoCommand {
                     for (var player : players) {
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             type.set(capability, value);
-                            capability.syncPlayerVariables(player);
+                            capability.sync(player);
                         });
                     }
 
@@ -58,7 +58,7 @@ public class AmmoCommand {
                     for (var player : players) {
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             type.add(capability, value);
-                            capability.syncPlayerVariables(player);
+                            capability.sync(player);
                         });
                     }
 

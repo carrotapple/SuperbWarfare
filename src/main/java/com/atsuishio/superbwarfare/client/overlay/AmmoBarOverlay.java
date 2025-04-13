@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -44,7 +43,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
     }
 
     private static ResourceLocation getFireMode(ItemStack stack) {
-        return switch (GunData.from(stack).getFireMode()) {
+        return switch (GunData.from(stack).fireMode.get()) {
             case 1 -> BURST;
             case 2 -> AUTO;
             default -> SEMI;
@@ -59,10 +58,10 @@ public class AmmoBarOverlay implements IGuiOverlay {
         }
 
         if (stack.getItem() == ModItems.BOCEK.get()) {
-            return GunsTool.getGunIntTag(stack, "MaxAmmo");
+            return GunData.from(stack).maxAmmo.get();
         }
 
-        return GunsTool.getGunIntTag(stack, "Ammo");
+        return GunData.from(stack).ammo.get();
     }
 
     private static String getPlayerAmmoCount(Player player) {
@@ -75,7 +74,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
         var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         if (!hasCreativeAmmo()) {
             if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
-                return "" + GunsTool.getGunIntTag(stack, "MaxAmmo");
+                return "" + GunData.from(stack).maxAmmo.get();
             }
             if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 return "" + cap.rifleAmmo;
@@ -177,7 +176,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
                 } else {
                     guiGraphics.drawString(
                             Minecraft.getInstance().font,
-                            stack.getOrCreateTag().getBoolean("DA") ? Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD) : Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD),
+                            GunData.from(stack).DA.get() ? Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD) : Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD),
                             screenWidth - 96,
                             screenHeight - 20,
                             0xFFFFFF,

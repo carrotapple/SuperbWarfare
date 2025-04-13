@@ -16,8 +16,6 @@ import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -110,7 +108,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new TaserItemRenderer();
@@ -137,7 +135,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.reload"));
         }
 
@@ -189,10 +187,10 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         if (entity instanceof Player player) {
-            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
+            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
         }
 
-        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.REGENERATION.get(), stack);
+        int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.REGENERATION);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 energy -> energy.receiveEnergy(perkLevel, false)
         );
@@ -267,15 +265,15 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
     public void fireOnPress(Player player, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
-        if (data.isReloading()) return;
+        if (data.reloading()) return;
 
-        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
+        int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.VOLT_OVERLOAD);
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
                 .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
                 .orElse(false);
 
         if (player.getCooldowns().isOnCooldown(stack.getItem())
-                || data.getAmmo() <= 0
+                || data.ammo.get() <= 0
                 || !hasEnoughEnergy
         ) return;
 
@@ -283,8 +281,8 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
 
         if (player instanceof ServerPlayer serverPlayer) {
             double spread = data.spread();
-            int volt = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
-            int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
+            int volt = GunData.from(stack).perk.getLevel(ModPerks.VOLT_OVERLOAD);
+            int wireLength = GunData.from(stack).perk.getLevel(ModPerks.LONGER_WIRE);
 
             SoundTool.playLocalSound(serverPlayer, ModSounds.TASER_FIRE_1P.get(), 1, 1);
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
@@ -301,8 +299,12 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
             Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        data.setAmmo(data.getAmmo() - 1);
+        data.ammo.set(data.ammo.get() - 1);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
-        stack.getOrCreateTag().putBoolean("shoot", true);
+    }
+
+    @Override
+    public Item getCustomAmmoItem() {
+        return ModItems.TASER_ELECTRODE.get();
     }
 }

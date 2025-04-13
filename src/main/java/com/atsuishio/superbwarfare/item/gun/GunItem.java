@@ -7,9 +7,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.ItemNBTTool;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -34,15 +32,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber
 public abstract class GunItem extends Item {
 
     public GunItem(Properties properties) {
         super(properties);
+        addReloadTimeBehavior(this.reloadTimeBehaviors);
     }
 
     @Override
@@ -54,52 +52,44 @@ public abstract class GunItem extends Item {
     @Override
     @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (!(entity instanceof LivingEntity)) return;
-        if (!stack.is(ModTags.Items.GUN)) return;
-        if (!(stack.getItem() instanceof GunItem gunItem)) return;
+        if (!(entity instanceof LivingEntity)
+                || !stack.is(ModTags.Items.GUN)
+                || !(stack.getItem() instanceof GunItem gunItem)
+        ) return;
+
         var data = GunData.from(stack);
 
-        if (!ItemNBTTool.getBoolean(stack, "init", false)) {
-            var name = this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1);
-
+        if (!data.initialized()) {
+            data.initialize();
             if (level.getServer() != null && entity instanceof Player player && player.isCreative()) {
-                GunsTool.initCreativeGun(stack, name);
-            } else {
-                GunsTool.initGun(stack, name);
+                data.ammo.set(data.magazine());
             }
-
-            GunsTool.generateAndSetUUID(stack);
-            ItemNBTTool.setBoolean(stack, "init", true);
         }
+        data.draw.set(false);
+        handleGunPerks(data);
 
-        if (stack.getOrCreateTag().getBoolean("draw")) {
-            stack.getOrCreateTag().putBoolean("draw", false);
-        }
+        var hasBulletInBarrel = gunItem.hasBulletInBarrel(stack);
+        var ammoCount = data.ammo.get();
+        var magazine = data.magazine();
 
-        handleGunPerks(stack);
+        if ((hasBulletInBarrel && ammoCount > magazine + 1) || (!hasBulletInBarrel && ammoCount > magazine)) {
+            int count = ammoCount - magazine - (hasBulletInBarrel ? 1 : 0);
 
-        if ((gunItem.hasBulletInBarrel(stack) && data.getAmmo() > data.magazine() + 1)
-                || (!gunItem.hasBulletInBarrel(stack) && data.getAmmo() > data.magazine())
-        ) {
-            int count = data.getAmmo() - data.magazine() - (gunItem.hasBulletInBarrel(stack) ? 1 : 0);
-            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
+            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(capability -> {
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                    capability.shotgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).shotgunAmmo + count;
+                    AmmoType.SHOTGUN.add(capability, count);
                 } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                    capability.sniperAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).sniperAmmo + count;
+                    AmmoType.SNIPER.add(capability, count);
                 } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                    capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
+                    AmmoType.HANDGUN.add(capability, count);
                 } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                    capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
+                    AmmoType.RIFLE.add(capability, count);
                 } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                    capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).heavyAmmo + count;
+                    AmmoType.HEAVY.add(capability, count);
                 }
-
-                capability.syncPlayerVariables(entity);
+                capability.sync(entity);
+                data.ammo.set(magazine + (hasBulletInBarrel ? 1 : 0));
             });
-
-            data.setAmmo(data.magazine() + (gunItem.hasBulletInBarrel(stack) ? 1 : 0));
         }
     }
 
@@ -149,7 +139,7 @@ public abstract class GunItem extends Item {
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
         if (event.getItem().getItem().is(ModTags.Items.GUN)) {
-            event.getItem().getItem().getOrCreateTag().putBoolean("draw", true);
+            GunData.from(event.getItem().getItem()).draw.set(true);
         }
     }
 
@@ -163,43 +153,38 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    private void handleGunPerks(ItemStack stack) {
-        reducePerkTagCoolDown(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
-                "DesperadoTime", "DesperadoTimePost");
+    private void handleGunPerks(GunData data) {
+        var perk = data.perk;
 
-        if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
-            int count = GunsTool.getPerkIntTag(stack, "FourthTimesCharmCount");
+        perk.reduceCooldown(ModPerks.HEAL_CLIP, "HealClipTime");
+
+        perk.reduceCooldown(ModPerks.KILL_CLIP, "KillClipReloadTime");
+        perk.reduceCooldown(ModPerks.KILL_CLIP, "KillClipTime");
+
+        perk.reduceCooldown(ModPerks.FOURTH_TIMES_CHARM, "FourthTimesCharmTick");
+
+        perk.reduceCooldown(ModPerks.HEAD_SEEKER, "HeadSeeker");
+
+        perk.reduceCooldown(ModPerks.DESPERADO, "DesperadoTime");
+        perk.reduceCooldown(ModPerks.DESPERADO, "DesperadoTimePost");
+
+        if (perk.getLevel(ModPerks.FOURTH_TIMES_CHARM) > 0) {
+            var tag = data.perk.getTag(ModPerks.FOURTH_TIMES_CHARM);
+            int count = perk.getTag(ModPerks.FOURTH_TIMES_CHARM).getInt("FourthTimesCharmCount");
+
             if (count >= 4) {
-                GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 0);
-                GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 0);
+                tag.remove("FourthTimesCharmTick");
+                tag.remove("FourthTimesCharmCount");
 
-                var data = GunData.from(stack);
                 int mag = data.magazine();
-                GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, data.getAmmo() + 2));
+                data.ammo.set(Math.min(mag, data.ammo.get() + 2));
             }
         }
+
     }
 
     public boolean canApplyPerk(Perk perk) {
         return true;
-    }
-
-    private void reducePerkTagCoolDown(ItemStack stack, String... tag) {
-        if (!stack.hasTag() || stack.getTag() == null) {
-            return;
-        }
-
-        var compound = stack.getOrCreateTag().getCompound("PerkData");
-        for (String t : tag) {
-            if (!compound.contains(t)) {
-                continue;
-            }
-
-            if (compound.getInt(t) > 0) {
-                compound.putInt(t, Math.max(0, compound.getInt(t) - 1));
-            }
-        }
-        stack.addTagElement("PerkData", compound);
     }
 
     /**
@@ -399,7 +384,7 @@ public abstract class GunItem extends Item {
      * 获取额外总重量加成
      */
     public double getCustomWeight(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+        CompoundTag tag = GunData.from(stack).attachment();
 
         double scopeWeight = switch (tag.getInt("Scope")) {
             case 1 -> 0.5;
@@ -446,7 +431,7 @@ public abstract class GunItem extends Item {
      * 获取额外音效半径加成
      */
     public double getCustomSoundRadius(ItemStack stack) {
-        return stack.getOrCreateTag().getCompound("Attachments").getInt("Barrel") == 2 ? 0.6 : 1;
+        return GunData.from(stack).attachment().getInt("Barrel") == 2 ? 0.6 : 1;
     }
 
     public int getCustomBoltActionTime(ItemStack stack) {
@@ -499,5 +484,17 @@ public abstract class GunItem extends Item {
         FireMode(int i) {
             this.flag = i;
         }
+    }
+
+    public final Map<Integer, Consumer<GunData>> reloadTimeBehaviors = new HashMap<>();
+
+    /**
+     * 添加达到指定换弹时间时的额外行为
+     */
+    public void addReloadTimeBehavior(Map<Integer, Consumer<GunData>> behaviors) {
+    }
+
+    public Item getCustomAmmoItem() {
+        return null;
     }
 }

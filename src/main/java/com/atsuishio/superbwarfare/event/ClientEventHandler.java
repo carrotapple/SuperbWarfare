@@ -13,11 +13,11 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.*;
 import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
 import net.minecraft.client.CameraType;
@@ -210,7 +210,7 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.REVOLVER)) {
             return true;
-        } else if (stack.is(ModTags.Items.REVOLVER) && (stack.getOrCreateTag().getBoolean("DA") || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
+        } else if (stack.is(ModTags.Items.REVOLVER) && (GunData.from(stack).DA.get() || GunData.from(stack).canImmediatelyShoot.get())) {
             return true;
         } else {
             return revolverPreTime >= 1;
@@ -421,10 +421,10 @@ public class ClientEventHandler {
                     && !holdFireVehicle
                     && !notInGame()
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !data.isReloading()
+                    && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())
+                    && !data.reloading()
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && !GunsTool.getGunBooleanTag(stack, "Charging")) {
+                    && !GunData.from(stack).charging()) {
                 gunMelee = 36;
                 cantFireTime = 40;
                 player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
@@ -505,8 +505,8 @@ public class ClientEventHandler {
         }
         var data = GunData.from(stack);
 
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        int mode = data.getFireMode();
+        var perk = data.perk.get(Perk.Type.AMMO);
+        int mode = data.fireMode.get();
 
         // 精准度
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -555,7 +555,7 @@ public class ClientEventHandler {
         }
 
         if (GunsTool.getPerkIntTag(stack, "DesperadoTimePost") > 0) {
-            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+            int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.DESPERADO);
             rpm *= (int) (1.285 + 0.015 * perkLevel);
         }
 
@@ -565,11 +565,11 @@ public class ClientEventHandler {
         int cooldown = (int) (1000 / rps);
 
         //左轮类
-        if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA"))
-                || (GunsTool.getGunIntTag(stack, "BoltActionTick") < 7 && GunsTool.getGunIntTag(stack, "BoltActionTick") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
+        if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !GunData.from(stack).DA.get())
+                || (GunData.from(stack).bolt.actionTimer.get() < 7 && GunData.from(stack).bolt.actionTimer.get() > 2) || GunData.from(stack).canImmediatelyShoot.get())) {
             revolverPreTime = Mth.clamp(revolverPreTime + 0.3 * times, 0, 1);
             revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.32 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
-        } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
+        } else if (!GunData.from(stack).DA.get() && !GunData.from(stack).canImmediatelyShoot.get()) {
             revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }
 
@@ -581,19 +581,18 @@ public class ClientEventHandler {
                 && drawTime < 0.01
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
-                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !data.isReloading()
-                && !GunsTool.getGunBooleanTag(stack, "Charging")
-                && data.getAmmo() > 0
+                && !data.reloading()
+                && !GunData.from(stack).charging()
+                && data.ammo.get() > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
-                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction")
+                && !GunData.from(stack).bolt.needed.get()
                 && revolverPre())
                 || (stack.is(ModItems.MINIGUN.get())
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
                 && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || InventoryTool.hasCreativeAmmoBox(player))
-        ))) {
+        )) {
             if (mode == 0) {
                 if (clientTimer.getProgress() == 0) {
                     clientTimer.start();
@@ -629,7 +628,7 @@ public class ClientEventHandler {
             clientTimer.stop();
         }
 
-        if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+        if (stack.getItem() == ModItems.DEVOTION.get() && (GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())) {
             customRpm = 0;
         }
     }
@@ -662,14 +661,14 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (data.getAmmo() > 0) {
-                int mode = data.getFireMode();
+            if (data.ammo.get() > 0) {
+                int mode = data.fireMode.get();
                 if (mode != 2) {
                     holdFire = false;
                 }
 
                 if (mode == 1) {
-                    if (data.getAmmo() == 1) {
+                    if (data.ammo.get() == 1) {
                         burstFireAmount = 1;
                     }
                     if (burstFireAmount == 1) {
@@ -682,7 +681,7 @@ public class ClientEventHandler {
                 }
 
                 if (stack.is(ModItems.DEVOTION.get())) {
-                    int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.TURBO_CHARGER.get(), stack);
+                    int perkLevel = data.perk.getLevel(ModPerks.TURBO_CHARGER);
                     customRpm = Math.min(customRpm + 15 + ((perkLevel > 0 ? 5 : 0) + 3 * perkLevel), 500);
                 }
 
@@ -695,8 +694,8 @@ public class ClientEventHandler {
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (data.boltActionTime() > 0 && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
-                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
+                if (data.defaultActionTime() > 0 && data.ammo.get() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                    data.bolt.needed.set(true);
                 }
 
                 revolverPreTime = 0;
@@ -706,13 +705,10 @@ public class ClientEventHandler {
                 handleClientShoot();
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
-            var tag = stack.getOrCreateTag();
-
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
-                    || InventoryTool.hasCreativeAmmoBox(player)) {
-
-                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-                float pitch = tag.getDouble("heat") <= 40 ? (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f) : (float) (((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f) - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).map(c -> c.rifleAmmo).orElse(0) > 0 || InventoryTool.hasCreativeAmmoBox(player)) {
+                var perk = data.perk.get(Perk.Type.AMMO);
+                var tag = data.data();
+                float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
                 player.playSound(ModSounds.MINIGUN_FIRE_1P.get(), 1f, pitch);
 
@@ -801,13 +797,15 @@ public class ClientEventHandler {
             }
         }
 
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        var data = GunData.from(stack);
+        var perk = data.perk.get(Perk.Type.AMMO);
 
         if (perk == ModPerks.BEAST_BULLET.get()) {
             player.playSound(ModSounds.HENG.get(), 1f, (float) ((2 * org.joml.Math.random() - 1) * 0.1f + 1.0f));
         }
 
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+        int barrelType = GunData.from(stack).attachment.get(AttachmentType.BARREL);
 
         SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
 
@@ -951,12 +949,12 @@ public class ClientEventHandler {
         if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.85f;
         } else if (isProne(player)) {
-            pose = (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
+            pose = (GunData.from(stack).attachment.get(AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
         } else {
             pose = 1;
         }
 
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
+        int stockType = GunData.from(stack).attachment.get(AttachmentType.STOCK);
 
         double sway = switch (stockType) {
             case 1 -> 1;
@@ -1091,7 +1089,7 @@ public class ClientEventHandler {
             if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
                 pose = 0.85;
             } else if (isProne(player)) {
-                pose = (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
+                pose = (GunData.from(stack).attachment.get(AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
             } else {
                 pose = 1;
             }
@@ -1300,8 +1298,8 @@ public class ClientEventHandler {
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
-        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        int barrelType = GunData.from(stack).attachment.get(AttachmentType.BARREL);
+        int gripType = GunData.from(stack).attachment.get(AttachmentType.GRIP);
 
         double recoil = switch (barrelType) {
             case 1 -> 1.5;
@@ -1346,7 +1344,7 @@ public class ClientEventHandler {
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.7f;
         } else if (isProne(player)) {
-            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) {
+            if (GunData.from(stack).attachment.get(AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) {
                 pose = 0.1f;
             } else {
                 pose = 0.5f;
@@ -1514,7 +1512,7 @@ public class ClientEventHandler {
                     && drawTime < 0.01
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.edit).orElse(false)) {
                 if (!player.isShiftKeyDown()) {
-                    int intelligentChipLevel = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
+                    int intelligentChipLevel = GunData.from(stack).perk.getLevel(ModPerks.INTELLIGENT_CHIP);
 
                     if (intelligentChipLevel > 0) {
                         if (ClientEventHandler.entity == null || !entity.isAlive()) {

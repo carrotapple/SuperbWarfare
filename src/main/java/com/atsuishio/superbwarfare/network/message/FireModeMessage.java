@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -47,7 +46,7 @@ public class FireModeMessage {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof GunItem gunItem) {
             var data = GunData.from(stack);
-            int fireMode = data.getFireMode();
+            int fireMode = data.fireMode.get();
 
             CompoundTag tag = stack.getOrCreateTag();
 
@@ -56,12 +55,12 @@ public class FireModeMessage {
 
             if (fireMode == 0) {
                 if ((mode & 2) != 0) {
-                    data.setFireMode(1);
+                    data.fireMode.set(1);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 4) != 0) {
-                    data.setFireMode(2);
+                    data.fireMode.set(2);
                     playChangeModeSound(player);
                     return;
                 }
@@ -69,12 +68,12 @@ public class FireModeMessage {
 
             if (fireMode == 1) {
                 if ((mode & 4) != 0) {
-                    data.setFireMode(2);
+                    data.fireMode.set(2);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 1) != 0) {
-                    data.setFireMode(0);
+                    data.fireMode.set(0);
                     playChangeModeSound(player);
                     return;
                 }
@@ -82,12 +81,12 @@ public class FireModeMessage {
 
             if (fireMode == 2) {
                 if ((mode & 1) != 0) {
-                    data.setFireMode(0);
+                    data.fireMode.set(0);
                     playChangeModeSound(player);
                     return;
                 }
                 if ((mode & 2) != 0) {
-                    data.setFireMode(1);
+                    data.fireMode.set(1);
                     playChangeModeSound(player);
                     return;
                 }
@@ -96,8 +95,8 @@ public class FireModeMessage {
             if (stack.getItem() == ModItems.SENTINEL.get()
                     && !player.isSpectator()
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
-                    && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
-                    && !GunsTool.getGunBooleanTag(stack, "Charging")) {
+                    && GunData.from(stack).reload.time() == 0
+                    && !GunData.from(stack).charging()) {
 
                 for (var cell : player.getInventory().items) {
                     if (cell.is(ModItems.CELL.get())) {
@@ -107,7 +106,7 @@ public class FireModeMessage {
                         );
 
                         if (flag.get()) {
-                            GunsTool.setGunBooleanTag(stack, "StartCharge", true);
+                            data.charge.starter.markStart();
                         }
                     }
                 }
@@ -120,10 +119,10 @@ public class FireModeMessage {
                 }
             }
 
-            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction")) {
-                tag.putBoolean("DA", !tag.getBoolean("DA"));
+            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunData.from(stack).bolt.needed.get()) {
+                data.DA.set(!data.DA.get());
                 if (!tag.getBoolean("canImmediatelyShoot")) {
-                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
+                    data.bolt.needed.set(true);
                 }
             }
         }

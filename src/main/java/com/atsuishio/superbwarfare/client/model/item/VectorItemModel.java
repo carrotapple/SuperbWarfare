@@ -5,8 +5,9 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -54,7 +55,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        int mode = GunsTool.getGunIntTag(stack, "FireMode");
+        int mode = GunData.from(stack).fireMode.get();
         if (mode == 0) {
             kmj.setRotX(-120 * Mth.DEG_TO_RAD);
         }
@@ -74,7 +75,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int type = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
 
         float posY = switch (type) {
             case 1 -> 0.74f;

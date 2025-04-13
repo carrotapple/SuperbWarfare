@@ -8,14 +8,12 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +24,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected final int width;
     protected final int height;
     protected final ItemStack stack;
+    protected final GunData data;
 
     protected GunData getGunData() {
         return GunData.from(stack);
@@ -35,6 +34,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         this.width = tooltip.width;
         this.height = tooltip.height;
         this.stack = tooltip.stack;
+        this.data = GunData.from(stack);
     }
 
     @Override
@@ -77,7 +77,9 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderPerks() {
-        return PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null || PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE) != null || PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL) != null;
+        return GunData.from(stack).perk.get(Perk.Type.AMMO) != null
+                || GunData.from(stack).perk.get(Perk.Type.DAMAGE) != null
+                || GunData.from(stack).perk.get(Perk.Type.FUNCTIONAL) != null;
     }
 
     /**
@@ -126,8 +128,8 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器等级文本组件
      */
     protected Component getLevelComponent() {
-        int level = getGunData().getLevel();
-        double rate = getGunData().getExp() / (20 * Math.pow(level, 2) + 160 * level + 20);
+        int level = getGunData().level.get();
+        double rate = getGunData().exp.get() / (20 * Math.pow(level, 2) + 160 * level + 20);
 
         ChatFormatting formatting;
         if (level < 10) {
@@ -153,7 +155,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器强化点数文本组件
      */
     protected Component getUpgradePointComponent() {
-        int upgradePoint = Mth.floor(getGunData().getUpgradePoint());
+        int upgradePoint = Mth.floor(getGunData().upgradePoint.get());
         return Component.translatable("des.superbwarfare.guns.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));
@@ -173,10 +175,12 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getBypassComponent() {
         double perkBypassArmorRate = 0;
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        var data = GunData.from(stack);
+        var perk = data.perk.get(Perk.Type.AMMO);
 
         if (perk instanceof AmmoPerk ammoPerk) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = GunData.from(stack).perk.getLevel(perk);
             perkBypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
         double bypassRate = Math.max(getGunData().bypassArmor() + perkBypassArmorRate, 0);
@@ -219,52 +223,17 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         int xOffset = -20;
 
-        Perk ammoPerk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (ammoPerk != null && PerkHelper.getPerkItem(ammoPerk).isPresent()) {
+        for (var type : Perk.Type.values()) {
+            var perkInstance = data.perk.getInstance(type);
+            if (perkInstance == null) continue;
+
             xOffset += 20;
 
-            var ammoItem = PerkHelper.getPerkItem(ammoPerk).get().get();
+            var ammoItem = perkInstance.perk().getItem().get();
             ItemStack perkStack = ammoItem.getDefaultInstance();
 
-            CompoundTag ammoTag = PerkHelper.getPerkTag(stack, Perk.Type.AMMO);
-            if (!ammoTag.isEmpty()) {
-                int level = PerkHelper.getItemPerkLevel(ammoPerk, stack);
-                perkStack.setCount(level);
-            }
-            guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
-            guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
-        }
-
-        Perk funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
-        if (funcPerk != null && PerkHelper.getPerkItem(funcPerk).isPresent()) {
-            xOffset += 20;
-
-            var funcItem = PerkHelper.getPerkItem(funcPerk).get().get();
-            ItemStack perkStack = funcItem.getDefaultInstance();
-
-            CompoundTag funcTag = PerkHelper.getPerkTag(stack, Perk.Type.FUNCTIONAL);
-            if (!funcTag.isEmpty()) {
-                int level = PerkHelper.getItemPerkLevel(funcPerk, stack);
-                perkStack.setCount(level);
-            }
-
-            guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
-            guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
-        }
-
-        Perk damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-        if (damagePerk != null && PerkHelper.getPerkItem(damagePerk).isPresent()) {
-            xOffset += 20;
-
-            var damageItem = PerkHelper.getPerkItem(damagePerk).get().get();
-            ItemStack perkStack = damageItem.getDefaultInstance();
-
-            CompoundTag damageTag = PerkHelper.getPerkTag(stack, Perk.Type.DAMAGE);
-            if (!damageTag.isEmpty()) {
-                int level = PerkHelper.getItemPerkLevel(damagePerk, stack);
-                perkStack.setCount(level);
-            }
-
+            int level = perkInstance.level();
+            perkStack.setCount(level);
             guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
             guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
         }
@@ -282,70 +251,25 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         int yOffset = -5;
 
-        Perk ammoPerk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (ammoPerk != null && PerkHelper.getPerkItem(ammoPerk).isPresent()) {
+        for (var type : Perk.Type.values()) {
+            var perkInstance = data.perk.getInstance(type);
+            if (perkInstance == null) continue;
+
             yOffset += 25;
-            var ammoItem = PerkHelper.getPerkItem(ammoPerk).get().get();
+
+            var ammoItem = perkInstance.perk().getItem().get();
             guiGraphics.renderItem(ammoItem.getDefaultInstance(), x, y + 4 + yOffset);
 
-            CompoundTag ammoTag = PerkHelper.getPerkTag(stack, Perk.Type.AMMO);
-            if (!ammoTag.isEmpty()) {
-                var ids = ammoTag.getString("id").split(":");
-                if (ids.length > 1) {
-                    String id = ids[1];
-                    var ammoComponent = Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.YELLOW)
-                            .append(Component.literal(" ").withStyle(ChatFormatting.RESET))
-                            .append(Component.literal(" Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.WHITE));
-                    var ammoDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
+            var id = perkInstance.perk().descriptionId;
 
-                    guiGraphics.drawString(font, ammoComponent, x + 20, y + yOffset + 2, 0xFFFFFF);
-                    guiGraphics.drawString(font, ammoDesComponent, x + 20, y + yOffset + 12, 0xFFFFFF);
-                }
-            }
-        }
+            var component = Component.translatable("item.superbwarfare." + id).withStyle(type.getColor())
+                    .append(Component.literal(" ").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(" Lvl. " + perkInstance.level()).withStyle(ChatFormatting.WHITE));
+            var descComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
 
-        Perk funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
-        if (funcPerk != null && PerkHelper.getPerkItem(funcPerk).isPresent()) {
-            yOffset += 25;
-            var funcItem = PerkHelper.getPerkItem(funcPerk).get().get();
-            guiGraphics.renderItem(funcItem.getDefaultInstance(), x, y + 4 + yOffset);
+            guiGraphics.drawString(font, component, x + 20, y + yOffset + 2, 0xFFFFFF);
+            guiGraphics.drawString(font, descComponent, x + 20, y + yOffset + 12, 0xFFFFFF);
 
-            CompoundTag funcTag = PerkHelper.getPerkTag(stack, Perk.Type.FUNCTIONAL);
-            if (!funcTag.isEmpty()) {
-                var ids = funcTag.getString("id").split(":");
-                if (ids.length > 1) {
-                    String id = ids[1];
-                    var funcComponent = Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.GREEN)
-                            .append(Component.literal(" ").withStyle(ChatFormatting.RESET))
-                            .append(Component.literal(" Lvl. " + funcTag.getInt("level")).withStyle(ChatFormatting.WHITE));
-                    var funcDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
-
-                    guiGraphics.drawString(font, funcComponent, x + 20, y + yOffset + 2, 0xFFFFFF);
-                    guiGraphics.drawString(font, funcDesComponent, x + 20, y + yOffset + 12, 0xFFFFFF);
-                }
-            }
-        }
-
-        Perk damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
-        if (damagePerk != null && PerkHelper.getPerkItem(damagePerk).isPresent()) {
-            yOffset += 25;
-            var damageItem = PerkHelper.getPerkItem(damagePerk).get().get();
-            guiGraphics.renderItem(damageItem.getDefaultInstance(), x, y + 4 + yOffset);
-
-            CompoundTag damageTag = PerkHelper.getPerkTag(stack, Perk.Type.DAMAGE);
-            if (!damageTag.isEmpty()) {
-                var ids = damageTag.getString("id").split(":");
-                if (ids.length > 1) {
-                    String id = ids[1];
-                    var damageComponent = Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.RED)
-                            .append(Component.literal(" ").withStyle(ChatFormatting.RESET))
-                            .append(Component.literal(" Lvl. " + damageTag.getInt("level")).withStyle(ChatFormatting.WHITE));
-                    var damageDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
-
-                    guiGraphics.drawString(font, damageComponent, x + 20, y + yOffset + 2, 0xFFFFFF);
-                    guiGraphics.drawString(font, damageDesComponent, x + 20, y + yOffset + 12, 0xFFFFFF);
-                }
-            }
         }
 
         guiGraphics.pose().popPose();
@@ -369,34 +293,14 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         int width = 0;
 
-        CompoundTag ammoTag = PerkHelper.getPerkTag(stack, Perk.Type.AMMO);
-        if (!ammoTag.isEmpty()) {
-            var ids = ammoTag.getString("id").split(":");
-            if (ids.length > 1) {
-                String id = ids[1];
-                var ammoDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
-                width = Math.max(width, font.width(ammoDesComponent));
-            }
-        }
+        for (var type : Perk.Type.values()) {
+            var perkInstance = data.perk.getInstance(type);
+            if (perkInstance == null) continue;
 
-        CompoundTag funcTag = PerkHelper.getPerkTag(stack, Perk.Type.FUNCTIONAL);
-        if (!funcTag.isEmpty()) {
-            var ids = funcTag.getString("id").split(":");
-            if (ids.length > 1) {
-                String id = ids[1];
-                var funcDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
-                width = Math.max(width, font.width(funcDesComponent));
-            }
-        }
+            var id = perkInstance.perk().descriptionId;
 
-        CompoundTag damageTag = PerkHelper.getPerkTag(stack, Perk.Type.DAMAGE);
-        if (!damageTag.isEmpty()) {
-            var ids = damageTag.getString("id").split(":");
-            if (ids.length > 1) {
-                String id = ids[1];
-                var damageDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
-                width = Math.max(width, font.width(damageDesComponent));
-            }
+            var ammoDesComponent = Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY);
+            width = Math.max(width, font.width(ammoDesComponent));
         }
 
         return width + 25;
@@ -409,18 +313,13 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         if (shouldRenderBypassAndHeadshotTooltip()) height += 10;
         if (shouldRenderEditTooltip()) height += 20;
         if (shouldRenderPerks()) {
-            if (!Screen.hasShiftDown()) {
-                height += 16;
-            } else {
-                height += 16;
-                if (PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null) {
-                    height += 25;
-                }
-                if (PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL) != null) {
-                    height += 25;
-                }
-                if (PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE) != null) {
-                    height += 25;
+            height += 16;
+
+            if (Screen.hasShiftDown()) {
+                for (var type : Perk.Type.values()) {
+                    if (data.perk.has(type)) {
+                        height += 25;
+                    }
                 }
             }
         }

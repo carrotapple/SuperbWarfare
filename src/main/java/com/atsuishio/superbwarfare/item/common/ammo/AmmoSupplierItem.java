@@ -47,7 +47,7 @@ public class AmmoSupplierItem extends Item {
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 this.type.add(capability, ammoToAdd * count);
-                capability.syncPlayerVariables(player);
+                capability.sync(player);
             });
         }
 

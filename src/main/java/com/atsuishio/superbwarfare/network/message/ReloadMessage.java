@@ -5,8 +5,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +42,7 @@ public class ReloadMessage {
         if (type == 0) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.edit = false;
-                capability.syncPlayerVariables(player);
+                capability.sync(player);
             });
 
             ItemStack stack = player.getMainHandItem();
@@ -52,17 +50,16 @@ public class ReloadMessage {
 
             if (!player.isSpectator()
                     && stack.getItem() instanceof GunItem gunItem
-                    && !GunsTool.getGunBooleanTag(stack, "Charging")
-                    && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
-                    && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
-                    && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                    && !GunData.from(stack).charging()
+                    && GunData.from(stack).reload.time() == 0
+                    && GunData.from(stack).bolt.actionTimer.get() == 0
+                    && !GunData.from(stack).reloading()
             ) {
                 var data = GunData.from(stack);
-                CompoundTag tag = data.getTag();
 
                 boolean canSingleReload = gunItem.isIterativeReload(stack);
                 boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
-                boolean clipLoad = data.getAmmo() == 0 && gunItem.isClipReload(stack);
+                boolean clipLoad = data.ammo.get() == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
                 boolean hasCreativeAmmoBox = player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()));
@@ -78,9 +75,9 @@ public class ReloadMessage {
                         return;
                     } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && capability.heavyAmmo == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
+                    } else if (stack.getItem() == ModItems.TASER.get() && GunData.from(stack).maxAmmo.get() == 0) {
                         return;
-                    } else if (stack.is(ModTags.Items.LAUNCHER) && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
+                    } else if (stack.is(ModTags.Items.LAUNCHER) && GunData.from(stack).maxAmmo.get() == 0) {
                         return;
                     }
                 }
@@ -90,23 +87,23 @@ public class ReloadMessage {
 
                     if (gunItem.isOpenBolt(stack)) {
                         if (gunItem.hasBulletInBarrel(stack)) {
-                            if (data.getAmmo() < magazine + 1) {
-                                GunsTool.setGunBooleanTag(stack, "StartReload", true);
+                            if (data.ammo.get() < magazine + 1) {
+                                data.reload.reloadStarter.markStart();
                             }
                         } else {
-                            if (data.getAmmo() < magazine) {
-                                GunsTool.setGunBooleanTag(stack, "StartReload", true);
+                            if (data.ammo.get() < magazine) {
+                                data.reload.reloadStarter.markStart();
                             }
                         }
-                    } else if (data.getAmmo() < magazine) {
-                        GunsTool.setGunBooleanTag(stack, "StartReload", true);
+                    } else if (data.ammo.get() < magazine) {
+                        data.reload.reloadStarter.markStart();
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (data.getAmmo() < data.magazine()) {
-                        tag.putBoolean("start_single_reload", true);
+                    if (data.ammo.get() < data.magazine()) {
+                        data.reload.singleReloadStarter.markStart();
                     }
                 }
             }

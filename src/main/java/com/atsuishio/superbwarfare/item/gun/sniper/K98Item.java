@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,6 +22,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -45,7 +45,7 @@ public class K98Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new K98ItemRenderer();
@@ -71,28 +71,29 @@ public class K98Item extends GunItem implements GeoItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+        var data = GunData.from(stack);
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+        if (GunData.from(stack).bolt.actionTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.shift"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+        if (data.reload.stage() == 1 && GunData.from(stack).reload.prepareTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.prepare"));
         }
 
-        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+        if (GunData.from(stack).loadIndex.get() == 0 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload"));
         }
 
-        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+        if (GunData.from(stack).loadIndex.get() == 1 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload2"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+        if (data.reload.stage() == 3) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.finish"));
         }
 
@@ -108,13 +109,13 @@ public class K98Item extends GunItem implements GeoItem {
 
         if (player.isSprinting() && player.onGround()
                 && ClientEventHandler.cantSprint == 0
-                && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && stack.getOrCreateTag().getInt("reload_stage") != 1
-                && stack.getOrCreateTag().getInt("reload_stage") != 2
-                && stack.getOrCreateTag().getInt("reload_stage") != 3
+                && !(GunData.from(stack).reload.empty())
+                && data.reload.stage() != 1
+                && data.reload.stage() != 2
+                && data.reload.stage() != 3
                 && ClientEventHandler.drawTime < 0.01
-                && !data.isReloading()) {
-            if (ClientEventHandler.tacticalSprint && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
+                && !data.reloading()) {
+            if (ClientEventHandler.tacticalSprint && GunData.from(stack).bolt.actionTimer.get() == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));

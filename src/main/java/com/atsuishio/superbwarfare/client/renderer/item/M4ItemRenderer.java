@@ -6,8 +6,9 @@ import com.atsuishio.superbwarfare.client.layer.gun.M4Layer;
 import com.atsuishio.superbwarfare.client.model.item.M4ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.M4Item;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -88,34 +89,34 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
         if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("Cross1")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
         }
 
         if (name.equals("Cross2")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2
                     || itemStack.getOrCreateTag().getBoolean("ScopeAlt"));
         }
 
         if (name.equals("CrossAlt")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2
                     || !(itemStack.getOrCreateTag().getBoolean("ScopeAlt")));
         }
 
         if (name.equals("Cross3")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 3);
         }
 
-        if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
+        if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
         }
 
-        if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+        if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 3
                 && (name.equals("hidden2") || name.equals("yugu") || name.equals("qiangguan") || name.equals("Barrel"))) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
         }
 
         if (name.equals("flare")) {
-            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunData.from(itemStack).attachment.get(AttachmentType.BARREL) == 2) {
                 bone.setHidden(true);
             } else {
                 bone.setHidden(false);
@@ -126,7 +127,7 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
         }
 
         if (name.equals("Sight")) {
-            bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3);
+            bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 3);
         }
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);

@@ -9,8 +9,6 @@ import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -58,30 +56,31 @@ public class ShootMessage {
     public static void pressAction(Player player, double spared, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
+        var tag = data.data();
+
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
             int projectileAmount = data.projectileAmount();
 
-            if (data.getAmmo() > 0) {
+            if (data.ammo.get() > 0) {
                 // 空仓挂机
-                if (data.getAmmo() == 1) {
-                    GunsTool.setGunBooleanTag(stack, "HoldOpen", true);
+                if (data.ammo.get() == 1) {
+                    data.holdOpen.set(true);
                 }
 
                 if (stack.is(ModTags.Items.REVOLVER)) {
-                    stack.getOrCreateTag().putBoolean("canImmediatelyShoot", false);
+                    data.canImmediatelyShoot.set(true);
                 }
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
-                if (data.boltActionTime() > 0 && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
-                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
+                if (data.defaultActionTime() > 0 && data.ammo.get() > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                    data.bolt.needed.set(true);
                 }
 
-                data.setAmmo(data.getAmmo() - 1);
+                data.ammo.set(data.ammo.get() - 1);
+                data.isEmpty.set(true);
 
-                stack.getOrCreateTag().putDouble("empty", 1);
-
-                if (stack.getItem() == ModItems.M_60.get() && data.getAmmo() <= 5) {
-                    GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
+                if (stack.getItem() == ModItems.M_60.get() && data.ammo.get() <= 5) {
+                    data.hideBulletChain.set(true);
                 }
 
                 if (stack.getItem() == ModItems.HOMEMADE_SHOTGUN.get()) {
@@ -98,19 +97,18 @@ public class ShootMessage {
                     );
                 }
 
-                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+                var perk = data.perk.get(Perk.Type.AMMO);
 
                 for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
-                    GunEventHandler.gunShoot(player, spared, zoom);
+                    GunEventHandler.gunShoot(player, data, spared, zoom);
                 }
 
                 GunEventHandler.playGunSounds(player);
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
-            var tag = stack.getOrCreateTag();
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
-                    || InventoryTool.hasCreativeAmmoBox(player)) {
+            if (cap.rifleAmmo > 0 || InventoryTool.hasCreativeAmmoBox(player)) {
                 tag.putDouble("heat", (tag.getDouble("heat") + 0.1));
                 if (tag.getDouble("heat") >= 50.5) {
                     tag.putDouble("overheat", 40);
@@ -119,7 +117,8 @@ public class ShootMessage {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
                     }
                 }
-                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+                var perk = data.perk.get(Perk.Type.AMMO);
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
                 if (!player.level().isClientSide() && player instanceof ServerPlayer) {
@@ -134,12 +133,10 @@ public class ShootMessage {
                     }
                 }
 
-                GunEventHandler.gunShoot(player, spared, false);
+                GunEventHandler.gunShoot(player, data, spared, false);
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
-                        capability.syncPlayerVariables(player);
-                    });
+                    cap.rifleAmmo = cap.rifleAmmo - 1;
+                    cap.sync(player);
                 }
             }
         }

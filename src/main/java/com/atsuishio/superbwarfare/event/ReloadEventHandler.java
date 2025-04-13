@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.event.modevent.ReloadEvent;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +65,7 @@ public class ReloadEventHandler {
             return;
         }
 
-        int healClipLevel = PerkHelper.getItemPerkLevel(ModPerks.HEAL_CLIP.get(), stack);
+        int healClipLevel = GunData.from(stack).perk.getLevel(ModPerks.HEAL_CLIP);
         if (healClipLevel == 0) {
             healClipLevel = 1;
         }
@@ -92,12 +92,12 @@ public class ReloadEventHandler {
             return;
         }
 
-        int level = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
+        int level = GunData.from(stack).perk.getLevel(ModPerks.KILL_CLIP);
         GunsTool.setPerkIntTag(stack, "KillClipTime", 90 + 10 * level);
     }
 
     private static void handleKillingTallyPre(ItemStack stack) {
-        int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), stack);
+        int level = GunData.from(stack).perk.getLevel(ModPerks.KILLING_TALLY);
         if (level == 0) {
             return;
         }
@@ -120,7 +120,7 @@ public class ReloadEventHandler {
             return;
         }
 
-        int level = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+        int level = GunData.from(stack).perk.getLevel(ModPerks.DESPERADO);
         GunsTool.setPerkIntTag(stack, "DesperadoTimePost", 110 + level * 10);
     }
 }

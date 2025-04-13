@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.layer.gun.BocekLayer;
 import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -92,11 +93,11 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         }
 
         if (name.equals("arrow")) {
-            bone.setHidden(GunsTool.getGunIntTag(itemStack, "ArrowEmpty") > 0);
+            bone.setHidden(GunsTool.getGunIntTag(GunData.from(itemStack).tag, "ArrowEmpty") > 0);
         }
 
         if (name.equals("jian")) {
-            bone.setHidden(GunsTool.getGunIntTag(itemStack, "MaxAmmo") == 0);
+            bone.setHidden(GunData.from(itemStack).maxAmmo.get() == 0);
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

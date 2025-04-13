@@ -7,6 +7,8 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -33,6 +35,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -73,11 +76,11 @@ public class SvdItem extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+        if (GunData.from(stack).reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload_empty"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+        if (GunData.from(stack).reload.normal()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload_normal"));
         }
 
@@ -125,7 +128,7 @@ public class SvdItem extends GunItem implements GeoItem {
 
     @Override
     public int getCustomMagazine(ItemStack stack) {
-        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        int magType = GunData.from(stack).attachment.get(AttachmentType.MAGAZINE);
         return switch (magType) {
             case 1 -> 10;
             case 2 -> 20;
@@ -135,7 +138,7 @@ public class SvdItem extends GunItem implements GeoItem {
 
     @Override
     public double getCustomZoom(ItemStack stack) {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
         return switch (scopeType) {
             case 2 -> 2.75;
             case 3 -> GunsTool.getGunDoubleTag(stack, "CustomZoom");
@@ -145,7 +148,7 @@ public class SvdItem extends GunItem implements GeoItem {
 
     @Override
     public boolean canAdjustZoom(ItemStack stack) {
-        return GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) == 3;
+        return GunData.from(stack).attachment.get(AttachmentType.SCOPE) == 3;
     }
 
     @Override
@@ -211,5 +214,12 @@ public class SvdItem extends GunItem implements GeoItem {
     @Override
     public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
+    }
+
+    @Override
+    public void addReloadTimeBehavior(Map<Integer, Consumer<GunData>> behaviors) {
+        super.addReloadTimeBehavior(behaviors);
+
+        behaviors.put(17, data -> data.holdOpen.set(false));
     }
 }

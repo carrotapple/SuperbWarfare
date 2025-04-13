@@ -1,20 +1,26 @@
 package com.atsuishio.superbwarfare.item.gun.data;
 
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.subdata.*;
+import com.atsuishio.superbwarfare.item.gun.data.value.*;
+import com.atsuishio.superbwarfare.perk.AmmoPerk;
+import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.HashMap;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class GunData {
-    private final ItemStack stack;
-    private final GunItem item;
-    private final CompoundTag tag;
-    private final CompoundTag data;
-    private final String id;
+    public final ItemStack stack;
+    public final GunItem item;
+    public final CompoundTag tag;
+    public final CompoundTag data;
+    public final CompoundTag perkTag;
+    public final CompoundTag attachmentTag;
+    public final String id;
 
     private static final WeakHashMap<ItemStack, GunData> dataCache = new WeakHashMap<>();
 
@@ -22,20 +28,62 @@ public class GunData {
         if (!(stack.getItem() instanceof GunItem gunItem)) {
             throw new IllegalArgumentException("stack is not GunItem!");
         }
+
         this.item = gunItem;
-
         this.stack = stack;
-        this.tag = stack.getOrCreateTag();
-
-        if (!tag.contains("GunData")) {
-            data = new CompoundTag();
-            tag.put("GunData", data);
-        } else {
-            data = tag.getCompound("GunData");
-        }
-
         var id = stack.getDescriptionId();
         this.id = id.substring(id.lastIndexOf(".") + 1);
+
+        this.tag = stack.getOrCreateTag();
+
+        data = getOrPut("GunData");
+        perkTag = getOrPut("Perks");
+        attachmentTag = getOrPut("Attachments");
+
+        reload = new Reload(this);
+        charge = new Charge(this);
+        bolt = new Bolt(this);
+        attachment = new Attachment(this);
+        perk = new Perks(this);
+
+        ammo = new IntValue(data, "Ammo");
+        fireMode = new IntValue(data, "FireMode", defaultGunData().fireMode);
+        level = new IntValue(data, "Level");
+        exp = new DoubleValue(data, "Exp");
+        upgradePoint = new DoubleValue(data, "UpgradePoint");
+
+        canImmediatelyShoot = new BooleanValue(data, "CanImmediatelyShoot");
+        DA = new BooleanValue(data, "DA");
+        isEmpty = new BooleanValue(data, "IsEmpty");
+        closeHammer = new BooleanValue(data, "CloseHammer");
+        stopped = new BooleanValue(data, "Stopped");
+        forceStop = new BooleanValue(data, "ForceStop");
+        loadIndex = new IntValue(data, "LoadIndex");
+        maxAmmo = new IntValue(data, "MaxAmmo");
+        holdOpen = new BooleanValue(data, "HoldOpen");
+        hideBulletChain = new BooleanValue(data, "HideBulletChain");
+        draw = new BooleanValue(data, "Draw");
+    }
+
+    private CompoundTag getOrPut(String name) {
+        CompoundTag tag;
+        if (!this.tag.contains(name)) {
+            tag = new CompoundTag();
+            this.tag.put(name, tag);
+        } else {
+            tag = this.tag.getCompound(name);
+        }
+        return tag;
+    }
+
+    public boolean initialized() {
+        return data.hasUUID("UUID");
+    }
+
+    public void initialize() {
+        if (initialized()) return;
+
+        data.putUUID("UUID", UUID.randomUUID());
     }
 
     public static GunData from(ItemStack stack) {
@@ -47,152 +95,150 @@ public class GunData {
         return value;
     }
 
-    public GunItem getItem() {
+    public GunItem item() {
         return item;
     }
 
-    public CompoundTag getTag() {
+    public ItemStack stack() {
+        return stack;
+    }
+
+    public CompoundTag tag() {
         return tag;
     }
 
-    public CompoundTag getData() {
+    public CompoundTag data() {
         return data;
     }
 
-    private double getGunData(String key) {
-        return getGunData(key, 0);
+    public CompoundTag perk() {
+        return perkTag;
     }
 
-    private double getGunData(String key, double defaultValue) {
-        return GunsTool.gunsData.getOrDefault(id, new HashMap<>()).getOrDefault(key, defaultValue);
+    public CompoundTag attachment() {
+        return attachmentTag;
+    }
+
+    DefaultGunData defaultGunData() {
+        return GunsTool.gunsData.getOrDefault(id, new DefaultGunData());
+    }
+
+
+    // 枪械本体属性开始
+
+    public double rawDamage() {
+        return defaultGunData().damage;
+    }
+
+    public double perkDamageRate() {
+        var perk = this.perk.get(Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            return ammoPerk.damageRate;
+        }
+        return 1;
     }
 
     public double damage() {
-        return getGunData("Damage") + item.getCustomDamage(stack);
+        return (rawDamage() + item.getCustomDamage(stack)) * perkDamageRate();
     }
 
     public double explosionDamage() {
-        return getGunData("ExplosionDamage");
+        return defaultGunData().explosionDamage;
     }
 
     public double explosionRadius() {
-        return getGunData("ExplosionRadius");
+        return defaultGunData().explosionRadius;
     }
 
     public double velocity() {
-        return getGunData("Velocity") + item.getCustomVelocity(stack);
+        return defaultGunData().velocity + item.getCustomVelocity(stack);
     }
 
     public double spread() {
-        return getGunData("Spread");
+        return defaultGunData().spread;
     }
 
     public int magazine() {
-        return (int) (getGunData("Magazine") + item.getCustomMagazine(stack));
+        return defaultGunData().magazine + item.getCustomMagazine(stack);
     }
 
     public int projectileAmount() {
-        return (int) getGunData("ProjectileAmount", 1);
+        return defaultGunData().projectileAmount;
     }
 
     public double headshot() {
-        return getGunData("Headshot", 1.5) + item.getCustomHeadshot(stack);
+        return defaultGunData().headshot + item.getCustomHeadshot(stack);
     }
 
-    public int normalReloadTime() {
-        return (int) getGunData("NormalReloadTime");
+    public int defaultNormalReloadTime() {
+        return defaultGunData().normalReloadTime;
     }
 
-    public int emptyReloadTime() {
-        return (int) getGunData("EmptyReloadTime");
+    public int defaultEmptyReloadTime() {
+        return defaultGunData().emptyReloadTime;
     }
 
-    public int iterativeTime() {
-        return (int) getGunData("IterativeTime");
+    public int defaultIterativeTime() {
+        return defaultGunData().iterativeTime;
     }
 
-    public int prepareTime() {
-        return (int) getGunData("PrepareTime");
+    public int defaultPrepareTime() {
+        return defaultGunData().prepareTime;
     }
 
-    public int prepareLoadTime() {
-        return (int) getGunData("PrepareLoadTime");
+    public int defaultPrepareLoadTime() {
+        return defaultGunData().prepareLoadTime;
     }
 
-    public int prepareEmptyTime() {
-        return (int) getGunData("PrepareEmptyTime");
+    public int defaultPrepareEmptyTime() {
+        return defaultGunData().prepareEmptyTime;
     }
 
-    public int boltActionTime() {
-        return (int) getGunData("BoltActionTime") + item.getCustomBoltActionTime(stack);
+    public int defaultFinishTime() {
+        return defaultGunData().finishTime;
     }
 
-    public int finishTime() {
-        return (int) getGunData("FinishTime");
-    }
-
-    public int reloadTime() {
-        var normalReload = normalReloadTime();
-        var emptyReload = emptyReloadTime();
-
-        if (normalReload == 0) return emptyReload;
-        if (emptyReload == 0) return normalReload;
-
-        return getAmmo() < magazine() ? normalReload : emptyReload;
+    public int defaultActionTime() {
+        return defaultGunData().boltActionTime + item.getCustomBoltActionTime(stack());
     }
 
     public double soundRadius() {
-        return getGunData("SoundRadius", 15) + item.getCustomSoundRadius(stack);
+        return defaultGunData().soundRadius + item.getCustomSoundRadius(stack);
     }
 
     public double bypassArmor() {
-        return getGunData("BypassesArmor") + item.getCustomBypassArmor(stack);
+        return defaultGunData().bypassArmor + item.getCustomBypassArmor(stack);
     }
 
     public double recoilX() {
-        return getGunData("RecoilX");
+        return defaultGunData().recoilX;
     }
 
     public double recoilY() {
-        return getGunData("RecoilY");
+        return defaultGunData().recoilY;
     }
 
     public double weight() {
-        return getGunData("Weight") + customWeight();
+        return defaultGunData().weight + customWeight();
     }
 
     public double customWeight() {
         return item.getCustomWeight(stack);
     }
 
-    public int getAmmo() {
-        return data.getInt("Ammo");
-    }
-
-    public void setAmmo(int ammo) {
-        data.putInt("Ammo", ammo);
-    }
-
-    public boolean isReloading() {
-        return data.getBoolean("Reloading");
-    }
-
-    public void setReloading(boolean reloading) {
-        data.putBoolean("Reloading", reloading);
-    }
 
     public double defaultZoom() {
-        return getGunData("DefaultZoom", 1.25);
+        return defaultGunData().defaultZoom;
     }
 
     public double minZoom() {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        return scopeType == 3 ? getGunData("MinZoom", 1.25) : 1.25;
+        int scopeType = this.attachment.get(AttachmentType.SCOPE);
+        return scopeType == 3 ? defaultGunData().minZoom : 1.25;
     }
 
     public double maxZoom() {
-        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        return scopeType == 3 ? getGunData("MaxZoom", 1) : 114514;
+        int scopeType = this.attachment.get(AttachmentType.SCOPE);
+        return scopeType == 3 ? defaultGunData().maxZoom : 114514;
     }
 
     public double zoom() {
@@ -202,47 +248,22 @@ public class GunData {
     }
 
     public int rpm() {
-        return (int) (getGunData("RPM") + item.getCustomRPM(stack));
+        return (defaultGunData().rpm + item.getCustomRPM(stack));
     }
 
     public int burstAmount() {
-        return (int) getGunData("BurstAmount");
+        return defaultGunData().burstAmount;
     }
 
-    public int getFireMode() {
-        if (data.contains("FireMode")) {
-            return data.getInt("FireMode");
-        }
-        return (int) getGunData("FireMode");
-    }
 
-    public void setFireMode(int fireMode) {
-        data.putInt("FireMode", fireMode);
-    }
+    // 可持久化属性开始
 
-    public int getLevel() {
-        return data.getInt("Level");
-    }
 
-    public void setLevel(int level) {
-        data.putInt("Level", level);
-    }
-
-    public double getExp() {
-        return data.getDouble("Exp");
-    }
-
-    public void setExp(double exp) {
-        data.putDouble("Exp", exp);
-    }
-
-    public double getUpgradePoint() {
-        return data.getDouble("UpgradePoint");
-    }
-
-    public void setUpgradePoint(double upgradePoint) {
-        data.putDouble("UpgradePoint", upgradePoint);
-    }
+    public final IntValue ammo;
+    public final IntValue fireMode;
+    public final IntValue level;
+    public final DoubleValue exp;
+    public final DoubleValue upgradePoint;
 
     public boolean canAdjustZoom() {
         return item.canAdjustZoom(stack);
@@ -251,4 +272,36 @@ public class GunData {
     public boolean canSwitchScope() {
         return item.canSwitchScope(stack);
     }
+
+
+    public final Reload reload;
+
+    public boolean reloading() {
+        return reload.state() != ReloadState.NOT_RELOADING;
+    }
+
+    public final Charge charge;
+
+    public boolean charging() {
+        return charge.time() > 0;
+    }
+
+    public final BooleanValue canImmediatelyShoot;
+    public final BooleanValue DA;
+    public final BooleanValue isEmpty;
+    public final BooleanValue closeHammer;
+    public final BooleanValue stopped;
+    public final BooleanValue forceStop;
+    public final IntValue loadIndex;
+    public final IntValue maxAmmo;
+
+    public final BooleanValue holdOpen;
+    public final BooleanValue hideBulletChain;
+    public final BooleanValue draw;
+
+    // 其他子级属性
+
+    public final Bolt bolt;
+    public final Attachment attachment;
+    public final Perks perk;
 }

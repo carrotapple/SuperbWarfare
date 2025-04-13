@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.client.tooltip;
 import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.tools.FormatTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -25,9 +24,7 @@ public class ClientSentinelImageTooltip extends ClientEnergyImageTooltip {
         );
 
         if (flag.get()) {
-            double damage = (getGunData().damage() +
-                    GunsTool.getGunDoubleTag(stack, "ChargedDamage"))
-                    * TooltipTool.perkDamage(stack);
+            double damage = data.damage();
             return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ? " + " +

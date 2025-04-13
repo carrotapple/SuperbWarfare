@@ -10,8 +10,6 @@ import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -61,15 +59,14 @@ public class FireMessage {
         handleGunBolt(player, stack);
 
         if (type == 0) {
-            var tag = stack.getOrCreateTag();
             var data = GunData.from(stack);
-            if (tag.getDouble("prepare") == 0 && data.isReloading() && data.getAmmo() > 0) {
-                tag.putDouble("force_stop", 1);
+            if (data.reload.prepareTimer.get() == 0 && data.reloading() && data.ammo.get() > 0) {
+                data.forceStop.set(true);
             }
 
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.edit = false;
-                capability.syncPlayerVariables(player);
+                capability.sync(player);
             });
 
             // 按下开火
@@ -91,30 +88,28 @@ public class FireMessage {
         if (!stack.is(ModTags.Items.GUN)) return;
         var data = GunData.from(stack);
 
-        if (data.boltActionTime() > 0
-                && data.getAmmo() > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
-                && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading")
-                || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !data.isReloading()
-                && !GunsTool.getGunBooleanTag(stack, "Charging")) {
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction")) {
-                GunsTool.setGunIntTag(stack, "BoltActionTick", data.boltActionTime() + 1);
+        if (data.defaultActionTime() > 0
+                && data.ammo.get() > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
+                && data.bolt.actionTimer.get() == 0
+                && !(data.reload.normal() || data.reload.empty())
+                && !data.reloading()
+                && !data.charging()
+        ) {
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && data.bolt.needed.get()) {
+                data.bolt.actionTimer.set(data.defaultActionTime() + 1);
                 GunEventHandler.playGunBoltSounds(player);
             }
         }
     }
 
-    public static double perkDamage(ItemStack stack) {
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+    public static double perkDamage(Perk perk) {
         if (perk instanceof AmmoPerk ammoPerk) {
             return ammoPerk.damageRate;
         }
         return 1;
     }
 
-    public static double perkSpeed(ItemStack stack) {
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+    public static double perkSpeed(Perk perk) {
         if (perk instanceof AmmoPerk ammoPerk) {
             return ammoPerk.speedRate;
         }
@@ -126,9 +121,9 @@ public class FireMessage {
         if (player.level().isClientSide()) return;
         var data = GunData.from(stack);
 
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        var perk = data.perk.get(Perk.Type.AMMO);
         float headshot = (float) data.headshot();
-        float velocity = (float) (24 * power * (float) perkSpeed(stack));
+        float velocity = (float) (24 * power * (float) perkSpeed(perk));
         float bypassArmorRate = (float) data.bypassArmor();
         double damage;
 
@@ -136,11 +131,11 @@ public class FireMessage {
         if (zoom) {
             spread = 0.01f;
             damage = 0.08333333 * data.damage() *
-                    12 * power * perkDamage(stack);
+                    12 * power * perkDamage(perk);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
-                    data.damage() * 12 * power * perkDamage(stack);
+                    data.damage() * 12 * power * perkDamage(perk);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -150,7 +145,7 @@ public class FireMessage {
                 .setGunItemId(stack);
 
         if (perk instanceof AmmoPerk ammoPerk) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = data.perk.getLevel(perk);
 
             bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
             projectile.setRGB(ammoPerk.rgb);
@@ -182,24 +177,24 @@ public class FireMessage {
         projectile.bypassArmorRate(bypassArmorRate);
 
         if (perk == ModPerks.SILVER_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = data.perk.getLevel(perk);
             projectile.undeadMultiple(1.0f + 0.5f * level);
         } else if (perk == ModPerks.BEAST_BULLET.get()) {
             projectile.beast();
         } else if (perk == ModPerks.JHP_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = data.perk.getLevel(perk);
             projectile.jhpBullet(level);
         } else if (perk == ModPerks.HE_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = data.perk.getLevel(perk);
             projectile.heBullet(level);
         } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            int level = data.perk.getLevel(perk);
             projectile.fireBullet(level, !zoom);
         }
 
-        var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+        var dmgPerk = data.perk.get(Perk.Type.DAMAGE);
         if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-            int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+            int perkLevel = data.perk.getLevel(dmgPerk);
             projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
         }
 

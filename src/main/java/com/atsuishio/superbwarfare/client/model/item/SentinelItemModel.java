@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -88,8 +88,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         ClientEventHandler.gunRootMove(getAnimationProcessor());
 
-        if (GunsTool.getGunIntTag(stack, "Ammo") <= 5) {
-            ammo.setScaleX((float) GunsTool.getGunIntTag(stack, "Ammo") / 5);
+        if (GunData.from(stack).ammo.get() <= 5) {
+            ammo.setScaleX((float) GunData.from(stack).ammo.get() / 5);
         }
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
@@ -98,7 +98,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         float numR = (float) (1 - 0.9 * zt);
         float numP = (float) (1 - 0.98 * zt);
 
-        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || GunsTool.getGunBooleanTag(stack, "Charging")) {
+        if (GunData.from(stack).reload.time() > 0 || GunData.from(stack).charging()) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

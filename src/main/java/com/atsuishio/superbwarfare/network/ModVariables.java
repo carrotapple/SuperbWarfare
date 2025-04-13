@@ -40,7 +40,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
         }
 
         @SubscribeEvent
@@ -48,7 +48,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
         }
 
         @SubscribeEvent
@@ -56,7 +56,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
         }
 
         @SubscribeEvent
@@ -75,7 +75,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
         }
 
         @SubscribeEvent
@@ -202,7 +202,7 @@ public class ModVariables {
         public boolean tacticalSprint = false;
         public boolean edit = false;
 
-        public void syncPlayerVariables(Entity entity) {
+        public void sync(Entity entity) {
             if (entity instanceof ServerPlayer)
                 Mod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
         }

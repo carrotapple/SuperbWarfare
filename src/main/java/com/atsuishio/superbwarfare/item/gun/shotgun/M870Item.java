@@ -8,9 +8,9 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -75,28 +75,29 @@ public class M870Item extends GunItem implements GeoItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+        var data = GunData.from(stack);
 
-        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+        if (GunData.from(stack).bolt.actionTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare_load") > 0) {
+        if (data.reload.stage() == 1 && GunData.from(stack).reload.prepareTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.preparealt"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+        if (data.reload.stage() == 1 && data.reload.prepareTimer.get() > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
         }
 
-        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+        if (GunData.from(stack).loadIndex.get() == 0 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
         }
 
-        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+        if (GunData.from(stack).loadIndex.get() == 1 && data.reload.stage() == 2) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+        if (data.reload.stage() == 3) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.finish"));
         }
 
@@ -113,7 +114,7 @@ public class M870Item extends GunItem implements GeoItem {
                 && player.onGround()
                 && ClientEventHandler.cantSprint == 0
                 && ClientEventHandler.drawTime < 0.01
-                && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
+                && !GunData.from(stack).reloading()) {
             if (ClientEventHandler.tacticalSprint) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
             } else {

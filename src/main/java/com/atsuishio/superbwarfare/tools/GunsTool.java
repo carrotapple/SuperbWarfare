@@ -2,11 +2,12 @@ package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModTags;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.DefaultGunData;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.Gson;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -26,7 +27,7 @@ import java.util.UUID;
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID)
 public class GunsTool {
 
-    public static HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
+    public static HashMap<String, DefaultGunData> gunsData = new HashMap<>();
 
     /**
      * 初始化数据，从data中读取数据json文件
@@ -36,73 +37,21 @@ public class GunsTool {
             var id = entry.getKey();
             var attribute = entry.getValue();
             try {
-                JsonReader reader = new JsonReader(new InputStreamReader(attribute.open()));
-
-                reader.beginObject();
-                var map = new HashMap<String, Double>();
-                while (reader.hasNext()) {
-                    map.put(reader.nextName(), reader.nextDouble());
-                }
+                Gson gson = new Gson();
+                var data = gson.fromJson(new InputStreamReader(attribute.open()), DefaultGunData.class);
                 var path = id.getPath();
-                gunsData.put(path.substring(5, path.length() - 5), map);
 
-                reader.endObject();
-                reader.close();
+                gunsData.put(path.substring(5, path.length() - 5), data);
             } catch (Exception e) {
                 Mod.LOGGER.error(e.getMessage());
             }
         }
     }
 
-    public static void initGun(ItemStack stack, String location) {
-        if (gunsData != null && gunsData.get(location) != null) {
-            CompoundTag tag = stack.getOrCreateTag();
-            CompoundTag data = tag.getCompound("GunData");
-
-            // gunsData.get(location).forEach(data::putDouble);
-
-            data.putBoolean("Init", true);
-            stack.addTagElement("GunData", data);
-        }
-    }
-
-    public static void initCreativeGun(ItemStack stack, String location) {
-        var fillAmmo = !stack.getOrCreateTag().getCompound("GunData").getBoolean("Init");
-
-        initGun(stack, location);
-
-        if (fillAmmo) {
-            var data = GunData.from(stack);
-            data.setAmmo(data.magazine());
-        }
-    }
-
-    public static void generateAndSetUUID(ItemStack stack) {
-        UUID uuid = UUID.randomUUID();
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        data.putUUID("UUID", uuid);
-        stack.addTagElement("GunData", data);
-    }
-
-    private static String getId(ItemStack stack) {
-        var id = stack.getDescriptionId();
-        return id.substring(id.lastIndexOf(".") + 1);
-    }
-
-    public static double getGunDefaultData(ItemStack stack, String name) {
-        if (!stack.getOrCreateTag().getBoolean("init")) {
-            return GunsTool.gunsData
-                    .getOrDefault(getId(stack), new HashMap<>())
-                    .getOrDefault(name, 0.0);
-        }
-        return getGunDoubleTag(stack, name);
-    }
-
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), GunsDataMessage.create());
         }
     }
 
@@ -115,40 +64,37 @@ public class GunsTool {
     public static void datapackSync(OnDatapackSyncEvent event) {
         initJsonData(event.getPlayerList().getServer().getResourceManager());
 
-        event.getPlayerList().getPlayers().forEach(player -> Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData)));
+        event.getPlayerList().getPlayers().forEach(player -> Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), GunsDataMessage.create()));
     }
 
-    public static void reload(Player player, ItemStack stack, AmmoType type) {
-        reload(player, stack, type, false);
+    public static void reload(Player player, ItemStack stack, GunData gunData, AmmoType type) {
+        reload(player, stack, gunData, type, false);
     }
 
-    public static void reload(Player player, ItemStack stack, AmmoType type, boolean extraOne) {
-        CompoundTag tag = stack.getOrCreateTag();
-        if (!(stack.getItem() instanceof GunItem)) return;
-        var data = GunData.from(stack);
-
+    public static void reload(Player player, ItemStack stack, GunData data, AmmoType type, boolean extraOne) {
         int mag = data.magazine();
-        int ammo = data.getAmmo();
+        int ammo = data.ammo.get();
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记
-        if (ammo == 0 && data.boltActionTime() > 0 && !stack.is(ModTags.Items.REVOLVER)) {
-            GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
+        if (ammo == 0 && data.defaultActionTime() > 0 && !stack.is(ModTags.Items.REVOLVER)) {
+            data.bolt.needed.set(false);
         }
 
-        int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(type::get).orElse(0);
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(capability -> {
+            var playerAmmo = 0;
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            playerAmmo = type.get(capability);
             var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
             type.set(capability, newAmmoCount);
-            capability.syncPlayerVariables(player);
+
+            capability.sync(player);
+
+            int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);
+
+            data.ammo.set(needToAdd);
+            data.reload.setState(ReloadState.NOT_RELOADING);
         });
-
-        int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);
-
-        data.setAmmo(needToAdd);
-        tag.putBoolean("is_normal_reloading", false);
-        tag.putBoolean("is_empty_reloading", false);
     }
 
     /* PerkData */
@@ -163,17 +109,6 @@ public class GunsTool {
         return tag.getInt(name);
     }
 
-    public static void setPerkDoubleTag(ItemStack stack, String name, double num) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
-        tag.putDouble(name, num);
-        stack.addTagElement("PerkData", tag);
-    }
-
-    public static double getPerkDoubleTag(ItemStack stack, String name) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
-        return tag.getDouble(name);
-    }
-
     public static void setPerkBooleanTag(ItemStack stack, String name, boolean flag) {
         CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
         tag.putBoolean(name, flag);
@@ -185,36 +120,6 @@ public class GunsTool {
         return tag.getBoolean(name);
     }
 
-    /* Attachments */
-    public static int getAttachmentType(ItemStack stack, AttachmentType type) {
-        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
-        return tag.getInt(type.getName());
-    }
-
-    public enum AttachmentType {
-        SCOPE("Scope"),
-        MAGAZINE("Magazine"),
-        BARREL("Barrel"),
-        STOCK("Stock"),
-        GRIP("Grip");
-
-        private final String name;
-
-        AttachmentType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    /* GunData */
-    public static CompoundTag getGunData(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.getCompound("GunData");
-    }
-
     public static void setGunIntTag(ItemStack stack, String name, int num) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
@@ -222,59 +127,31 @@ public class GunsTool {
         stack.addTagElement("GunData", data);
     }
 
-    public static int getGunIntTag(ItemStack stack, String name) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        if (!data.contains(name)) return (int) getGunDefaultData(stack, name);
-        return data.getInt(name);
+    public static int getGunIntTag(final CompoundTag tag, String name) {
+        return getGunIntTag(tag, name, 0);
     }
 
-    public static int getGunIntTag(ItemStack stack, String name, int defaultValue) {
-        CompoundTag tag = stack.getOrCreateTag();
+    public static int getGunIntTag(final CompoundTag tag, String name, int defaultValue) {
         var data = tag.getCompound("GunData");
         if (!data.contains(name)) return defaultValue;
         return data.getInt(name);
-    }
-
-    public static void setGunDoubleTag(ItemStack stack, String name, double num) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        data.putDouble(name, num);
-        stack.addTagElement("GunData", data);
     }
 
     public static double getGunDoubleTag(ItemStack stack, String name) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        if (!data.contains(name) && !tag.getBoolean("init")) return getGunDefaultData(stack, name);
-        return data.getDouble(name);
+        return getGunDoubleTag(stack, name, 0);
     }
 
     public static double getGunDoubleTag(ItemStack stack, String name, double defaultValue) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
+        var data = stack.getOrCreateTag().getCompound("GunData");
         if (!data.contains(name)) return defaultValue;
         return data.getDouble(name);
-    }
-
-    public static void setGunBooleanTag(ItemStack stack, String name, boolean flag) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        data.putBoolean(name, flag);
-        stack.addTagElement("GunData", data);
-    }
-
-    public static boolean getGunBooleanTag(ItemStack stack, String name) {
-        CompoundTag tag = stack.getOrCreateTag();
-        var data = tag.getCompound("GunData");
-        if (!data.contains(name)) return getGunDefaultData(stack, name) != 0;
-        return data.getBoolean(name);
     }
 
     @Nullable
     public static UUID getGunUUID(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag == null || !tag.contains("GunData")) return null;
+
         CompoundTag data = tag.getCompound("GunData");
         if (!data.hasUUID("UUID")) return null;
         return data.getUUID("UUID");
