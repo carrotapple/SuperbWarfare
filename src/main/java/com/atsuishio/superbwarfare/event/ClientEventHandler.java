@@ -581,6 +581,7 @@ public class ClientEventHandler {
                 && drawTime < 0.01
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
+                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !data.reloading()
                 && !GunData.from(stack).charging()
                 && data.ammo.get() > 0
@@ -592,7 +593,7 @@ public class ClientEventHandler {
                 && stack.getOrCreateTag().getDouble("overheat") == 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
                 && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || InventoryTool.hasCreativeAmmoBox(player))
-        )) {
+        ))) {
             if (mode == 0) {
                 if (clientTimer.getProgress() == 0) {
                     clientTimer.start();
