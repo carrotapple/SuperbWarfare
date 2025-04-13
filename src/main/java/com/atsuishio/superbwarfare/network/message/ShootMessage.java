@@ -55,6 +55,7 @@ public class ShootMessage {
 
     public static void pressAction(Player player, double spared, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
         var data = GunData.from(stack);
         var tag = data.data();
 
