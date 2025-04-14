@@ -50,6 +50,8 @@ public class StaminaOverlay implements IGuiOverlay {
         RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 64, screenHeight - 48, (float) screenWidth / 2 + 64, screenHeight - 49, -90, -16777216);
         RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 64, (float) (screenHeight - 48), (float) (screenWidth / 2 + 64 - 1.28 * ClientEventHandler.stamina), screenHeight - 49, -90, -1);
 
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+
         guiGraphics.pose().popPose();
     }
 
