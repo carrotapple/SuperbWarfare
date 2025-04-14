@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -40,14 +41,15 @@ public class ArmorPlateOverlay implements IGuiOverlay {
         if (stack == ItemStack.EMPTY) return;
         if (stack.getTag() == null || !stack.getTag().contains("ArmorPlate")) return;
 
-        double amount = 2 * stack.getTag().getDouble("ArmorPlate");
-
-        int armorLevel = 1;
+        int armorLevel = MiscConfig.DEFAULT_ARMOR_LEVEL.get();
         if (stack.is(ModTags.Items.MILITARY_ARMOR)) {
-            armorLevel = 2;
+            armorLevel = MiscConfig.MILITARY_ARMOR_LEVEL.get();
         } else if (stack.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
-            armorLevel = 3;
+            armorLevel = MiscConfig.HEAVY_MILITARY_ARMOR_LEVEL.get();
         }
+
+        var max = armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get();
+        double amount = 60 * (stack.getTag().getDouble("ArmorPlate") / max);
 
         ResourceLocation texture = switch (armorLevel) {
             case 2 -> LEVEL2;
@@ -60,17 +62,15 @@ public class ArmorPlateOverlay implements IGuiOverlay {
             default -> LEVEL1_FRAME;
         };
 
-        int length = armorLevel * 30;
-
         guiGraphics.pose().pushPose();
         // 渲染图标
         guiGraphics.blit(ICON, 10, screenHeight - 13, 0, 0, 8, 8, 8, 8);
 
         // 渲染框架
-        guiGraphics.blit(frame, 20, screenHeight - 12, 0, 0, length, 6, length, 6);
+        guiGraphics.blit(frame, 20, screenHeight - 12, 0, 0, 60, 6, 60, 6);
 
         // 渲染盔甲值
-        guiGraphics.blit(texture, 20, screenHeight - 12, 0, 0, (int) amount, 6, length, 6);
+        guiGraphics.blit(texture, 20, screenHeight - 12, 0, 0, (int) amount, 6, 60, 6);
 
         guiGraphics.pose().popPose();
     }

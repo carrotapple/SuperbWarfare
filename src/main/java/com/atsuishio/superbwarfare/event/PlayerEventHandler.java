@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -129,24 +130,24 @@ public class PlayerEventHandler {
 
         double armorPlate = armor.getOrCreateTag().getDouble("ArmorPlate");
 
-        int armorLevel = 1;
+        int armorLevel = MiscConfig.DEFAULT_ARMOR_LEVEL.get();
         if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
-            armorLevel = 2;
+            armorLevel = MiscConfig.MILITARY_ARMOR_LEVEL.get();
         } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
-            armorLevel = 3;
+            armorLevel = MiscConfig.HEAVY_MILITARY_ARMOR_LEVEL.get();
         }
 
-        if (armorPlate < armorLevel * 15) {
+        if (armorPlate < armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get()) {
             for (var stack : player.getInventory().items) {
                 if (stack.is(ModItems.ARMOR_PLATE.get())) {
                     if (stack.getTag() != null && stack.getTag().getBoolean("Infinite")) {
-                        armor.getOrCreateTag().putDouble("ArmorPlate", armorLevel * 15);
+                        armor.getOrCreateTag().putDouble("ArmorPlate", armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get());
 
                         if (player instanceof ServerPlayer serverPlayer) {
                             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.PLAYERS, 0.5f, 1);
                         }
                     } else {
-                        for (int index0 = 0; index0 < Math.ceil(((armorLevel * 15) - armorPlate) / 15); index0++) {
+                        for (int index0 = 0; index0 < Math.ceil(((armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get()) - armorPlate) / MiscConfig.ARMOR_PONT_PER_LEVEL.get()); index0++) {
                             stack.finishUsingItem(player.level(), player);
                         }
                     }

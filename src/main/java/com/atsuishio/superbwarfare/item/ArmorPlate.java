@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.ChatFormatting;
@@ -29,27 +30,27 @@ public class ArmorPlate extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         if (pStack.getOrCreateTag().getBoolean("Infinite")) {
             pTooltipComponents.add(Component.translatable("des.superbwarfare.armor_plate.infinite").withStyle(ChatFormatting.GRAY));
         }
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         ItemStack armor = playerIn.getItemBySlot(EquipmentSlot.CHEST);
 
         if (armor == ItemStack.EMPTY) return InteractionResultHolder.fail(stack);
 
-        int armorLevel = 1;
+        int armorLevel = MiscConfig.DEFAULT_ARMOR_LEVEL.get();
         if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
-            armorLevel = 2;
+            armorLevel = MiscConfig.MILITARY_ARMOR_LEVEL.get();
         } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
-            armorLevel = 3;
+            armorLevel = MiscConfig.HEAVY_MILITARY_ARMOR_LEVEL.get();
         }
 
-        if (armor.getOrCreateTag().getDouble("ArmorPlate") < armorLevel * 15) {
+        if (armor.getOrCreateTag().getDouble("ArmorPlate") < armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get()) {
             playerIn.startUsingItem(handIn);
         }
 
@@ -62,18 +63,18 @@ public class ArmorPlate extends Item {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
+    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, Level pLevel, @NotNull LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
             ItemStack armor = pLivingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
-            int armorLevel = 1;
+            int armorLevel = MiscConfig.DEFAULT_ARMOR_LEVEL.get();
             if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
-                armorLevel = 2;
+                armorLevel = MiscConfig.MILITARY_ARMOR_LEVEL.get();
             } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
-                armorLevel = 3;
+                armorLevel = MiscConfig.HEAVY_MILITARY_ARMOR_LEVEL.get();
             }
 
-            armor.getOrCreateTag().putDouble("ArmorPlate", Mth.clamp(armor.getOrCreateTag().getDouble("ArmorPlate") + 15, 0, armorLevel * 15));
+            armor.getOrCreateTag().putDouble("ArmorPlate", Mth.clamp(armor.getOrCreateTag().getDouble("ArmorPlate") + MiscConfig.ARMOR_PONT_PER_LEVEL.get(), 0, armorLevel * MiscConfig.ARMOR_PONT_PER_LEVEL.get()));
 
             if (pLivingEntity instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.PLAYERS, 0.5f, 1);
@@ -88,7 +89,7 @@ public class ArmorPlate extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 20;
     }
 
