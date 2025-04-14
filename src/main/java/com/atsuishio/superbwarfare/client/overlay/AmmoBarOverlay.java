@@ -5,11 +5,8 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
-import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -55,11 +52,11 @@ public class AmmoBarOverlay implements IGuiOverlay {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0));
+            return GunData.from(stack).countAmmo(player);
         }
 
         if (stack.getItem() == ModItems.BOCEK.get()) {
-            return GunData.from(stack).maxAmmo.get();
+            return GunData.from(stack).countAmmo(player);
         }
 
         return GunData.from(stack).ammo.get();
@@ -72,25 +69,9 @@ public class AmmoBarOverlay implements IGuiOverlay {
             return "";
         }
 
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         if (!hasCreativeAmmo()) {
             var data = GunData.from(stack);
-            if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
-                return "" + GunData.from(stack).maxAmmo.get();
-            }
-            var ammoTypeInfo = data.ammoTypeInfo();
-            return switch (ammoTypeInfo.type()) {
-                case PLAYER_AMMO -> {
-                    var type = AmmoType.getType(ammoTypeInfo.value());
-                    assert type != null;
-
-                    yield type.get(cap) + "";
-                }
-
-                // TODO 正确计算弹药数量
-                case ITEM, TAG -> "" + data.maxAmmo.get();
-                default -> "";
-            };
+            return data.countAmmo(player) + "";
         }
 
         return "∞";

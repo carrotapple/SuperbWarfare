@@ -157,35 +157,11 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
         return this.cache;
     }
 
-    public static int getAmmoCount(Player player) {
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
-            int sum = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-                ItemStack itemstack = player.getInventory().getItem(i);
-                if (check(itemstack)) {
-                    sum += itemstack.getCount();
-                }
-            }
-            return sum;
-        }
-        return (int) Double.POSITIVE_INFINITY;
-    }
 
     @Override
     @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-
-        if (entity instanceof Player player) {
-            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
-        }
 
         int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.REGENERATION);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
@@ -217,10 +193,6 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
                 }
             }
         }
-    }
-
-    protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ModItems.TASER_ELECTRODE.get();
     }
 
     @Override

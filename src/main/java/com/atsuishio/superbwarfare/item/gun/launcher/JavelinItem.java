@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.entity.projectile.DecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -126,27 +125,6 @@ public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapo
         return this.cache;
     }
 
-    public static int getAmmoCount(Player player) {
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
-            int sum = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-                ItemStack itemstack = player.getInventory().getItem(i);
-                if (check(itemstack)) {
-                    sum += itemstack.getCount();
-                }
-            }
-            return sum;
-        }
-        return (int) Double.POSITIVE_INFINITY;
-    }
-
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.JAVELIN_RELOAD_EMPTY.get(), ModSounds.JAVELIN_LOCK.get(), ModSounds.JAVELIN_LOCKON.get());
@@ -158,8 +136,6 @@ public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapo
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player && selected) {
             var tag = stack.getOrCreateTag();
-            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
-
             if (tag.getBoolean("Seeking")) {
 
                 List<Entity> decoy = SeekTool.seekLivingEntities(player, player.level(), 512, 8);
@@ -222,10 +198,6 @@ public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapo
         } else {
             stack.getOrCreateTag().putInt("SeekTime", 0);
         }
-    }
-
-    protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ModItems.JAVELIN_MISSILE.get();
     }
 
     @Override

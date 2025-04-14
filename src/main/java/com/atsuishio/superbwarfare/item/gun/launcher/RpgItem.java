@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.client.renderer.item.RpgItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.LauncherImageComponent;
 import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -117,27 +116,6 @@ public class RpgItem extends GunItem implements GeoItem, PressFireSpecialWeapon 
         return this.cache;
     }
 
-    public static int getAmmoCount(Player player) {
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
-            int sum = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-                ItemStack itemstack = player.getInventory().getItem(i);
-                if (check(itemstack)) {
-                    sum += itemstack.getCount();
-                }
-            }
-            return sum;
-        }
-        return (int) Double.POSITIVE_INFINITY;
-    }
-
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.RPG_RELOAD_EMPTY.get());
@@ -154,15 +132,7 @@ public class RpgItem extends GunItem implements GeoItem, PressFireSpecialWeapon 
             }
         }
 
-        if (entity instanceof Player player) {
-            GunData.from(stack).maxAmmo.set(getAmmoCount(player));
-        }
-
         super.inventoryTick(stack, world, entity, slot, selected);
-    }
-
-    protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ModItems.ROCKET.get();
     }
 
     @Override

@@ -110,7 +110,7 @@ public class ShootMessage {
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-            if (cap.rifleAmmo > 0 || InventoryTool.hasCreativeAmmoBox(player)) {
+            if (data.hasAmmo(player) || InventoryTool.hasCreativeAmmoBox(player)) {
                 tag.putDouble("heat", (tag.getDouble("heat") + 0.1));
                 if (tag.getDouble("heat") >= 50.5) {
                     tag.putDouble("overheat", 40);
@@ -137,7 +137,7 @@ public class ShootMessage {
 
                 GunEventHandler.gunShoot(player, data, spared, false);
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                    cap.rifleAmmo = cap.rifleAmmo - 1;
+                    data.consumeAmmo(player, 1);
                     cap.sync(player);
                 }
             }

@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.renderer.item.BocekItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.BocekImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -107,44 +106,15 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
         return this.cache;
     }
 
-    public static int getAmmoCount(Player player) {
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
-            int sum = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-                ItemStack itemstack = player.getInventory().getItem(i);
-                if (check(itemstack)) {
-                    sum += itemstack.getCount();
-                }
-            }
-            return sum;
-        }
-        return (int) Double.POSITIVE_INFINITY;
-    }
 
     @Override
     @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if (entity instanceof Player player) {
-            var data = GunData.from(stack);
-            data.maxAmmo.set(getAmmoCount(player));
-        }
 
         if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0) {
             GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") - 1);
         }
-    }
-
-    // TODO 替换硬编码判断
-    protected static boolean check(ItemStack stack) {
-        return stack.getItem() == Items.ARROW;
     }
 
     @Override
