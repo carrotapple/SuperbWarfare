@@ -37,7 +37,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
     private static boolean hasCreativeAmmo() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return false;
-        return InventoryTool.hasCreativeAmmoBox(player);
+        return player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
     }
 
     private static ResourceLocation getFireMode(ItemStack stack) {
