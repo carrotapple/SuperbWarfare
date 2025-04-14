@@ -54,6 +54,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -255,14 +256,12 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         this.refreshDimensions();
     }
 
-
-    private void droneDrop(Player player) {
-        Level level = player.level();
-        if (!level.isClientSide()) {
-            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level, 160);
+    private void droneDrop(@Nullable Player player) {
+        if (!this.level().isClientSide()) {
+            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, this.level(), 160);
             rgoGrenadeEntity.setPos(this.getX(), this.getEyeY() - 0.09, this.getZ());
             rgoGrenadeEntity.droneShoot(this);
-            level.addFreshEntity(rgoGrenadeEntity);
+            this.level().addFreshEntity(rgoGrenadeEntity);
         }
     }
 
@@ -526,6 +525,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+        if (controller != null) {
+            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                Monitor.disLink(controller.getMainHandItem(), controller);
+            }
+        }
+
         // 无人机爆炸
         if (level() instanceof ServerLevel) {
             level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
@@ -537,17 +543,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         // RGO投弹
-        ItemStack rgoGrenade = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
-        if (this.level() instanceof ServerLevel level) {
-            ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), rgoGrenade);
-            itemEntity.setPickUpDelay(10);
-            level.addFreshEntity(itemEntity);
-        }
-
-        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
-        if (controller != null) {
-            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
-                Monitor.disLink(controller.getMainHandItem(), controller);
+        if (this.level() instanceof ServerLevel) {
+            int count = this.entityData.get(AMMO);
+            for (int i = 0; i < count; i++) {
+                droneDrop(controller);
             }
         }
 
