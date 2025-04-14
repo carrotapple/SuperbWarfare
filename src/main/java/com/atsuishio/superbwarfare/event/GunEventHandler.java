@@ -23,7 +23,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,7 +40,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -638,29 +636,8 @@ public class GunEventHandler {
         data.ammo.set(data.ammo.get() + 1);
 
         if (!InventoryTool.hasCreativeAmmoBox(player)) {
-            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
-
-            var ammoTypeInfo = data.ammoTypeInfo();
-            switch (ammoTypeInfo.type()) {
-                case PLAYER_AMMO -> {
-                    var type = AmmoType.getType(ammoTypeInfo.value());
-                    assert type != null;
-
-                    type.add(cap, -1);
-                }
-                case ITEM -> player.getInventory().clearOrCountMatchingItems(
-                        p -> p.getItem().toString().equals(ammoTypeInfo.value()),
-                        1,
-                        player.inventoryMenu.getCraftSlots()
-                );
-                case TAG -> player.getInventory().clearOrCountMatchingItems(
-                        p -> p.is(ItemTags.create(Objects.requireNonNull(ResourceLocation.tryParse(ammoTypeInfo.value())))),
-                        1,
-                        player.inventoryMenu.getCraftSlots()
-                );
-            }
-
-            cap.sync(player);
+            data.consumeAmmo(player, 1);
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(c -> c.sync(player));
         }
     }
 
