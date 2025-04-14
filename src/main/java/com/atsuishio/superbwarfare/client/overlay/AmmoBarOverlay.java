@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -73,25 +74,23 @@ public class AmmoBarOverlay implements IGuiOverlay {
 
         var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         if (!hasCreativeAmmo()) {
+            var data = GunData.from(stack);
             if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
                 return "" + GunData.from(stack).maxAmmo.get();
             }
-            if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                return "" + cap.rifleAmmo;
-            }
-            if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                return "" + cap.handgunAmmo;
-            }
-            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                return "" + cap.shotgunAmmo;
-            }
-            if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                return "" + cap.sniperAmmo;
-            }
-            if (stack.is(ModTags.Items.USE_HEAVY_AMMO)) {
-                return "" + cap.heavyAmmo;
-            }
-            return "";
+            var ammoTypeInfo = data.ammoTypeInfo();
+            return switch (ammoTypeInfo.type()) {
+                case PLAYER_AMMO -> {
+                    var type = AmmoType.getType(ammoTypeInfo.value());
+                    assert type != null;
+
+                    yield type.get(cap) + "";
+                }
+
+                // TODO 正确计算弹药数量
+                case ITEM, TAG -> "" + data.maxAmmo.get();
+                default -> "";
+            };
         }
 
         return "∞";
@@ -248,7 +247,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
             );
 
             // 渲染弹药类型
-            String ammoName = gunItem.getAmmoDisplayName(stack);
+            String ammoName = gunItem.getAmmoDisplayName(data);
             guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     ammoName,

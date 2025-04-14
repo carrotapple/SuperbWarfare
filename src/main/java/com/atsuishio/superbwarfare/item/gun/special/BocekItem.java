@@ -42,6 +42,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -57,7 +58,7 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new BocekItemRenderer();
@@ -128,6 +129,7 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
@@ -140,6 +142,7 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
         }
     }
 
+    // TODO 替换硬编码判断
     protected static boolean check(ItemStack stack) {
         return stack.getItem() == Items.ARROW;
     }
@@ -174,7 +177,7 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
     }
 
     @Override
-    public String getAmmoDisplayName(ItemStack stack) {
+    public String getAmmoDisplayName(GunData data) {
         return "Arrow";
     }
 

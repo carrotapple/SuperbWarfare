@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.AmmoType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public class ReloadMessage {
             });
 
             ItemStack stack = player.getMainHandItem();
-            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
             if (!player.isSpectator()
                     && stack.getItem() instanceof GunItem gunItem
@@ -65,19 +65,17 @@ public class ReloadMessage {
                 boolean hasCreativeAmmoBox = player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
                 if (!hasCreativeAmmoBox) {
-                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
-                        return;
-                    } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
-                        return;
-                    } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
-                        return;
-                    } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
-                        return;
-                    } else if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && capability.heavyAmmo == 0) {
-                        return;
-                    } else if (stack.getItem() == ModItems.TASER.get() && GunData.from(stack).maxAmmo.get() == 0) {
-                        return;
-                    } else if (stack.is(ModTags.Items.LAUNCHER) && GunData.from(stack).maxAmmo.get() == 0) {
+                    var ammoTypeInfo = data.ammoTypeInfo();
+
+                    if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
+                        var ammoType = AmmoType.getType(ammoTypeInfo.value());
+                        assert ammoType != null;
+
+                        if (ammoType.get(cap) == 0) return;
+                    } else if ((ammoTypeInfo.type() == GunData.AmmoConsumeType.ITEM || ammoTypeInfo.type() == GunData.AmmoConsumeType.TAG)
+                            // TODO 弃用maxAmmo
+                            && data.maxAmmo.get() == 0
+                    ) {
                         return;
                     }
                 }

@@ -45,6 +45,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -93,7 +94,7 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(@NotNull ItemStack pStack) {
         return 0xFFFF00;
     }
 
@@ -178,6 +179,7 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
@@ -252,7 +254,7 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
     }
 
     @Override
-    public String getAmmoDisplayName(ItemStack stack) {
+    public String getAmmoDisplayName(GunData data) {
         return "Electrode Rod";
     }
 
@@ -288,8 +290,4 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
     }
 
-    @Override
-    public Item getCustomAmmoItem() {
-        return ModItems.TASER_ELECTRODE.get();
-    }
 }

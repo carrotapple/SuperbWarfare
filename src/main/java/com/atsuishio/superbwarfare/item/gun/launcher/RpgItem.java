@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 public class RpgItem extends GunItem implements GeoItem, PressFireSpecialWeapon {
 
     @Override
-    public String getAmmoDisplayName(ItemStack stack) {
+    public String getAmmoDisplayName(GunData data) {
         return "Yassin105 TBG";
     }
 
@@ -239,15 +239,11 @@ public class RpgItem extends GunItem implements GeoItem, PressFireSpecialWeapon 
     }
 
     @Override
-    public Item getCustomAmmoItem() {
-        return ModItems.ROCKET.get();
-    }
-
-    @Override
     public void addReloadTimeBehavior(Map<Integer, Consumer<GunData>> behaviors) {
         super.addReloadTimeBehavior(behaviors);
 
         behaviors.put(84, data -> data.isEmpty.set(false));
         behaviors.put(9, data -> data.closeHammer.set(false));
     }
+
 }

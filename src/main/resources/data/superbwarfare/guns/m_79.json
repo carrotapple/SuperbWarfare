@@ -9,5 +9,6 @@
   "Magazine": 1,
   "Weight": 4,
   "EmptyReloadTime": 64,
-  "RPM": 180
+  "RPM": 180,
+  "AmmoType": "superbwarfare:grenade_40mm"
 }

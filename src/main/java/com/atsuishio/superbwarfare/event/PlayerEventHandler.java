@@ -11,10 +11,12 @@ import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,6 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -116,37 +119,38 @@ public class PlayerEventHandler {
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
                     var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && cap.shotgunAmmo > 0) {
-                        GunsTool.reload(player, stack, data, AmmoType.SHOTGUN);
-                    }
-                    if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && cap.sniperAmmo > 0) {
-                        GunsTool.reload(player, stack, data, AmmoType.SNIPER);
-                    }
-                    if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) && cap.handgunAmmo > 0) {
-                        GunsTool.reload(player, stack, data, AmmoType.HANDGUN);
-                    }
-                    if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
-                        GunsTool.reload(player, stack, data, AmmoType.RIFLE);
-                    }
-                    if (stack.is(ModTags.Items.USE_HEAVY_AMMO) && cap.heavyAmmo > 0) {
-                        GunsTool.reload(player, stack, data, AmmoType.HEAVY);
-                    }
+                    var ammoTypeInfo = data.ammoTypeInfo();
+                    switch (ammoTypeInfo.type()) {
+                        case PLAYER_AMMO -> {
+                            var type = AmmoType.getType(ammoTypeInfo.value());
+                            assert type != null;
 
-                    if (stack.getItem() == ModItems.TASER.get() && GunData.from(stack).maxAmmo.get() > 0 && data.ammo.get() == 0) {
-                        data.ammo.set(1);
-                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
-                    }
-                    if (stack.getItem() == ModItems.M_79.get() && GunData.from(stack).maxAmmo.get() > 0 && data.ammo.get() == 0) {
-                        data.ammo.set(1);
-                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
-                    }
-                    if (stack.getItem() == ModItems.RPG.get() && GunData.from(stack).maxAmmo.get() > 0 && data.ammo.get() == 0) {
-                        data.ammo.set(1);
-                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
-                    }
-                    if (stack.getItem() == ModItems.JAVELIN.get() && GunData.from(stack).maxAmmo.get() > 0 && data.ammo.get() == 0) {
-                        data.ammo.set(1);
-                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+                            if (type.get(cap) == 0) {
+                                GunsTool.reload(player, stack, data, type);
+                            }
+                        }
+                        case ITEM -> {
+                            // TODO 弃用maxAmmo
+                            if (data.ammo.get() == 0 && data.maxAmmo.get() == 0) {
+                                data.ammo.set(1);
+                                player.getInventory().clearOrCountMatchingItems(
+                                        p -> p.getItem().getDescriptionId().equals(ammoTypeInfo.value()),
+                                        1,
+                                        player.inventoryMenu.getCraftSlots()
+                                );
+                            }
+                        }
+                        case TAG -> {
+                            // TODO 弃用maxAmmo
+                            if (data.ammo.get() == 0 && data.maxAmmo.get() == 0) {
+                                data.ammo.set(1);
+                                player.getInventory().clearOrCountMatchingItems(
+                                        p -> p.is(ItemTags.create(Objects.requireNonNull(ResourceLocation.tryParse(ammoTypeInfo.value())))),
+                                        1,
+                                        player.inventoryMenu.getCraftSlots()
+                                );
+                            }
+                        }
                     }
                 } else {
                     data.ammo.set(data.magazine());
