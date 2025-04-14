@@ -115,8 +115,20 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0) {
-            GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") - 1);
+        if (entity instanceof Player player) {
+
+            var data = GunData.from(stack);
+
+            if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0) {
+                GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") - 1);
+            }
+
+            if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") == 0 && data.ammo.get() == 0 && (data.countAmmo(player) > 0 || InventoryTool.hasCreativeAmmoBox(player))) {
+                if (!InventoryTool.hasCreativeAmmoBox(player)) {
+                    data.consumeAmmo(player, 1);
+                }
+                data.ammo.set(1);
+            }
         }
     }
 
@@ -158,16 +170,17 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
     public void fireOnRelease(Player player, double power, boolean zoom) {
         if (player.level().isClientSide()) return;
 
+        ItemStack stack = player.getMainHandItem();
+        var data = GunData.from(stack);
+        var perk = data.perk.get(Perk.Type.AMMO);
+
+        if (data.ammo.get() == 0) return;
+
         if (player instanceof ServerPlayer serverPlayer) {
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
             Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
-
-        ItemStack stack = player.getMainHandItem();
-
-        var data = GunData.from(stack);
-        var perk = data.perk.get(Perk.Type.AMMO);
 
         if (power * 12 >= 6) {
             if (zoom) {
@@ -192,12 +205,8 @@ public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon 
                 }
             }
 
-            player.getCooldowns().addCooldown(stack.getItem(), 7);
             GunsTool.setGunIntTag(stack, "ArrowEmpty", 7);
-
-            if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                data.consumeAmmo(player, 1);
-            }
+            data.ammo.set(data.ammo.get() - 1);
         }
     }
 }

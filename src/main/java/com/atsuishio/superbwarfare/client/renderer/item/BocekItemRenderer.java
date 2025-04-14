@@ -93,11 +93,12 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         }
 
         if (name.equals("arrow")) {
-            bone.setHidden(GunsTool.getGunIntTag(GunData.from(itemStack).tag, "ArrowEmpty") > 0);
+            bone.setHidden(GunsTool.getGunIntTag(GunData.from(itemStack).tag, "ArrowEmpty") > 1);
         }
 
         if (name.equals("jian")) {
-            bone.setHidden(!GunData.from(itemStack).hasAmmo(player));
+            var data = GunData.from(itemStack);
+            bone.setHidden(data.ammo.get() == 0);
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

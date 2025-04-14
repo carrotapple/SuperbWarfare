@@ -54,18 +54,13 @@ public class AmmoBarOverlay implements IGuiOverlay {
         if (stack.getItem() == ModItems.MINIGUN.get()) {
             return GunData.from(stack).countAmmo(player);
         }
-
-        if (stack.getItem() == ModItems.BOCEK.get()) {
-            return GunData.from(stack).countAmmo(player);
-        }
-
         return GunData.from(stack).ammo.get();
     }
 
     private static String getPlayerAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) {
+        if (stack.getItem() == ModItems.MINIGUN.get()) {
             return "";
         }
 
@@ -181,7 +176,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
 
-            if ((stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) && hasCreativeAmmo()) {
+            if (stack.getItem() == ModItems.MINIGUN.get() && hasCreativeAmmo()) {
                 guiGraphics.drawString(
                         Minecraft.getInstance().font,
                         "∞",
