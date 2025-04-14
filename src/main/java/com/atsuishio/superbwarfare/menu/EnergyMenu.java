@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.menu;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyDataSlot;
-import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
+import com.atsuishio.superbwarfare.network.message.receive.ContainerDataMessage;
 import com.google.common.collect.Lists;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;

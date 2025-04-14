@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.Mod;
-import com.atsuishio.superbwarfare.network.message.ClientMotionSyncMessage;
+import com.atsuishio.superbwarfare.network.message.receive.ClientMotionSyncMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

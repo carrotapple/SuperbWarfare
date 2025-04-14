@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
+import com.atsuishio.superbwarfare.network.message.receive.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

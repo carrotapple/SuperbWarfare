@@ -9,7 +9,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.ReleaseSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
+import com.atsuishio.superbwarfare.network.message.receive.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -45,7 +45,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.atsuishio.superbwarfare.network.message.FireMessage.spawnBullet;
+import static com.atsuishio.superbwarfare.network.message.send.FireMessage.spawnBullet;
 
 public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon {
 

@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.network.message.receive.PlayerVariablesSyncMessage;
 import com.atsuishio.superbwarfare.tools.AmmoType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -230,48 +230,4 @@ public class ModVariables {
         }
     }
 
-    public static class PlayerVariablesSyncMessage {
-        private final int target;
-        private final PlayerVariables data;
-
-        public PlayerVariablesSyncMessage(FriendlyByteBuf buffer) {
-            this.data = new PlayerVariables();
-            this.data.readNBT(buffer.readNbt());
-            this.target = buffer.readInt();
-        }
-
-        public PlayerVariablesSyncMessage(PlayerVariables data, int entityId) {
-            this.data = data;
-            this.target = entityId;
-        }
-
-        public static void buffer(PlayerVariablesSyncMessage message, FriendlyByteBuf buffer) {
-            buffer.writeNbt((CompoundTag) message.data.writeNBT());
-            buffer.writeInt(message.target);
-        }
-
-        public static void handler(PlayerVariablesSyncMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
-            context.enqueueWork(() -> {
-                context.setPacketHandled(true);
-                if (context.getDirection().getReceptionSide().isServer() || Minecraft.getInstance().player == null) {
-                    return;
-                }
-
-                var entity = Minecraft.getInstance().player.level().getEntity(message.target);
-                if (entity == null) {
-                    return;
-                }
-
-                PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
-                variables.rifleAmmo = message.data.rifleAmmo;
-                variables.handgunAmmo = message.data.handgunAmmo;
-                variables.shotgunAmmo = message.data.shotgunAmmo;
-                variables.sniperAmmo = message.data.sniperAmmo;
-                variables.heavyAmmo = message.data.heavyAmmo;
-                variables.tacticalSprint = message.data.tacticalSprint;
-                variables.edit = message.data.edit;
-            });
-        }
-    }
 }

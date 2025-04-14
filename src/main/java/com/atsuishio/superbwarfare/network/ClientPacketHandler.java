@@ -8,7 +8,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.item.gun.data.DefaultGunData;
 import com.atsuishio.superbwarfare.menu.EnergyMenu;
-import com.atsuishio.superbwarfare.network.message.*;
+import com.atsuishio.superbwarfare.network.message.receive.*;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
 import com.google.gson.Gson;

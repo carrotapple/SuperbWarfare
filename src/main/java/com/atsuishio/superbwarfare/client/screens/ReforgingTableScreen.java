@@ -2,8 +2,8 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
-import com.atsuishio.superbwarfare.network.message.GunReforgeMessage;
-import com.atsuishio.superbwarfare.network.message.SetPerkLevelMessage;
+import com.atsuishio.superbwarfare.network.message.send.GunReforgeMessage;
+import com.atsuishio.superbwarfare.network.message.send.SetPerkLevelMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTableMenu> {
@@ -112,7 +113,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         @Override
-        public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
             super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         }
 
@@ -122,7 +123,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput pNarrationElementOutput) {
 
         }
     }
@@ -168,7 +169,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput pNarrationElementOutput) {
 
         }
     }
@@ -214,7 +215,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput pNarrationElementOutput) {
 
         }
     }

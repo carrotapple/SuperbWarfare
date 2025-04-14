@@ -7,8 +7,8 @@ import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
-import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
+import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
+import com.atsuishio.superbwarfare.network.message.send.LaserShootMessage;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -71,7 +71,7 @@ public class BeamTest extends Item {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
         }
         if (livingEntity instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BeamTest beamTest) {
-            stopGunChargeSound(serverPlayer,beamTest);
+            stopGunChargeSound(serverPlayer, beamTest);
         }
 
 
