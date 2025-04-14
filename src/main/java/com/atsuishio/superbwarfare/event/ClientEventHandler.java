@@ -357,7 +357,7 @@ public class ClientEventHandler {
             tacticalSprint = false;
         }
 
-        if (tacticalSprint && player.onGround()) {
+        if (tacticalSprint && (player.onGround() || player.jumping)) {
             Mod.PACKET_HANDLER.sendToServer(new TacticalSprintMessage(true));
         } else {
             Mod.PACKET_HANDLER.sendToServer(new TacticalSprintMessage(false));
