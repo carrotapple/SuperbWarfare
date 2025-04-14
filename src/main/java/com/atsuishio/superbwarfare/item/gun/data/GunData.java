@@ -14,6 +14,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -310,7 +311,7 @@ public class GunData {
                 yield type.get(player);
             }
             case ITEM -> player.getInventory().clearOrCountMatchingItems(
-                    p -> p.getItem().toString().equals(info.value()),
+                    p -> p.getItem() == ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(info.value())),
                     0,
                     player.inventoryMenu.getCraftSlots()
             );
@@ -333,7 +334,7 @@ public class GunData {
                 type.set(player, type.get(player) - count);
             }
             case ITEM -> player.getInventory().clearOrCountMatchingItems(
-                    p -> p.getItem().toString().equals(info.value()),
+                    p -> p.getItem() == ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(info.value())),
                     count,
                     player.inventoryMenu.getCraftSlots()
             );
