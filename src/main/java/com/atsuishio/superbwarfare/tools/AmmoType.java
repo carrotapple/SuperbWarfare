@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public enum AmmoType {
@@ -53,6 +54,23 @@ public enum AmmoType {
     public void add(CompoundTag tag, int count) {
         set(tag, safeAdd(get(tag), count));
     }
+
+    public int get(Player player) {
+        return player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY)
+                .map(this::get)
+                .orElse(0);
+    }
+
+    public void set(Player player, int count) {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY)
+                .ifPresent(c -> set(c, Math.max(0, count)));
+    }
+
+    public void add(Player player, int count) {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY)
+                .ifPresent(c -> add(c, count));
+    }
+
 
     // PlayerVariables
     public int get(ModVariables.PlayerVariables variable) {
