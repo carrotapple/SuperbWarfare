@@ -581,7 +581,7 @@ public class ClientEventHandler {
                 && drawTime < 0.01
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
-                && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && (!(data.reload.normal() || data.reload.empty())
                 && !data.reloading()
                 && !GunData.from(stack).charging()
                 && data.ammo.get() > 0
