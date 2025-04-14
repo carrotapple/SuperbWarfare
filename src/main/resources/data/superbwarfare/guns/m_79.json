@@ -1,5 +1,5 @@
 {
-  "Spread": 1.5,
+  "Spread": 3.5,
   "RecoilX": 0.004,
   "RecoilY": 0.023,
   "Damage": 40,
@@ -8,5 +8,6 @@
   "Velocity": 3.75,
   "Magazine": 1,
   "Weight": 4,
-  "EmptyReloadTime": 64
+  "EmptyReloadTime": 64,
+  "RPM": 180
 }

@@ -1,5 +1,5 @@
 {
-  "Spread": 1.5,
+  "Spread": 5,
   "RecoilX": 0.004,
   "RecoilY": 0.023,
   "Damage": 30,
@@ -11,5 +11,6 @@
   "PrepareLoadTime": 31,
   "IterativeTime": 20,
   "FinishTime": 19,
-  "SoundRadius": 8
+  "SoundRadius": 8,
+  "RPM": 300
 }

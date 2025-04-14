@@ -12,7 +12,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.ReleaseSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -64,7 +64,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class JavelinItem extends GunItem implements GeoItem, SpecialFireWeapon {
+public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapon {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;

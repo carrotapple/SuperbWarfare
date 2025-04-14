@@ -11,11 +11,9 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.PressFireSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.message.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,7 +22,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,7 +35,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -55,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
+public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapon {
 
     public static final int MAX_ENERGY = 6000;
 
@@ -261,7 +257,7 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
     }
 
     @Override
-    public void fireOnPress(Player player, boolean zoom) {
+    public void fireOnPress(Player player, double spread, boolean zoom) {
         ItemStack stack = player.getMainHandItem();
         var data = GunData.from(stack);
         if (data.reloading()) return;
@@ -271,20 +267,13 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
                 .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
                 .orElse(false);
 
-        if (player.getCooldowns().isOnCooldown(stack.getItem())
-                || data.ammo.get() <= 0
-                || !hasEnoughEnergy
-        ) return;
+        if (!hasEnoughEnergy) return;
 
         player.getCooldowns().addCooldown(stack.getItem(), 5);
 
         if (player instanceof ServerPlayer serverPlayer) {
-            double spread = data.spread();
             int volt = GunData.from(stack).perk.getLevel(ModPerks.VOLT_OVERLOAD);
             int wireLength = GunData.from(stack).perk.getLevel(ModPerks.LONGER_WIRE);
-
-            SoundTool.playLocalSound(serverPlayer, ModSounds.TASER_FIRE_1P.get(), 1, 1);
-            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
 
             var level = serverPlayer.level();
             TaserBulletEntity taserBulletProjectile = new TaserBulletEntity(player, level,
@@ -294,11 +283,8 @@ public class TaserItem extends GunItem implements GeoItem, SpecialFireWeapon {
             taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) data.velocity(),
                     (float) (zoom ? 0.1 : spread));
             level.addFreshEntity(taserBulletProjectile);
-
-            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
 
-        data.ammo.set(data.ammo.get() - 1);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
     }
 

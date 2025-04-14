@@ -105,7 +105,7 @@ public class ShootMessage {
                     GunEventHandler.gunShoot(player, data, spared, zoom);
                 }
 
-                GunEventHandler.playGunSounds(player);
+                GunEventHandler.playGunSounds(player, zoom);
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());

@@ -26,7 +26,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -791,10 +790,20 @@ public class ClientEventHandler {
             );
 
             if (charged.get()) {
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, "sentinel_charge_fire_1p"));
-                if (sound1p != null) {
-                    player.playSound(sound1p, 2f, (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
-                }
+                player.playSound(ModSounds.SENTINEL_CHARGE_FIRE_1P.get(), 2f, (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
+                return;
+            }
+        }
+
+        if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
+            var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
+                    .map(storage -> storage.getEnergyStored() >= 3000)
+                    .orElse(false);
+
+            boolean isChargedFire = zoom && hasEnoughEnergy;
+
+            if (isChargedFire) {
+                player.playSound(ModSounds.SECONDARY_CATACLYSM_FIRE_1P_CHARGE.get(), 2f, (float) ((2 * org.joml.Math.random() - 1) * 0.05f + 1.0f));
                 return;
             }
         }

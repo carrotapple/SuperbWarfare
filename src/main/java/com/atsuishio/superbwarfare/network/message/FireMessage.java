@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.SpecialFireWeapon;
+import com.atsuishio.superbwarfare.item.gun.ReleaseSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -71,15 +71,15 @@ public class FireMessage {
             });
 
             // 按下开火
-            if (!(stack.getItem() instanceof SpecialFireWeapon specialFireWeapon)) return;
-            specialFireWeapon.fireOnPress(player, zoom);
+            if (!(stack.getItem() instanceof ReleaseSpecialWeapon releaseSpecialWeapon)) return;
+            releaseSpecialWeapon.fireOnPress(player, zoom);
         } else if (type == 1) {
             // 松开开火
-            if (stack.getItem() instanceof SpecialFireWeapon specialFireWeapon) {
-                if (specialFireWeapon instanceof BocekItem) {
-                    specialFireWeapon.fireOnRelease(player, power, zoom);
+            if (stack.getItem() instanceof ReleaseSpecialWeapon releaseSpecialWeapon) {
+                if (releaseSpecialWeapon instanceof BocekItem) {
+                    releaseSpecialWeapon.fireOnRelease(player, power, zoom);
                 } else {
-                    specialFireWeapon.fireOnRelease(player, 0, zoom);
+                    releaseSpecialWeapon.fireOnRelease(player, 0, zoom);
                 }
             }
         }
