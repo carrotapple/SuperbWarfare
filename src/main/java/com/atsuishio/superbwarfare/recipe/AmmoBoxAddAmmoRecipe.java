@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.recipe;
 import com.atsuishio.superbwarfare.init.ModRecipes;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoBox;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoSupplierItem;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -42,13 +42,13 @@ public class AmmoBoxAddAmmoRecipe extends CustomRecipe {
     }
 
 
-    private void addAmmo(HashMap<AmmoType, Integer> map, AmmoType type, int count) {
+    private void addAmmo(HashMap<Ammo, Integer> map, Ammo type, int count) {
         map.put(type, map.getOrDefault(type, 0) + count);
     }
 
     @Override
     public @NotNull ItemStack assemble(CraftingContainer pContainer, @NotNull RegistryAccess pRegistryAccess) {
-        var map = new HashMap<AmmoType, Integer>();
+        var map = new HashMap<Ammo, Integer>();
         var ammoBox = ItemStack.EMPTY;
 
         for (var item : pContainer.getItems()) {
@@ -56,13 +56,13 @@ public class AmmoBoxAddAmmoRecipe extends CustomRecipe {
                 addAmmo(map, ammoSupplier.type, ammoSupplier.ammoToAdd);
             } else if (item.getItem() instanceof AmmoBox) {
                 ammoBox = item.copy();
-                for (var type : AmmoType.values()) {
+                for (var type : Ammo.values()) {
                     addAmmo(map, type, type.get(item));
                 }
             }
         }
 
-        for (var type : AmmoType.values()) {
+        for (var type : Ammo.values()) {
             type.set(ammoBox, map.getOrDefault(type, 0));
         }
 

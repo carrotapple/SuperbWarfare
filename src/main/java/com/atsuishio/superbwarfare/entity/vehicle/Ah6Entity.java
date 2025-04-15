@@ -14,7 +14,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -214,10 +214,10 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
-                return AmmoType.HEAVY.get(stack) > 0;
+                return Ammo.HEAVY.get(stack) > 0;
             }
             return false;
-        }).mapToInt(AmmoType.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
+        }).mapToInt(Ammo.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
 
         if ((hasItem(ModItems.ROCKET_70.get()) || InventoryTool.hasCreativeAmmoBox(player)) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
             this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
@@ -569,13 +569,13 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 if (!hasCreativeAmmo) {
                     ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                         if (stack.is(ModItems.AMMO_BOX.get())) {
-                            return AmmoType.HEAVY.get(stack) > 0;
+                            return Ammo.HEAVY.get(stack) > 0;
                         }
                         return false;
                     }).findFirst().orElse(ItemStack.EMPTY);
 
                     if (!ammoBox.isEmpty()) {
-                        AmmoType.HEAVY.add(ammoBox, -1);
+                        Ammo.HEAVY.add(ammoBox, -1);
                     } else {
                         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                     }

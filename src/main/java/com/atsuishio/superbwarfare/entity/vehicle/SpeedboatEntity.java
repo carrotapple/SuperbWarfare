@@ -10,7 +10,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -195,10 +195,10 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
-                return AmmoType.HEAVY.get(stack) > 0;
+                return Ammo.HEAVY.get(stack) > 0;
             }
             return false;
-        }).mapToInt(AmmoType.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
+        }).mapToInt(Ammo.HEAVY::get).sum() + countItem(ModItems.HEAVY_AMMO.get());
 
 
         this.entityData.set(AMMO, ammoCount);
@@ -263,13 +263,13 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         if (!hasCreativeAmmo) {
             ItemStack ammoBox = this.getItemStacks().stream().filter(stack -> {
                 if (stack.is(ModItems.AMMO_BOX.get())) {
-                    return AmmoType.HEAVY.get(stack) > 0;
+                    return Ammo.HEAVY.get(stack) > 0;
                 }
                 return false;
             }).findFirst().orElse(ItemStack.EMPTY);
 
             if (!ammoBox.isEmpty()) {
-                AmmoType.HEAVY.add(ammoBox, -1);
+                Ammo.HEAVY.add(ammoBox, -1);
             } else {
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }

@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -74,7 +74,7 @@ public abstract class GunItem extends Item {
             entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(capability -> {
                 var ammoTypeInfo = data.ammoTypeInfo();
                 if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                    var type = AmmoType.getType(ammoTypeInfo.value());
+                    var type = Ammo.getType(ammoTypeInfo.value());
                     assert type != null;
 
                     type.add(capability, count);
@@ -451,7 +451,7 @@ public abstract class GunItem extends Item {
     public String getAmmoDisplayName(GunData data) {
         var ammoTypeInfo = data.ammoTypeInfo();
         if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-            var type = AmmoType.getType(ammoTypeInfo.value());
+            var type = Ammo.getType(ammoTypeInfo.value());
             assert type != null;
 
             return switch (type) {

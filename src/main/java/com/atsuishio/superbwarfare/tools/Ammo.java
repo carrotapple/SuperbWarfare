@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public enum AmmoType {
+public enum Ammo {
     HANDGUN("item.superbwarfare.ammo.handgun", "HandgunAmmo"),
     RIFLE("item.superbwarfare.ammo.rifle", "RifleAmmo"),
     SHOTGUN("item.superbwarfare.ammo.shotgun", "ShotgunAmmo"),
@@ -14,13 +14,13 @@ public enum AmmoType {
     public final String translatableKey;
     public final String name;
 
-    AmmoType(String translatableKey, String name) {
+    Ammo(String translatableKey, String name) {
         this.translatableKey = translatableKey;
         this.name = name;
     }
 
-    public static AmmoType getType(String name) {
-        for (AmmoType type : values()) {
+    public static Ammo getType(String name) {
+        for (Ammo type : values()) {
             if (type.name.equals(name)) {
                 return type;
             }

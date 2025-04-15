@@ -16,7 +16,7 @@ import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
@@ -506,7 +506,7 @@ public class GunEventHandler {
 
                 var ammoTypeInfo = data.ammoTypeInfo();
                 if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                    var type = AmmoType.getType(ammoTypeInfo.value());
+                    var type = Ammo.getType(ammoTypeInfo.value());
                     assert type != null;
 
                     if (type.get(capability) == 0) {
@@ -587,7 +587,7 @@ public class GunEventHandler {
 
                 var ammoTypeInfo = data.ammoTypeInfo();
                 if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                    var type = AmmoType.getType(ammoTypeInfo.value());
+                    var type = Ammo.getType(ammoTypeInfo.value());
                     assert type != null;
 
                     if (type.get(capability) == 0) {

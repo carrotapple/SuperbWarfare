@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -68,7 +68,7 @@ public class ReloadMessage {
                     var ammoTypeInfo = data.ammoTypeInfo();
 
                     if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                        var ammoType = AmmoType.getType(ammoTypeInfo.value());
+                        var ammoType = Ammo.getType(ammoTypeInfo.value());
                         assert ammoType != null;
 
                         if (ammoType.get(cap) == 0) return;

@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +41,7 @@ public class AmmoBox extends Item {
 
         var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            var types = type.equals("All") ? AmmoType.values() : new AmmoType[]{AmmoType.getType(type)};
+            var types = type.equals("All") ? Ammo.values() : new Ammo[]{Ammo.getType(type)};
 
             for (var ammoType : types) {
                 if (ammoType == null) return;
@@ -76,7 +76,7 @@ public class AmmoBox extends Item {
         var list = new ArrayList<String>();
         list.add("All");
 
-        for (var ammoType : AmmoType.values()) {
+        for (var ammoType : Ammo.values()) {
             list.add(ammoType.name);
         }
 
@@ -94,7 +94,7 @@ public class AmmoBox extends Item {
             tag.putString("Type", typeString);
             entity.playSound(ModSounds.FIRE_RATE.get(), 1f, 1f);
 
-            var type = AmmoType.getType(typeString);
+            var type = Ammo.getType(typeString);
             if (type == null) {
                 player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.all").withStyle(ChatFormatting.WHITE), true);
                 return true;
@@ -119,29 +119,29 @@ public class AmmoBox extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
-        var type = AmmoType.getType(stack.getOrCreateTag().getString("Type"));
+        var type = Ammo.getType(stack.getOrCreateTag().getString("Type"));
         var tag = stack.getOrCreateTag();
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box").withStyle(ChatFormatting.GRAY));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.handgun").withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.HANDGUN.get(tag)) + ((type != AmmoType.HANDGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(Ammo.HANDGUN.get(tag)) + ((type != Ammo.HANDGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.RIFLE.get(tag)) + ((type != AmmoType.RIFLE) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(Ammo.RIFLE.get(tag)) + ((type != Ammo.RIFLE) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.shotgun").withStyle(ChatFormatting.RED)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.SHOTGUN.get(tag)) + ((type != AmmoType.SHOTGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(Ammo.SHOTGUN.get(tag)) + ((type != Ammo.SHOTGUN) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.SNIPER.get(tag)) + ((type != AmmoType.SNIPER) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(Ammo.SNIPER.get(tag)) + ((type != Ammo.SNIPER) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.heavy").withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format0D(AmmoType.HEAVY.get(tag)) + ((type != AmmoType.HEAVY) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(Ammo.HEAVY.get(tag)) + ((type != Ammo.HEAVY) ? " " : " ←-")).withStyle(ChatFormatting.BOLD)));
     }
 }

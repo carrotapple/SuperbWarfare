@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.recipe;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModRecipes;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoBox;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +40,7 @@ public class AmmoBoxExtractAmmoRecipe extends CustomRecipe {
         if (tag == null) return false;
 
         var typeString = tag.getString("Type");
-        var type = AmmoType.getType(typeString);
+        var type = Ammo.getType(typeString);
         if (type == null) return false;
 
         return type.get(ammoBoxItem) > 0;
@@ -49,11 +49,11 @@ public class AmmoBoxExtractAmmoRecipe extends CustomRecipe {
 
     @Override
     public @NotNull ItemStack assemble(CraftingContainer pContainer, @NotNull RegistryAccess pRegistryAccess) {
-        AmmoType type = null;
+        Ammo type = null;
 
         for (var item : pContainer.getItems()) {
             if (item.getItem() instanceof AmmoBox) {
-                type = AmmoType.getType(item.getOrCreateTag().getString("Type"));
+                type = Ammo.getType(item.getOrCreateTag().getString("Type"));
                 break;
             }
         }
@@ -79,7 +79,7 @@ public class AmmoBoxExtractAmmoRecipe extends CustomRecipe {
             var item = pContainer.getItem(i);
             if (item.getItem() instanceof AmmoBox) {
                 var ammoBox = item.copy();
-                AmmoType type = AmmoType.getType(item.getOrCreateTag().getString("Type"));
+                Ammo type = Ammo.getType(item.getOrCreateTag().getString("Type"));
 
                 assert type != null;
                 type.add(ammoBox, -1);

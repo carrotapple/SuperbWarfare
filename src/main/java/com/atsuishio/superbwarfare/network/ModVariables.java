@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.network.message.receive.PlayerVariablesSyncMessage;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -67,7 +67,7 @@ public class ModVariables {
             PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
 
-            for (var type : AmmoType.values()) {
+            for (var type : Ammo.values()) {
                 type.set(clone, type.get(original));
             }
 
@@ -190,7 +190,7 @@ public class ModVariables {
 
     public static class PlayerVariables {
 
-        public Map<AmmoType, Integer> ammo = new HashMap<>();
+        public Map<Ammo, Integer> ammo = new HashMap<>();
         public boolean tacticalSprint = false;
         public boolean edit = false;
 
@@ -201,7 +201,7 @@ public class ModVariables {
 
         public Tag writeNBT() {
             CompoundTag nbt = new CompoundTag();
-            for (var type : AmmoType.values()) {
+            for (var type : Ammo.values()) {
                 type.set(nbt, type.get(this));
             }
 
@@ -213,7 +213,7 @@ public class ModVariables {
 
         public void readNBT(Tag tag) {
             CompoundTag nbt = (CompoundTag) tag;
-            for (var type : AmmoType.values()) {
+            for (var type : Ammo.values()) {
                 type.set(this, type.get(nbt));
             }
 

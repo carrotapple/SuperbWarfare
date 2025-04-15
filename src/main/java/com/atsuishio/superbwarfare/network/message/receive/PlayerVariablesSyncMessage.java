@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.network.message.receive;
 
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,7 +44,7 @@ public class PlayerVariablesSyncMessage {
 
             ModVariables.PlayerVariables variables = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-            for (var type : AmmoType.values()) {
+            for (var type : Ammo.values()) {
                 type.set(variables, type.get(message.data));
             }
 

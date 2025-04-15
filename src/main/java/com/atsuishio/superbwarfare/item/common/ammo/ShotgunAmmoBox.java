@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
-import com.atsuishio.superbwarfare.tools.AmmoType;
+import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -13,7 +13,7 @@ import java.util.List;
 public class ShotgunAmmoBox extends AmmoSupplierItem {
 
     public ShotgunAmmoBox() {
-        super(AmmoType.SHOTGUN, 12, new Item.Properties());
+        super(Ammo.SHOTGUN, 12, new Item.Properties());
     }
 
     @Override
