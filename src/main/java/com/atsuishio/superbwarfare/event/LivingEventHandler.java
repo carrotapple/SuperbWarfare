@@ -52,6 +52,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber
 public class LivingEventHandler {
@@ -729,7 +730,9 @@ public class LivingEventHandler {
         if (event.getEntity() instanceof Player player && !player.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
 
-            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo + cap.heavyAmmo > 0;
+            boolean drop = Stream.of(AmmoType.values())
+                    .mapToInt(type -> type.get(cap))
+                    .sum() > 0;
 
             if (drop) {
                 var stack = new ItemStack(ModItems.AMMO_BOX.get());

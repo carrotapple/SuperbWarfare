@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.capabilities.*;
@@ -22,7 +21,10 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
@@ -64,11 +66,11 @@ public class ModVariables {
             event.getOriginal().revive();
             PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
-            clone.rifleAmmo = original.rifleAmmo;
-            clone.handgunAmmo = original.handgunAmmo;
-            clone.shotgunAmmo = original.shotgunAmmo;
-            clone.sniperAmmo = original.sniperAmmo;
-            clone.heavyAmmo = original.heavyAmmo;
+
+            for (var type : AmmoType.values()) {
+                type.set(clone, type.get(original));
+            }
+
             clone.edit = original.edit;
             clone.tacticalSprint = original.tacticalSprint;
 
@@ -100,22 +102,16 @@ public class ModVariables {
 
         public static WorldVariables load(CompoundTag tag) {
             WorldVariables data = new WorldVariables();
-            data.read(tag);
+            data.read();
             return data;
         }
 
-        public void read(CompoundTag nbt) {
+        public void read() {
         }
 
         @Override
-        public CompoundTag save(CompoundTag nbt) {
+        public @NotNull CompoundTag save(@NotNull CompoundTag nbt) {
             return nbt;
-        }
-
-        public void syncData(LevelAccessor world) {
-            this.setDirty();
-            if (world instanceof Level level && !level.isClientSide())
-                Mod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(level::dimension), new SavedDataSyncMessage(1, this));
         }
 
         static WorldVariables clientSide = new WorldVariables();
@@ -177,7 +173,7 @@ public class ModVariables {
         private final LazyOptional<PlayerVariables> instance = LazyOptional.of(() -> playerVariables);
 
         @Override
-        public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
             return cap == PLAYER_VARIABLES_CAPABILITY ? instance.cast() : LazyOptional.empty();
         }
 
@@ -193,12 +189,8 @@ public class ModVariables {
     }
 
     public static class PlayerVariables {
-        public int rifleAmmo = 0;
-        public int handgunAmmo = 0;
-        public int shotgunAmmo = 0;
-        public int sniperAmmo = 0;
-        public int heavyAmmo = 0;
 
+        public Map<AmmoType, Integer> ammo = new HashMap<>();
         public boolean tacticalSprint = false;
         public boolean edit = false;
 
