@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,12 +30,12 @@ public class AmmoSupplierItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack itemstack, Level world, List<Component> list, @NotNull TooltipFlag flag) {
         list.add(Component.translatable("des.superbwarfare.ammo_supplier").withStyle(ChatFormatting.AQUA));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         int count = stack.getCount();
         player.getCooldowns().addCooldown(this, 10);
@@ -52,7 +53,7 @@ public class AmmoSupplierItem extends Item {
         }
 
         if (!level.isClientSide()) {
-            player.displayClientMessage(Component.translatable("item.superbwarfare.ammo_supplier.supply", Component.translatable(this.type.translatableKey), ammoToAdd * count), true);
+            player.displayClientMessage(Component.translatable("item.superbwarfare.ammo_supplier.supply", Component.translatable(this.type.translationKey), ammoToAdd * count), true);
             level.playSound(null, player.blockPosition(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResultHolder.success(stack);

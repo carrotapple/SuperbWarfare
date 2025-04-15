@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.common.ammo.AmmoSupplierItem;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
 import com.atsuishio.superbwarfare.tools.animation.AnimationTimer;
@@ -81,12 +80,11 @@ public class AmmoCountOverlay implements IGuiOverlay {
         var yOffset = (-screenHeight - Ammo.values().length * fontHeight) / 2f;
 
         // 渲染总弹药数量
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
         var font = Minecraft.getInstance().font;
 
         for (var type : Ammo.values()) {
             var index = type.ordinal();
-            var ammoCount = type.get(cap);
+            var ammoCount = type.get(player);
             var animator = ammoCountAnimators[index];
 
             var boxAnimator = ammoBoxAnimators[index];
@@ -96,7 +94,7 @@ public class AmmoCountOverlay implements IGuiOverlay {
             if (isAmmoBox) {
                 var ammoBoxType = stack.getOrCreateTag().getString("Type");
                 boxAmmoCount = type.get(stack);
-                if (ammoBoxType.equals("All") || ammoBoxType.equals(type.name)) {
+                if (ammoBoxType.equals("All") || ammoBoxType.equals(type.serializationName)) {
                     boxAnimator.forward(currentTime);
                     boxAmmoSelected = true;
                 } else {
@@ -148,7 +146,7 @@ public class AmmoCountOverlay implements IGuiOverlay {
             // 弹药类型
             guiGraphics.drawString(
                     font,
-                    Component.translatable(type.translatableKey).getString(),
+                    Component.translatable(type.translationKey).getString(),
                     ammoX + 35,
                     screenHeight + yOffset,
                     fontColor,
