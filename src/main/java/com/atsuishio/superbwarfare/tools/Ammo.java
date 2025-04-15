@@ -113,7 +113,7 @@ public enum Ammo {
 
     // PlayerVariables
     public int get(ModVariables.PlayerVariables variable) {
-        return variable.ammo.get(this);
+        return variable.ammo.getOrDefault(this, 0);
     }
 
     public void set(ModVariables.PlayerVariables variable, int count) {
