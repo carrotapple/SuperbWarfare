@@ -1,10 +1,8 @@
 package com.atsuishio.superbwarfare.network.message.send;
 
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +44,6 @@ public class ReloadMessage {
             });
 
             ItemStack stack = player.getMainHandItem();
-            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
             if (!player.isSpectator()
                     && stack.getItem() instanceof GunItem gunItem
@@ -62,20 +59,7 @@ public class ReloadMessage {
                 boolean clipLoad = data.ammo.get() == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
-                boolean hasCreativeAmmoBox = player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()));
-
-                if (!hasCreativeAmmoBox) {
-                    var ammoTypeInfo = data.ammoTypeInfo();
-
-                    if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                        var ammoType = Ammo.getType(ammoTypeInfo.value());
-                        assert ammoType != null;
-
-                        if (ammoType.get(cap) == 0) return;
-                    } else if ((ammoTypeInfo.type() == GunData.AmmoConsumeType.ITEM || ammoTypeInfo.type() == GunData.AmmoConsumeType.TAG) && !data.hasAmmo(player)) {
-                        return;
-                    }
-                }
+                if (!data.hasAmmo(player)) return;
 
                 if (canReload || clipLoad) {
                     int magazine = data.magazine();
