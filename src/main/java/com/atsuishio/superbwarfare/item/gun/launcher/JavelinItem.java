@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.ReleaseSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.receive.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -62,7 +61,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapon {
+public class JavelinItem extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -285,9 +284,12 @@ public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapo
     }
 
     @Override
-    public void fireOnRelease(Player player, double power, boolean zoom) {
-        var tag = player.getMainHandItem().getOrCreateTag();
+    public void onFireKeyRelease(GunData data, Player player, double power, boolean zoom) {
+        super.onFireKeyRelease(data, player, power, zoom);
+
         fire(player);
+
+        var tag = data.tag();
         tag.putBoolean("Seeking", false);
         tag.putInt("SeekTime", 0);
         tag.putString("TargetEntity", "none");
@@ -298,13 +300,16 @@ public class JavelinItem extends GunItem implements GeoItem, ReleaseSpecialWeapo
     }
 
     @Override
-    public void fireOnPress(Player player, boolean zoom) {
-        var stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof GunItem)) return;
-        var data = GunData.from(stack);
-        var tag = data.tag();
+    public void onShoot(GunData data, Player player, double spread, boolean zoom) {
+    }
+
+    @Override
+    public void onFireKeyPress(GunData data, Player player, boolean zoom) {
+        super.onFireKeyPress(data, player, zoom);
 
         if (!zoom || data.ammo.get() <= 0) return;
+
+        var tag = data.tag();
 
         Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
 

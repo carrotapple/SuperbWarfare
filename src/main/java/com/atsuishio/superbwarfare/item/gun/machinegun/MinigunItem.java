@@ -5,12 +5,14 @@ import com.atsuishio.superbwarfare.client.renderer.item.MinigunItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.RarityTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,11 +26,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -39,6 +43,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 public class MinigunItem extends GunItem implements GeoItem {
@@ -56,23 +61,23 @@ public class MinigunItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean isBarVisible(ItemStack pStack) {
+    public boolean isBarVisible(@NotNull ItemStack pStack) {
         return ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) != 0;
     }
 
     @Override
-    public int getBarWidth(ItemStack pStack) {
+    public int getBarWidth(@NotNull ItemStack pStack) {
         return Math.round((float) ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) * 13.0F / 51F);
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(@NotNull ItemStack pStack) {
         double f = 1 - ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) / 55.0F;
         return Mth.hsvToRgb((float) f / 3.0F, 1.0F, 1.0F);
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new MinigunItemRenderer();
@@ -135,6 +140,7 @@ public class MinigunItem extends GunItem implements GeoItem {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
@@ -185,6 +191,41 @@ public class MinigunItem extends GunItem implements GeoItem {
         if (tag.getDouble("overheat") > 0) {
             tag.putDouble("overheat", (tag.getDouble("overheat") - 1));
         }
+    }
+
+    @Override
+    public void onShoot(GunData data, Player player, double spread, boolean zoom) {
+        var tag = data.tag();
+
+        if (!data.hasAmmo(player)) return;
+
+        // TODO 替换为通用过热处理
+        tag.putDouble("heat", (tag.getDouble("heat") + 0.1));
+        if (tag.getDouble("heat") >= 50.5) {
+            tag.putDouble("overheat", 40);
+            player.getCooldowns().addCooldown(data.item(), 40);
+            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
+            }
+        }
+
+        float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+        var perk = data.perk.get(Perk.Type.AMMO);
+
+        if (!player.level().isClientSide() && player instanceof ServerPlayer) {
+            float soundRadius = (float) data.soundRadius();
+
+            player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), soundRadius * 0.2f, pitch);
+            player.playSound(ModSounds.MINIGUN_FAR.get(), soundRadius * 0.5f, pitch);
+            player.playSound(ModSounds.MINIGUN_VERYFAR.get(), soundRadius, pitch);
+
+            if (perk == ModPerks.BEAST_BULLET.get()) {
+                player.playSound(ModSounds.HENG.get(), 4f, pitch);
+            }
+        }
+
+        shootBullet(player, data, spread, zoom);
+        data.consumeAmmo(player, 1);
     }
 
     @Override

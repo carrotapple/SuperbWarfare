@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -86,12 +87,12 @@ public class SentinelItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(@NotNull ItemStack pStack) {
         return 0x95E9FF;
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new SentinelItemRenderer();
@@ -226,5 +227,12 @@ public class SentinelItem extends GunItem implements GeoItem {
     @Override
     public int getAvailableFireModes() {
         return FireMode.SEMI.flag;
+    }
+
+    @Override
+    public void beforeShoot(GunData data, Player player, double spread, boolean zoom) {
+        super.beforeShoot(data, player, spread, zoom);
+
+        data.stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> cap.extractEnergy(3000, false));
     }
 }

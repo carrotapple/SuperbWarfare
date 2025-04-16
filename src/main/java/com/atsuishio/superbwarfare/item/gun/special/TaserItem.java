@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.PressFireSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import net.minecraft.client.Minecraft;
@@ -52,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapon {
+public class TaserItem extends GunItem implements GeoItem {
 
     public static final int MAX_ENERGY = 6000;
 
@@ -131,7 +130,8 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
 
-        if (GunData.from(stack).reload.empty()) {
+        var data = GunData.from(stack);
+        if (data.reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.reload"));
         }
 
@@ -163,7 +163,8 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.REGENERATION);
+        var data = GunData.from(stack);
+        int perkLevel = data.perk.getLevel(ModPerks.REGENERATION);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 energy -> energy.receiveEnergy(perkLevel, false)
         );
@@ -231,12 +232,11 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
     }
 
     @Override
-    public void fireOnPress(Player player, double spread, boolean zoom) {
-        ItemStack stack = player.getMainHandItem();
-        var data = GunData.from(stack);
+    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
         if (data.reloading()) return;
+        var stack = data.stack;
 
-        int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.VOLT_OVERLOAD);
+        int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
                 .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
                 .orElse(false);
@@ -246,8 +246,8 @@ public class TaserItem extends GunItem implements GeoItem, PressFireSpecialWeapo
         player.getCooldowns().addCooldown(stack.getItem(), 5);
 
         if (player instanceof ServerPlayer serverPlayer) {
-            int volt = GunData.from(stack).perk.getLevel(ModPerks.VOLT_OVERLOAD);
-            int wireLength = GunData.from(stack).perk.getLevel(ModPerks.LONGER_WIRE);
+            int volt = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
+            int wireLength = data.perk.getLevel(ModPerks.LONGER_WIRE);
 
             var level = serverPlayer.level();
             TaserBulletEntity taserBulletProjectile = new TaserBulletEntity(player, level,

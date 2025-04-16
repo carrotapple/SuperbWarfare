@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.PressFireSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -58,7 +57,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SecondaryCataclysm extends GunItem implements GeoItem, PressFireSpecialWeapon {
+public class SecondaryCataclysm extends GunItem implements GeoItem {
     private final Supplier<Integer> energyCapacity = () -> 24000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -277,10 +276,9 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, PressFireSpe
     }
 
     @Override
-    public void fireOnPress(Player player, double spread, boolean zoom) {
-        ItemStack stack = player.getMainHandItem();
-        var data = GunData.from(stack);
+    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
         if (data.reloading()) return;
+        var stack = data.stack;
 
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
                 .map(storage -> storage.getEnergyStored() >= 3000)

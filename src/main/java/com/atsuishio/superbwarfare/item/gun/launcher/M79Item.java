@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.item.gun.PressFireSpecialWeapon;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -45,7 +44,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class M79Item extends GunItem implements GeoItem, PressFireSpecialWeapon {
+public class M79Item extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -86,8 +85,9 @@ public class M79Item extends GunItem implements GeoItem, PressFireSpecialWeapon 
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
+        var data = GunData.from(stack);
 
-        if (GunData.from(stack).reload.empty()) {
+        if (data.reload.empty()) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
         }
 
@@ -144,9 +144,7 @@ public class M79Item extends GunItem implements GeoItem, PressFireSpecialWeapon 
     }
 
     @Override
-    public void fireOnPress(Player player, double spread, boolean zoom) {
-        ItemStack stack = player.getMainHandItem();
-        var data = GunData.from(stack);
+    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
         if (data.reloading()) return;
 
         if (player.level() instanceof ServerLevel serverLevel) {
@@ -155,16 +153,16 @@ public class M79Item extends GunItem implements GeoItem, PressFireSpecialWeapon 
                     (float) data.explosionDamage(),
                     (float) data.explosionRadius());
 
-            var dmgPerk = GunData.from(stack).perk.get(Perk.Type.DAMAGE);
+            var dmgPerk = data.perk.get(Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int perkLevel = GunData.from(stack).perk.getLevel(dmgPerk);
+                int perkLevel = data.perk.getLevel(dmgPerk);
                 gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
-            gunGrenadeEntity.setNoGravity(GunData.from(stack).perk.get(Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
+            gunGrenadeEntity.setNoGravity(data.perk.get(Perk.Type.AMMO) == ModPerks.MICRO_MISSILE.get());
 
             float velocity = (float) data.velocity();
-            int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.MICRO_MISSILE);
+            int perkLevel = data.perk.getLevel(ModPerks.MICRO_MISSILE);
             if (perkLevel > 0) {
                 gunGrenadeEntity.setExplosionRadius((float) data.explosionRadius() * 0.5f);
                 gunGrenadeEntity.setDamage((float) data.explosionDamage() * (1.1f + perkLevel * 0.1f));

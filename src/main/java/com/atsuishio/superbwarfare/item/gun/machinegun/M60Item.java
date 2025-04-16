@@ -19,12 +19,14 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -49,7 +51,7 @@ public class M60Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new M60ItemRenderer();
@@ -177,6 +179,15 @@ public class M60Item extends GunItem implements GeoItem {
     @Override
     public int getAvailableFireModes() {
         return FireMode.AUTO.flag;
+    }
+
+    @Override
+    public void beforeShoot(GunData data, Player player, double spread, boolean zoom) {
+        super.beforeShoot(data, player, spread, zoom);
+
+        if (data.ammo.get() <= 5) {
+            data.hideBulletChain.set(true);
+        }
     }
 
     @Override
