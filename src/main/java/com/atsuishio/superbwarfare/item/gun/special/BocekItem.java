@@ -124,9 +124,9 @@ public class BocekItem extends GunItem implements GeoItem {
                 GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") - 1);
             }
 
-            if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") == 0 && data.ammo.get() == 0 && (data.countAmmo(player) > 0 || InventoryTool.hasCreativeAmmoBox(player))) {
+            if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") == 0 && data.ammo.get() == 0 && (data.countBackupAmmo(player) > 0 || InventoryTool.hasCreativeAmmoBox(player))) {
                 if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                    data.consumeAmmo(player, 1);
+                    data.consumeBackupAmmo(player, 1);
                 }
                 data.ammo.set(1);
             }

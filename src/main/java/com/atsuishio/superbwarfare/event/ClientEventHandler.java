@@ -592,7 +592,7 @@ public class ClientEventHandler {
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
-                && data.hasAmmo(player)
+                && data.hasBackupAmmo(player)
         ))) {
             if (mode == 0) {
                 if (clientTimer.getProgress() == 0) {
@@ -707,7 +707,7 @@ public class ClientEventHandler {
                 handleClientShoot();
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
-            if (data.hasAmmo(player)) {
+            if (data.hasBackupAmmo(player)) {
                 var perk = data.perk.get(Perk.Type.AMMO);
                 var tag = data.data();
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
@@ -1635,7 +1635,7 @@ public class ClientEventHandler {
         }
     }
 
-    public static void handleDrawMessage(boolean draw, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleDrawMessage(Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             drawTime = 1;
             for (int i = 0; i < 5; i++) {

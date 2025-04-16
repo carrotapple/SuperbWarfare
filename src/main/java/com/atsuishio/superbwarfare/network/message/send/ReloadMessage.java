@@ -59,7 +59,7 @@ public class ReloadMessage {
                 boolean clipLoad = data.ammo.get() == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
-                if (!data.hasAmmo(player)) return;
+                if (!data.hasBackupAmmo(player)) return;
 
                 if (canReload || clipLoad) {
                     int magazine = data.magazine();

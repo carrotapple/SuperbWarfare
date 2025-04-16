@@ -296,7 +296,7 @@ public class GunEventHandler {
                 }
 
                 // TODO 优化这坨判断
-                if (stack.is(ModTags.Items.LAUNCHER) && !data.hasAmmo(player)
+                if (stack.is(ModTags.Items.LAUNCHER) && !data.hasBackupAmmo(player)
                         || stack.is(ModItems.SECONDARY_CATACLYSM.get()) && data.ammo.get() >= data.magazine()
                 ) {
                     startStage3 = true;
@@ -418,7 +418,7 @@ public class GunEventHandler {
         data.ammo.set(data.ammo.get() + 1);
 
         if (!InventoryTool.hasCreativeAmmoBox(player)) {
-            data.consumeAmmo(player, 1);
+            data.consumeBackupAmmo(player, 1);
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(c -> c.sync(player));
         }
     }
