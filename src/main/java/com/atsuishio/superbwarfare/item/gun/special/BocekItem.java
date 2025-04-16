@@ -48,7 +48,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.atsuishio.superbwarfare.network.message.send.FireMessage.spawnBullet;
+import static com.atsuishio.superbwarfare.network.message.send.FireKeyMessage.spawnBullet;
 
 public class BocekItem extends GunItem implements GeoItem, ReleaseSpecialWeapon {
 

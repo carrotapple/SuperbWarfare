@@ -20,28 +20,31 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-public class FireMessage {
+/**
+ * 开火按键按下/松开时的处理
+ */
+public class FireKeyMessage {
     private final int type;
     private final double power;
     private final boolean zoom;
 
-    public FireMessage(int type, double power, boolean zoom) {
+    public FireKeyMessage(int type, double power, boolean zoom) {
         this.type = type;
         this.power = power;
         this.zoom = zoom;
     }
 
-    public static FireMessage decode(FriendlyByteBuf buffer) {
-        return new FireMessage(buffer.readInt(), buffer.readDouble(), buffer.readBoolean());
+    public static FireKeyMessage decode(FriendlyByteBuf buffer) {
+        return new FireKeyMessage(buffer.readInt(), buffer.readDouble(), buffer.readBoolean());
     }
 
-    public static void encode(FireMessage message, FriendlyByteBuf buffer) {
+    public static void encode(FireKeyMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
         buffer.writeDouble(message.power);
         buffer.writeBoolean(message.zoom);
     }
 
-    public static void handler(FireMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handler(FireKeyMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {

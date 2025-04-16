@@ -351,7 +351,7 @@ public class ClickHandler {
                     ClientEventHandler.burstFireAmount = 0;
                 }
             } else {
-                Mod.PACKET_HANDLER.sendToServer(new FireMessage(0, handTimer, zoom));
+                Mod.PACKET_HANDLER.sendToServer(new FireKeyMessage(0, handTimer, zoom));
                 if ((!(data.reload.normal() || data.reload.empty())
                         && !data.reloading()
                         && !data.charging()
@@ -372,7 +372,7 @@ public class ClickHandler {
     }
 
     public static void handleWeaponFireRelease() {
-        Mod.PACKET_HANDLER.sendToServer(new FireMessage(1, handTimer, zoom));
+        Mod.PACKET_HANDLER.sendToServer(new FireKeyMessage(1, handTimer, zoom));
         bowPull = false;
         holdFire = false;
         holdFireVehicle = false;
