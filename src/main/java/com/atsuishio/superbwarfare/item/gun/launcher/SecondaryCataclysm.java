@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -324,6 +325,21 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(3000, false));
             }
         }
+    }
+
+    @Override
+    public void playFireSounds(GunData data, Player player, boolean zoom) {
+        data.stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {
+            if (cap.getEnergyStored() > 3000 && zoom) {
+                float soundRadius = (float) data.soundRadius();
+
+                player.playSound(ModSounds.SECONDARY_CATACLYSM_FIRE_3P_CHARGE.get(), soundRadius * 0.4f, 1f);
+                player.playSound(ModSounds.SECONDARY_CATACLYSM_FAR_CHARGE.get(), soundRadius * 0.7f, 1f);
+                player.playSound(ModSounds.SECONDARY_CATACLYSM_VERYFAR_CHARGE.get(), soundRadius, 1f);
+            } else {
+                super.playFireSounds(data, player, zoom);
+            }
+        });
     }
 
 }

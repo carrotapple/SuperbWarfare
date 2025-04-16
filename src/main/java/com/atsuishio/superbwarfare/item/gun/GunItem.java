@@ -3,10 +3,11 @@ package com.atsuishio.superbwarfare.item.gun;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -525,9 +527,41 @@ public abstract class GunItem extends Item {
             shootBullet(player, data, spread, zoom);
         }
 
-        // TODO 提取对应方法
-        // 播放音效
-        GunEventHandler.playGunSounds(player, zoom);
+        playFireSounds(data, player, zoom);
+    }
+
+    /**
+     * 播放开火音效
+     */
+    public void playFireSounds(GunData data, Player player, boolean zoom) {
+        ItemStack stack = data.stack;
+        if (!(stack.getItem() instanceof GunItem)) return;
+
+        String origin = stack.getItem().getDescriptionId();
+        String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+        var perk = data.perk.get(Perk.Type.AMMO);
+        if (perk == ModPerks.BEAST_BULLET.get()) {
+            player.playSound(ModSounds.HENG.get(), 4f, 1f);
+        }
+
+        float soundRadius = (float) data.soundRadius();
+        int barrelType = data.attachment.get(AttachmentType.BARREL);
+
+        SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + (barrelType == 2 ? "_fire_3p_s" : "_fire_3p")));
+        if (sound3p != null) {
+            player.playSound(sound3p, soundRadius * 0.4f, 1f);
+        }
+
+        SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + (barrelType == 2 ? "_far_s" : "_far")));
+        if (soundFar != null) {
+            player.playSound(soundFar, soundRadius * 0.7f, 1f);
+        }
+
+        SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + (barrelType == 2 ? "_veryfar_s" : "_veryfar")));
+        if (soundVeryFar != null) {
+            player.playSound(soundVeryFar, soundRadius, 1f);
+        }
     }
 
     /**
