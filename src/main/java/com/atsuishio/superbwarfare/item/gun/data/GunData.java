@@ -12,11 +12,15 @@ import com.atsuishio.superbwarfare.tools.InventoryTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -274,6 +278,23 @@ public class GunData {
     }
 
     public record AmmoTypeInfo(AmmoConsumeType type, String value) {
+        /**
+         * 尝试返回Ammo类型
+         */
+        public @Nullable Ammo playerAmmoType() {
+            if (type != AmmoConsumeType.PLAYER_AMMO) return null;
+            return toPlayerAmmoType();
+        }
+
+        public @NotNull Ammo toPlayerAmmoType() {
+            if (type != AmmoConsumeType.PLAYER_AMMO) throw new IllegalArgumentException("not PLAYER_AMMO type!");
+            return Objects.requireNonNull(Ammo.getType(value));
+        }
+
+        public TagKey<Item> toTag() {
+            if (type != AmmoConsumeType.TAG) throw new IllegalArgumentException("not TAG type!");
+            return ItemTags.create(Objects.requireNonNull(ResourceLocation.tryParse(this.value())));
+        }
     }
 
     public AmmoTypeInfo ammoTypeInfo() {
@@ -332,7 +353,7 @@ public class GunData {
                     player.inventoryMenu.getCraftSlots()
             );
             case TAG -> player.getInventory().clearOrCountMatchingItems(
-                    p -> p.is(ItemTags.create(Objects.requireNonNull(ResourceLocation.tryParse(info.value())))),
+                    p -> p.is(info.toTag()),
                     0,
                     player.inventoryMenu.getCraftSlots()
             );
@@ -348,19 +369,14 @@ public class GunData {
 
         var info = ammoTypeInfo();
         switch (info.type()) {
-            case PLAYER_AMMO -> {
-                var type = Ammo.getType(info.value());
-                assert type != null;
-
-                type.set(player, type.get(player) - count);
-            }
+            case PLAYER_AMMO -> info.toPlayerAmmoType().set(player, info.toPlayerAmmoType().get(player) - count);
             case ITEM -> player.getInventory().clearOrCountMatchingItems(
                     p -> p.getItem() == ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(info.value())),
                     count,
                     player.inventoryMenu.getCraftSlots()
             );
             case TAG -> player.getInventory().clearOrCountMatchingItems(
-                    p -> p.is(ItemTags.create(Objects.requireNonNull(ResourceLocation.tryParse(info.value())))),
+                    p -> p.is(info.toTag()),
                     count,
                     player.inventoryMenu.getCraftSlots()
             );

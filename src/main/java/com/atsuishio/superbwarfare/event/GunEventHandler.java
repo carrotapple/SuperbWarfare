@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
@@ -281,40 +280,11 @@ public class GunEventHandler {
 
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((reload.prepareTimer.get() == 1 || reload.prepareLoadTimer.get() == 1)) {
-            if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
-                var startStage3 = false;
-
-                var ammoTypeInfo = data.ammoTypeInfo();
-                if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                    var type = Ammo.getType(ammoTypeInfo.value());
-                    assert type != null;
-
-                    if (type.get(capability) == 0) {
-                        startStage3 = true;
-                    }
-                }
-
-                // TODO 优化这坨判断
-                if (stack.is(ModTags.Items.LAUNCHER) && !data.hasBackupAmmo(player)
-                        || stack.is(ModItems.SECONDARY_CATACLYSM.get()) && data.ammo.get() >= data.magazine()
-                ) {
-                    startStage3 = true;
-                }
-
-                if (startStage3) {
-                    reload.stage3Starter.markStart();
-                } else {
-                    reload.setStage(2);
-                }
+            if (!data.hasBackupAmmo(player) || data.ammo.get() >= data.magazine()) {
+                reload.stage3Starter.markStart();
             } else {
-                if (stack.is(ModItems.SECONDARY_CATACLYSM.get()) && data.ammo.get() >= data.magazine()) {
-                    reload.stage3Starter.markStart();
-                } else {
-                    reload.setStage(2);
-                }
+                reload.setStage(2);
             }
-            // 检查备弹
         }
 
         // 强制停止换弹，进入三阶段
@@ -357,24 +327,9 @@ public class GunEventHandler {
 
         // 二阶段结束
         if (reload.iterativeLoadTimer.get() == 1) {
-            // 装满结束
-            if (data.ammo.get() >= data.magazine()) {
+            // 装满或备弹耗尽结束
+            if (!data.hasBackupAmmo(player) || data.ammo.get() >= data.magazine()) {
                 reload.setStage(3);
-            }
-
-            // 备弹耗尽结束
-            if (!InventoryTool.hasCreativeAmmoBox(player)) {
-                var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
-
-                var ammoTypeInfo = data.ammoTypeInfo();
-                if (ammoTypeInfo.type() == GunData.AmmoConsumeType.PLAYER_AMMO) {
-                    var type = Ammo.getType(ammoTypeInfo.value());
-                    assert type != null;
-
-                    if (type.get(capability) == 0) {
-                        reload.setStage(3);
-                    }
-                }
             }
 
             // 强制结束
