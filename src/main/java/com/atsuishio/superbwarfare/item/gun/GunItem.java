@@ -242,15 +242,6 @@ public abstract class GunItem extends Item {
     }
 
     /**
-     * 武器是否直接使用背包内的弹药物品进行发射，而不是使用玩家存储的弹药
-     *
-     * @param stack 武器物品
-     */
-    public boolean useBackpackAmmo(ItemStack stack) {
-        return false;
-    }
-
-    /**
      * 武器是否能进行改装
      *
      * @param stack 武器物品
@@ -506,15 +497,19 @@ public abstract class GunItem extends Item {
             data.bolt.needed.set(true);
         }
 
-        data.ammo.set(data.ammo.get() - 1);
-        data.isEmpty.set(true);
+        if (!data.useBackpackAmmo()) {
+            data.ammo.set(data.ammo.get() - 1);
+            data.isEmpty.set(true);
+        } else {
+            data.consumeBackupAmmo(player, 1);
+        }
     }
 
     /**
      * 服务端处理开火
      */
     public void onShoot(GunData data, Player player, double spread, boolean zoom) {
-        if (data.ammo.get() <= 0) return;
+        if (!data.hasEnoughAmmoToShoot(player)) return;
 
         // 开火前事件
         data.item.beforeShoot(data, player, spread, zoom);
@@ -568,7 +563,7 @@ public abstract class GunItem extends Item {
      * 服务端处理按下开火按键时的额外行为
      */
     public void onFireKeyPress(final GunData data, Player player, boolean zoom) {
-        if (data.reload.prepareTimer.get() == 0 && data.reloading() && data.ammo.get() > 0) {
+        if (data.reload.prepareTimer.get() == 0 && data.reloading() && data.hasEnoughAmmoToShoot(player)) {
             data.forceStop.set(true);
         }
 

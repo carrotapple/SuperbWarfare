@@ -158,11 +158,6 @@ public class BocekItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean useBackpackAmmo(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public String getAmmoDisplayName(GunData data) {
         return "Arrow";
     }

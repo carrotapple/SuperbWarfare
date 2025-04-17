@@ -48,28 +48,15 @@ public class AmmoBarOverlay implements IGuiOverlay {
         };
     }
 
-    private static int getGunAmmoCount(Player player) {
-        ItemStack stack = player.getMainHandItem();
-
-        if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return GunData.from(stack).countBackupAmmo(player);
-        }
-        return GunData.from(stack).ammo.get();
+    private static String getGunAmmoString(GunData data, Player player) {
+        if (data.useBackpackAmmo() && hasCreativeAmmo()) return "∞";
+        return data.useBackpackAmmo() ? data.countBackupAmmo(player) + "" : data.ammo.get() + "";
     }
 
-    private static String getPlayerAmmoCount(Player player) {
-        ItemStack stack = player.getMainHandItem();
+    private static String getBackupAmmoString(GunData data, Player player) {
+        if (data.useBackpackAmmo()) return "";
 
-        if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return "";
-        }
-
-        if (!hasCreativeAmmo()) {
-            var data = GunData.from(stack);
-            return data.countBackupAmmo(player) + "";
-        }
-
-        return "∞";
+        return hasCreativeAmmo() ? "∞" : data.countBackupAmmo(player) + "";
     }
 
     @Override
@@ -176,32 +163,21 @@ public class AmmoBarOverlay implements IGuiOverlay {
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
 
-            if (stack.getItem() == ModItems.MINIGUN.get() && hasCreativeAmmo()) {
-                guiGraphics.drawString(
-                        Minecraft.getInstance().font,
-                        "∞",
-                        screenWidth / 1.5f - 64 / 1.5f,
-                        screenHeight / 1.5f - 48 / 1.5f,
-                        0xFFFFFF,
-                        true
-                );
-            } else {
-                guiGraphics.drawString(
-                        Minecraft.getInstance().font,
-                        getGunAmmoCount(player) + "",
-                        screenWidth / 1.5f - 64 / 1.5f,
-                        screenHeight / 1.5f - 48 / 1.5f,
-                        0xFFFFFF,
-                        true
-                );
-            }
+            guiGraphics.drawString(
+                    Minecraft.getInstance().font,
+                    getGunAmmoString(data, player),
+                    screenWidth / 1.5f - 64 / 1.5f,
+                    screenHeight / 1.5f - 48 / 1.5f,
+                    0xFFFFFF,
+                    true
+            );
 
             poseStack.popPose();
 
             // 渲染备弹量
             guiGraphics.drawString(
                     Minecraft.getInstance().font,
-                    getPlayerAmmoCount(player),
+                    getBackupAmmoString(data, player),
                     screenWidth - 64,
                     screenHeight - 35,
                     0xCCCCCC,

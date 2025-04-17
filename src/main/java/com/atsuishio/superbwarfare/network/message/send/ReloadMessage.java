@@ -37,54 +37,54 @@ public class ReloadMessage {
     }
 
     public static void pressAction(Player player, int type) {
-        if (type == 0) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.edit = false;
-                capability.sync(player);
-            });
+        if (type != 0) return;
 
-            ItemStack stack = player.getMainHandItem();
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.edit = false;
+            capability.sync(player);
+        });
 
-            if (!player.isSpectator()
-                    && stack.getItem() instanceof GunItem gunItem
-                    && !GunData.from(stack).charging()
-                    && GunData.from(stack).reload.time() == 0
-                    && GunData.from(stack).bolt.actionTimer.get() == 0
-                    && !GunData.from(stack).reloading()
-            ) {
-                var data = GunData.from(stack);
+        ItemStack stack = player.getMainHandItem();
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
-                boolean canSingleReload = gunItem.isIterativeReload(stack);
-                boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
-                boolean clipLoad = data.ammo.get() == 0 && gunItem.isClipReload(stack);
+        var data = GunData.from(stack);
+        if (data.useBackpackAmmo()) return;
 
-                // 检查备弹
-                if (!data.hasBackupAmmo(player)) return;
+        if (!player.isSpectator()
+                && stack.getItem() instanceof GunItem
+                && !GunData.from(stack).charging()
+                && GunData.from(stack).reload.time() == 0
+                && GunData.from(stack).bolt.actionTimer.get() == 0
+                && !GunData.from(stack).reloading()
+        ) {
+            boolean canSingleReload = gunItem.isIterativeReload(stack);
+            boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
+            boolean clipLoad = data.ammo.get() == 0 && gunItem.isClipReload(stack);
 
-                if (canReload || clipLoad) {
-                    int magazine = data.magazine();
+            // 检查备弹
+            if (!data.hasBackupAmmo(player)) return;
 
-                    if (gunItem.isOpenBolt(stack)) {
-                        if (gunItem.hasBulletInBarrel(stack)) {
-                            if (data.ammo.get() < magazine + 1) {
-                                data.reload.reloadStarter.markStart();
-                            }
-                        } else {
-                            if (data.ammo.get() < magazine) {
-                                data.reload.reloadStarter.markStart();
-                            }
+            if (canReload || clipLoad) {
+                int magazine = data.magazine();
+
+                if (gunItem.isOpenBolt(stack)) {
+                    if (gunItem.hasBulletInBarrel(stack)) {
+                        if (data.ammo.get() < magazine + 1) {
+                            data.reload.reloadStarter.markStart();
                         }
-                    } else if (data.ammo.get() < magazine) {
-                        data.reload.reloadStarter.markStart();
+                    } else {
+                        if (data.ammo.get() < magazine) {
+                            data.reload.reloadStarter.markStart();
+                        }
                     }
-                    return;
+                } else if (data.ammo.get() < magazine) {
+                    data.reload.reloadStarter.markStart();
                 }
+                return;
+            }
 
-                if (canSingleReload) {
-                    if (data.ammo.get() < data.magazine()) {
-                        data.reload.singleReloadStarter.markStart();
-                    }
-                }
+            if (canSingleReload && data.ammo.get() < data.magazine()) {
+                data.reload.singleReloadStarter.markStart();
             }
         }
     }

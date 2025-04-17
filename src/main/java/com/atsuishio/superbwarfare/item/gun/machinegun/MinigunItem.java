@@ -253,8 +253,4 @@ public class MinigunItem extends GunItem implements GeoItem {
         return true;
     }
 
-    @Override
-    public boolean useBackpackAmmo(ItemStack stack) {
-        return true;
-    }
 }
