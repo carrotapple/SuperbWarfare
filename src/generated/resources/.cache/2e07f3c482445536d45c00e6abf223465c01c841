@@ -1,4 +1,4 @@
-// 1.20.1	2025-04-14T14:59:50.4881906	Tags for minecraft:item mod id superbwarfare
+// 1.20.1	2025-04-18T00:52:55.9455528	Tags for minecraft:item mod id superbwarfare
 cf8d49a8d2872286d1a9c3d4a7e1c2b7690db0b8 data/forge/tags/items/dusts.json
 0fa06c2ff83bf09797e3ddff90f62d1124e645b4 data/forge/tags/items/dusts/coal_coke.json
 295ddf906b7133a0558d03e9a60eea18281fe430 data/forge/tags/items/dusts/iron.json
@@ -49,8 +49,3 @@ a249d9d052cdc24b34e0e51ab991329f6c76e8ab data/superbwarfare/tags/items/shotgun.j
 7a12c751d024c06b3e88657afddc84fce8e13295 data/superbwarfare/tags/items/sniper_rifle.json
 30a6a2a2031c2fc53accf833c1760697462c5b33 data/superbwarfare/tags/items/storage_blocks/cemented_carbide.json
 a391df0529d05dbae8f9bc6e9ddce039b63e545a data/superbwarfare/tags/items/storage_blocks/steel.json
-9af8a0147d1e920ef2a2b990bc9010367cf3b7df data/superbwarfare/tags/items/use_handgun_ammo.json
-0ab1b2a8f5433e0d1b03446a9d0d9428e9d64feb data/superbwarfare/tags/items/use_heavy_ammo.json
-ee130846fa0c4e4a51833c6a0b1de7daaa098a73 data/superbwarfare/tags/items/use_rifle_ammo.json
-a249d9d052cdc24b34e0e51ab991329f6c76e8ab data/superbwarfare/tags/items/use_shotgun_ammo.json
-7a12c751d024c06b3e88657afddc84fce8e13295 data/superbwarfare/tags/items/use_sniper_ammo.json
