@@ -7,46 +7,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class PlayerVariablesSyncMessage {
     private final int target;
-    private final PlayerVariable data;
+    private final Map<Byte, Integer> data;
 
     public PlayerVariablesSyncMessage(FriendlyByteBuf buffer) {
         this.target = buffer.readVarInt();
-        this.data = new PlayerVariable();
-
-        while (buffer.isReadable()) {
-            var type = buffer.readByte();
-            switch (type) {
-                case -1 -> this.data.tacticalSprint = buffer.readBoolean();
-                case -2 -> this.data.edit = buffer.readBoolean();
-                default -> {
-                    if (type < Ammo.values().length) {
-                        var ammoType = Ammo.values()[type];
-                        ammoType.set(this.data, buffer.readVarInt());
-                    }
-                }
-            }
-        }
+        this.data = buffer.readMap(FriendlyByteBuf::readByte, FriendlyByteBuf::readVarInt);
     }
 
-    public PlayerVariablesSyncMessage(PlayerVariable data, int entityId) {
+    public PlayerVariablesSyncMessage(int entityId, Map<Byte, Integer> data) {
         this.data = data;
         this.target = entityId;
     }
 
     public static void buffer(PlayerVariablesSyncMessage message, FriendlyByteBuf buffer) {
         buffer.writeVarInt(message.target);
-        for (var type : Ammo.values()) {
-            buffer.writeByte(type.ordinal());
-            buffer.writeVarInt(type.get(message.data));
-        }
-        buffer.writeByte(-1);
-        buffer.writeBoolean(message.data.tacticalSprint);
-        buffer.writeByte(-2);
-        buffer.writeBoolean(message.data.edit);
+        buffer.writeMap(message.data, (buf, key) -> buf.writeByte(key), FriendlyByteBuf::writeVarInt);
     }
 
     public static void handler(PlayerVariablesSyncMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -58,18 +38,23 @@ public class PlayerVariablesSyncMessage {
             }
 
             var entity = Minecraft.getInstance().player.level().getEntity(message.target);
-            if (entity == null) {
-                return;
-            }
+            if (entity == null) return;
 
             PlayerVariable variables = entity.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable());
 
-            for (var type : Ammo.values()) {
-                type.set(variables, type.get(message.data));
+            for (var entry : message.data.entrySet()) {
+                var type = entry.getKey();
+                switch (type) {
+                    case -1 -> variables.tacticalSprint = entry.getValue() == 1;
+                    case -2 -> variables.edit = entry.getValue() == 1;
+                    default -> {
+                        var types = Ammo.values();
+                        if (type < types.length) {
+                            types[type].set(variables, entry.getValue());
+                        }
+                    }
+                }
             }
-
-            variables.tacticalSprint = message.data.tacticalSprint;
-            variables.edit = message.data.edit;
         });
     }
 }

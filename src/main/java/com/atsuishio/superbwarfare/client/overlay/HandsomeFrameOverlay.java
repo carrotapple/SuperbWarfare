@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -47,7 +46,7 @@ public class HandsomeFrameOverlay implements IGuiOverlay {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit)
+        if (PlayerVariable.isEditing(player))
             return;
         if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
             return;

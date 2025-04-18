@@ -8,7 +8,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
-import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.google.common.collect.HashMultimap;
@@ -77,13 +77,12 @@ public abstract class GunItem extends Item {
 
         if ((hasBulletInBarrel && ammoCount > magazine + 1) || (!hasBulletInBarrel && ammoCount > magazine)) {
             int count = ammoCount - magazine - (hasBulletInBarrel ? 1 : 0);
-            entity.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(capability -> {
+            PlayerVariable.modify(entity, capability -> {
                 var ammoType = data.ammoTypeInfo().playerAmmoType();
                 if (ammoType != null) {
                     ammoType.add(capability, count);
                 }
 
-                capability.sync(entity);
                 data.ammo.set(magazine + (hasBulletInBarrel ? 1 : 0));
             });
         }
@@ -560,10 +559,7 @@ public abstract class GunItem extends Item {
             data.forceStop.set(true);
         }
 
-        player.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(cap -> {
-            cap.edit = false;
-            cap.sync(player);
-        });
+        PlayerVariable.modify(player, cap -> cap.edit = false);
     }
 
     /**

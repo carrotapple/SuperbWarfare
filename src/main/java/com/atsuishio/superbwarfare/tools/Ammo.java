@@ -102,13 +102,11 @@ public enum Ammo {
     }
 
     public void set(Player player, int count) {
-        player.getCapability(ModVariables.PLAYER_VARIABLE)
-                .ifPresent(c -> set(c, Math.max(0, count)));
+        PlayerVariable.modify(player, c -> set(c, Math.max(0, count)));
     }
 
     public void add(Player player, int count) {
-        player.getCapability(ModVariables.PLAYER_VARIABLE)
-                .ifPresent(c -> add(c, count));
+        set(player, safeAdd(get(player), count));
     }
 
 

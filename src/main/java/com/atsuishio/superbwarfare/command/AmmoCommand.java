@@ -1,7 +1,7 @@
 
 package com.atsuishio.superbwarfare.command;
 
-import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -41,10 +41,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
-                            type.set(capability, value);
-                            capability.sync(player);
-                        });
+                        PlayerVariable.modify(player, capability -> type.set(capability, value));
                     }
 
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.set", Component.translatable(type.translationKey), value, players.size()), true);
@@ -56,10 +53,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
-                            type.add(capability, value);
-                            capability.sync(player);
-                        });
+                        PlayerVariable.modify(player, capability -> type.add(capability, value));
                     }
 
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.add", Component.translatable(type.translationKey), value, players.size()), true);

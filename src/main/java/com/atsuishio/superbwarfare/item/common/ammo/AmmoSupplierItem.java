@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -46,10 +46,7 @@ public class AmmoSupplierItem extends Item {
         if (offhandItem.is(ModItems.AMMO_BOX.get())) {
             this.type.add(offhandItem, ammoToAdd * count);
         } else {
-            player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
-                this.type.add(capability, ammoToAdd * count);
-                capability.sync(player);
-            });
+            PlayerVariable.modify(player, capability -> this.type.add(capability, ammoToAdd * count));
         }
 
         if (!level.isClientSide()) {

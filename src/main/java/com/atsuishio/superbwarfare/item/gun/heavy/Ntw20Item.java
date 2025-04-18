@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -121,7 +120,7 @@ public class Ntw20Item extends GunItem implements GeoItem {
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit) {
+        if (PlayerVariable.isEditing(player)) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.edit"));
         }
 

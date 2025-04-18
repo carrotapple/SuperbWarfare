@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -42,10 +42,7 @@ public class ZoomMessage {
             // 缩放音效播放条件: 载具是武器载具，且该位置有可用武器
 
             if (message.type == 0) {
-                player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
-                    capability.edit = false;
-                    capability.sync(player);
-                });
+                PlayerVariable.modify(player, capability -> capability.edit = false);
 
                 if (player.isPassenger()
                         && vehicle instanceof WeaponVehicleEntity weaponEntity

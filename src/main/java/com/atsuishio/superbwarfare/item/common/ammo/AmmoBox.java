@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.FormatTool;
@@ -40,8 +39,7 @@ public class AmmoBox extends Item {
         player.getCooldowns().addCooldown(this, 10);
         String type = stack.getOrCreateTag().getString("Type");
 
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable());
-        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
+        PlayerVariable.modify(player, cap -> {
             var types = type.equals("All") ? Ammo.values() : new Ammo[]{Ammo.getType(type)};
 
             for (var ammoType : types) {
@@ -57,7 +55,6 @@ public class AmmoBox extends Item {
                     ammoType.set(tag, 0);
                 }
             }
-            capability.sync(player);
 
             if (!level.isClientSide()) {
                 level.playSound(null, player.blockPosition(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 1, 1);

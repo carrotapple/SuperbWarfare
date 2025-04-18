@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
@@ -374,7 +373,6 @@ public class GunEventHandler {
 
         if (!InventoryTool.hasCreativeAmmoBox(player)) {
             data.consumeBackupAmmo(player, 1);
-            player.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(c -> c.sync(player));
         }
     }
 

@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -53,7 +52,7 @@ public class CrossHairOverlay implements IGuiOverlay {
             return;
         }
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit)
+        if (PlayerVariable.isEditing(player))
             return;
         if (!player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)))
             return;

@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -50,7 +49,7 @@ public class JavelinHudOverlay implements IGuiOverlay {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit)
+        if (PlayerVariable.isEditing(player))
             return;
         if (player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
             return;

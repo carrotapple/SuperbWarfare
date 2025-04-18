@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message.send;
 
-import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -22,10 +22,7 @@ public record TacticalSprintMessage(boolean sprint) {
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
             if (player == null) return;
-            player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
-                capability.tacticalSprint = message.sprint;
-                capability.sync(player);
-            });
+            PlayerVariable.modify(player, capability -> capability.tacticalSprint = message.sprint);
         });
         context.setPacketHandled(true);
     }
