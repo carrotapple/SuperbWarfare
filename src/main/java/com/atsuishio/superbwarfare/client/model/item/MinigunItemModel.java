@@ -52,7 +52,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         var data = GunData.from(stack);
         int rpm = data.rpm();
 
-        gun.setRotZ(gun.getRotZ() + times * -0.07f * ((float) rpm / 1200) * ClientEventHandler.miniGunRot);
+        gun.setRotZ((float) (gun.getRotZ() + times * -0.07f * ((float) rpm / 1200) * ClientEventHandler.shootDelay));
 
         shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (-0.03f * fp - 0.06f * fr));

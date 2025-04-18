@@ -147,7 +147,7 @@ public class ClientEventHandler {
     public static double chamberRot = 0;
     public static double actionMove = 0;
 
-    public static int miniGunRot = 0;
+    public static double shootDelay = 0;
 
     public static double revolverPreTime = 0;
     public static double revolverWheelPreTime = 0;
@@ -237,12 +237,19 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModItems.MINIGUN.get())) {
+        // 射击延迟
+        if (stack.is(ModTags.Items.GUN)) {
             var data = GunData.from(stack);
-            if (holdFire || zoom) {
-                miniGunRot = Math.min(miniGunRot + 5, 21);
-                float rpm = (float) data.rpm() / 3600;
-                player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
+
+            if (holdFire || (zoom && stack.is(ModItems.MINIGUN.get()))) {
+                shootDelay = Math.min(shootDelay + 2, data.shootDelay() + 1);
+
+                // 加特林特有的旋转音效
+                if (stack.is(ModItems.MINIGUN.get())) {
+                    float rpm = (float) data.rpm() / 3600;
+                    player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
+                }
+
             }
         }
 
@@ -391,8 +398,8 @@ public class ClientEventHandler {
     }
 
     private static void handleVariableDecrease() {
-        if (miniGunRot > 0) {
-            miniGunRot--;
+        if (shootDelay > 0) {
+            shootDelay = Math.max(shootDelay - 1, 0);
         }
 
         if (dismountCountdown > 0) {
@@ -573,7 +580,7 @@ public class ClientEventHandler {
             revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }
 
-        if ((holdFire || burstFireAmount > 0)
+        if (((holdFire || burstFireAmount > 0) && shootDelay >= data.shootDelay())
                 && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !holdFireVehicle
                 && (stack.is(ModTags.Items.NORMAL_GUN)
@@ -591,7 +598,7 @@ public class ClientEventHandler {
                 || (stack.is(ModItems.MINIGUN.get())
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
-                && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
+                && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && data.hasBackupAmmo(player)
         ))) {
             if (mode == 0) {
