@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -221,7 +222,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         }
         this.move(MoverType.SELF, this.getDeltaMovement());
-        collideLilyPadBlock();
+        baseCollideBlock();
         this.refreshDimensions();
     }
 
@@ -396,12 +397,12 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         return pos.y + 0.5f * diffY;
     }
 
-    public void collideLilyPadBlock() {
+    public void baseCollideBlock() {
         if (level() instanceof ServerLevel) {
             AABB aabb = getBoundingBox().inflate(0.05).move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
-                if (blockstate.is(Blocks.LILY_PAD)) {
+                if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(BlockTags.LEAVES) || blockstate.is(Blocks.COBWEB) || blockstate.is(Blocks.CACTUS)) {
                     this.level().destroyBlock(pos, true);
                 }
             });
