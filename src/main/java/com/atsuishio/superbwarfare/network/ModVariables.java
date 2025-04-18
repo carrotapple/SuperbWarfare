@@ -195,8 +195,8 @@ public class ModVariables {
         public boolean edit = false;
 
         public void sync(Entity entity) {
-            if (entity instanceof ServerPlayer)
-                Mod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
+            if (entity instanceof ServerPlayer player)
+                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerVariablesSyncMessage(this, entity.getId()));
         }
 
         public Tag writeNBT() {
