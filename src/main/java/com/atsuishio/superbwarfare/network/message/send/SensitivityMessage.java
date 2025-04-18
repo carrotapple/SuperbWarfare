@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message.send;
 
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,14 +36,14 @@ public class SensitivityMessage {
             ItemStack stack = player.getMainHandItem();
             if (!(stack.getItem() instanceof GunItem)) return;
 
+            var data = GunData.from(stack);
             if (message.add) {
-                stack.getOrCreateTag().putInt("sensitivity", Math.min(10, stack.getOrCreateTag().getInt("sensitivity") + 1));
+                data.sensitivity.set(Math.min(10, data.sensitivity.get() + 1));
             } else {
-                stack.getOrCreateTag().putInt("sensitivity", Math.max(-10, stack.getOrCreateTag().getInt("sensitivity") - 1));
+                data.sensitivity.set(Math.max(-10, data.sensitivity.get() - 1));
             }
-            player.displayClientMessage(Component.translatable("tips.superbwarfare.sensitivity", stack.getOrCreateTag().getInt("sensitivity")), true);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.sensitivity", data.sensitivity.get()), true);
         });
         context.get().setPacketHandled(true);
     }
-
 }

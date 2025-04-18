@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -29,8 +30,10 @@ import static com.atsuishio.superbwarfare.event.ClientEventHandler.isFreeCam;
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
 
-    private static double x;
-    private static double y;
+    @Unique
+    private static double sbw$x;
+    @Unique
+    private static double sbw$y;
 
     @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 2)
     private double sensitivity(double original) {
@@ -46,7 +49,7 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
         if (stack.getItem() instanceof GunItem) {
             var data = GunData.from(stack);
-            float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
+            float customSens = data.sensitivity.get();
 
             if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
                 return original / Math.max((1 + (0.2 * (data.zoom() - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
@@ -76,7 +79,7 @@ public class MouseHandlerMixin {
         if (player.getVehicle() instanceof Yx100Entity yx100) {
             if (player == yx100.getFirstPassenger()) {
                 return ClientEventHandler.zoomVehicle ? 0.17 : 0.22;
-            } else if (player ==yx100.getNthEntity(1)){
+            } else if (player == yx100.getNthEntity(1)) {
                 return ClientEventHandler.zoomVehicle ? 0.25 : 0.35;
             }
         }
@@ -122,7 +125,7 @@ public class MouseHandlerMixin {
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
-            x = d;
+            sbw$x = d;
 
             double i = 0;
 
@@ -136,7 +139,7 @@ public class MouseHandlerMixin {
                 i *= (1 - (Mth.abs(vehicle.getRoll()) - 90) / 90);
             }
 
-            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * y * i;
+            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * sbw$y * i;
         }
         return d;
     }
@@ -150,8 +153,8 @@ public class MouseHandlerMixin {
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
-            y = d;
-            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * x * (vehicle.getRoll() < 0 ? -1 : 1);
+            sbw$y = d;
+            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * sbw$x * (vehicle.getRoll() < 0 ? -1 : 1);
         }
 
         return d;
