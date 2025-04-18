@@ -274,7 +274,7 @@ public class GunData {
         return defaultGunData().burstAmount;
     }
 
-    public double shootDelay() {
+    public int shootDelay() {
         return defaultGunData().shootDelay;
     }
 
