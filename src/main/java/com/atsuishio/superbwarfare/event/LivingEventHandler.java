@@ -656,19 +656,15 @@ public class LivingEventHandler {
             int ammoReload = (int) Math.min(mag, mag * rate);
             int ammoNeed = Math.min(mag - ammo, ammoReload);
 
-            boolean flag = InventoryTool.hasCreativeAmmoBox(player);
+            boolean flag = player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
 
-            var ammoType = data.ammoTypeInfo().playerAmmoType();
-            if (ammoType != null) {
-                int ammoFinal = Math.min(ammoType.get(cap), ammoNeed);
-                if (flag) {
-                    ammoFinal = ammoNeed;
-                } else {
-                    ammoType.add(cap, -ammoFinal);
-                }
-
-                data.ammo.set(Math.min(mag, ammo + ammoFinal));
+            int ammoFinal = Math.min(data.countBackupAmmo(player), ammoNeed);
+            if (flag) {
+                ammoFinal = ammoNeed;
+            } else {
+                data.consumeBackupAmmo(player, ammoFinal);
             }
+            data.ammo.set(Math.min(mag, ammo + ammoFinal));
 
             cap.sync(player);
         });
