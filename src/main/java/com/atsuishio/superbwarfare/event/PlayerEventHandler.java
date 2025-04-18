@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.network.message.receive.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import net.minecraft.server.level.ServerLevel;
@@ -166,7 +167,7 @@ public class PlayerEventHandler {
             attr.removeModifier(TACTICAL_SPRINT_UUID);
         }
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).tacticalSprint) {
             player.setSprinting(true);
             attr.addTransientModifier(new AttributeModifier(TACTICAL_SPRINT_UUID, Mod.ATTRIBUTE_MODIFIER,
                     0.25, AttributeModifier.Operation.MULTIPLY_BASE));

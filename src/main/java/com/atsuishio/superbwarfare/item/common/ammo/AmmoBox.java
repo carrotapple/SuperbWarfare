@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import net.minecraft.ChatFormatting;
@@ -39,7 +40,7 @@ public class AmmoBox extends Item {
         player.getCooldowns().addCooldown(this, 10);
         String type = stack.getOrCreateTag().getString("Type");
 
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var types = type.equals("All") ? Ammo.values() : new Ammo[]{Ammo.getType(type)};
 
@@ -112,7 +113,6 @@ public class AmmoBox extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
         var type = Ammo.getType(stack.getOrCreateTag().getString("Type"));
-        var tag = stack.getOrCreateTag();
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box").withStyle(ChatFormatting.GRAY));
 

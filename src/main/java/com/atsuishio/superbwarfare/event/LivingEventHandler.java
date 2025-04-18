@@ -19,6 +19,7 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.receive.DrawClientMessage;
 import com.atsuishio.superbwarfare.network.message.receive.PlayerGunKillMessage;
@@ -727,7 +728,7 @@ public class LivingEventHandler {
     public static void onLivingDrops(LivingDropsEvent event) {
         // 死亡掉落弹药盒
         if (event.getEntity() instanceof Player player && !player.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new ModVariables.PlayerVariables());
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new PlayerVariable());
 
             boolean drop = Stream.of(Ammo.values())
                     .mapToInt(type -> type.get(cap))

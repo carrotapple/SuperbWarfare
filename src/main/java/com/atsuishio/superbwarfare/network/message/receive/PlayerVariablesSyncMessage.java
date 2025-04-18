@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message.receive;
 
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,11 +11,11 @@ import java.util.function.Supplier;
 
 public class PlayerVariablesSyncMessage {
     private final int target;
-    private final ModVariables.PlayerVariables data;
+    private final PlayerVariable data;
 
     public PlayerVariablesSyncMessage(FriendlyByteBuf buffer) {
         this.target = buffer.readVarInt();
-        this.data = new ModVariables.PlayerVariables();
+        this.data = new PlayerVariable();
 
         while (buffer.isReadable()) {
             var type = buffer.readByte();
@@ -31,7 +32,7 @@ public class PlayerVariablesSyncMessage {
         }
     }
 
-    public PlayerVariablesSyncMessage(ModVariables.PlayerVariables data, int entityId) {
+    public PlayerVariablesSyncMessage(PlayerVariable data, int entityId) {
         this.data = data;
         this.target = entityId;
     }
@@ -61,7 +62,7 @@ public class PlayerVariablesSyncMessage {
                 return;
             }
 
-            ModVariables.PlayerVariables variables = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+            PlayerVariable variables = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
 
             for (var type : Ammo.values()) {
                 type.set(variables, type.get(message.data));

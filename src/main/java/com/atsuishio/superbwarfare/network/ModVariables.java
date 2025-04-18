@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.Mod;
-import com.atsuishio.superbwarfare.network.message.receive.PlayerVariablesSyncMessage;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,8 +22,6 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
@@ -32,7 +29,7 @@ public class ModVariables {
 
     @SubscribeEvent
     public static void init(RegisterCapabilitiesEvent event) {
-        event.register(PlayerVariables.class);
+        event.register(PlayerVariable.class);
     }
 
     @net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -42,7 +39,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -50,7 +47,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -58,14 +55,14 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
         public static void clonePlayer(PlayerEvent.Clone event) {
             event.getOriginal().revive();
-            PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
-            PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
+            PlayerVariable original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
+            PlayerVariable clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
 
             for (var type : Ammo.values()) {
                 type.set(clone, type.get(original));
@@ -77,7 +74,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).sync(player);
+            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -158,7 +155,7 @@ public class ModVariables {
         }
     }
 
-    public static final Capability<PlayerVariables> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<PlayerVariable> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     @net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -169,8 +166,8 @@ public class ModVariables {
                 event.addCapability(Mod.loc("player_variables"), new PlayerVariablesProvider());
         }
 
-        private final PlayerVariables playerVariables = new PlayerVariables();
-        private final LazyOptional<PlayerVariables> instance = LazyOptional.of(() -> playerVariables);
+        private final PlayerVariable playerVariable = new PlayerVariable();
+        private final LazyOptional<PlayerVariable> instance = LazyOptional.of(() -> playerVariable);
 
         @Override
         public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
@@ -179,46 +176,12 @@ public class ModVariables {
 
         @Override
         public Tag serializeNBT() {
-            return playerVariables.writeNBT();
+            return playerVariable.writeNBT();
         }
 
         @Override
         public void deserializeNBT(Tag nbt) {
-            playerVariables.readNBT(nbt);
-        }
-    }
-
-    public static class PlayerVariables {
-
-        public Map<Ammo, Integer> ammo = new HashMap<>();
-        public boolean tacticalSprint = false;
-        public boolean edit = false;
-
-        public void sync(Entity entity) {
-            if (entity instanceof ServerPlayer player)
-                Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerVariablesSyncMessage(this, entity.getId()));
-        }
-
-        public Tag writeNBT() {
-            CompoundTag nbt = new CompoundTag();
-            for (var type : Ammo.values()) {
-                type.set(nbt, type.get(this));
-            }
-
-            nbt.putBoolean("TacticalSprint", tacticalSprint);
-            nbt.putBoolean("EditMode", edit);
-
-            return nbt;
-        }
-
-        public void readNBT(Tag tag) {
-            CompoundTag nbt = (CompoundTag) tag;
-            for (var type : Ammo.values()) {
-                type.set(this, type.get(nbt));
-            }
-
-            tacticalSprint = nbt.getBoolean("TacticalSprint");
-            edit = nbt.getBoolean("EditMode");
+            playerVariable.readNBT(nbt);
         }
     }
 

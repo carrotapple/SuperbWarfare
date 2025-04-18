@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.PlayerVariable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -112,17 +113,17 @@ public enum Ammo {
 
 
     // PlayerVariables
-    public int get(ModVariables.PlayerVariables variable) {
+    public int get(PlayerVariable variable) {
         return variable.ammo.getOrDefault(this, 0);
     }
 
-    public void set(ModVariables.PlayerVariables variable, int count) {
+    public void set(PlayerVariable variable, int count) {
         if (count < 0) count = 0;
 
         variable.ammo.put(this, count);
     }
 
-    public void add(ModVariables.PlayerVariables variable, int count) {
+    public void add(PlayerVariable variable, int count) {
         set(variable, safeAdd(get(variable), count));
     }
 
