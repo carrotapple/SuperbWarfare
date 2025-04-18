@@ -398,7 +398,7 @@ public class LivingEventHandler {
                             oldData.charge.timer.reset();
                         }
 
-                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(cap -> {
+                        player.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(cap -> {
                             cap.edit = false;
                             cap.sync(player);
                         });
@@ -650,7 +650,7 @@ public class LivingEventHandler {
 
         float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.07f : 0f);
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(cap -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(cap -> {
             var data = GunData.from(stack);
             int mag = data.magazine();
             int ammo = data.ammo.get();
@@ -728,7 +728,7 @@ public class LivingEventHandler {
     public static void onLivingDrops(LivingDropsEvent event) {
         // 死亡掉落弹药盒
         if (event.getEntity() instanceof Player player && !player.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).orElse(new PlayerVariable());
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLE).orElse(new PlayerVariable());
 
             boolean drop = Stream.of(Ammo.values())
                     .mapToInt(type -> type.get(cap))

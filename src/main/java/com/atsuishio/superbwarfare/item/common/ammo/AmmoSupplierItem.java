@@ -46,7 +46,7 @@ public class AmmoSupplierItem extends Item {
         if (offhandItem.is(ModItems.AMMO_BOX.get())) {
             this.type.add(offhandItem, ammoToAdd * count);
         } else {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
                 this.type.add(capability, ammoToAdd * count);
                 capability.sync(player);
             });

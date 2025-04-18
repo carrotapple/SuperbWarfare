@@ -41,7 +41,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
                             type.set(capability, value);
                             capability.sync(player);
                         });
@@ -56,7 +56,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
                             type.add(capability, value);
                             capability.sync(player);
                         });

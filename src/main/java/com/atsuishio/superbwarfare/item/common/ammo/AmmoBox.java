@@ -40,8 +40,8 @@ public class AmmoBox extends Item {
         player.getCooldowns().addCooldown(this, 10);
         String type = stack.getOrCreateTag().getString("Type");
 
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        var cap = player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable());
+        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
             var types = type.equals("All") ? Ammo.values() : new Ammo[]{Ammo.getType(type)};
 
             for (var ammoType : types) {

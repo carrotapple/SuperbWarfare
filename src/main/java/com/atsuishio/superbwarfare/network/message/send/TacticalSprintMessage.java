@@ -22,7 +22,7 @@ public record TacticalSprintMessage(boolean sprint) {
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
             if (player == null) return;
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
                 capability.tacticalSprint = message.sprint;
                 capability.sync(player);
             });

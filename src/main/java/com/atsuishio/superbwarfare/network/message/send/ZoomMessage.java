@@ -42,7 +42,7 @@ public class ZoomMessage {
             // 缩放音效播放条件: 载具是武器载具，且该位置有可用武器
 
             if (message.type == 0) {
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
                     capability.edit = false;
                     capability.sync(player);
                 });

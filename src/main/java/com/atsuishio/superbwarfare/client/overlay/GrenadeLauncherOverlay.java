@@ -28,7 +28,7 @@ public class GrenadeLauncherOverlay implements IGuiOverlay {
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
         Player player = gui.getMinecraft().player;
 
-        if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).edit)
+        if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit)
             return;
         if (player != null && player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
             return;

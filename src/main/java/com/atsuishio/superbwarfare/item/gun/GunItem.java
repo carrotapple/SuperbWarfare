@@ -77,7 +77,7 @@ public abstract class GunItem extends Item {
 
         if ((hasBulletInBarrel && ammoCount > magazine + 1) || (!hasBulletInBarrel && ammoCount > magazine)) {
             int count = ammoCount - magazine - (hasBulletInBarrel ? 1 : 0);
-            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(capability -> {
+            entity.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(capability -> {
                 var ammoType = data.ammoTypeInfo().playerAmmoType();
                 if (ammoType != null) {
                     ammoType.add(capability, count);
@@ -560,7 +560,7 @@ public abstract class GunItem extends Item {
             data.forceStop.set(true);
         }
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(cap -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(cap -> {
             cap.edit = false;
             cap.sync(player);
         });

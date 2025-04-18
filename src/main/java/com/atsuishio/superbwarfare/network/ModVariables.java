@@ -39,7 +39,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
+            player.getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -47,7 +47,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
+            player.getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -55,14 +55,14 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
+            player.getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
         public static void clonePlayer(PlayerEvent.Clone event) {
             event.getOriginal().revive();
-            PlayerVariable original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
-            PlayerVariable clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
+            PlayerVariable original = event.getOriginal().getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable());
+            PlayerVariable clone = event.getEntity().getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable());
 
             for (var type : Ammo.values()) {
                 type.set(clone, type.get(original));
@@ -74,7 +74,7 @@ public class ModVariables {
             if (event.getEntity().level().isClientSide()) return;
 
             var player = event.getEntity();
-            player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).sync(player);
+            player.getCapability(PLAYER_VARIABLE, null).orElse(new PlayerVariable()).sync(player);
         }
 
         @SubscribeEvent
@@ -155,7 +155,7 @@ public class ModVariables {
         }
     }
 
-    public static final Capability<PlayerVariable> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<PlayerVariable> PLAYER_VARIABLE = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     @net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -171,7 +171,7 @@ public class ModVariables {
 
         @Override
         public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-            return cap == PLAYER_VARIABLES_CAPABILITY ? instance.cast() : LazyOptional.empty();
+            return cap == PLAYER_VARIABLE ? instance.cast() : LazyOptional.empty();
         }
 
         @Override

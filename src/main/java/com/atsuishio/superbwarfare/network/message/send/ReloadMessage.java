@@ -39,7 +39,7 @@ public class ReloadMessage {
     public static void pressAction(Player player, int type) {
         if (type != 0) return;
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLE, null).ifPresent(capability -> {
             capability.edit = false;
             capability.sync(player);
         });

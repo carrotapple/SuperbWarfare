@@ -428,7 +428,7 @@ public class ClientEventHandler {
                     && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                     && !holdFireVehicle
                     && !notInGame()
-                    && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).edit
+                    && !player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit
                     && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())
                     && !data.reloading()
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
@@ -588,7 +588,7 @@ public class ClientEventHandler {
                 && cantFireTime == 0
                 && drawTime < 0.01
                 && !notInGame()
-                && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).edit
+                && !player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit
                 && (!(data.reload.normal() || data.reload.empty())
                 && !data.reloading()
                 && !data.charging()
@@ -1135,7 +1135,7 @@ public class ClientEventHandler {
                 onGround = 0.001;
             }
 
-            if (!entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).edit) {
+            if (!entity.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit) {
                 if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
                     moveRotZ = Mth.lerp(0.2f * times, moveRotZ, 0.14) * (1 - zoomTime);
                 } else {
@@ -1202,7 +1202,7 @@ public class ClientEventHandler {
                 && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !notInGame()
                 && drawTime < 0.01
-                && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable()).edit) {
+                && !player.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable()).edit) {
             if (Minecraft.getInstance().player != null) {
                 cantSprint = 5;
             }
@@ -1535,7 +1535,7 @@ public class ClientEventHandler {
             if (zoom
                     && !notInGame()
                     && drawTime < 0.01
-                    && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.edit).orElse(false)) {
+                    && !player.getCapability(ModVariables.PLAYER_VARIABLE, null).map(c -> c.edit).orElse(false)) {
                 if (!player.isShiftKeyDown()) {
                     int intelligentChipLevel = GunData.from(stack).perk.getLevel(ModPerks.INTELLIGENT_CHIP);
 

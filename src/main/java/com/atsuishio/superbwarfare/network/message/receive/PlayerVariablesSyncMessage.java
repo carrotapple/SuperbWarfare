@@ -62,7 +62,7 @@ public class PlayerVariablesSyncMessage {
                 return;
             }
 
-            PlayerVariable variables = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariable());
+            PlayerVariable variables = entity.getCapability(ModVariables.PLAYER_VARIABLE, null).orElse(new PlayerVariable());
 
             for (var type : Ammo.values()) {
                 type.set(variables, type.get(message.data));

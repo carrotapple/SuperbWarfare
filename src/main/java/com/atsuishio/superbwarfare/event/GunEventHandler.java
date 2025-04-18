@@ -374,7 +374,7 @@ public class GunEventHandler {
 
         if (!InventoryTool.hasCreativeAmmoBox(player)) {
             data.consumeBackupAmmo(player, 1);
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY).ifPresent(c -> c.sync(player));
+            player.getCapability(ModVariables.PLAYER_VARIABLE).ifPresent(c -> c.sync(player));
         }
     }
 
