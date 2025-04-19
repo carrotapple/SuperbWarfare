@@ -47,8 +47,8 @@ public class StaminaOverlay implements IGuiOverlay {
             RenderSystem.setShaderColor(1, 1, 1, (float) Mth.clamp(ClientEventHandler.switchTime, 0, 1));
         }
 
-        RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 64, screenHeight - 48, (float) screenWidth / 2 + 64, screenHeight - 49, -90, -16777216);
-        RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 64, (float) (screenHeight - 48), (float) (screenWidth / 2 + 64 - 1.28 * ClientEventHandler.stamina), screenHeight - 49, -90, -1);
+        RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 90, screenHeight - 23, (float) screenWidth / 2 + 90, screenHeight - 24, -90, -16777216);
+        RenderHelper.fill(guiGraphics, RenderType.guiOverlay(), (float) screenWidth / 2 - 90, (float) (screenHeight - 23), (float) (screenWidth / 2 + 90 - 1.8 * ClientEventHandler.stamina), screenHeight - 24, -90, -1);
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
