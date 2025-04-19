@@ -6,8 +6,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -35,7 +40,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SenpaiEntity extends Monster implements GeoEntity {
-
+    public static final EntityDataAccessor<Boolean> RUNNER = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public SenpaiEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -51,6 +56,19 @@ public class SenpaiEntity extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(RUNNER, Math.random() < 0.5);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("Runner", this.entityData.get(RUNNER));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(RUNNER, compound.getBoolean("Runner"));
     }
 
     @Override
@@ -118,18 +136,15 @@ public class SenpaiEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-    }
-
-    @Override
     public void baseTick() {
         super.baseTick();
+
+        if (entityData.get(RUNNER)) {
+            addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 0));
+        } else {
+            addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20, 0));
+        }
+
         this.refreshDimensions();
     }
 
@@ -162,7 +177,11 @@ public class SenpaiEntity extends Monster implements GeoEntity {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.senpai.die"));
         }
         if (this.isAggressive() && event.isMoving()) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.run2"));
+            if (entityData.get(RUNNER)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.run2"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.run"));
+            }
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.idle"));
     }
@@ -179,13 +198,6 @@ public class SenpaiEntity extends Monster implements GeoEntity {
             this.remove(SenpaiEntity.RemovalReason.KILLED);
             this.dropExperience();
         }
-    }
-
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    public void setAnimation(String animation) {
     }
 
     @Override
