@@ -98,7 +98,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<Bmp2Entity>> BMP_2 = register("bmp_2",
             EntityType.Builder.<Bmp2Entity>of(Bmp2Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Bmp2Entity::new).fireImmune().sized(4f, 3f));
     public static final RegistryObject<EntityType<Yx100Entity>> YX_100 = register("yx_100",
-            EntityType.Builder.<Yx100Entity>of(Yx100Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Yx100Entity::new).fireImmune().sized(5.5f, 3.25f));
+            EntityType.Builder.<Yx100Entity>of(Yx100Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Yx100Entity::new).fireImmune().sized(4.6f, 3.25f));
 
     public static final RegistryObject<EntityType<DroneEntity>> DRONE = register("drone",
             EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(DroneEntity::new).sized(0.6f, 0.2f));
