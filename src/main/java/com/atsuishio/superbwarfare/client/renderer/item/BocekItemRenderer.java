@@ -1,13 +1,11 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.BocekLayer;
 import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -33,7 +31,7 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
 
     public BocekItemRenderer() {
         super(new BocekItemModel());
-        this.addRenderLayer(new BocekLayer(this));
+//        this.addRenderLayer(new BocekLayer(this));
     }
 
     @Override
@@ -89,16 +87,17 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         if (!(itemStack.getItem() instanceof GunItem)) return;
 
         if (name.equals("holo")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || ClientEventHandler.pullPos < 0.7 || !ClientEventHandler.zoom);
+            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || ClientEventHandler.bowPullPos < 0.7 || !ClientEventHandler.zoom);
         }
 
         if (name.equals("arrow")) {
-            bone.setHidden(GunsTool.getGunIntTag(GunData.from(itemStack).tag, "ArrowEmpty") > 1);
-        }
-
-        if (name.equals("jian")) {
             var data = GunData.from(itemStack);
             bone.setHidden(data.ammo.get() == 0);
+        }
+
+        if (name.equals("arrow2")) {
+            var data = GunData.from(itemStack);
+            bone.setHidden(data.ammo.get() != 0);
         }
 
         if (this.transformType.firstPerson() && renderingArms) {
@@ -121,12 +120,12 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {
                 stack.translate(-1.0f * SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
-                AnimationHelper.renderPartOverBone(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-                AnimationHelper.renderPartOverBone(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimationHelper.renderPartOverBone2(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimationHelper.renderPartOverBone2(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
             } else {
                 stack.translate(SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
-                AnimationHelper.renderPartOverBone(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-                AnimationHelper.renderPartOverBone(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimationHelper.renderPartOverBone2(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimationHelper.renderPartOverBone2(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
             }
 
             this.currentBuffer.getBuffer(this.renderType);

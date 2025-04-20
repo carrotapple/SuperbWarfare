@@ -170,9 +170,9 @@ public abstract class CameraMixin {
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK
                 && entity instanceof Player player
                 && player.getMainHandItem().is(ModTags.Items.GUN)
-                && Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos) > 0
+                && Math.max(ClientEventHandler.bowPullPos, ClientEventHandler.zoomPos) > 0
         ) {
-            move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
+            move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.bowPullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.bowPullPos, ClientEventHandler.zoomPos));
             return;
         }
 
