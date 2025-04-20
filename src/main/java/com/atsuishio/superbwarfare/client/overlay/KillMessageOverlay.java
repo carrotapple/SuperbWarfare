@@ -215,7 +215,7 @@ public class KillMessageOverlay implements IGuiOverlay {
                     );
                 } else if (ModList.get().isLoaded("tacz")
                         && ModList.get().getModFileById("tacz") != null
-                        && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.")) {
+                        && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4")) {
                     renderItem = TACZGunEventHandler.taczCompatRender(record.stack, guiGraphics, itemIconW, top);
                 }
             }
