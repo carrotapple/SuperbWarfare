@@ -149,12 +149,18 @@ public class HomemadeShotgunItem extends GunItem implements GeoItem {
     public void beforeShoot(GunData data, Player player, double spread, boolean zoom) {
         super.beforeShoot(data, player, spread, zoom);
 
-        var stack = data.stack();
-        stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
         if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x, player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
                     player.getZ() + 1.8 * player.getLookAngle().z, 30, 0.4, 0.4, 0.4, 0.005, true, serverPlayer);
         }
+    }
+
+    @Override
+    public void afterShoot(GunData data, Player player) {
+        super.afterShoot(data, player);
+
+        var stack = data.stack();
+        stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
     }
 
     @Override

@@ -230,9 +230,8 @@ public class SentinelItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void beforeShoot(GunData data, Player player, double spread, boolean zoom) {
-        super.beforeShoot(data, player, spread, zoom);
-
+    public void afterShoot(GunData data, Player player) {
+        super.afterShoot(data, player);
         data.stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> cap.extractEnergy(3000, false));
     }
 

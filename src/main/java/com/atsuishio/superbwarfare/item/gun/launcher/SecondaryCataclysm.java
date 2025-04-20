@@ -277,8 +277,8 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
     }
 
     @Override
-    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
-        if (data.reloading()) return;
+    public boolean shootBullet(Player player, GunData data, double spread, boolean zoom) {
+        if (data.reloading()) return false;
         var stack = data.stack;
 
         var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
@@ -325,6 +325,8 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(3000, false));
             }
         }
+
+        return true;
     }
 
     @Override

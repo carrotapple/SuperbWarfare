@@ -157,7 +157,6 @@ public class TaserItem extends GunItem implements GeoItem {
         return this.cache;
     }
 
-
     @Override
     @ParametersAreNonnullByDefault
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
@@ -232,8 +231,8 @@ public class TaserItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
-        if (data.reloading()) return;
+    public boolean shootBullet(Player player, GunData data, double spread, boolean zoom) {
+        if (data.reloading()) return false;
         var stack = data.stack;
 
         int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
@@ -241,7 +240,7 @@ public class TaserItem extends GunItem implements GeoItem {
                 .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
                 .orElse(false);
 
-        if (!hasEnoughEnergy) return;
+        if (!hasEnoughEnergy) return false;
 
         player.getCooldowns().addCooldown(stack.getItem(), 5);
 
@@ -260,6 +259,8 @@ public class TaserItem extends GunItem implements GeoItem {
         }
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
+
+        return true;
     }
 
 }

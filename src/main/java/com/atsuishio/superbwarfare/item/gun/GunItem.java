@@ -488,7 +488,12 @@ public abstract class GunItem extends Item {
         if (data.defaultActionTime() > 0 && data.ammo.get() > (data.stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
             data.bolt.needed.set(true);
         }
+    }
 
+    /**
+     * 服务端在开火后的额外行为
+     */
+    public void afterShoot(GunData data, Player player) {
         if (!data.useBackpackAmmo()) {
             data.ammo.set(data.ammo.get() - 1);
             data.isEmpty.set(true);
@@ -511,9 +516,10 @@ public abstract class GunItem extends Item {
 
         // 生成所有子弹
         for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
-            shootBullet(player, data, spread, zoom);
+            if (!shootBullet(player, data, spread, zoom)) return;
         }
 
+        data.item.afterShoot(data, player);
         playFireSounds(data, player, zoom);
     }
 
@@ -585,8 +591,10 @@ public abstract class GunItem extends Item {
 
     /**
      * 服务端发射单发子弹
+     *
+     * @return
      */
-    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
+    public boolean shootBullet(Player player, GunData data, double spread, boolean zoom) {
         var stack = data.stack;
 
         float headshot = (float) data.headshot();
@@ -661,5 +669,7 @@ public abstract class GunItem extends Item {
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
         projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, stack.is(ModTags.Items.SHOTGUN) && perk == ModPerks.INCENDIARY_BULLET.get() ? 4.5f : velocity, (float) spread);
         player.level().addFreshEntity(projectile);
+
+        return true;
     }
 }

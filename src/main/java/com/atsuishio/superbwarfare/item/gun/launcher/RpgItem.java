@@ -160,11 +160,11 @@ public class RpgItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void shootBullet(Player player, GunData data, double spread, boolean zoom) {
+    public boolean shootBullet(Player player, GunData data, double spread, boolean zoom) {
         Level level = player.level();
         ItemStack stack = player.getMainHandItem();
 
-        if (data.reloading()) return;
+        if (data.reloading()) return false;
 
         if (player.level() instanceof ServerLevel serverLevel) {
             RpgRocketEntity rocket = new RpgRocketEntity(player, level,
@@ -204,6 +204,8 @@ public class RpgItem extends GunItem implements GeoItem {
         }
         data.isEmpty.set(true);
         data.closeHammer.set(true);
+
+        return true;
     }
 
     @Override
@@ -213,5 +215,4 @@ public class RpgItem extends GunItem implements GeoItem {
         behaviors.put(84, data -> data.isEmpty.set(false));
         behaviors.put(9, data -> data.closeHammer.set(false));
     }
-
 }
