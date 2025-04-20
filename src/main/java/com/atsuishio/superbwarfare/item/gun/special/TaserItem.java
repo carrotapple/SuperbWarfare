@@ -232,16 +232,7 @@ public class TaserItem extends GunItem implements GeoItem {
 
     @Override
     public boolean shootBullet(Player player, GunData data, double spread, boolean zoom) {
-        if (data.reloading()) return false;
         var stack = data.stack;
-
-        int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
-        var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
-                .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
-                .orElse(false);
-
-        if (!hasEnoughEnergy) return false;
-
         player.getCooldowns().addCooldown(stack.getItem(), 5);
 
         if (player instanceof ServerPlayer serverPlayer) {
@@ -257,10 +248,28 @@ public class TaserItem extends GunItem implements GeoItem {
                     (float) (zoom ? 0.1 : spread));
             level.addFreshEntity(taserBulletProjectile);
         }
-
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
-
         return true;
     }
 
+    @Override
+    public void afterShoot(GunData data, Player player) {
+        super.afterShoot(data, player);
+        var stack = data.stack;
+        int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
+    }
+
+    @Override
+    public boolean canShoot(GunData data) {
+        var stack = data.stack;
+
+        int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
+        var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
+                .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
+                .orElse(false);
+
+        if (!hasEnoughEnergy) return false;
+        if (data.reloading()) return false;
+        return super.canShoot(data);
+    }
 }
