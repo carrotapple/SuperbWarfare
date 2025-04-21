@@ -47,25 +47,6 @@ public class MinigunItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean isBarVisible(@NotNull ItemStack stack) {
-        var data = GunData.from(stack);
-        return data.heat.get() != 0;
-    }
-
-    @Override
-    public int getBarWidth(@NotNull ItemStack stack) {
-        var data = GunData.from(stack);
-        return Math.round((float) data.heat.get() * 13.0F / 100F);
-    }
-
-    @Override
-    public int getBarColor(@NotNull ItemStack stack) {
-        var data = GunData.from(stack);
-        double f = 1 - data.heat.get() / 100.0F;
-        return Mth.hsvToRgb((float) f / 3.0F, 1.0F, 1.0F);
-    }
-
-    @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
