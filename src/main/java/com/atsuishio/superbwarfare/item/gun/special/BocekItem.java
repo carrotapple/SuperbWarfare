@@ -124,7 +124,10 @@ public class BocekItem extends GunItem implements GeoItem {
 
         var data = GunData.from(stack);
 
-        if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0 && data.ammo.get() == 0 && (data.countBackupAmmo(player) > 0 || InventoryTool.hasCreativeAmmoBox(player))) {
+        // TODO 调整成正常的判断逻辑
+        if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0 && data.ammo.get() == 0
+//                && (data.countBackupAmmo(player) > 0 || InventoryTool.hasCreativeAmmoBox(player))
+        ) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.bocek.reload"));
         }
 
@@ -153,7 +156,6 @@ public class BocekItem extends GunItem implements GeoItem {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         if (entity instanceof Player player) {
-
             var data = GunData.from(stack);
 
             if (GunsTool.getGunIntTag(GunData.from(stack).tag, "ArrowEmpty") > 0) {
