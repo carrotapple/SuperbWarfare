@@ -19,7 +19,6 @@ public class PlayerVariable {
 
     public Map<Ammo, Integer> ammo = new HashMap<>();
     public boolean tacticalSprint = false;
-    public boolean edit = false;
 
     public void watch() {
         this.old = this.copy();
@@ -34,10 +33,6 @@ public class PlayerVariable {
         cap.watch();
         consumer.accept(cap);
         cap.sync(entity);
-    }
-
-    public static boolean isEditing(Entity entity) {
-        return entity.getCapability(ModVariables.PLAYER_VARIABLE).map(variable -> variable.edit).orElse(false);
     }
 
     public void sync(Entity entity) {
@@ -67,9 +62,6 @@ public class PlayerVariable {
         if (old.tacticalSprint != this.tacticalSprint) {
             map.put((byte) -1, this.tacticalSprint ? 1 : 0);
         }
-        if (old.edit != this.edit) {
-            map.put((byte) -2, this.edit ? 1 : 0);
-        }
 
         return map;
     }
@@ -81,7 +73,6 @@ public class PlayerVariable {
             type.set(clone, type.get(this));
         }
 
-        clone.edit = this.edit;
         clone.tacticalSprint = this.tacticalSprint;
 
         return clone;
@@ -95,8 +86,7 @@ public class PlayerVariable {
             if (type.get(this) != type.get(other)) return false;
         }
 
-        return tacticalSprint == other.tacticalSprint
-                && edit == other.edit;
+        return tacticalSprint == other.tacticalSprint;
     }
 
     public Tag writeNBT() {
@@ -106,8 +96,6 @@ public class PlayerVariable {
         }
 
         nbt.putBoolean("TacticalSprint", tacticalSprint);
-        nbt.putBoolean("EditMode", edit);
-
         return nbt;
     }
 
@@ -118,6 +106,5 @@ public class PlayerVariable {
         }
 
         tacticalSprint = nbt.getBoolean("TacticalSprint");
-        edit = nbt.getBoolean("EditMode");
     }
 }

@@ -624,8 +624,6 @@ public abstract class GunItem extends Item {
         if (data.reload.prepareTimer.get() == 0 && data.reloading() && data.hasEnoughAmmoToShoot(player)) {
             data.forceStop.set(true);
         }
-
-        PlayerVariable.modify(player, cap -> cap.edit = false);
     }
 
     /**

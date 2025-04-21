@@ -44,14 +44,12 @@ public class PlayerVariablesSyncMessage {
 
             for (var entry : message.data.entrySet()) {
                 var type = entry.getKey();
-                switch (type) {
-                    case -1 -> variables.tacticalSprint = entry.getValue() == 1;
-                    case -2 -> variables.edit = entry.getValue() == 1;
-                    default -> {
-                        var types = Ammo.values();
-                        if (type < types.length) {
-                            types[type].set(variables, entry.getValue());
-                        }
+                if (type == -1) {
+                    variables.tacticalSprint = entry.getValue() == 1;
+                } else {
+                    var types = Ammo.values();
+                    if (type < types.length) {
+                        types[type].set(variables, entry.getValue());
                     }
                 }
             }

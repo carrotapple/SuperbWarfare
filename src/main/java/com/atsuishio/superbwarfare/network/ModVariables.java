@@ -68,7 +68,6 @@ public class ModVariables {
                 type.set(clone, type.get(original));
             }
 
-            clone.edit = original.edit;
             clone.tacticalSprint = original.tacticalSprint;
 
             if (event.getEntity().level().isClientSide()) return;

@@ -397,8 +397,6 @@ public class LivingEventHandler {
                         if (oldStack.is(ModItems.SENTINEL.get())) {
                             oldData.charge.timer.reset();
                         }
-
-                        PlayerVariable.modify(player, cap -> cap.edit = false);
                     }
 
                     if (newStack.getItem() instanceof GunItem) {

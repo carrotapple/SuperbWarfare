@@ -14,7 +14,6 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
-import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.network.message.send.*;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -426,7 +425,7 @@ public class ClientEventHandler {
                     && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                     && !holdFireVehicle
                     && !notInGame()
-                    && !PlayerVariable.isEditing(player)
+                    && !ClickHandler.isEditing
                     && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty())
                     && !data.reloading()
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
@@ -588,7 +587,7 @@ public class ClientEventHandler {
                 && cantFireTime == 0
                 && drawTime < 0.01
                 && !notInGame()
-                && !PlayerVariable.isEditing(player)
+                && !ClickHandler.isEditing
                 && (!(data.reload.normal() || data.reload.empty())
                 && !data.reloading()
                 && !data.charging()
@@ -1130,7 +1129,7 @@ public class ClientEventHandler {
                 onGround = 0.001;
             }
 
-            if (!PlayerVariable.isEditing(entity)) {
+            if (!ClickHandler.isEditing) {
                 if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
                     moveRotZ = Mth.lerp(0.2f * times, moveRotZ, 0.14) * (1 - zoomTime);
                 } else {
@@ -1197,7 +1196,7 @@ public class ClientEventHandler {
                 && !(player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
                 && !notInGame()
                 && drawTime < 0.01
-                && !PlayerVariable.isEditing(player)) {
+                && !ClickHandler.isEditing) {
             if (Minecraft.getInstance().player != null) {
                 cantSprint = 5;
             }
@@ -1523,7 +1522,7 @@ public class ClientEventHandler {
             if (zoom
                     && !notInGame()
                     && drawTime < 0.01
-                    && !PlayerVariable.isEditing(player)) {
+                    && !ClickHandler.isEditing) {
                 if (!player.isShiftKeyDown()) {
                     int intelligentChipLevel = GunData.from(stack).perk.getLevel(ModPerks.INTELLIGENT_CHIP);
 
@@ -1645,6 +1644,7 @@ public class ClientEventHandler {
             bowPullTimer = 0;
             bowPower = 0;
             cantSprint = 20;
+            ClickHandler.isEditing = false;
         }
     }
 

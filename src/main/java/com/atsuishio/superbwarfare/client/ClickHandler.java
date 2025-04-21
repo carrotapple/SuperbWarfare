@@ -13,7 +13,6 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.network.PlayerVariable;
 import com.atsuishio.superbwarfare.network.message.send.*;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
@@ -41,7 +40,7 @@ import static com.atsuishio.superbwarfare.event.ClientEventHandler.*;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClickHandler {
-
+    public static boolean isEditing = false;
     public static boolean switchZoom = false;
 
     private static boolean notInGame() {
@@ -213,6 +212,7 @@ public class ClickHandler {
             }
             if (key == ModKeyMappings.RELOAD.getKey().getValue()) {
                 ClientEventHandler.burstFireAmount = 0;
+                ClickHandler.isEditing = false;
                 Mod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
             }
             if (key == ModKeyMappings.FIRE_MODE.getKey().getValue()) {
@@ -227,14 +227,15 @@ public class ClickHandler {
             }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue() && ClientEventHandler.burstFireAmount == 0) {
                 ClientEventHandler.holdFire = false;
-                Mod.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
+                isEditing = true;
+                player.playSound(ModSounds.EDIT_MODE.get(), 1, 1);
             }
 
             if (key == ModKeyMappings.BREATH.getKey().getValue() && !exhaustion && zoom) {
                 breath = true;
             }
 
-            if (PlayerVariable.isEditing(player)) {
+            if (isEditing) {
                 if (!(stack.getItem() instanceof GunItem gunItem)) return;
                 if (ModKeyMappings.EDIT_GRIP.getKeyModifier().isActive(KeyConflictContext.IN_GAME)) {
                     if (key == ModKeyMappings.EDIT_GRIP.getKey().getValue() && gunItem.hasCustomGrip(stack)) {
@@ -311,6 +312,8 @@ public class ClickHandler {
     }
 
     public static void handleWeaponFirePress(Player player, ItemStack stack) {
+        isEditing = false;
+
         if (player.hasEffect(ModMobEffects.SHOCK.get())) return;
 
         if (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
@@ -379,12 +382,14 @@ public class ClickHandler {
         bowPull = false;
         holdFire = false;
         holdFireVehicle = false;
+        isEditing = false;
         customRpm = 0;
     }
 
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
-
         Mod.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
+
+        ClickHandler.isEditing = false;
 
         if (player.getVehicle() instanceof VehicleEntity pVehicle && player.getVehicle() instanceof WeaponVehicleEntity iVehicle && iVehicle.hasWeapon(pVehicle.getSeatIndex(player)) && iVehicle.banHand(player)) {
             ClientEventHandler.zoomVehicle = true;
