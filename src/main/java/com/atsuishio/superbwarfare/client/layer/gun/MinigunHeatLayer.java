@@ -33,8 +33,10 @@ public class MinigunHeatLayer extends GeoRenderLayer<MinigunItem> {
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return;
 
-        float heat = (float) GunData.from(stack).data().getDouble("heat");
-        getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, heat / 55, heat / 55, heat / 55, 1);
+        var data = GunData.from(stack);
+
+        float heat = (float) data.heat.get();
+        getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, heat / 100, heat / 100, heat / 100, 1);
     }
 }
 
