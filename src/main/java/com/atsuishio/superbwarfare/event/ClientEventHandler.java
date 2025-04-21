@@ -568,7 +568,7 @@ public class ClientEventHandler {
         double rps = (double) rpm / 60;
 
         // cooldown in ms
-        int cooldown = (int) (1000 / rps);
+        int cooldown = (int) Math.round(1000 / rps);
 
         //左轮类
         if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !GunData.from(stack).DA.get())
@@ -606,12 +606,19 @@ public class ClientEventHandler {
                 if (!clientTimer.started()) {
                     clientTimer.start();
                     // 首发瞬间发射
-                    clientTimer.setProgress((cooldown + 1));
+                    clientTimer.setProgress(cooldown + 1);
                 }
 
                 if (clientTimer.getProgress() >= cooldown) {
-                    shootClient(player);
-                    clientTimer.setProgress((clientTimer.getProgress() - cooldown));
+                    var newProgress = clientTimer.getProgress();
+
+                    // 低帧率下的开火次数补偿
+                    do {
+                        shootClient(player);
+                        newProgress -= cooldown;
+                    } while (newProgress - cooldown > 0);
+
+                    clientTimer.setProgress(newProgress);
                 }
             }
 
@@ -847,7 +854,7 @@ public class ClientEventHandler {
             }
 
             double rps = (double) rpm / 60;
-            int cooldown = (int) (1000 / rps);
+            int cooldown = (int) Math.round(1000 / rps);
 
             if ((holdFireVehicle)) {
                 if (!clientTimerVehicle.started()) {
@@ -857,9 +864,17 @@ public class ClientEventHandler {
                 }
 
                 if (clientTimerVehicle.getProgress() >= cooldown) {
-                    Mod.PACKET_HANDLER.sendToServer(new VehicleFireMessage(pVehicle.getSeatIndex(player)));
-                    playVehicleClientSounds(player, iVehicle, pVehicle.getSeatIndex(player));
-                    clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
+                    var newProgress = clientTimerVehicle.getProgress();
+
+                    // 低帧率下的开火次数补偿
+                    do {
+                        Mod.PACKET_HANDLER.sendToServer(new VehicleFireMessage(pVehicle.getSeatIndex(player)));
+                        playVehicleClientSounds(player, iVehicle, pVehicle.getSeatIndex(player));
+
+                        newProgress -= cooldown;
+                    } while (newProgress - cooldown > 0);
+
+                    clientTimerVehicle.setProgress(newProgress);
                 }
             } else if (clientTimerVehicle.getProgress() >= cooldown) {
                 clientTimerVehicle.stop();
