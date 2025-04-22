@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.network.message.receive.ShootClientMessage;
-import com.atsuishio.superbwarfare.network.message.send.ReloadMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -233,7 +232,6 @@ public class BocekItem extends GunItem implements GeoItem {
             GunsTool.setGunIntTag(data.stack, "ArrowEmpty", 7);
             data.ammo.set(data.ammo.get() - 1);
         }
-        Mod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
     }
 
 

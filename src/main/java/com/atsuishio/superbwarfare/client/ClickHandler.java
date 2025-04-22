@@ -389,6 +389,16 @@ public class ClickHandler {
         holdFireVehicle = false;
         isEditing = false;
         customRpm = 0;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (player.isSpectator()) return;
+
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.is(ModItems.BOCEK.get())) {
+            Mod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+        }
     }
 
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
