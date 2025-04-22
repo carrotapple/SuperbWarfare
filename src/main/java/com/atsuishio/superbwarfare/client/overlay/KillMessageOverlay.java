@@ -25,7 +25,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -213,9 +212,7 @@ public class KillMessageOverlay implements IGuiOverlay {
                             -32,
                             8
                     );
-                } else if (ModList.get().isLoaded("tacz")
-                        && ModList.get().getModFileById("tacz") != null
-                        && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4")) {
+                } else if (TACZGunEventHandler.displayCompat()) {
                     renderItem = TACZGunEventHandler.taczCompatRender(record.stack, guiGraphics, itemIconW, top);
                 }
             }
@@ -237,9 +234,7 @@ public class KillMessageOverlay implements IGuiOverlay {
                         -32,
                         8
                 );
-            } else if (ModList.get().isLoaded("tacz")
-                    && ModList.get().getModFileById("tacz") != null
-                    && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.")) {
+            } else if (TACZGunEventHandler.displayCompat()) {
                 renderItem = TACZGunEventHandler.taczCompatRender(record.stack, guiGraphics, itemIconW, top);
             }
 
@@ -311,6 +306,9 @@ public class KillMessageOverlay implements IGuiOverlay {
         } else {
             if (DamageTypeTool.isCompatGunDamage(record.damageType)) {
                 icon = null;
+                if (TACZGunEventHandler.hasMod() && !TACZGunEventHandler.displayCompat()) {
+                    icon = GENERIC;
+                }
             } else {
                 // 如果是其他伤害，则渲染对应图标
                 if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION || record.damageType == ModDamageTypes.PROJECTILE_BOOM || record.damageType == DamageTypes.FIREWORKS) {
