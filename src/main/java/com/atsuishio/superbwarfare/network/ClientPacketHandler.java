@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.overlay.DroneHudOverlay;
 import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
+import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.item.gun.data.DefaultGunData;
@@ -101,6 +102,13 @@ public class ClientPacketHandler {
             if (entity != null) {
                 entity.lerpMotion(message.x, message.y, message.z);
             }
+        }
+    }
+
+    public static void handleClientTacticalSprintSync(boolean flag, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            MiscConfig.ALLOW_TACTICAL_SPRINT.set(flag);
+            MiscConfig.ALLOW_TACTICAL_SPRINT.save();
         }
     }
 }
