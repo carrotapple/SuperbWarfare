@@ -231,7 +231,6 @@ public class ClickHandler {
                 if (!isEditing) {
                     player.playSound(ModSounds.EDIT_MODE.get(), 1, 1);
                 }
-                // TODO 退出时的动画渐变
                 isEditing = !isEditing;
             }
 
@@ -352,7 +351,9 @@ public class ClickHandler {
                 bowPower = 0;
                 holdFire = true;
                 player.setSprinting(false);
-                return;
+                if (data.ammo.get() > 0) {
+                    return;
+                }
             }
 
             if (!data.useBackpackAmmo() && data.ammo.get() <= 0 && data.reload.time() == 0) {
