@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.client;
 
-import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
@@ -8,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -99,7 +97,7 @@ public class AnimationHelper {
             PoseStack.Pose $$6 = stack.last();
             Matrix4f $$7 = $$6.pose();
             Matrix3f $$8 = $$6.normal();
-            VertexConsumer $$9 = buffer.getBuffer(RenderType.eyes(Mod.loc("textures/particle/flare.png")));
+            VertexConsumer $$9 = buffer.getBuffer(ModRenderTypes.MUZZLE_FLASH_TYPE);
             vertex($$9, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1);
             vertex($$9, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1);
             vertex($$9, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0);
