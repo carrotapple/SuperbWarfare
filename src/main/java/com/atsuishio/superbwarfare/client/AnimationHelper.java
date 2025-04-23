@@ -83,8 +83,14 @@ public class AnimationHelper {
             bone.setScaleY((float) (size + 0.8 * size * (Math.random() - 0.5)));
             bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
 
+            float height = 0f;
+
+            if ((GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 3) && ClientEventHandler.zoom) {
+                height = -0.07f;
+            }
+
             stack.pushPose();
-            stack.translate(x, y, -z);
+            stack.translate(x, y + 0.02 + height, -z);
             RenderUtils.translateMatrixToBone(stack, bone);
             RenderUtils.translateToPivotPoint(stack, bone);
             RenderUtils.rotateMatrixAroundBone(stack, bone);
