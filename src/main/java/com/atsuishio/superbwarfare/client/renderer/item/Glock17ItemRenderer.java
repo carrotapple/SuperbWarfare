@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.Glock17Layer;
 import com.atsuishio.superbwarfare.client.layer.gun.Glock17LightLayer;
 import com.atsuishio.superbwarfare.client.model.item.Glock17ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -32,7 +31,6 @@ public class Glock17ItemRenderer extends GeoItemRenderer<Glock17Item> {
 
     public Glock17ItemRenderer() {
         super(new Glock17ItemModel());
-        this.addRenderLayer(new Glock17Layer(this));
         this.addRenderLayer(new Glock17LightLayer(this));
     }
 

@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.MinigunHeatLayer;
-import com.atsuishio.superbwarfare.client.layer.gun.MinigunLayer;
 import com.atsuishio.superbwarfare.client.model.item.MinigunItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -32,7 +31,6 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
 
     public MinigunItemRenderer() {
         super(new MinigunItemModel());
-        this.addRenderLayer(new MinigunLayer(this));
         this.addRenderLayer(new MinigunHeatLayer(this));
     }
 

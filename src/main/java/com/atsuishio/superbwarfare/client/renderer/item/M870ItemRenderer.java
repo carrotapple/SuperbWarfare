@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.M870Layer;
 import com.atsuishio.superbwarfare.client.model.item.M870ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -31,7 +30,6 @@ public class M870ItemRenderer extends GeoItemRenderer<M870Item> {
 
     public M870ItemRenderer() {
         super(new M870ItemModel());
-        this.addRenderLayer(new M870Layer(this));
     }
 
     @Override
