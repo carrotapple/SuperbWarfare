@@ -63,9 +63,6 @@ public class GunEventHandler {
 
             if (data.bolt.actionTimer.get() == 1) {
                 data.bolt.needed.set(false);
-                if (stack.is(ModTags.Items.REVOLVER)) {
-                    data.canImmediatelyShoot.set(true);
-                }
             }
         }
     }
@@ -85,8 +82,6 @@ public class GunEventHandler {
 
                 double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
-
-                if (stack.is(ModTags.Items.REVOLVER)) return;
 
                 Mod.queueServerWork((int) (data.bolt.actionTimer.get() / 2 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {

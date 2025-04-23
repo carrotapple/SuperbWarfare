@@ -118,13 +118,6 @@ public class FireModeMessage {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get());
                 }
             }
-
-            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunData.from(stack).bolt.needed.get()) {
-                data.DA.set(!data.DA.get());
-                if (!tag.getBoolean("canImmediatelyShoot")) {
-                    data.bolt.needed.set(true);
-                }
-            }
         }
     }
 
