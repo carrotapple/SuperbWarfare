@@ -1,15 +1,23 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationProcessor;
+import software.bernie.geckolib.util.RenderUtils;
 
 public class AnimationHelper {
 
@@ -67,5 +75,34 @@ public class AnimationHelper {
             camera.setRotY(roll * camera.getRotY());
             camera.setRotZ(roll * camera.getRotZ());
         }
+    }
+
+    public static void handleShootFlare(String name, PoseStack stack, ItemStack itemStack, GeoBone bone, MultiBufferSource buffer, int packedLightIn, double x, double y, double z, double size) {
+        if (name.equals("flare") && ClientEventHandler.firePosTimer > 0 && ClientEventHandler.firePosTimer < 0.5 && GunData.from(itemStack).attachment.get(AttachmentType.BARREL) != 2) {
+            bone.setScaleX((float) (size + 0.8 * size * (Math.random() - 0.5)));
+            bone.setScaleY((float) (size + 0.8 * size * (Math.random() - 0.5)));
+            bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+
+            stack.pushPose();
+            stack.translate(x, y, -z);
+            RenderUtils.translateMatrixToBone(stack, bone);
+            RenderUtils.translateToPivotPoint(stack, bone);
+            RenderUtils.rotateMatrixAroundBone(stack, bone);
+            RenderUtils.scaleMatrixForBone(stack, bone);
+            RenderUtils.translateAwayFromPivotPoint(stack, bone);
+            PoseStack.Pose $$6 = stack.last();
+            Matrix4f $$7 = $$6.pose();
+            Matrix3f $$8 = $$6.normal();
+            VertexConsumer $$9 = buffer.getBuffer(RenderType.eyes(Mod.loc("textures/particle/flare.png")));
+            vertex($$9, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1);
+            vertex($$9, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1);
+            vertex($$9, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0);
+            vertex($$9, $$7, $$8, packedLightIn, 0.0F, 1, 0, 0);
+            stack.popPose();
+        }
+    }
+
+    private static void vertex(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, int pLightmapUV, float pX, float pY, int pU, int pV) {
+        pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(255, 255, 255, 255).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 }
