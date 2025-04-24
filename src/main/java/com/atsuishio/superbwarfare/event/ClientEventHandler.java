@@ -1133,7 +1133,6 @@ public class ClientEventHandler {
                 moveFadeTime = Mth.lerp(0.1 * times, moveFadeTime, 0);
             }
 
-
             movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime) * moveFadeTime;
             movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime) * moveFadeTime;
 
@@ -1152,7 +1151,6 @@ public class ClientEventHandler {
             if (left && right) {
                 pos = 0;
             }
-
 
             movePosHorizon = Mth.lerp(0.1f * times, movePosHorizon, pos * (1 - 1 * zoomTime));
 
@@ -1191,7 +1189,6 @@ public class ClientEventHandler {
             if (cantFireTime <= 10) {
                 zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
             }
-
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * speed * times, 0, 1);
         }
@@ -1233,7 +1230,6 @@ public class ClientEventHandler {
         if (0.454 <= firePosTimer && firePosTimer < 1) {
             firePos = 4.34 * Math.pow(firePosTimer, 2) - 6.5 * firePosTimer + 2.167;
         }
-
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
             fireRotTimer += 0.18 * (1.9 - fireRotTimer) * times;
         }
@@ -1388,9 +1384,14 @@ public class ClientEventHandler {
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         if (entity.hasEffect(ModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
-            event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
-            event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
-            event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
+            float shakeStrength = (float) (DisplayConfig.SHOCK_SCREEN_SHAKE.get() / 100.0);
+            if (shakeStrength <= 0.0f) return;
+
+            event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() +
+                    (float) Mth.nextDouble(RandomSource.create(), -3, 3) * shakeStrength);
+            event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() +
+                    (float) Mth.nextDouble(RandomSource.create(), -3, 3) * shakeStrength);
+            event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12) * shakeStrength);
         }
     }
 
