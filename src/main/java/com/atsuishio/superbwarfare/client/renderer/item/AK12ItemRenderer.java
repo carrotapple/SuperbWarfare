@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.AK12Layer;
 import com.atsuishio.superbwarfare.client.model.item.AK12ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -34,7 +33,6 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
 
     public AK12ItemRenderer() {
         super(new AK12ItemModel());
-        this.addRenderLayer(new AK12Layer(this));
     }
 
     @Override
@@ -89,18 +87,6 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             ItemStack itemStack = player.getMainHandItem();
             if (!(itemStack.getItem() instanceof GunItem)) return;
 
-            if (name.equals("Cross1")) {
-                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
-            }
-
-            if (name.equals("Cross2")) {
-                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2);
-            }
-
-            if (name.equals("Cross3")) {
-                bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 3);
-            }
-
             if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2
                     && (name.equals("hidden2"))) {
                 bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
@@ -111,6 +97,13 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
             }
 
+            int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
+
+            switch (scopeType) {
+                case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, -0.03, 0.27363125, 28, 0, 255, 0, 255, "okp_7");
+                case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, -0.03, 0.29, 18, 255, 0, 0, 255, "dot");
+                case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, -0.03, 0.29, Math.max(30 - 4 * ClientEventHandler.customZoom, 3), 255, 0, 0, 255, "lpvo");
+            }
 
             AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, -0.012, 0.02, 1.25229375, 0.3);
 
