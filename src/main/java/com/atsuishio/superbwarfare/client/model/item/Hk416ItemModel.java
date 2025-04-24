@@ -46,9 +46,6 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
         CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
-        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
-        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
-        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone kuaimanji = getAnimationProcessor().getBone("kuaimanji");
 
         Player player = Minecraft.getInstance().player;
@@ -79,14 +76,14 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             case 0 -> 0.2f;
             case 1 -> 0.4f;
             case 2 -> 0.8f;
-            case 3 -> 0.78f;
+            case 3 -> 0.9f;
             default -> 0f;
         };
         float posZ = switch (type) {
             case 0 -> 3f;
             case 1 -> 3.5f;
             case 2 -> 7.4f;
-            case 3 -> 6.8f;
+            case 3 -> 7.5f;
             default -> 0f;
         };
 
@@ -130,10 +127,6 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         CrossHairOverlay.gunRot = shen.getRotZ();
-
-        cross1.setPosY(-0.75f * (float) fpz);
-        cross2.setPosY(-0.7f * (float) fpz);
-        cross3.setPosY(-0.2f * (float) fpz);
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
