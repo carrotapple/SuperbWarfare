@@ -10,6 +10,8 @@ public class DisplayConfig {
     public static ForgeConfigSpec.BooleanValue CAMERA_ROTATE;
     public static ForgeConfigSpec.BooleanValue ARMOR_PLATE_HUD;
     public static ForgeConfigSpec.BooleanValue STAMINA_HUD;
+    public static ForgeConfigSpec.IntValue WEAPON_SCREEN_SHAKE;
+    public static ForgeConfigSpec.IntValue EXPLOSION_SCREEN_SHAKE;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
@@ -31,6 +33,12 @@ public class DisplayConfig {
 
         builder.comment("Set true to enable stamina hud");
         STAMINA_HUD = builder.define("stamina_hud", true);
+
+        builder.comment("The strength of screen shaking while firing with a weapon");
+        WEAPON_SCREEN_SHAKE = builder.defineInRange("weapon_screen_shake", 100, 0, 100);
+
+        builder.comment("The strength of screen shaking while exploding");
+        EXPLOSION_SCREEN_SHAKE = builder.defineInRange("explosion_screen_shake", 100, 0, 100);
 
         builder.pop();
     }
