@@ -83,7 +83,7 @@ public class LivingEventHandler {
         handleVehicleHurt(event);
         handleGunPerksWhenHurt(event);
         renderDamageIndicator(event);
-        reduceBulletDamage(event);
+        reduceDamage(event);
         giveExpToWeapon(event);
         handleGunLevels(event);
     }
@@ -128,33 +128,32 @@ public class LivingEventHandler {
     }
 
     /**
-     * 计算子弹伤害衰减
+     * 计算伤害减免
      */
-    private static void reduceBulletDamage(LivingHurtEvent event) {
+    private static void reduceDamage(LivingHurtEvent event) {
         DamageSource source = event.getSource();
         LivingEntity entity = event.getEntity();
         if (entity == null) return;
         Entity sourceEntity = source.getEntity();
         if (sourceEntity == null) return;
+        if (sourceEntity.level().isClientSide) return;
 
         double amount = event.getAmount();
         double damage = amount;
 
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
-        if (!(stack.getItem() instanceof GunItem)) return;
-
-        var data = GunData.from(stack);
-        var perk = data.perk.get(Perk.Type.AMMO);
-
         // 距离衰减
-        if (DamageTypeTool.isGunDamage(source)) {
+        if (DamageTypeTool.isGunDamage(source) && stack.getItem() instanceof GunItem) {
+            var data = GunData.from(stack);
             double distance = entity.position().distanceTo(sourceEntity.position());
 
             var ammoType = data.ammoTypeInfo().playerAmmoType();
             if (ammoType != null) {
                 switch (ammoType) {
                     case SHOTGUN -> {
+                        var perk = data.perk.get(Perk.Type.AMMO);
+
                         if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
                             damage = reduceDamageByDistance(amount, distance, 0.015, 30);
                         } else {
