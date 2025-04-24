@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.item.gun.rifle.Hk416Item;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -19,7 +18,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +30,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Hk416ItemRenderer extends GeoItemRenderer<Hk416Item> {
-    public static double zoomFactor;
     public Hk416ItemRenderer() {
         super(new Hk416ItemModel());
     }
@@ -99,13 +96,12 @@ public class Hk416ItemRenderer extends GeoItemRenderer<Hk416Item> {
         }
 
         int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
-        zoomFactor = Mth.lerp(0.01 * partialTick, zoomFactor, GunsTool.getGunDoubleTag(itemStack, "CustomZoom"));
 
         switch (scopeType) {
             case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.25, 30, 0, 255, 0, 255, "eotech");
             case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.313, 9, 255, 0, 0, 255, "acog");
-            case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.29, Math.max(38 - 5.2 * zoomFactor, 3), 255, 0, 0, 255, "lpvo");
-        };
+            case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.29, Math.max(44 - 5 * ClientEventHandler.customZoom, 3), 255, 0, 0, 255, "lpvo");
+        }
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.440625, 0.3);
 
