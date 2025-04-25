@@ -113,7 +113,7 @@ public class AnimationHelper {
         pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(255, 255, 255, 255).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, int packedLightIn, double x, double y, double z, int r, int g, int b, int a ,String name, boolean hasBlackPart) {
+    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, int packedLightIn, double x, double y, double z, float size, int r, int g, int b, int a ,String name, boolean hasBlackPart) {
         if (boneName.equals("cross") && ClientEventHandler.zoomPos > 0.8) {
             stack.pushPose();
             stack.translate(x, y, -z);
@@ -126,25 +126,26 @@ public class AnimationHelper {
             Matrix4f $$7 = $$6.pose();
             Matrix3f $$8 = $$6.normal();
             ResourceLocation tex = Mod.loc("textures/crosshair/" + name + ".png");
-            // 准星里如果有黑色部分则使用此渲染
-            if (hasBlackPart) {
-                VertexConsumer blackPart = buffer.getBuffer(RenderType.entityTranslucent(tex));
-                vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, a);
-                vertexRGB(blackPart, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1, r, g, b, a);
-                vertexRGB(blackPart, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0, r, g, b, a);
-                vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, 1, 0, 0, r, g, b, a);
-            }
+
+            int alpha = hasBlackPart ? a : (int) (0.05 * a);
+
+            VertexConsumer blackPart = buffer.getBuffer(RenderType.entityTranslucent(tex));
+            vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, alpha, size);
+            vertexRGB(blackPart, $$7, $$8, packedLightIn, size, 0, 1, 1, r, g, b, alpha, size);
+            vertexRGB(blackPart, $$7, $$8, packedLightIn, size, size, 1, 0, r, g, b, alpha, size);
+            vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, size, 0, 0, r, g, b, alpha, size);
+
             VertexConsumer $$9 = buffer.getBuffer(ModRenderTypes.MUZZLE_FLASH_TYPE.apply(tex));
-            vertexRGB($$9, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, a);
-            vertexRGB($$9, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1, r, g, b, a);
-            vertexRGB($$9, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0, r, g, b, a);
-            vertexRGB($$9, $$7, $$8, packedLightIn, 0.0F, 1, 0, 0, r, g, b, a);
+            vertexRGB($$9, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, a, size);
+            vertexRGB($$9, $$7, $$8, packedLightIn, size, 0, 1, 1, r, g, b, a, size);
+            vertexRGB($$9, $$7, $$8, packedLightIn, size, size, 1, 0, r, g, b, a, size);
+            vertexRGB($$9, $$7, $$8, packedLightIn, 0.0F, size, 0, 0, r, g, b, a, size);
             stack.popPose();
         }
         currentBuffer.getBuffer(renderType);
     }
 
-    private static void vertexRGB(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, int pLightmapUV, float pX, float pY, int pU, int pV, int r, int g, int b, int a) {
-        pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(r, g, b, a).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+    private static void vertexRGB(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, int pLightmapUV, float pX, float pY, int pU, int pV, int r, int g, int b, int a, float size) {
+        pConsumer.vertex(pPose, pX - 0.5F * size, pY - 0.5F * size, 0.0F).color(r, g, b, a).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 }

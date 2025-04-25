@@ -98,6 +98,8 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
             bone.setHidden(data.ammo.get() != 0);
         }
 
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0.002, 0.1790625, 0.13, 0.08f, 255, 0, 0, 255, "dot", false);
+
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 

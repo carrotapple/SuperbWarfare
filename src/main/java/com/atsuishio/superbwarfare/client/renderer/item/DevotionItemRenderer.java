@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.DevotionLayer;
 import com.atsuishio.superbwarfare.client.model.item.DevotionItemModel;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -31,7 +29,6 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
 
     public DevotionItemRenderer() {
         super(new DevotionItemModel());
-        this.addRenderLayer(new DevotionLayer(this));
     }
 
     @Override
@@ -87,9 +84,7 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.3875, 0.35);
 
-        if (name.equals("holo")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7  || !ClientEventHandler.zoom);
-        }
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.22993125, 20, 1, 255, 0, 0, 255, "apex_2x", false);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
