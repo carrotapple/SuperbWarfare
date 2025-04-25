@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.InsidiousLayer;
 import com.atsuishio.superbwarfare.client.model.item.InsidiousItemModel;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.rifle.InsidiousItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -31,7 +29,6 @@ public class InsidiousItemRenderer extends GeoItemRenderer<InsidiousItem> {
 
     public InsidiousItemRenderer() {
         super(new InsidiousItemModel());
-        this.addRenderLayer(new InsidiousLayer(this));
     }
 
     @Override
@@ -95,9 +92,7 @@ public class InsidiousItemRenderer extends GeoItemRenderer<InsidiousItem> {
             bone.setRotZ(-(System.currentTimeMillis() % 36000000) / 400f);
         }
 
-        if (name.equals("cross")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7  || !ClientEventHandler.zoom);
-        }
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.359325, 40, 0.33f, 255, 0, 0, 255, "insidious", false);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
