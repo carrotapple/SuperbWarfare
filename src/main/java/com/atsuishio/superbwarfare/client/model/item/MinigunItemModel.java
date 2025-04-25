@@ -66,6 +66,6 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         ClientEventHandler.gunRootMove(getAnimationProcessor());
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.handleReloadShake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

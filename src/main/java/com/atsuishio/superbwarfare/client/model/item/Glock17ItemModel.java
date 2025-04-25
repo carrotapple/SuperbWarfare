@@ -103,7 +103,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
             camera.setRotZ(numR * camera.getRotZ());
         }
 
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.handleReloadShake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
 
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
