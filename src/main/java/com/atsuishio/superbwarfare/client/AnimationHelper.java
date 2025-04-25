@@ -10,6 +10,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
@@ -112,7 +113,7 @@ public class AnimationHelper {
         pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(255, 255, 255, 255).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, int packedLightIn, double x, double y, double z, int r, int g, int b, int a ,String name) {
+    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, int packedLightIn, double x, double y, double z, int r, int g, int b, int a ,String name, boolean hasBlackPart) {
         if (boneName.equals("cross") && ClientEventHandler.zoomPos > 0.8) {
             stack.pushPose();
             stack.translate(x, y, -z);
@@ -124,7 +125,16 @@ public class AnimationHelper {
             PoseStack.Pose $$6 = stack.last();
             Matrix4f $$7 = $$6.pose();
             Matrix3f $$8 = $$6.normal();
-            VertexConsumer $$9 = buffer.getBuffer(ModRenderTypes.MUZZLE_FLASH_TYPE.apply(Mod.loc("textures/crosshair/" + name + ".png")));
+            ResourceLocation tex = Mod.loc("textures/crosshair/" + name + ".png");
+            // 准星里如果有黑色部分则使用此渲染
+            if (hasBlackPart) {
+                VertexConsumer blackPart = buffer.getBuffer(RenderType.entityTranslucent(tex));
+                vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, a);
+                vertexRGB(blackPart, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1, r, g, b, a);
+                vertexRGB(blackPart, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0, r, g, b, a);
+                vertexRGB(blackPart, $$7, $$8, packedLightIn, 0.0F, 1, 0, 0, r, g, b, a);
+            }
+            VertexConsumer $$9 = buffer.getBuffer(ModRenderTypes.MUZZLE_FLASH_TYPE.apply(tex));
             vertexRGB($$9, $$7, $$8, packedLightIn, 0.0F, 0, 0, 1, r, g, b, a);
             vertexRGB($$9, $$7, $$8, packedLightIn, 1.0F, 0, 1, 1, r, g, b, a);
             vertexRGB($$9, $$7, $$8, packedLightIn, 1.0F, 1, 1, 0, r, g, b, a);

@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
@@ -33,13 +35,21 @@ public class ModRenderTypes extends RenderType {
 
     //DickSheep的恩情还不完
 
+    public static final TransparencyStateShard TEST_TRANSPARENCY = new TransparencyStateShard("test_transparency", () -> {
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+    }, () -> {
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+    });
+
     public static final Function<ResourceLocation, RenderType> MUZZLE_FLASH_TYPE = Util.memoize((location) -> {
         TextureStateShard shard = new RenderStateShard.TextureStateShard(location, false, false);
         RenderType.CompositeState state = RenderType.CompositeState.builder()
                 // 关键修复：使用内置的 POSITION_COLOR_TEX_SHADER（直接调用 ShaderStateShard）
                 .setShaderState(RENDERTYPE_EYES_SHADER)
                 // 启用半透明（确保正确排序）
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setTransparencyState(TEST_TRANSPARENCY)
                 // 绑定贴图
                 .setTextureState(shard)
                 // 禁用光照和覆盖颜色
