@@ -44,7 +44,6 @@ public class SvdItemModel extends GeoModel<SvdItem> {
     public void setCustomAnimations(SvdItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
-        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -98,8 +97,6 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         gun.setPosZ(posZ * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.05f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
-        cross3.setScaleX((float) (1f + (0.1 * zp)));
-        cross3.setScaleY((float) (1f + (0.1 * zp)));
 
         CoreGeoBone shen;
         if (zt < 0.5) {

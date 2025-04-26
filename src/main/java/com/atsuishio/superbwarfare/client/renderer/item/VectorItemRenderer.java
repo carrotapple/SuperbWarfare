@@ -2,9 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.VectorLayer;
 import com.atsuishio.superbwarfare.client.model.item.VectorItemModel;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
@@ -34,7 +32,6 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
 
     public VectorItemRenderer() {
         super(new VectorItemModel());
-        this.addRenderLayer(new VectorLayer(this));
     }
 
     @Override
@@ -88,16 +85,14 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
         ItemStack itemStack = player.getMainHandItem();
         if (!(itemStack.getItem() instanceof GunItem)) return;
 
-        if (name.equals("Cross1")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
-        }
-
-        if (name.equals("Cross2")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2);
-        }
-
         if (name.equals("tuoxin")) {
             bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.STOCK) == 0);
+        }
+
+        int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
+        switch (scopeType) {
+            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.27, 18, 1, 255, 0, 0, 255, "dot", false);
+            case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.27, 16, 1, 255, 0, 0, 255, "apex_2x", true);
         }
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.453125, 0.35);

@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.SksLayer;
 import com.atsuishio.superbwarfare.client.model.item.SksItemModel;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.rifle.SksItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -31,7 +29,6 @@ public class SksItemRenderer extends GeoItemRenderer<SksItem> {
 
     public SksItemRenderer() {
         super(new SksItemModel());
-        this.addRenderLayer(new SksLayer(this));
     }
 
     @Override
@@ -85,9 +82,7 @@ public class SksItemRenderer extends GeoItemRenderer<SksItem> {
         ItemStack itemStack = player.getMainHandItem();
         if (!(itemStack.getItem() instanceof GunItem)) return;
 
-        if (name.equals("holo")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || !ClientEventHandler.zoom);
-        }
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.25654375, 20, 2f, 0, 255, 0, 255, "okp_7", false);
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.4375, 0.35);
 

@@ -45,7 +45,6 @@ public class VectorItemModel extends GeoModel<VectorItem> {
     public void setCustomAnimations(VectorItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
-        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
         CoreGeoBone kmj = getAnimationProcessor().getBone("kuaimanji");
         CoreGeoBone sight1fold = getAnimationProcessor().getBone("SightFold1");
         CoreGeoBone sight2fold = getAnimationProcessor().getBone("SightFold2");
@@ -119,8 +118,6 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         CrossHairOverlay.gunRot = shen.getRotZ();
-
-        cross1.setPosY(-0.25f * (float) fpz);
 
         rotXSight = Mth.lerp(1.5f * times, rotXSight, type == 0 ? 0 : 90);
         sight1fold.setRotX(rotXSight * Mth.DEG_TO_RAD);

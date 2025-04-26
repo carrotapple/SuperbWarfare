@@ -2,8 +2,6 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.TracheliumLayer;
-import com.atsuishio.superbwarfare.client.layer.gun.TracheliumLightLayer;
 import com.atsuishio.superbwarfare.client.model.item.TracheliumItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -35,8 +33,6 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
 
     public TracheliumItemRenderer() {
         super(new TracheliumItemModel());
-        this.addRenderLayer(new TracheliumLayer(this));
-        this.addRenderLayer(new TracheliumLightLayer(this));
     }
 
     @Override
@@ -106,22 +102,22 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
             bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.GRIP) == 0);
         }
 
-        if (name.equals("Cross1")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
-        }
-
-        if (name.equals("Cross2")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2
-                    || itemStack.getOrCreateTag().getBoolean("ScopeAlt"));
-        }
-
-        if (name.equals("CrossAlt")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2
-                    || !(itemStack.getOrCreateTag().getBoolean("ScopeAlt")));
-        }
 
         if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
+        }
+
+        int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
+
+        switch (scopeType) {
+            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.3, 30, 1.2f, 255, 0, 0, 255, "dot", false);
+            case 2 -> {
+                if (itemStack.getOrCreateTag().getBoolean("ScopeAlt")) {
+                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.36, 30, 0.18f, 255, 0, 0, 255, "delta", false);
+                } else {
+                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.294, 13, 0.87f, 255, 0, 0, 255, "hamr", true);
+                }
+            }
         }
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);
