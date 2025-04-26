@@ -99,9 +99,9 @@ public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
         int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
 
         switch (scopeType) {
-            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.24, 20, 1, 255, 0, 0, 255, "dot", false);
-            case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, -0.01, 0.24, 18, 1, 255, 0, 0, 255, "pso_1", true);
-            case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.2525, -0.1, 0.08f, 255, 0, 0, 255, "sniper", true);
+            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.24, 20, 1, 255, 0, 0, 255, "dot", false);
+            case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, -0.01, 0.24, 18, 1, 255, 0, 0, 255, "pso_1", true);
+            case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.2525, -0.1, 0.08f, 255, 0, 0, 255, "sniper", true);
         }
 
 

@@ -84,7 +84,7 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.3875, 0.35);
 
-        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.22993125, 20, 1, 255, 0, 0, 255, "apex_2x", false);
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.22993125, 20, 1, 255, 0, 0, 255, "apex_2x", false);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;

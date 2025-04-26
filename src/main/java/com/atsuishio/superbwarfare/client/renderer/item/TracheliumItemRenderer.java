@@ -110,12 +110,12 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
         int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
 
         switch (scopeType) {
-            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.3, 30, 1.2f, 255, 0, 0, 255, "dot", false);
+            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.3, 30, 1.2f, 255, 0, 0, 255, "dot", false);
             case 2 -> {
                 if (itemStack.getOrCreateTag().getBoolean("ScopeAlt")) {
-                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.36, 30, 0.18f, 255, 0, 0, 255, "delta", false);
+                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.36, 30, 0.18f, 255, 0, 0, 255, "delta", false);
                 } else {
-                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.294, 13, 0.87f, 255, 0, 0, 255, "hamr", true);
+                    AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.294, 13, 0.87f, 255, 0, 0, 255, "hamr", true);
                 }
             }
         }
