@@ -47,9 +47,6 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
         CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
-        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
-        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
-        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;

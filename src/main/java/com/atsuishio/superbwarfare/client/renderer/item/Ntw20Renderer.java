@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.Ntw20Layer;
 import com.atsuishio.superbwarfare.client.model.item.Ntw20Model;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -34,7 +33,6 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
 
     public Ntw20Renderer() {
         super(new Ntw20Model());
-        this.addRenderLayer(new Ntw20Layer(this));
     }
 
     @Override
@@ -92,18 +90,6 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
             bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 0);
         }
 
-        if (name.equals("Cross1")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 1);
-        }
-
-        if (name.equals("Cross2")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 2);
-        }
-
-        if (name.equals("Cross3")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 3);
-        }
-
         if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 2
                 && (name.equals("bone1") || name.equals("zhituiqi") || name.equals("guan") || name.equals("hidden"))) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
@@ -112,6 +98,14 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
         if (GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) == 3
                 && (name.equals("bone1") || name.equals("zhituiqi") || name.equals("guan") || name.equals("jing") || name.equals("rail") || name.equals("base2") || name.equals("guan7"))) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7 && ClientEventHandler.zoom);
+        }
+
+        int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
+
+        switch (scopeType) {
+            case 1 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.468755, 40, 1, 255, 0, 0, 255, "eotech", false);
+            case 2 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.48875, 9, 1, 255, 0, 0, 255, "acog", true);
+            case 3 -> AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.46875, 30, (float) ClientEventHandler.customZoom, 255, 0, 0, 255, "lpvo", true);
         }
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 3.70229375, 0.8);
