@@ -63,9 +63,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         scope.setScaleZ(1f - (0.8f * (float) zp));
         cb.setRotZ((float) (cb.getRotZ() + times * 10 * ClientEventHandler.chamberRot));
 
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        holo.setPosY(0.09f);
-
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.4f * fp + 0.44f * fr));
         shen.setPosZ((float) (3.325 * fp + 0.34f * fr + 2.35 * fpz));

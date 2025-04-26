@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.gun.SentinelLayer;
 import com.atsuishio.superbwarfare.client.layer.gun.SentinelLightLayer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -89,12 +88,6 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
         ItemStack itemStack = player.getMainHandItem();
         if (!(itemStack.getItem() instanceof GunItem)) return;
 
-        AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.53125, 0.6);
-
-        if (name.equals("holo")) {
-            bone.setHidden(ClientEventHandler.zoomPos < 0.7 || !ClientEventHandler.zoom);
-        }
-
         AtomicBoolean flag = new AtomicBoolean(false);
         itemStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
@@ -103,6 +96,10 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
         if (name.equals("charge")) {
             bone.setHidden(!flag.get());
         }
+
+        AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, packedLightIn, 0, 0.265, -0.05, 0.075f, 255, 0, 0, 255, "apex_3x", false);
+
+        AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.53125, 0.6);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
