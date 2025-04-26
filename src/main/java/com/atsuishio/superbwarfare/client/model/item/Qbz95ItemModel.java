@@ -53,9 +53,6 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         CoreGeoBone button = getAnimationProcessor().getBone("button");
         CoreGeoBone button3 = getAnimationProcessor().getBone("button3");
         CoreGeoBone button6 = getAnimationProcessor().getBone("button6");
-        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
-        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
-        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
@@ -143,12 +140,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         CrossHairOverlay.gunRot = shen.getRotZ();
-
         bolt.setPosZ(5f * (float) fp);
-
-        cross1.setPosY(-0.75f * (float) fpz);
-        cross2.setPosY(-0.7f * (float) fpz);
-        cross3.setPosY(-0.2f * (float) fpz);
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
