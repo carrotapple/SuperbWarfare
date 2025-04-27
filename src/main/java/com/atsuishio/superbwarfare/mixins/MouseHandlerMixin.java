@@ -64,6 +64,10 @@ public class MouseHandlerMixin {
             return 0;
         }
 
+        if (player.getVehicle() instanceof Hpj11Entity) {
+            return ClientEventHandler.zoomVehicle ? 0.25 : 0.3;
+        }
+
         if (player.getVehicle() instanceof CannonEntity) {
             return ClientEventHandler.zoomVehicle ? 0.15 : 0.3;
         }

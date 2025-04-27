@@ -80,6 +80,8 @@ public class ModEntities {
     // Vehicles
     public static final RegistryObject<EntityType<Mk42Entity>> MK_42 = register("mk_42",
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(3.4f, 3.5f));
+    public static final RegistryObject<EntityType<Hpj11Entity>> HPJ_11 = register("hpj_11",
+            EntityType.Builder.<Hpj11Entity>of(Hpj11Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Hpj11Entity::new).fireImmune().sized(2.8f, 2.4f));
     public static final RegistryObject<EntityType<Mle1934Entity>> MLE_1934 = register("mle_1934",
             EntityType.Builder.<Mle1934Entity>of(Mle1934Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mle1934Entity::new).fireImmune().sized(4.5f, 2.8f));
     public static final RegistryObject<EntityType<AnnihilatorEntity>> ANNIHILATOR = register("annihilator",
