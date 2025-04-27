@@ -71,12 +71,12 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public abstract class VehicleEntity extends Entity {
-
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.INT);
 
     public VehicleWeapon[][] availableWeapons;
 
@@ -102,6 +102,8 @@ public abstract class VehicleEntity extends Entity {
     public float gunXRot;
     public float gunYRotO;
     public float gunXRotO;
+
+    public boolean cannotFire;
 
     // 自定义骑乘
     private final List<Entity> orderedPassengers = generatePassengersList();
@@ -264,6 +266,7 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(LAST_DRIVER_UUID, "undefined");
         this.entityData.define(DELTA_ROT, 0f);
+        this.entityData.define(HEAT, 0);
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             this.entityData.define(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
@@ -554,6 +557,19 @@ public abstract class VehicleEntity extends Entity {
 
         if (repairCoolDown > 0) {
             repairCoolDown--;
+        }
+
+        if (this.entityData.get(HEAT) > 0) {
+            this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
+        }
+
+        if (this.entityData.get(HEAT) < 40) {
+            cannotFire = false;
+        }
+
+        if (this.entityData.get(HEAT) > 100 && !cannotFire) {
+            cannotFire = true;
+            this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
         }
 
         this.prevRoll = this.getRoll();

@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class SmallCannonShellLayer extends GeoRenderLayer<SmallCannonShellEntity> {
-	private static final ResourceLocation LAYER = new ResourceLocation(Mod.MODID, "textures/entity/cannon_shell_e.png");
+	private static final ResourceLocation LAYER = new ResourceLocation(Mod.MODID, "textures/entity/small_cannon_shell.png");
 
 	public SmallCannonShellLayer(GeoRenderer<SmallCannonShellEntity> entityRenderer) {
 		super(entityRenderer);

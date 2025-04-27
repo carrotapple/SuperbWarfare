@@ -57,7 +57,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
@@ -97,7 +96,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public double recoilShake;
     public double recoilShakeO;
 
-    public boolean cannotFire;
     public boolean cannotFireCoax;
     public int reloadCoolDown;
 
@@ -183,20 +181,12 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             turretYRotO = deltaT + getTurretYRot();
         }
 
-        if (this.entityData.get(HEAT) > 0) {
-            this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
-        }
-
         if (this.entityData.get(COAX_HEAT) > 0) {
             this.entityData.set(COAX_HEAT, this.entityData.get(COAX_HEAT) - 1);
         }
 
         if (this.entityData.get(FIRE_ANIM) > 0) {
             this.entityData.set(FIRE_ANIM, this.entityData.get(FIRE_ANIM) - 1);
-        }
-
-        if (this.entityData.get(HEAT) < 40) {
-            cannotFire = false;
         }
 
         if (this.entityData.get(COAX_HEAT) < 40) {
@@ -207,10 +197,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             decoyReloadCoolDown--;
         }
 
-        if (this.entityData.get(HEAT) > 100 && !cannotFire) {
-            cannotFire = true;
-            this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
-        }
         if (this.entityData.get(COAX_HEAT) > 100) {
             cannotFireCoax = true;
             this.level().playSound(null, this.getOnPos(), ModSounds.MINIGUN_OVERHEAT.get(), SoundSource.PLAYERS, 1, 1);
@@ -765,7 +751,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         this.entityData.define(YAW, 0f);
         this.entityData.define(AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
-        this.entityData.define(HEAT, 0);
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(DECOY_COUNT, 0);
     }

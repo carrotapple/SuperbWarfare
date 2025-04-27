@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.Hpj11Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Mk42Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Mle1934Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
@@ -127,17 +128,37 @@ public class CannonHudOverlay implements IGuiOverlay {
                                     screenWidth / 2 + 14, screenHeight / 2 - 20, -1, false);
                         }
                     }
-                    if (cannon instanceof AnnihilatorEntity) {
-                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-                    } else {
-                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-                    }
-                    float diffY = -Mth.wrapDegrees(Mth.lerp(partialTick, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
 
-                    preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/indicator.png"), (float) screenWidth / 2 - 4.3f + 0.45f * diffY, (float) screenHeight / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
+                    if (!(cannon instanceof Hpj11Entity)) {
+                        if (cannon instanceof AnnihilatorEntity) {
+                            preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                        } else {
+                            preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                        }
+                        float diffY = -Mth.wrapDegrees(Mth.lerp(partialTick, player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(partialTick, cannon.yRotO, cannon.getYRot()));
+
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/indicator.png"), (float) screenWidth / 2 - 4.3f + 0.45f * diffY, (float) screenHeight / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
+                    } else {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/hpj_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                    }
+
+
                 } else {
-                    preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                    if (!(cannon instanceof Hpj11Entity)) {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                    } else {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/cannon/hpj_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                    }
+
                 }
+
+                RenderSystem.disableDepthTest();
+                RenderSystem.depthMask(false);
+                RenderSystem.enableBlend();
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+
                 renderKillIndicator(guiGraphics, screenWidth, screenHeight);
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
                 Vec3 p = RenderHelper.worldToScreen(new Vec3(Mth.lerp(partialTick, player.xo, player.getX()), Mth.lerp(partialTick, player.yo, player.getY()),
