@@ -255,8 +255,10 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
             return;
         }
 
+        Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
+
         if (entityData.get(TARGET_UUID).equals("none") && tickCount % 10 == 0) {
-            Entity naerestEntity = seekNearLivingEntity(72);
+            Entity naerestEntity = seekNearLivingEntity(barrelRootPos,-40, 90,1,72);
             if (naerestEntity != null) {
                 entityData.set(TARGET_UUID, naerestEntity.getStringUUID());
             }
@@ -274,7 +276,6 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                 return;
             }
 
-            Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
             Vec3 targetVec = barrelRootPos.vectorTo(target.getEyePosition()).normalize();
 
             double d0 = targetVec.x;
@@ -326,12 +327,16 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         }
     }
 
-    public Entity seekNearLivingEntity(double seekRange) {
+    public Entity seekNearLivingEntity(Vec3 pos, double minAngle, double maxAngle, double minRange, double seekRange) {
         return StreamSupport.stream(EntityFindUtil.getEntities(level()).getAll().spliterator(), false)
                 .filter(e -> {
                     // TODO 自定义目标列表
-                    if (e.distanceTo(this) <= seekRange && ((e instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0)
-                    )) {
+                    if (e.distanceTo(this) > minRange
+                            && e.distanceTo(this) <= seekRange
+                            && canAim(pos, e, minAngle, maxAngle)
+                            && e instanceof LivingEntity living
+                            && living instanceof Enemy
+                            && living.getHealth() > 0) {
                         return checkNoClip(e);
                     }
                     return false;
