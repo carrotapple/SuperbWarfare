@@ -75,6 +75,7 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        if (this.level() instanceof ServerLevel) {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -90,11 +91,12 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
         }
 
         if (this.tickCount > 0) {
-            if (this.level() instanceof ServerLevel) {
+
                 causeExplode(result.getLocation());
-            }
+
         }
         this.discard();
+        }
     }
 
     @Override
