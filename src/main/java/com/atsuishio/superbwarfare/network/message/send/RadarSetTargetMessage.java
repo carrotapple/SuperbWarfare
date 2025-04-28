@@ -1,10 +1,12 @@
 package com.atsuishio.superbwarfare.network.message.send;
 
+import com.atsuishio.superbwarfare.entity.vehicle.Hpj11Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.LaserTowerEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -40,12 +42,21 @@ public class RadarSetTargetMessage {
                 }
                 fuMO25Menu.getSelfPos().ifPresent(pos -> {
                     var entities = StreamSupport.stream(EntityFindUtil.getEntities(player.level()).getAll().spliterator(), false)
-                            .filter(e -> e instanceof LaserTowerEntity towerEntity && towerEntity.getOwner() == player && towerEntity.distanceTo(player) <= 16)
+                            .filter(e -> (e instanceof LaserTowerEntity towerEntity && towerEntity.getOwner() == player && towerEntity.distanceTo(player) <= 16) ||
+                                    (e instanceof Hpj11Entity hpj11Entity && hpj11Entity.getOwner() == player && hpj11Entity.distanceTo(player) <= 16) )
                             .toList();
-                    entities.forEach(e -> e.getEntityData().set(LaserTowerEntity.TARGET_UUID, message.targetUUID.toString()));
+                    entities.forEach(e -> setTarget(e, message.targetUUID.toString()));
                 });
             }
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    public static void setTarget(Entity e, String uuid) {
+        if (e instanceof LaserTowerEntity laserTower) {
+            laserTower.getEntityData().set(LaserTowerEntity.TARGET_UUID, uuid);
+        } else if (e instanceof Hpj11Entity hpj11Entity) {
+            hpj11Entity.getEntityData().set(Hpj11Entity.TARGET_UUID, uuid);
+        }
     }
 }
