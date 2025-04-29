@@ -21,6 +21,7 @@ import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -409,7 +410,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
             Vec3 viewVec = getBarrelVector(1);
             Vec3 toVec = pos.add(viewVec.x * 512, viewVec.y * 512, viewVec.z * 512);
             AABB aabb = getBoundingBox().expandTowards(viewVec.scale(512)).inflate(1.0D, 1.0D, 1.0D);
-            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(this, pos, toVec, aabb, p -> !p.isSpectator() && p.isAlive(), distance);
+            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(this, pos, toVec, aabb, p -> !p.isSpectator() && p.isAlive() && SeekTool.smokeFilter(p), distance);
             if (entityhitresult != null) {
                 Vec3 targetPos = entityhitresult.getLocation();
                 double distanceToTarget = pos.distanceToSqr(targetPos);
@@ -482,6 +483,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
                         && e != this
                         && e.getVehicle() != this
                         && baseFilter(e)
+                        && SeekTool.smokeFilter(e)
                         && e.getVehicle() == null
                         && (!e.isAlliedTo(this) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))).toList();
     }
@@ -489,7 +491,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
     public HitResult pickNew(Vec3 pos, double pHitDistance) {
         Vec3 vec31 = this.getBarrelVector(1);
         Vec3 vec32 = pos.add(vec31.x * pHitDistance, vec31.y * pHitDistance, vec31.z * pHitDistance);
-        return this.level().clip(new ClipContext(pos, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
+        return this.level().clip(new ClipContext(pos, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
     }
 
     @Override
