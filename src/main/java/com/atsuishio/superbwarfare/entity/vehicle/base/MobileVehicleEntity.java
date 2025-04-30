@@ -70,6 +70,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public boolean upInputDown;
     public boolean downInputDown;
     public boolean decoyInputDown;
+    public boolean fireInputDown;
     public double lastTickSpeed;
     public double lastTickVerticalSpeed;
     public int collisionCoolDown;
@@ -122,6 +123,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
                 = (keys & 0b0100000) > 0;
         decoyInputDown
                 = (keys & 0b1000000) > 0;
+        fireInputDown
+                = (keys & 0b1000001) > 0;
     }
 
     @Override
