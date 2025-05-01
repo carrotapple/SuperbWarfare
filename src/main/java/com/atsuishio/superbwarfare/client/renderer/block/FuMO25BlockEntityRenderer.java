@@ -20,7 +20,7 @@ public class FuMO25BlockEntityRenderer extends GeoBlockRenderer<FuMO25BlockEntit
 
     @Override
     public boolean shouldRenderOffScreen(FuMO25BlockEntity pBlockEntity) {
-        return true;
+        return false;
     }
 
     @Override
