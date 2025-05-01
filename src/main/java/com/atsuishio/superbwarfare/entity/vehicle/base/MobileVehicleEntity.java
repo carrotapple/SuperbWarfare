@@ -437,7 +437,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public void baseCollideBlock() {
         if (level() instanceof ServerLevel) {
-            AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(0.6));
+            AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(1.2));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(Blocks.LILY_PAD) ||
@@ -451,7 +451,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public void collideBlock() {
         if (!VehicleConfig.COLLISION_DESTROY_BLOCKS.get()) return;
-        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(0.6));
+        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(1.2));
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
             if (blockstate.is(ModTags.Blocks.SOFT_COLLISION)) {
@@ -462,7 +462,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public void collideHardBlock() {
         if (!VehicleConfig.COLLISION_DESTROY_HARD_BLOCKS.get()) return;
-        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(0.6));
+        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.5 , 1).move(this.getDeltaMovement().scale(1.2));
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
             if (blockstate.is(ModTags.Blocks.HARD_COLLISION)) {
@@ -474,7 +474,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public void collideBlockBeastly() {
         if (!VehicleConfig.COLLISION_DESTROY_BLOCKS_BEASTLY.get()) return;
-        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.52 , 1).move(this.getDeltaMovement().scale(0.6));
+        AABB aabb = getBoundingBox().inflate(0.25, 1, 0.25).expandTowards(0, 0.52 , 1).move(this.getDeltaMovement().scale(1.2));
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
             float hardness = blockstate.getBlock().defaultDestroyTime();
