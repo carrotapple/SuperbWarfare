@@ -85,7 +85,7 @@ public class HandGrenade extends Item implements DispenserLaunchable {
 
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
                     ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), handGrenade, pLivingEntity), ExplosionConfig.M67_GRENADE_EXPLOSION_DAMAGE.get(),
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), ExplosionConfig.M67_GRENADE_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), ExplosionConfig.M67_GRENADE_EXPLOSION_RADIUS.get(), ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP, true).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);

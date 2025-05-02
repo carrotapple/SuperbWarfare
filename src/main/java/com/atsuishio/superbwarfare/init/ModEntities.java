@@ -51,7 +51,7 @@ public class ModEntities {
 
     // Fast Projectiles
     public static final RegistryObject<EntityType<SmallCannonShellEntity>> SMALL_CANNON_SHELL = register("small_cannon_shell",
-            EntityType.Builder.<SmallCannonShellEntity>of(SmallCannonShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(false).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(SmallCannonShellEntity::new).noSave().sized(0.25f, 0.25f));
+            EntityType.Builder.<SmallCannonShellEntity>of(SmallCannonShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(false).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(SmallCannonShellEntity::new).noSave().sized(0.75f, 0.75f));
     public static final RegistryObject<EntityType<RpgRocketEntity>> RPG_ROCKET = register("rpg_rocket",
             EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(false).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(RpgRocketEntity::new).noSave().sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("mortar_shell",
