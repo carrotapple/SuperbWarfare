@@ -116,8 +116,10 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        Entity entity = result.getEntity();
+        if (result.getEntity() instanceof SmallCannonShellEntity) return;
         if (this.level() instanceof ServerLevel) {
-            Entity entity = result.getEntity();
+
             if (this.getOwner() instanceof LivingEntity living) {
                 if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                     living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
