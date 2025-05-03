@@ -622,5 +622,7 @@
 
   "block.superbwarfare.vehicle_deployer": "载具部署器",
   "des.superbwarfare.vehicle_deployer.success": "成功设置载具信息！",
-  "des.superbwarfare.vehicle_deployer.fail": "请使用集装箱点击！"
+  "des.superbwarfare.vehicle_deployer.fail": "请使用集装箱点击！",
+
+  "des.superbwarfare.small_shell_item": "20mm ~ 40mm"
 }

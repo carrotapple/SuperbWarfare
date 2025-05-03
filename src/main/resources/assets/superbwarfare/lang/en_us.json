@@ -621,5 +621,7 @@
 
   "block.superbwarfare.vehicle_deployer": "Vehicle Deployer",
   "des.superbwarfare.vehicle_deployer.success": "Vehicle info set successfully!",
-  "des.superbwarfare.vehicle_deployer.fail": "Please click with a container!"
+  "des.superbwarfare.vehicle_deployer.fail": "Please click with a container!",
+
+  "des.superbwarfare.small_shell_item": "20mm ~ 40mm"
 }

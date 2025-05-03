@@ -9,15 +9,17 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class SmallShellItem extends Item {
     public SmallShellItem() {
         super(new Properties());
     }
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("20mm ~ 40mm").withStyle(ChatFormatting.GRAY));
-    }
 
+    @Override
+    @ParametersAreNonnullByDefault
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("des.superbwarfare.small_shell_item").withStyle(ChatFormatting.GRAY));
+    }
 }
