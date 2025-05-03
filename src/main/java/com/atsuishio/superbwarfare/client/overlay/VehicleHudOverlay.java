@@ -13,7 +13,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
-import com.atsuishio.superbwarfare.tools.SeekTool;
+import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.atsuishio.superbwarfare.tools.animation.AnimationCurves;
 import com.atsuishio.superbwarfare.tools.animation.AnimationTimer;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -200,7 +200,7 @@ public class VehicleHudOverlay implements IGuiOverlay {
 
                 double entityRange = 0;
 
-                Entity lookingEntity = SeekTool.seekLivingEntity(player, player.level(), 512, 1);
+                Entity lookingEntity = TraceTool.camerafFindLookingEntity(player, cameraPos, 512, partialTick);
                 if (lookingEntity != null) {
                     lookAtEntity = true;
                     entityRange = player.distanceTo(lookingEntity);

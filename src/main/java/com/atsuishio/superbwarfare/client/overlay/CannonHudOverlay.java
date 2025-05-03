@@ -100,7 +100,7 @@ public class CannonHudOverlay implements IGuiOverlay {
                         shootPos = cannon.driverZoomPos(partialTick);
                     }
 
-                    Entity lookingEntity = TraceTool.vehiclefFindLookingEntity(cannon, shootPos, 512);
+                    Entity lookingEntity = TraceTool.camerafFindLookingEntity(player, cameraPos, 512, partialTick);
                     boolean lookAtEntity = false;
 
                     BlockHitResult result = player.level().clip(new ClipContext(shootPos, shootPos.add(player.getViewVector(1).scale(512)),
