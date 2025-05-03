@@ -74,7 +74,8 @@ public class Mod {
         bus.addListener(this::onClientSetup);
         bus.addListener(ModItems::registerDispenserBehavior);
 
-        if (ModList.get().isLoaded("tacz")) {
+        if (ModList.get().isLoaded("tacz") && ModList.get().getModFileById("tacz") != null
+                && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4")) {
             MinecraftForge.EVENT_BUS.addListener(TACZGunEventHandler::entityHurtByTACZGun);
         }
 
