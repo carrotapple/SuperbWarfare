@@ -24,6 +24,7 @@ public interface AutoAimable {
             var condition = target.distanceToSqr(attacker) > minRange * minRange
                     && target.distanceToSqr(attacker) <= seekRange * seekRange
                     && canAim(pos, target, minAngle, maxAngle)
+                    && checkNoClip(attacker, target, pos)
                     && !(target instanceof Player player && (player.isSpectator() || player.isCreative()))
                     && ((target instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0) || isThreateningEntity(attacker, target, size, pos) || basicEnemyFilter(target))
                     && smokeFilter(target);

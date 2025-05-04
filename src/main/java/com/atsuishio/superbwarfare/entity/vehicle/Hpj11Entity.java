@@ -486,7 +486,9 @@ public class Hpj11Entity extends ContainerMobileVehicleEntity implements GeoEnti
 
         if (!player.level().isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.level().playSound(null, this.getOnPos(), ModSounds.HPJ_11_FIRE_3P.get(), SoundSource.PLAYERS, 16, random.nextFloat() * 0.05f + 1);
+                serverPlayer.level().playSound(null, this.getOnPos(), ModSounds.HPJ_11_FIRE_3P.get(), SoundSource.PLAYERS, 6, random.nextFloat() * 0.05f + 1);
+                serverPlayer.level().playSound(null, this.getOnPos(), ModSounds.HPJ_11_FAR.get(), SoundSource.PLAYERS, 12, random.nextFloat() * 0.05f + 1);
+                serverPlayer.level().playSound(null, this.getOnPos(), ModSounds.HPJ_11_VERYFAR.get(), SoundSource.PLAYERS, 24, random.nextFloat() * 0.05f + 1);
             }
         }
 

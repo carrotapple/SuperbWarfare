@@ -3051,5 +3051,21 @@
         "stream": false
       }
     ]
+  },
+  "hpj_11_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:hpj11/hpj_11_far",
+        "stream": false
+      }
+    ]
+  },
+  "hpj_11_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:hpj11/hpj_11_veryfar",
+        "stream": false
+      }
+    ]
   }
 }
