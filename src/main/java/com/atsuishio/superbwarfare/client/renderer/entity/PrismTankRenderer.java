@@ -84,7 +84,7 @@ public class PrismTankRenderer extends GeoEntityRenderer<PrismTankEntity> {
             bone.setRotY(Mth.lerp(partialTick, animatable.turretYRotO, animatable.getTurretYRot()) * Mth.DEG_TO_RAD);
         }
 
-        if (name.equals("head") || name.equals("head2")) {
+        if (name.equals("head")) {
             Player player = Minecraft.getInstance().player;
             bone.setHidden(ClientEventHandler.zoomVehicle && animatable.getFirstPassenger() == player);
         }
