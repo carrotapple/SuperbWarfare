@@ -12,6 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @Cancelable
 @ApiStatus.Internal
+@ApiStatus.AvailableSince("0.7.7")
 public class PreKillEvent extends Event {
 
     private final Player player;

@@ -7,6 +7,7 @@ import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@ApiStatus.AvailableSince("0.7.7")
 public class ReloadEvent extends Event {
 
     public final Player player;
