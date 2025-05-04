@@ -1,15 +1,17 @@
-package com.atsuishio.superbwarfare.event.modevent;
+package com.atsuishio.superbwarfare.api.event;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * 玩家击杀生物后，用于判断是否发送击杀播报/显示击杀指示
  */
 @Cancelable
+@ApiStatus.Internal
 public class PreKillEvent extends Event {
 
     private final Player player;

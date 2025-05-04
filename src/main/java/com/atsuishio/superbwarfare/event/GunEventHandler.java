@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.Mod;
-import com.atsuishio.superbwarfare.event.modevent.ReloadEvent;
+import com.atsuishio.superbwarfare.api.event.ReloadEvent;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -106,7 +106,7 @@ public class GunEventHandler {
 
         // 启动换弹
         if (reload.reloadStarter.start()) {
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, data));
 
             if (gunItem.isOpenBolt(stack)) {
                 if (data.ammo.get() == 0) {
@@ -164,7 +164,7 @@ public class GunEventHandler {
             }
         }
         data.reload.setState(ReloadState.NOT_RELOADING);
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, data));
     }
 
     public static void playGunEmptyReload(Player player, GunData data) {
@@ -175,7 +175,7 @@ public class GunEventHandler {
         } else {
             data.reload(player);
         }
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, data));
     }
 
     public static void playGunEmptyReloadSounds(Player player) {
@@ -237,7 +237,7 @@ public class GunEventHandler {
 
         // 一阶段
         if (reload.singleReloadStarter.start()) {
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, data));
 
             if ((data.defaultPrepareLoadTime() != 0 && data.ammo.get() == 0) || stack.is(ModItems.SECONDARY_CATACLYSM.get())) {
                 // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
@@ -359,7 +359,7 @@ public class GunEventHandler {
             reload.setState(ReloadState.NOT_RELOADING);
             reload.singleReloadStarter.finish();
 
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, data));
         }
     }
 
