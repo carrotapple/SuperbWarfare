@@ -81,4 +81,9 @@ public class SmokeDecoyEntity extends Entity implements DecoyEntity {
     public Vec3 getPosition() {
         return position();
     }
+
+    @Override
+    public String getDecoyUUID() {
+        return this.getStringUUID();
+    }
 }

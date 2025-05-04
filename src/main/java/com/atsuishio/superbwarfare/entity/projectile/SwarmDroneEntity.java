@@ -211,7 +211,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
 
         for (var e : decoy) {
             if (e instanceof DecoyEntity decoyEntity && !distracted) {
-                this.entityData.set(TARGET_UUID, decoyEntity.getStringUUID());
+                this.entityData.set(TARGET_UUID, decoyEntity.getDecoyUUID());
                 distracted = true;
             }
         }
