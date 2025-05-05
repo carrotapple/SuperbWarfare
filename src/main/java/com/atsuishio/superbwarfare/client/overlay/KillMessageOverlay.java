@@ -70,7 +70,32 @@ public class KillMessageOverlay implements IGuiOverlay {
             return;
         }
 
-        float totalTop = 5;
+        var pos = KillMessageConfig.KILL_MESSAGE_POSITION.get();
+        int posX = screenWidth;
+        float posY = KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get();
+        int count = KillMessageConfig.KILL_MESSAGE_COUNT.get();
+        boolean left = false;
+
+        switch (pos) {
+            case LEFT_TOP -> {
+                posX = KillMessageConfig.KILL_MESSAGE_MARGIN_X.get();
+                posY = KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get();
+                left = true;
+            }
+            case RIGHT_TOP -> {
+                posX = screenWidth - KillMessageConfig.KILL_MESSAGE_MARGIN_X.get();
+                posY = KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get();
+            }
+            case LEFT_BOTTOM -> {
+                posX = KillMessageConfig.KILL_MESSAGE_MARGIN_X.get();
+                posY = screenHeight - KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get() - count * 10;
+                left = true;
+            }
+            case RIGHT_BOTTOM -> {
+                posX = screenWidth - KillMessageConfig.KILL_MESSAGE_MARGIN_X.get();
+                posY = screenHeight - KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get() - count * 10;
+            }
+        }
 
         var arr = KillMessageHandler.QUEUE.toArray(new PlayerKillRecord[0]);
         var record = arr[0];
@@ -92,11 +117,11 @@ public class KillMessageOverlay implements IGuiOverlay {
         }
 
         for (PlayerKillRecord r : KillMessageHandler.QUEUE) {
-            totalTop = renderKillMessages(r, guiGraphics, partialTick, screenWidth, totalTop);
+            posY = renderKillMessages(r, guiGraphics, partialTick, posX, posY, left);
         }
     }
 
-    private static float renderKillMessages(PlayerKillRecord record, GuiGraphics guiGraphics, float partialTick, int width, float baseTop) {
+    private static float renderKillMessages(PlayerKillRecord record, GuiGraphics guiGraphics, float partialTick, int width, float baseTop, boolean left) {
         float top = baseTop;
 
         Font font = Minecraft.getInstance().font;
@@ -128,21 +153,21 @@ public class KillMessageOverlay implements IGuiOverlay {
 
         // 入场效果
         if (record.tick < 3) {
-            guiGraphics.pose().translate((3 - record.tick - partialTick) * 33, 0, 0);
+            guiGraphics.pose().translate((3 - record.tick - partialTick) * 33 * (left ? -1 : 1), 0, 0);
         }
 
         // 4s后开始消失
         if (record.tick >= 80) {
             int animationTickCount = record.fastRemove ? 2 : 20;
             float rate = (float) Math.pow((record.tick + partialTick - 80) / animationTickCount, 5);
-            guiGraphics.pose().translate(rate * 100, 0, 0);
+            guiGraphics.pose().translate(rate * 100 * (left ? -1 : 1), 0, 0);
             guiGraphics.setColor(1, 1, 1, 1 - rate);
             baseTop += 10 * (1 - rate);
         } else {
             baseTop += 10;
         }
 
-        // 击杀提示是右对齐的，这里从右向左渲染
+        // 击杀提示默认是右对齐的，这里从右向左渲染
 
         // 渲染被击杀者名称
         guiGraphics.drawString(
