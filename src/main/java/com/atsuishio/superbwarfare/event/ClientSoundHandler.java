@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.ModClient;
+import com.atsuishio.superbwarfare.client.VehicleSoundInstance;
 import com.atsuishio.superbwarfare.entity.projectile.SwarmDroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
@@ -17,14 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.joml.Math;
 
 import java.util.List;
 
-import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.PROPELLER_ROT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.DELTA_ROT;
 import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.POWER;
 
@@ -32,8 +31,14 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntit
 public class ClientSoundHandler {
 
     @SubscribeEvent
-    public static void initClient(FMLClientSetupEvent setup) {
-        ModClient.init();
+    public static void handleJoinLevelEvent(EntityJoinLevelEvent event) {
+        if (event.getLevel().isClientSide) {
+            com.atsuishio.superbwarfare.Mod.queueClientWork(5, () -> {
+                if (event.getEntity() instanceof MobileVehicleEntity mobileVehicle) {
+                    Minecraft.getInstance().getSoundManager().play(new VehicleSoundInstance.EngineSound(mobileVehicle, mobileVehicle.getEngineSound()));
+                }
+            });
+        }
     }
 
     @SubscribeEvent
@@ -57,14 +62,14 @@ public class ClientSoundHandler {
                 var engineSoundPos = new Vec3(listener.x + toVec.x, listener.y + toVec.y, listener.z + toVec.z);
                 SoundEvent engineSound = mobileVehicle.getEngineSound();
                 float distanceReduce;
-                if (e instanceof Ah6Entity ah6Entity) {
-                    distanceReduce = (float) Math.max((1 - distance / 128), 0);
-                    if (player.getVehicle() == ah6Entity) {
-                        player.playSound(ModSounds.HELICOPTER_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
-                    } else {
-                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
-                    }
-                }
+//                if (e instanceof Ah6Entity ah6Entity) {
+//                    distanceReduce = (float) Math.max((1 - distance / 128), 0);
+//                    if (player.getVehicle() == ah6Entity) {
+//                        player.playSound(ModSounds.HELICOPTER_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
+//                    } else {
+//                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
+//                    }
+//                }
                 if (e instanceof Lav150Entity lav150) {
                     distanceReduce = (float) Math.max((1 - distance / 64), 0);
                     if (player.getVehicle() == lav150) {
@@ -106,14 +111,14 @@ public class ClientSoundHandler {
                         player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), e.onGround() ? 0 : distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.002f + 1.05), false);
                     }
                 }
-                if (e instanceof A10Entity a10Entity) {
-                    distanceReduce = (float) Math.max((1 - distance / 128), 0);
-                    if (player.getVehicle() == a10Entity) {
-                        player.playSound(ModSounds.A_10_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(POWER) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
-                    } else {
-                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(POWER) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
-                    }
-                }
+//                if (e instanceof A10Entity a10Entity) {
+//                    distanceReduce = (float) Math.max((1 - distance / 128), 0);
+//                    if (player.getVehicle() == a10Entity) {
+//                        player.playSound(ModSounds.A_10_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(POWER) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
+//                    } else {
+//                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(POWER) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
+//                    }
+//                }
             }
         }
 
