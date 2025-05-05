@@ -3067,5 +3067,19 @@
         "stream": false
       }
     ]
+  },
+  "a10_engine": {
+    "sounds": [
+      {
+        "name": "superbwarfare:a10/a10_engine"
+      }
+    ]
+  },
+  "a10_engine_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:a10/a10_engine_1p"
+      }
+    ]
   }
 }
