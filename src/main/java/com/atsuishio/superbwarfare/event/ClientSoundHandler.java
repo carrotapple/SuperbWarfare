@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.event;
 
+import com.atsuishio.superbwarfare.ModClient;
 import com.atsuishio.superbwarfare.entity.projectile.SwarmDroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
@@ -18,6 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.joml.Math;
 
 import java.util.List;
@@ -28,6 +30,11 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntit
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientSoundHandler {
+
+    @SubscribeEvent
+    public static void initClient(FMLClientSetupEvent setup) {
+        ModClient.init();
+    }
 
     @SubscribeEvent
     public static void handleClientTick(TickEvent.ClientTickEvent event) {
