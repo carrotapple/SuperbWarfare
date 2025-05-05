@@ -29,9 +29,9 @@ public enum VehicleDeployerProvider implements IBlockComponentProvider, IServerD
         iTooltip.add(Component.translatable(translationKey == null ? "des.superbwarfare.container.empty" : translationKey).withStyle(ChatFormatting.GRAY));
 
         // 所需尺寸显示
-        int w = (int) (entityType.get().getDimensions().width() + 1);
+        int w = (int) (entityType.get().getDimensions().width + 1);
         if (w % 2 == 0) w++;
-        int h = (int) (entityType.get().getDimensions().height() + 1);
+        int h = (int) (entityType.get().getDimensions().height + 1);
         if (h != 0) {
             iTooltip.add(Component.literal(w + " x " + w + " x " + h).withStyle(ChatFormatting.YELLOW));
         }
