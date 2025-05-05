@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements ControllableVehicle {
-
     public static final EntityDataAccessor<Integer> CANNON_RECOIL_TIME = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
@@ -61,6 +60,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GEAR_ROT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public int decoyReloadCoolDown;
     public boolean leftInputDown;
@@ -113,6 +113,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public float flap2RRotO;
     public float flap3Rot;
     public float flap3RotO;
+    public float gearRot;
+    public float gearRotO;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -185,6 +187,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         flap2LRotO = this.getFlap2LRot();
         flap2RRotO = this.getFlap2RRot();
         flap3RotO = this.getFlap3Rot();
+        gearRotO = entityData.get(GEAR_ROT);
 
         super.baseTick();
 
@@ -532,7 +535,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
             if ((verticalCollision)) {
                 if (this instanceof HelicopterEntity) {
-                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (20 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (60 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
                     this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
                 } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.4) {
                     this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, driver == null ? this : driver), (float) (96 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.4) * (lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
@@ -551,7 +554,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
                 }
                 collisionCoolDown = 4;
                 crash = true;
-                this.entityData.set(POWER, 0.4f * entityData.get(POWER));
+                this.entityData.set(POWER, 0.8f * entityData.get(POWER));
             }
         }
     }
@@ -815,6 +818,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(DECOY_COUNT, 0);
+        this.entityData.define(GEAR_ROT, 0);
     }
 
     @Override
@@ -822,6 +826,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         super.readAdditionalSaveData(compound);
         this.entityData.set(POWER, compound.getFloat("Power"));
         this.entityData.set(DECOY_COUNT, compound.getInt("DecoyCount"));
+        this.entityData.set(GEAR_ROT, compound.getInt("GearRot"));
     }
 
     @Override
@@ -829,6 +834,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         super.addAdditionalSaveData(compound);
         compound.putFloat("Power", this.entityData.get(POWER));
         compound.putInt("DecoyCount", this.entityData.get(DECOY_COUNT));
+        compound.putInt("GearRot", this.entityData.get(GEAR_ROT));
     }
 
     public boolean canCrushEntities() {
