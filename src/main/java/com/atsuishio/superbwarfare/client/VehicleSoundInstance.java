@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance {
+
     private final Minecraft client;
     private final MobileVehicleEntity mobileVehicle;
     private double lastDistance;
@@ -32,6 +33,7 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
     protected abstract float getPitch(MobileVehicleEntity mobileVehicle);
 
     protected abstract float getVolume(MobileVehicleEntity mobileVehicle);
+
     @Override
     public void tick() {
         var player = this.client.player;
