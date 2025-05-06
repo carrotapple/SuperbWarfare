@@ -1,12 +1,16 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance {
     private final Minecraft client;
@@ -63,6 +67,14 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
             this.lastDistance = distance;
         } else {
             this.lastDistance = 0;
+        }
+
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+            DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+            if (this.mobileVehicle == drone) {
+                pitch = 1;
+            }
         }
     }
 
