@@ -600,14 +600,6 @@ public abstract class GunItem extends Item {
     public void onFireKeyRelease(final GunData data, Player player, double power, boolean zoom) {
     }
 
-    public static double perkSpeed(GunData data) {
-        var perk = data.perk.get(Perk.Type.AMMO);
-        if (perk instanceof AmmoPerk ammoPerk) {
-            return ammoPerk.speedRate;
-        }
-        return 1;
-    }
-
     public static double perkDamage(Perk perk) {
         if (perk instanceof AmmoPerk ammoPerk) {
             return ammoPerk.damageRate;
@@ -625,10 +617,8 @@ public abstract class GunItem extends Item {
 
         float headshot = (float) data.headshot();
         float damage = (float) data.damage();
-        float velocity = (float) (data.velocity() * perkSpeed(data));
+        float velocity = (float) data.velocity();
         float bypassArmorRate = (float) data.bypassArmor();
-        var perkInstance = data.perk.getInstance(Perk.Type.AMMO);
-        var perk = perkInstance != null ? perkInstance.perk() : null;
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
@@ -642,28 +632,14 @@ public abstract class GunItem extends Item {
             var instance = data.perk.getInstance(type);
             if (instance != null) {
                 instance.perk().modifyProjectile(data, instance, projectile);
+                if (instance.perk() instanceof AmmoPerk ammoPerk) {
+                    velocity = (float) ammoPerk.getModifiedVelocity(data, instance);
+                }
             }
         }
 
-        if (perk == ModPerks.JHP_BULLET.get()) {
-            int level = data.perk.getLevel(perk);
-            projectile.jhpBullet(level);
-        } else if (perk == ModPerks.HE_BULLET.get()) {
-            int level = data.perk.getLevel(perk);
-            projectile.heBullet(level);
-        } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
-            int level = data.perk.getLevel(perk);
-            projectile.fireBullet(level, stack.is(ModTags.Items.SHOTGUN));
-        }
-
-        var dmgPerk = data.perk.get(Perk.Type.DAMAGE);
-        if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-            int level = data.perk.getLevel(dmgPerk);
-            projectile.monsterMultiple(0.1f + 0.1f * level);
-        }
-
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, stack.is(ModTags.Items.SHOTGUN) && perk == ModPerks.INCENDIARY_BULLET.get() ? 4.5f : velocity, (float) spread);
+        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, velocity, (float) spread);
         player.level().addFreshEntity(projectile);
 
         return true;
