@@ -34,9 +34,9 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity.HEAT
 
 @OnlyIn(Dist.CLIENT)
 public class AircraftOverlay implements IGuiOverlay {
-
     public static final String ID = Mod.MODID + "_aircraft_hud";
     private static float lerpVy = 1;
+    private static float lerpG = 1;
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -114,9 +114,17 @@ public class AircraftOverlay implements IGuiOverlay {
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/speed_frame.png"), x + 108 - 36, y - 64, 0, 0, 36, 12, 36, 12);
                     //垂直速度
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(lerpVy * 20)),(int) x - 96, (int) y + 60, 0x66FF00, false);
+                    //加速度
+                    lerpG = (float) Mth.lerp(0.1f * partialTick, lerpG, mobileVehicle.acceleration / 9.8);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("M"),(int) x - 105, (int) y + 70, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("0.2"),(int) x - 96, (int) y + 70, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("G"),(int) x - 105, (int) y + 78, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpG)),(int) x - 96, (int) y + 78, 0x66FF00, false);
 
                     // 热诱弹
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("IR FLARES " + aircraftEntity.getDecoy()), (int) x + 72, (int) y, 0x66FF00, false);
+
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TGT"), (int) x + 76, (int) y + 78, 0x66FF00, false);
 
 
                 if (mobileVehicle instanceof A10Entity a10Entity) {

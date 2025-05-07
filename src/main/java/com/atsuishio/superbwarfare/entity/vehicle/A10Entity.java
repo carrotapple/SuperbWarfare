@@ -62,11 +62,11 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity, WeaponVehicleEntity, AircraftEntity {
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(A10Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(A10Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float yRotSync;
     private boolean fly;
     private int flyTime;
-
     public int fireIndex;
 
     public A10Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -106,6 +106,7 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(LOADED_ROCKET, 0);
+        this.entityData.define(FIRE_TIME, 0);
     }
 
     @Override
@@ -212,6 +213,10 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
         } else {
             this.setZRot(this.roll * 0.99f);
         }
+
+        if (entityData.get(FIRE_TIME) > 0) {
+            entityData.set(FIRE_TIME, entityData.get(FIRE_TIME) - 1);
+        }
         this.refreshDimensions();
     }
 
@@ -304,11 +309,11 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
             this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(POWER));
 
-            if (!onGround() && getDeltaMovement().dot(getViewVector(1)) * 72 > 150) {
+            if (!onGround() && getDeltaMovement().dot(getViewVector(1)) * 72 > 120) {
                 flyTime = Math.min(flyTime + 1, 20);
             }
 
-            if (getDeltaMovement().dot(getViewVector(1)) * 72 < 150 && fly) {
+            if (getDeltaMovement().dot(getViewVector(1)) * 72 < 120 && fly) {
                 flyTime = Math.max(flyTime - 1, 0);
             }
 
@@ -547,6 +552,9 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
             Vector4f worldPosition = transformPosition(transform, 0.1321625f, -0.56446875f, 7.85210625f);
 
             if (this.entityData.get(AMMO) > 0 || hasCreativeAmmo) {
+
+                entityData.set(FIRE_TIME, Math.min(entityData.get(FIRE_TIME) + 6, 6));
+
                 var entityToSpawn = ((SmallCannonShellWeapon) getWeapon(0)).create(player);
 
                 entityToSpawn.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
@@ -555,15 +563,15 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
                 sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x, worldPosition.y, worldPosition.z, 1, 0, 0, 0, 0, false);
 
-                BlockPos pos = BlockPos.containing(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z));
+//                BlockPos pos = BlockPos.containing(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z));
 
-                if (!player.level().isClientSide) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_FIRE_3P.get(), SoundSource.PLAYERS, 6, random.nextFloat() * 0.05f + 1);
-                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_FAR.get(), SoundSource.PLAYERS, 12, random.nextFloat() * 0.05f + 1);
-                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_VERYFAR.get(), SoundSource.PLAYERS, 24, random.nextFloat() * 0.05f + 1);
-                    }
-                }
+//                if (!player.level().isClientSide) {
+//                    if (player instanceof ServerPlayer serverPlayer) {
+//                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_FIRE_3P.get(), SoundSource.PLAYERS, 6, random.nextFloat() * 0.05f + 1);
+//                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_FAR.get(), SoundSource.PLAYERS, 12, random.nextFloat() * 0.05f + 1);
+//                        serverPlayer.level().playSound(null, pos, ModSounds.HPJ_11_VERYFAR.get(), SoundSource.PLAYERS, 24, random.nextFloat() * 0.05f + 1);
+//                    }
+//                }
 
                 if (!hasCreativeAmmo) {
                     this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
@@ -631,6 +639,14 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
             reloadCoolDown = 15;
         }
+    }
+
+    public float shootingVolume() {
+        return entityData.get(FIRE_TIME) * 0.3f;
+    }
+
+    public float shootingPitch() {
+        return 0.7f + entityData.get(FIRE_TIME) * 0.05f;
     }
 
     @Override
