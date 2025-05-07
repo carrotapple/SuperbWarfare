@@ -198,8 +198,6 @@ public abstract class GunItem extends Item {
 
         perk.reduceCooldown(ModPerks.FOURTH_TIMES_CHARM, "FourthTimesCharmTick");
 
-        perk.reduceCooldown(ModPerks.HEAD_SEEKER, "HeadSeeker");
-
         perk.reduceCooldown(ModPerks.DESPERADO, "DesperadoTime");
         perk.reduceCooldown(ModPerks.DESPERADO, "DesperadoTimePost");
 

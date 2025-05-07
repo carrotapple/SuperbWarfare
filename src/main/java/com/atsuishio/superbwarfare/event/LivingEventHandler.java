@@ -500,24 +500,13 @@ public class LivingEventHandler {
         for (Perk.Type type : Perk.Type.values()) {
             var instance = data.perk.getInstance(type);
             if (instance != null) {
+                instance.perk().onHit(damage, data, instance, event.getEntity(), source);
                 damage = instance.perk().getModifiedDamage(damage, data, instance, event.getEntity(), source);
             }
         }
 
-        if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            handleVorpalWeaponDamage(stack, event);
-        }
-
-        if (DamageTypeTool.isGunFireDamage(source) && source.getDirectEntity() instanceof ProjectileEntity projectile && projectile.isZoom()) {
-            handleGutshotStraightDamage(stack, event);
-        }
-
         if (DamageTypeTool.isGunDamage(source)) {
             handleKillingTallyDamage(stack, event);
-        }
-
-        if (DamageTypeTool.isGunFireDamage(source)) {
-            handleHeadSeekerTime(stack);
         }
 
         if (source.getDirectEntity() instanceof ProjectileEntity projectile) {
@@ -533,10 +522,6 @@ public class LivingEventHandler {
             if (!projectile.isZoom()) {
                 handleFieldDoctor(stack, event, attacker);
             }
-        }
-
-        if (DamageTypeTool.isHeadshotDamage(source)) {
-            handleHeadSeekerDamage(stack, event);
         }
 
         event.setAmount(damage);
@@ -578,15 +563,6 @@ public class LivingEventHandler {
         if (DamageTypeTool.isHeadshotDamage(source)) {
             handleDesperado(stack);
         }
-    }
-
-    private static void handleGutshotStraightDamage(ItemStack stack, LivingHurtEvent event) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.GUTSHOT_STRAIGHT);
-        if (level == 0) {
-            return;
-        }
-
-        event.setAmount(event.getAmount() * (1.15f + 0.05f * level));
     }
 
     private static void handleKillingTallyDamage(ItemStack stack, LivingHurtEvent event) {
@@ -664,26 +640,6 @@ public class LivingEventHandler {
         if (event.getEntity().isAlliedTo(player)) {
             event.getEntity().heal(event.getAmount() * Math.min(1.0f, 0.25f + 0.05f * level));
             event.setCanceled(true);
-        }
-    }
-
-    private static void handleHeadSeekerTime(ItemStack stack) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.HEAD_SEEKER);
-        if (level == 0) {
-            return;
-        }
-
-        GunsTool.setPerkIntTag(stack, "HeadSeeker", 11 + level * 2);
-    }
-
-    private static void handleHeadSeekerDamage(ItemStack stack, LivingHurtEvent event) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.HEAD_SEEKER);
-        if (level == 0) {
-            return;
-        }
-
-        if (GunsTool.getPerkIntTag(stack, "HeadSeeker") > 0) {
-            event.setAmount(event.getAmount() * (1.095f + 0.0225f * level));
         }
     }
 
@@ -797,15 +753,6 @@ public class LivingEventHandler {
 
     public static void handlePlayerBeamReset(Player player) {
         player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::end);
-    }
-
-    private static void handleVorpalWeaponDamage(ItemStack stack, LivingHurtEvent event) {
-        var entity = event.getEntity();
-        int level = GunData.from(stack).perk.getLevel(ModPerks.VORPAL_WEAPON);
-        if (level <= 0) return;
-        if (entity.getHealth() < 100.0f) return;
-
-        event.setAmount((float) (event.getAmount() + entity.getHealth() * 0.00002f * Math.pow(level, 2)));
     }
 
     @SubscribeEvent
