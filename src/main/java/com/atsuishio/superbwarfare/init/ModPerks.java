@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.functional.HealClip;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,7 +20,7 @@ public class ModPerks {
 
     @SubscribeEvent
     public static void registry(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<Perk>().setName(new ResourceLocation(Mod.MODID, "perk")));
+        event.create(new RegistryBuilder<Perk>().setName(Mod.loc("perk")));
     }
 
     /**
@@ -52,7 +53,7 @@ public class ModPerks {
      */
     public static final DeferredRegister<Perk> FUNC_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
 
-    public static final RegistryObject<Perk> HEAL_CLIP = FUNC_PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> HEAL_CLIP = FUNC_PERKS.register("heal_clip", HealClip::new);
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = FUNC_PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> SUBSISTENCE = FUNC_PERKS.register("subsistence", () -> new Perk("subsistence", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FIELD_DOCTOR = FUNC_PERKS.register("field_doctor", () -> new Perk("field_doctor", Perk.Type.FUNCTIONAL));

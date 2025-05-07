@@ -4,13 +4,12 @@ import com.atsuishio.superbwarfare.api.event.ReloadEvent;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ReloadEventHandler {
@@ -27,7 +26,14 @@ public class ReloadEventHandler {
             return;
         }
 
-        handleHealClipPre(stack);
+        GunData data = GunData.from(stack);
+        for (Perk.Type type : Perk.Type.values()) {
+            var instance = data.perk.getInstance(type);
+            if (instance != null) {
+                instance.perk().preReload(data, instance, player);
+            }
+        }
+
         handleKillClipPre(stack);
         handleKillingTallyPre(stack);
         handleDesperadoPre(stack);
@@ -45,36 +51,16 @@ public class ReloadEventHandler {
             return;
         }
 
-        handleHealClipPost(player, stack);
+        GunData data = GunData.from(stack);
+        for (Perk.Type type : Perk.Type.values()) {
+            var instance = data.perk.getInstance(type);
+            if (instance != null) {
+                instance.perk().postReload(data, instance, player);
+            }
+        }
+
         handleKillClipPost(stack);
         handleDesperadoPost(stack);
-    }
-
-    private static void handleHealClipPre(ItemStack stack) {
-        int time = GunsTool.getPerkIntTag(stack, "HealClipTime");
-        if (time > 0) {
-            GunsTool.setPerkIntTag(stack, "HealClipTime", 0);
-            GunsTool.setPerkBooleanTag(stack, "HealClip", true);
-        } else {
-            GunsTool.setPerkBooleanTag(stack, "HealClip", false);
-        }
-    }
-
-    private static void handleHealClipPost(Player player, ItemStack stack) {
-        if (!GunsTool.getPerkBooleanTag(stack, "HealClip")) {
-            return;
-        }
-
-        int healClipLevel = GunData.from(stack).perk.getLevel(ModPerks.HEAL_CLIP);
-        if (healClipLevel == 0) {
-            healClipLevel = 1;
-        }
-
-        player.heal(12.0f * (0.8f + 0.2f * healClipLevel));
-        List<Player> players = player.level().getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(5))
-                .stream().filter(p -> p.isAlliedTo(player)).toList();
-        int finalHealClipLevel = healClipLevel;
-        players.forEach(p -> p.heal(6.0f * (0.8f + 0.2f * finalHealClipLevel)));
     }
 
     private static void handleKillClipPre(ItemStack stack) {

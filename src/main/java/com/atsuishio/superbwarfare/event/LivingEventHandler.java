@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.api.event.PreKillEvent;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
@@ -13,7 +14,6 @@ import com.atsuishio.superbwarfare.entity.vehicle.LaserTowerEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
-import com.atsuishio.superbwarfare.api.event.PreKillEvent;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
@@ -551,6 +551,14 @@ public class LivingEventHandler {
             return;
         }
 
+        GunData data = GunData.from(stack);
+        for (Perk.Type type : Perk.Type.values()) {
+            var instance = data.perk.getInstance(type);
+            if (instance != null) {
+                instance.perk().onKill(data, instance, attacker, event.getEntity(), source);
+            }
+        }
+
         if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             handleClipPerks(stack);
         }
@@ -566,11 +574,6 @@ public class LivingEventHandler {
     }
 
     private static void handleClipPerks(ItemStack stack) {
-        int healClipLevel = GunData.from(stack).perk.getLevel(ModPerks.HEAL_CLIP);
-        if (healClipLevel != 0) {
-            GunsTool.setPerkIntTag(stack, "HealClipTime", 80 + healClipLevel * 20);
-        }
-
         int killClipLevel = GunData.from(stack).perk.getLevel(ModPerks.KILL_CLIP);
         if (killClipLevel != 0) {
             GunsTool.setPerkIntTag(stack, "KillClipReloadTime", 80);
