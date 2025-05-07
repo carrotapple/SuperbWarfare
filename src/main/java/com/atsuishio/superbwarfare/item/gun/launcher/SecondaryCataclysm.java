@@ -8,13 +8,11 @@ import com.atsuishio.superbwarfare.client.tooltip.component.SecondaryCataclysmIm
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.RarityTool;
 import com.google.common.collect.HashMultimap;
@@ -60,6 +58,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class SecondaryCataclysm extends GunItem implements GeoItem {
+
     private final Supplier<Integer> energyCapacity = () -> 24000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -233,11 +232,6 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
     @Override
     public String getGunDisplayName() {
         return "SECONDARY CATACLYSM";
-    }
-
-    @Override
-    public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get() || perk == ModPerks.REGENERATION.get();
     }
 
     @Override

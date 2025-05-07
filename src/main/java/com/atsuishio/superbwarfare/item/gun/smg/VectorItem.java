@@ -9,8 +9,6 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
-import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -174,11 +172,6 @@ public class VectorItem extends GunItem implements GeoItem {
     @Override
     public String getGunDisplayName() {
         return "VECTOR";
-    }
-
-    @Override
-    public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.SMG_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 
     @Override
