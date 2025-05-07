@@ -95,7 +95,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器伤害的文本组件
      */
     protected Component getDamageComponent() {
-        double damage = getGunData().damage() * TooltipTool.perkDamage(stack);
+        double damage = getGunData().damage();
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ? " + "

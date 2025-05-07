@@ -31,7 +31,7 @@ public class ClientSentinelImageTooltip extends ClientEnergyImageTooltip {
                                     FormatTool.format1D(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : ""))
                             .withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
         } else {
-            double damage = getGunData().damage() * TooltipTool.perkDamage(stack);
+            double damage = getGunData().damage();
             return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ?

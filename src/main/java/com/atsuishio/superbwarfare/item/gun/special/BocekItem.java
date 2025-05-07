@@ -22,8 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +44,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -234,7 +231,6 @@ public class BocekItem extends GunItem implements GeoItem {
         }
     }
 
-
     public void spawnBullet(GunData data, Player player, double power, boolean zoom) {
         ItemStack stack = data.stack;
 
@@ -259,46 +255,17 @@ public class BocekItem extends GunItem implements GeoItem {
                 .shooter(player)
                 .headShot(headshot)
                 .zoom(zoom)
+                .bypassArmorRate(bypassArmorRate)
                 .setGunItemId(stack);
 
-        if (perk instanceof AmmoPerk ammoPerk) {
-            int level = data.perk.getLevel(perk);
-
-            bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
-            projectile.setRGB(ammoPerk.rgb);
-
-            if (!ammoPerk.mobEffects.get().isEmpty()) {
-                int amplifier;
-                if (perk.descriptionId.equals("blade_bullet")) {
-                    amplifier = level / 3;
-                } else if (perk.descriptionId.equals("bread_bullet")) {
-                    amplifier = 1;
-                } else {
-                    amplifier = level - 1;
-                }
-
-                ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
-                for (MobEffect effect : ammoPerk.mobEffects.get()) {
-                    mobEffectInstances.add(new MobEffectInstance(effect, 70 + 30 * level, amplifier));
-                }
-                projectile.effect(mobEffectInstances);
-            }
-
-            if (perk.descriptionId.equals("bread_bullet")) {
-                projectile.knockback(level * 0.3f);
-                projectile.forceKnockback();
+        for (Perk.Type type : Perk.Type.values()) {
+            var instance = data.perk.getInstance(type);
+            if (instance != null) {
+                instance.perk().modifyProjectile(data, instance, projectile);
             }
         }
 
-        bypassArmorRate = Math.max(bypassArmorRate, 0);
-        projectile.bypassArmorRate(bypassArmorRate);
-
-        if (perk == ModPerks.SILVER_BULLET.get()) {
-            int level = data.perk.getLevel(perk);
-            projectile.undeadMultiple(1.0f + 0.5f * level);
-        } else if (perk == ModPerks.BEAST_BULLET.get()) {
-            projectile.beast();
-        } else if (perk == ModPerks.JHP_BULLET.get()) {
+        if (perk == ModPerks.JHP_BULLET.get()) {
             int level = data.perk.getLevel(perk);
             projectile.jhpBullet(level);
         } else if (perk == ModPerks.HE_BULLET.get()) {
