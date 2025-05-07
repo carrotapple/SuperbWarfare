@@ -16,6 +16,7 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
+@SuppressWarnings("unused")
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
 public class ModPerks {
 
@@ -37,7 +38,7 @@ public class ModPerks {
             () -> new AmmoPerk(new AmmoPerk.Builder("poisonous_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).damageRate(1.0f).speedRate(1.0f).rgb(48, 131, 6)
                     .mobEffect(() -> MobEffects.POISON)));
     public static final RegistryObject<Perk> BEAST_BULLET = AMMO_PERKS.register("beast_bullet", BeastBullet::new);
-    public static final RegistryObject<Perk> LONGER_WIRE = AMMO_PERKS.register("longer_wire", () -> new Perk("longer_wire", Perk.Type.AMMO));
+    public static final RegistryObject<Perk> LONGER_WIRE = AMMO_PERKS.register("longer_wire", LongerWire::new);
     public static final RegistryObject<Perk> INCENDIARY_BULLET = AMMO_PERKS.register("incendiary_bullet", IncendiaryBullet::new);
     public static final RegistryObject<Perk> MICRO_MISSILE = AMMO_PERKS.register("micro_missile", MicroMissile::new);
 
@@ -65,7 +66,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> KILLING_TALLY = DAMAGE_PERKS.register("killing_tally", KillingTally::new);
     public static final RegistryObject<Perk> HEAD_SEEKER = DAMAGE_PERKS.register("head_seeker", HeadSeeker::new);
     public static final RegistryObject<Perk> MONSTER_HUNTER = DAMAGE_PERKS.register("monster_hunter", MonsterHunter::new);
-    public static final RegistryObject<Perk> VOLT_OVERLOAD = DAMAGE_PERKS.register("volt_overload", () -> new Perk("volt_overload", Perk.Type.DAMAGE));
+    public static final RegistryObject<Perk> VOLT_OVERLOAD = DAMAGE_PERKS.register("volt_overload", VoltOverload::new);
     public static final RegistryObject<Perk> DESPERADO = DAMAGE_PERKS.register("desperado", Desperado::new);
     public static final RegistryObject<Perk> VORPAL_WEAPON = DAMAGE_PERKS.register("vorpal_weapon", VorpalWeapon::new);
 
