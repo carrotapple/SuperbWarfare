@@ -494,8 +494,17 @@ public class LivingEventHandler {
             return;
         }
 
+        float damage = event.getAmount();
+
+        GunData data = GunData.from(stack);
+        for (Perk.Type type : Perk.Type.values()) {
+            var instance = data.perk.getInstance(type);
+            if (instance != null) {
+                damage = instance.perk().getModifiedDamage(damage, data, instance, event.getEntity(), source);
+            }
+        }
+
         if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            handleKillClipDamage(stack, event);
             handleVorpalWeaponDamage(stack, event);
         }
 
@@ -529,6 +538,8 @@ public class LivingEventHandler {
         if (DamageTypeTool.isHeadshotDamage(source)) {
             handleHeadSeekerDamage(stack, event);
         }
+
+        event.setAmount(damage);
     }
 
     private static void handleGunPerksWhenDeath(LivingDeathEvent event) {
@@ -555,12 +566,8 @@ public class LivingEventHandler {
         for (Perk.Type type : Perk.Type.values()) {
             var instance = data.perk.getInstance(type);
             if (instance != null) {
-                instance.perk().onKill(data, instance, attacker, event.getEntity(), source);
+                instance.perk().onKill(data, instance, event.getEntity(), source);
             }
-        }
-
-        if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            handleClipPerks(stack);
         }
 
         if (DamageTypeTool.isGunDamage(source)) {
@@ -570,24 +577,6 @@ public class LivingEventHandler {
 
         if (DamageTypeTool.isHeadshotDamage(source)) {
             handleDesperado(stack);
-        }
-    }
-
-    private static void handleClipPerks(ItemStack stack) {
-        int killClipLevel = GunData.from(stack).perk.getLevel(ModPerks.KILL_CLIP);
-        if (killClipLevel != 0) {
-            GunsTool.setPerkIntTag(stack, "KillClipReloadTime", 80);
-        }
-    }
-
-    private static void handleKillClipDamage(ItemStack stack, LivingHurtEvent event) {
-        if (GunsTool.getPerkIntTag(stack, "KillClipTime") > 0) {
-            int level = GunData.from(stack).perk.getLevel(ModPerks.KILL_CLIP);
-            if (level == 0) {
-                return;
-            }
-
-            event.setAmount(event.getAmount() * (1.2f + 0.05f * level));
         }
     }
 

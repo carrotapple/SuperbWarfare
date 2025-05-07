@@ -34,7 +34,6 @@ public class ReloadEventHandler {
             }
         }
 
-        handleKillClipPre(stack);
         handleKillingTallyPre(stack);
         handleDesperadoPre(stack);
     }
@@ -59,27 +58,7 @@ public class ReloadEventHandler {
             }
         }
 
-        handleKillClipPost(stack);
         handleDesperadoPost(stack);
-    }
-
-    private static void handleKillClipPre(ItemStack stack) {
-        int time = GunsTool.getPerkIntTag(stack, "KillClipReloadTime");
-        if (time > 0) {
-            GunsTool.setPerkIntTag(stack, "KillClipReloadTime", 0);
-            GunsTool.setPerkBooleanTag(stack, "KillClip", true);
-        } else {
-            GunsTool.setPerkBooleanTag(stack, "KillClip", false);
-        }
-    }
-
-    private static void handleKillClipPost(ItemStack stack) {
-        if (!GunsTool.getPerkBooleanTag(stack, "KillClip")) {
-            return;
-        }
-
-        int level = GunData.from(stack).perk.getLevel(ModPerks.KILL_CLIP);
-        GunsTool.setPerkIntTag(stack, "KillClipTime", 90 + 10 * level);
     }
 
     private static void handleKillingTallyPre(ItemStack stack) {

@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.damage.KillClip;
 import com.atsuishio.superbwarfare.perk.functional.HealClip;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,7 +26,7 @@ public class ModPerks {
     /**
      * Ammo Perks
      */
-    public static final DeferredRegister<Perk> AMMO_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
+    public static final DeferredRegister<Perk> AMMO_PERKS = DeferredRegister.create(Mod.loc("perk"), Mod.MODID);
 
     public static final RegistryObject<Perk> AP_BULLET = AMMO_PERKS.register("ap_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).damageRate(0.9f).speedRate(1.2f).slug(true).rgb(230, 70, 35)));
@@ -51,7 +51,7 @@ public class ModPerks {
     /**
      * Functional Perks
      */
-    public static final DeferredRegister<Perk> FUNC_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
+    public static final DeferredRegister<Perk> FUNC_PERKS = DeferredRegister.create(Mod.loc("perk"), Mod.MODID);
 
     public static final RegistryObject<Perk> HEAL_CLIP = FUNC_PERKS.register("heal_clip", HealClip::new);
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = FUNC_PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
@@ -65,9 +65,9 @@ public class ModPerks {
     /**
      * Damage Perks
      */
-    public static final DeferredRegister<Perk> DAMAGE_PERKS = DeferredRegister.create(new ResourceLocation(Mod.MODID, "perk"), Mod.MODID);
+    public static final DeferredRegister<Perk> DAMAGE_PERKS = DeferredRegister.create(Mod.loc("perk"), Mod.MODID);
 
-    public static final RegistryObject<Perk> KILL_CLIP = DAMAGE_PERKS.register("kill_clip", () -> new Perk("kill_clip", Perk.Type.DAMAGE));
+    public static final RegistryObject<Perk> KILL_CLIP = DAMAGE_PERKS.register("kill_clip", KillClip::new);
     public static final RegistryObject<Perk> GUTSHOT_STRAIGHT = DAMAGE_PERKS.register("gutshot_straight", () -> new Perk("gutshot_straight", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> KILLING_TALLY = DAMAGE_PERKS.register("killing_tally", () -> new Perk("killing_tally", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> HEAD_SEEKER = DAMAGE_PERKS.register("head_seeker", () -> new Perk("head_seeker", Perk.Type.DAMAGE));
