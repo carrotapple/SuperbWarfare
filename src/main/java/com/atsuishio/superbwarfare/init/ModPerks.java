@@ -39,8 +39,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> BEAST_BULLET = AMMO_PERKS.register("beast_bullet", BeastBullet::new);
     public static final RegistryObject<Perk> LONGER_WIRE = AMMO_PERKS.register("longer_wire", () -> new Perk("longer_wire", Perk.Type.AMMO));
     public static final RegistryObject<Perk> INCENDIARY_BULLET = AMMO_PERKS.register("incendiary_bullet", IncendiaryBullet::new);
-    public static final RegistryObject<Perk> MICRO_MISSILE = AMMO_PERKS.register("micro_missile",
-            () -> new AmmoPerk(new AmmoPerk.Builder("micro_missile", Perk.Type.AMMO).speedRate(1.2f)));
+    public static final RegistryObject<Perk> MICRO_MISSILE = AMMO_PERKS.register("micro_missile", MicroMissile::new);
 
     /**
      * Functional Perks

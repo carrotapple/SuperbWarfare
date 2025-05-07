@@ -247,7 +247,6 @@ public class GunData {
         return item.getCustomWeight(stack);
     }
 
-
     public double defaultZoom() {
         return defaultGunData().defaultZoom;
     }
