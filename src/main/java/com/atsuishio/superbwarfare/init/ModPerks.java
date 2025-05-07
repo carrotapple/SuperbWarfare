@@ -52,7 +52,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> SUBSISTENCE = FUNC_PERKS.register("subsistence", Subsistence::new);
     public static final RegistryObject<Perk> FIELD_DOCTOR = FUNC_PERKS.register("field_doctor", FieldDoctor::new);
     public static final RegistryObject<Perk> REGENERATION = FUNC_PERKS.register("regeneration", Regeneration::new);
-    public static final RegistryObject<Perk> TURBO_CHARGER = FUNC_PERKS.register("turbo_charger", () -> new Perk("turbo_charger", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> TURBO_CHARGER = FUNC_PERKS.register("turbo_charger", TurboCharger::new);
     public static final RegistryObject<Perk> POWERFUL_ATTRACTION = FUNC_PERKS.register("powerful_attraction", PowerfulAttraction::new);
     public static final RegistryObject<Perk> INTELLIGENT_CHIP = FUNC_PERKS.register("intelligent_chip", () -> new Perk("intelligent_chip", Perk.Type.FUNCTIONAL));
 
