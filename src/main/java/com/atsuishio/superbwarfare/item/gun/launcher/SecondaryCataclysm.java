@@ -236,7 +236,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get();
+        return PerkHelper.LAUNCHER_PERKS.test(perk) || perk == ModPerks.MICRO_MISSILE.get() || perk == ModPerks.REGENERATION.get();
     }
 
     @Override

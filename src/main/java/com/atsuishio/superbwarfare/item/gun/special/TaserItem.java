@@ -162,12 +162,6 @@ public class TaserItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        var data = GunData.from(stack);
-        int perkLevel = data.perk.getLevel(ModPerks.REGENERATION);
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                energy -> energy.receiveEnergy(perkLevel, false)
-        );
-
         if (entity instanceof Player player) {
             for (var cell : player.getInventory().items) {
                 if (cell.is(ModItems.CELL.get())) {

@@ -585,7 +585,6 @@ public class LivingEventHandler {
         if (source == null) return;
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
-        ItemStack mainHandItem = player.getMainHandItem();
 
         // 创生物收集掉落物
         if (player.getVehicle() instanceof ContainerMobileVehicleEntity containerMobileVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
@@ -604,18 +603,6 @@ public class LivingEventHandler {
             });
 
             drops.removeAll(removed);
-            return;
-        }
-
-        if (mainHandItem.getItem() instanceof GunItem && GunData.from(mainHandItem).perk.getLevel(ModPerks.POWERFUL_ATTRACTION) > 0 && (DamageTypeTool.isGunDamage(source) || DamageTypeTool.isExplosionDamage(source))) {
-            var drops = event.getDrops();
-            drops.forEach(itemEntity -> {
-                ItemStack item = itemEntity.getItem();
-                if (!player.addItem(item)) {
-                    player.drop(item, false);
-                }
-            });
-            event.setCanceled(true);
         }
     }
 
@@ -626,17 +613,6 @@ public class LivingEventHandler {
 
         if (player.getVehicle() instanceof ArmedVehicleEntity) {
             player.giveExperiencePoints(event.getDroppedExperience());
-            event.setCanceled(true);
-            return;
-        }
-
-        ItemStack stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof GunItem)) return;
-
-        int level = GunData.from(stack).perk.getLevel(ModPerks.POWERFUL_ATTRACTION);
-        if (level > 0) {
-            player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
-
             event.setCanceled(true);
         }
     }

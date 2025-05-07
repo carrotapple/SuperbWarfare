@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.SentinelImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
@@ -217,7 +218,7 @@ public class SentinelItem extends GunItem implements GeoItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
+        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.REGENERATION.get();
     }
 
     @Override
