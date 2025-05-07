@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.LaserTowerEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
@@ -504,21 +503,10 @@ public class LivingEventHandler {
             if (instance != null) {
                 instance.perk().onHit(damage, data, instance, event.getEntity(), source);
                 damage = instance.perk().getModifiedDamage(damage, data, instance, event.getEntity(), source);
-            }
-        }
-
-        if (source.getDirectEntity() instanceof ProjectileEntity projectile) {
-            if (GunData.from(stack).perk.getLevel(ModPerks.FOURTH_TIMES_CHARM) > 0) {
-                float bypassArmorRate = projectile.getBypassArmorRate();
-                if (bypassArmorRate >= 1.0f && source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)) {
-                    handleFourthTimesCharm(stack);
-                } else if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
-                    handleFourthTimesCharm(stack);
+                if (instance.perk().shouldCancelHurtEvent(damage, data, instance, event.getEntity(), source)) {
+                    event.setCanceled(true);
+                    return;
                 }
-            }
-
-            if (!projectile.isZoom()) {
-                handleFieldDoctor(stack, event, attacker);
             }
         }
 
@@ -551,67 +539,6 @@ public class LivingEventHandler {
             if (instance != null) {
                 instance.perk().onKill(data, instance, event.getEntity(), source);
             }
-        }
-
-        if (DamageTypeTool.isGunDamage(source)) {
-            handleSubsistence(stack, attacker);
-        }
-    }
-
-    private static void handleFourthTimesCharm(ItemStack stack) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.FOURTH_TIMES_CHARM);
-        if (level == 0) {
-            return;
-        }
-
-        int fourthTimesCharmTick = GunsTool.getPerkIntTag(stack, "FourthTimesCharmTick");
-        if (fourthTimesCharmTick <= 0) {
-            GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 40 + 10 * level);
-            GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 1);
-        } else {
-            int count = GunsTool.getPerkIntTag(stack, "FourthTimesCharmCount");
-            if (count < 4) {
-                GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", Math.min(4, count + 1));
-            }
-        }
-    }
-
-    private static void handleSubsistence(ItemStack stack, Player player) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.SUBSISTENCE);
-        if (level == 0) {
-            return;
-        }
-
-        float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.07f : 0f);
-
-        PlayerVariable.modify(player, cap -> {
-            var data = GunData.from(stack);
-            int mag = data.magazine();
-            int ammo = data.ammo.get();
-            int ammoReload = (int) Math.min(mag, mag * rate);
-            int ammoNeed = Math.min(mag - ammo, ammoReload);
-
-            boolean flag = player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
-
-            int ammoFinal = Math.min(data.countBackupAmmo(player), ammoNeed);
-            if (flag) {
-                ammoFinal = ammoNeed;
-            } else {
-                data.consumeBackupAmmo(player, ammoFinal);
-            }
-            data.ammo.set(Math.min(mag, ammo + ammoFinal));
-        });
-    }
-
-    private static void handleFieldDoctor(ItemStack stack, LivingHurtEvent event, Player player) {
-        int level = GunData.from(stack).perk.getLevel(ModPerks.FIELD_DOCTOR);
-        if (level == 0) {
-            return;
-        }
-
-        if (event.getEntity().isAlliedTo(player)) {
-            event.getEntity().heal(event.getAmount() * Math.min(1.0f, 0.25f + 0.05f * level));
-            event.setCanceled(true);
         }
     }
 
