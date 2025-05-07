@@ -436,7 +436,11 @@ public class GunData {
     public List<Perk> availablePerks() {
         List<Perk> availablePerks = new ArrayList<>();
         var perkNames = defaultGunData().availablePerks;
-        perkNames.sort((s1, s2) -> {
+        if (perkNames == null || perkNames.isEmpty()) return availablePerks;
+
+        List<String> sortedNames = new ArrayList<>(perkNames);
+
+        sortedNames.sort((s1, s2) -> {
             int p1 = getPriority(s1);
             int p2 = getPriority(s2);
 
@@ -451,7 +455,7 @@ public class GunData {
         var perkValues = perks.stream().map(Map.Entry::getValue).toList();
         var perkKeys = perks.stream().map(perk -> perk.getKey().location().toString()).toList();
 
-        for (String name : perkNames) {
+        for (String name : sortedNames) {
             if (name.startsWith("@")) {
                 String type = name.substring(1);
                 switch (type) {
