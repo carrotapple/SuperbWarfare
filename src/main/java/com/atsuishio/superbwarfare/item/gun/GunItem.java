@@ -190,10 +190,6 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    public boolean canApplyPerk(Perk perk) {
-        return true;
-    }
-
     /**
      * 是否使用弹匣换弹
      *
