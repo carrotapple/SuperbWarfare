@@ -2,7 +2,7 @@
   "criteria": {
     "0": {
       "conditions": {},
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "minecraft:tick"
     }
   },
   "display": {
@@ -26,5 +26,10 @@
       "0"
     ]
   ],
+  "rewards": {
+    "loot": [
+      "superbwarfare:grant_manual"
+    ]
+  },
   "sends_telemetry_event": true
 }

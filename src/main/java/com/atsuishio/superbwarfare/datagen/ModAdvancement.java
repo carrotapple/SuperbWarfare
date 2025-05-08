@@ -162,7 +162,7 @@ public class ModAdvancement {
         }
 
         Builder awardedForFree() {
-            return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[]{}));
+            return externalTrigger(PlayerTrigger.TriggerInstance.tick());
         }
 
         Builder whenEffectChanged(MobEffectsPredicate predicate) {
@@ -187,6 +187,11 @@ public class ModAdvancement {
 
         Builder rewardExp(int exp) {
             builder.rewards(AdvancementRewards.Builder.experience(exp).build());
+            return this;
+        }
+
+        Builder rewardLootTable(ResourceLocation location) {
+            builder.rewards(AdvancementRewards.Builder.loot(location).build());
             return this;
         }
     }
