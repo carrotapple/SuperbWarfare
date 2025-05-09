@@ -59,6 +59,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> TURBO_CHARGER = FUNC_PERKS.register("turbo_charger", TurboCharger::new);
     public static final RegistryObject<Perk> POWERFUL_ATTRACTION = FUNC_PERKS.register("powerful_attraction", PowerfulAttraction::new);
     public static final RegistryObject<Perk> INTELLIGENT_CHIP = FUNC_PERKS.register("intelligent_chip", () -> new Perk("intelligent_chip", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> CUPID_ARROW = FUNC_PERKS.register("cupid_arrow", CupidArrow::new);
 
     /**
      * Damage Perks

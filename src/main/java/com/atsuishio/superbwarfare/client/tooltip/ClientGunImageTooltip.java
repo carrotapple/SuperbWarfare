@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.client.tooltip;
 
-import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModPerks;
@@ -97,10 +96,21 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getDamageComponent() {
         double damage = getGunData().damage();
+        double extraDamage = -1;
+        for (var type : Perk.Type.values()) {
+            var instance = getGunData().perk.getInstance(type);
+            if (instance != null) {
+                damage = instance.perk().getDisplayDamage(damage, getGunData(), instance);
+                if (instance.perk().getExtraDisplayDamage(damage, getGunData(), instance) >= 0) {
+                    extraDamage = instance.perk().getExtraDisplayDamage(damage, getGunData(), instance);
+                }
+            }
+        }
+
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ? " + "
-                        + FormatTool.format1D(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+                .append(Component.literal(FormatTool.format1D(damage) + (extraDamage >= 0 ? " + " + FormatTool.format1D(extraDamage) : ""))
+                        .withStyle(ChatFormatting.GREEN));
     }
 
     /**

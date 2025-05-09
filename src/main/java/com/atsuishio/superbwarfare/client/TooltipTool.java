@@ -1,12 +1,8 @@
 package com.atsuishio.superbwarfare.client;
 
-import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.item.gun.data.GunData;
-import com.atsuishio.superbwarfare.perk.Perk;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -20,22 +16,5 @@ public class TooltipTool {
 
     public static void addDevelopingText(List<Component> tooltip) {
         tooltip.add(Component.translatable("des.superbwarfare.developing").withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD));
-    }
-
-    public static boolean heBullet(ItemStack stack) {
-
-        var data = GunData.from(stack);
-        var perk = data.perk.get(Perk.Type.AMMO);
-        return perk == ModPerks.HE_BULLET.get();
-    }
-
-    public static int heBulletLevel(ItemStack stack) {
-
-        var data = GunData.from(stack);
-        var perk = data.perk.get(Perk.Type.AMMO);
-        if (perk == ModPerks.HE_BULLET.get()) {
-            return GunData.from(stack).perk.getLevel(perk);
-        }
-        return 0;
     }
 }
