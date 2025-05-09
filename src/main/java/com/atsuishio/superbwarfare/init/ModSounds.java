@@ -447,5 +447,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> A_10_FIRE = REGISTRY.register("a10_fire", () -> SoundEvent.createVariableRangeEvent(Mod.loc("a10_fire")));
     public static final RegistryObject<SoundEvent> BOMB_RELEASE = REGISTRY.register("bomb_release", () -> SoundEvent.createVariableRangeEvent(Mod.loc("bomb_release")));
     public static final RegistryObject<SoundEvent> BOMB_RELOAD = REGISTRY.register("bomb_reload", () -> SoundEvent.createVariableRangeEvent(Mod.loc("bomb_reload")));
+    public static final RegistryObject<SoundEvent> MISSILE_START = REGISTRY.register("missile_start", () -> SoundEvent.createVariableRangeEvent(Mod.loc("missile_start")));
+    public static final RegistryObject<SoundEvent> JET_LOCK = REGISTRY.register("jet_lock", () -> SoundEvent.createVariableRangeEvent(Mod.loc("jet_lock")));
+    public static final RegistryObject<SoundEvent> JET_LOCKON = REGISTRY.register("jet_lockon", () -> SoundEvent.createVariableRangeEvent(Mod.loc("jet_lockon")));
 }
 

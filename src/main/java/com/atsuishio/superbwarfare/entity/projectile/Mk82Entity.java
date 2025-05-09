@@ -37,8 +37,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity, AerialBombEntity {
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk82Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private float explosion_damage = 500f;
-    private float explosion_radius = 12f;
+    private float explosion_damage = 520f;
+    private float explosion_radius = 14f;
 
     public Mk82Entity(EntityType<? extends Mk82Entity> type, Level world) {
         super(type, world);

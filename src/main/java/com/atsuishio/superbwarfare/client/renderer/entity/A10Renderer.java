@@ -16,6 +16,7 @@ import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import static com.atsuishio.superbwarfare.entity.vehicle.A10Entity.LOADED_BOMB;
+import static com.atsuishio.superbwarfare.entity.vehicle.A10Entity.LOADED_MISSILE;
 import static com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity.GEAR_ROT;
 
 public class A10Renderer extends GeoEntityRenderer<A10Entity> {
@@ -82,6 +83,18 @@ public class A10Renderer extends GeoEntityRenderer<A10Entity> {
         }
         if (name.equals("bomb3")) {
             bone.setHidden(animatable.getEntityData().get(LOADED_BOMB) < 1);
+        }
+        if (name.equals("missile1")) {
+            bone.setHidden(animatable.getEntityData().get(LOADED_MISSILE) < 4);
+        }
+        if (name.equals("missile2")) {
+            bone.setHidden(animatable.getEntityData().get(LOADED_MISSILE) < 3);
+        }
+        if (name.equals("missile4")) {
+            bone.setHidden(animatable.getEntityData().get(LOADED_MISSILE) < 2);
+        }
+        if (name.equals("missile3")) {
+            bone.setHidden(animatable.getEntityData().get(LOADED_MISSILE) < 1);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
