@@ -1,8 +1,7 @@
 package com.atsuishio.superbwarfare.client.tooltip;
 
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
-import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.item.gun.data.GunData;
+import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.FormatTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -16,8 +15,13 @@ public class ClientSecondaryCataclysmImageTooltip extends ClientEnergyImageToolt
     @Override
     protected Component getDamageComponent() {
         double damage = getGunData().damage();
-        int perkLevel = GunData.from(stack).perk.getLevel(ModPerks.MICRO_MISSILE);
-        if (perkLevel > 0) damage *= 1.1f + perkLevel * 0.1f;
+
+        for (var type : Perk.Type.values()) {
+            var instance = getGunData().perk.getInstance(type);
+            if (instance != null) {
+                damage = instance.perk().getDisplayDamage(damage, getGunData(), instance);
+            }
+        }
 
         double explosionDamage = getGunData().explosionDamage();
 
