@@ -47,6 +47,7 @@ import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -648,6 +649,13 @@ public class LivingEventHandler {
     public static void onPreIndicator(PreKillEvent.Indicator event) {
         if (event.getSource().getDirectEntity() instanceof LaserTowerEntity && !(event.getTarget() instanceof Player)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEffectApply(MobEffectEvent.Applicable event) {
+        if (event.getEntity().getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.hidePassenger(event.getEntity())) {
+            event.setResult(Event.Result.DENY);
         }
     }
 }
