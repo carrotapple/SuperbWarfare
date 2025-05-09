@@ -24,6 +24,8 @@ public class ModEntities {
     // Living Entities
     public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
             EntityType.Builder.<TargetEntity>of(TargetEntity::new, MobCategory.CREATURE).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(TargetEntity::new).fireImmune().sized(0.875f, 2f));
+    public static final RegistryObject<EntityType<DPSGeneratorEntity>> DPS_GENERATOR = register("dps_generator",
+            EntityType.Builder.<DPSGeneratorEntity>of(DPSGeneratorEntity::new, MobCategory.CREATURE).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DPSGeneratorEntity::new).fireImmune().sized(0.875f, 2f));
     public static final RegistryObject<EntityType<SenpaiEntity>> SENPAI = register("senpai",
             EntityType.Builder.<SenpaiEntity>of(SenpaiEntity::new, MobCategory.MONSTER).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(SenpaiEntity::new)
                     .sized(0.6f, 2f));
@@ -130,6 +132,7 @@ public class ModEntities {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
+        event.put(DPS_GENERATOR.get(), DPSGeneratorEntity.createAttributes().build());
         event.put(SENPAI.get(), SenpaiEntity.createAttributes().build());
     }
 }
