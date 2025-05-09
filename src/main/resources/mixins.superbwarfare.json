@@ -9,7 +9,9 @@
     "ExplosionMixin",
     "FishingHookMixin",
     "LivingEntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "VillagerMakeLoveMixin",
+    "VillagerMixin"
   ],
   "client": [
     "CameraMixin",
