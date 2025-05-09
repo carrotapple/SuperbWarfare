@@ -10,7 +10,6 @@
     "FishingHookMixin",
     "LivingEntityMixin",
     "PlayerMixin",
-    "VillagerMakeLoveMixin",
     "VillagerMixin"
   ],
   "client": [
