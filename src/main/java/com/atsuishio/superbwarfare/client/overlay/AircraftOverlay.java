@@ -107,12 +107,11 @@ public class AircraftOverlay implements IGuiOverlay {
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    if (mobileVehicle instanceof A10Entity a10Entity && weaponVehicle.getWeaponIndex(0) == 3) {
-                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base_missile.png"),x - 160, y - 160, 0, 0, 320, 320, 320, 320);
-                    } else  {
-                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base.png"),x - 160, y - 160, 0, 0, 320, 320, 320, 320);
+                    if (mobileVehicle instanceof A10Entity && weaponVehicle.getWeaponIndex(0) == 3) {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base_missile.png"), x - 160, y - 160, 0, 0, 320, 320, 320, 320);
+                    } else {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base.png"), x - 160, y - 160, 0, 0, 320, 320, 320, 320);
                     }
-
 
                     //指南针
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/compass.png"), x - 128, y - 122, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
@@ -124,7 +123,6 @@ public class AircraftOverlay implements IGuiOverlay {
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/roll_ind.png"), x - 4, y + 144, 0, 0, 8, 8, 8, 8);
                     poseStack.popPose();
 
-
                     //时速
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(mobileVehicle.getDeltaMovement().dot(mobileVehicle.getViewVector(1)) * 72)),
                             (int) x - 105, (int) y - 61, 0x66FF00, false);
@@ -135,56 +133,55 @@ public class AircraftOverlay implements IGuiOverlay {
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/speed_frame.png"), x - 108, y - 64, 0, 0, 36, 12, 36, 12);
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/helicopter/speed_frame.png"), x + 108 - 36, y - 64, 0, 0, 36, 12, 36, 12);
                     //垂直速度
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpVy * 20)),(int) x - 96, (int) y + 60, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpVy * 20)), (int) x - 96, (int) y + 60, 0x66FF00, false);
                     //加速度
                     lerpG = (float) Mth.lerp(0.1f * partialTick, lerpG, mobileVehicle.acceleration / 9.8);
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("M"),(int) x - 105, (int) y + 70, 0x66FF00, false);
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("0.2"),(int) x - 96, (int) y + 70, 0x66FF00, false);
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("G"),(int) x - 105, (int) y + 78, 0x66FF00, false);
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpG)),(int) x - 96, (int) y + 78, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("M"), (int) x - 105, (int) y + 70, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("0.2"), (int) x - 96, (int) y + 70, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("G"), (int) x - 105, (int) y + 78, 0x66FF00, false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpG)), (int) x - 96, (int) y + 78, 0x66FF00, false);
 
                     // 热诱弹
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("IR FLARES " + aircraftEntity.getDecoy()), (int) x + 72, (int) y, 0x66FF00, false);
 
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TGT"), (int) x + 76, (int) y + 78, 0x66FF00, false);
 
+                    if (mobileVehicle instanceof A10Entity a10Entity) {
+                        if (weaponVehicle.getWeaponIndex(0) == 0) {
+                            double heat = 1 - a10Entity.getEntityData().get(HEAT) / 100.0F;
+                            String name = "30MM CANNON";
+                            int width = Minecraft.getInstance().font.width(name);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
 
-                if (mobileVehicle instanceof A10Entity a10Entity) {
-                    if (weaponVehicle.getWeaponIndex(0) == 0) {
-                        double heat = 1 - a10Entity.getEntityData().get(HEAT) / 100.0F;
-                        String name = "30MM CANNON";
-                        int width = Minecraft.getInstance().font.width(name);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                            String count = InventoryTool.hasCreativeAmmoBox(player) ? "∞" : String.valueOf(aircraftEntity.getAmmoCount(player));
+                            int width2 = Minecraft.getInstance().font.width(count);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                        } else if (weaponVehicle.getWeaponIndex(0) == 1) {
+                            String name = "70MM ROCKET";
+                            int width = Minecraft.getInstance().font.width(name);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
 
-                        String count = InventoryTool.hasCreativeAmmoBox(player) ? "∞" : String.valueOf(aircraftEntity.getAmmoCount(player));
-                        int width2 = Minecraft.getInstance().font.width(count);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
-                    } else if (weaponVehicle.getWeaponIndex(0) == 1){
-                        String name = "70MM ROCKET";
-                        int width = Minecraft.getInstance().font.width(name);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
+                            String count = String.valueOf(aircraftEntity.getAmmoCount(player));
+                            int width2 = Minecraft.getInstance().font.width(count);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
+                        } else if (weaponVehicle.getWeaponIndex(0) == 2) {
+                            String name = "MK82 BOMB";
+                            int width = Minecraft.getInstance().font.width(name);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
 
-                        String count = String.valueOf(aircraftEntity.getAmmoCount(player));
-                        int width2 = Minecraft.getInstance().font.width(count);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
-                    } else if (weaponVehicle.getWeaponIndex(0) == 2){
-                        String name = "MK82 BOMB";
-                        int width = Minecraft.getInstance().font.width(name);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
+                            String count = String.valueOf(aircraftEntity.getAmmoCount(player));
+                            int width2 = Minecraft.getInstance().font.width(count);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
+                        } else if (weaponVehicle.getWeaponIndex(0) == 3) {
+                            String name = "AGM-65";
+                            int width = Minecraft.getInstance().font.width(name);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
 
-                        String count = String.valueOf(aircraftEntity.getAmmoCount(player));
-                        int width2 = Minecraft.getInstance().font.width(count);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
-                    } else if (weaponVehicle.getWeaponIndex(0) == 3){
-                        String name = "AGM-65";
-                        int width = Minecraft.getInstance().font.width(name);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(name), (int) x - width / 2, (int) y + 67, 0x66FF00, false);
-
-                        String count = String.valueOf(aircraftEntity.getAmmoCount(player));
-                        int width2 = Minecraft.getInstance().font.width(count);
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
+                            String count = String.valueOf(aircraftEntity.getAmmoCount(player));
+                            int width2 = Minecraft.getInstance().font.width(count);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(count), (int) x - width2 / 2, (int) y + 76, 0x66FF00, false);
+                        }
                     }
-                }
 
                     //角度
                     poseStack.pushPose();
@@ -202,8 +199,7 @@ public class AircraftOverlay implements IGuiOverlay {
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_ind.png"), x - 18 + diffY, y - 12, 0, 0, 36, 24, 36, 24);
                     poseStack.popPose();
 
-                    //能量警告
-
+                    // 能量警告
                     if (mobileVehicle.getEnergy() < 0.02 * mobileVehicle.getMaxEnergy()) {
                         guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("NO POWER!"),
                                 (int) x - 144, (int) y + 14, -65536, false);
@@ -216,13 +212,11 @@ public class AircraftOverlay implements IGuiOverlay {
 
             // 准星
             if (pCross != null) {
-
                 poseStack.pushPose();
                 float x = (float) pCross.x;
                 float y = (float) pCross.y;
 
                 if (mc.options.getCameraType() == CameraType.FIRST_PERSON && !(mobileVehicle instanceof A10Entity a10Entity && a10Entity.getWeaponIndex(0) == 3)) {
-
                     RenderSystem.disableDepthTest();
                     RenderSystem.depthMask(false);
                     RenderSystem.enableBlend();
@@ -230,11 +224,10 @@ public class AircraftOverlay implements IGuiOverlay {
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base2.png"),x - 72 + diffX, y - 72 + diffY, 0, 0, 144, 144, 144, 144);
+                    preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base2.png"), x - 72 + diffX, y - 72 + diffY, 0, 0, 144, 144, 144, 144);
 
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/crosshair_ind.png"), x - 16, y - 16, 0, 0, 32, 32, 32, 32);
                     renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
-
                 } else if (mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                     poseStack.pushPose();
                     poseStack.rotateAround(Axis.ZP.rotationDegrees(aircraftEntity.getRotZ(partialTick)), x, y, 0);
@@ -266,8 +259,7 @@ public class AircraftOverlay implements IGuiOverlay {
                 poseStack.popPose();
             }
 
-            //A-10的导弹锁定
-
+            // A-10的导弹锁定
             if (mobileVehicle instanceof A10Entity a10Entity && a10Entity.getWeaponIndex(0) == 3) {
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), a10Entity.getTargetUuid());
                 List<Entity> entities = SeekTool.seekCustomSizeEntities(a10Entity, player.level(), 384, 20, 0.9, true);
@@ -288,8 +280,8 @@ public class AircraftOverlay implements IGuiOverlay {
                         if (lockOn) {
                             RenderHelper.blit(poseStack, FRAME_LOCK, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                         } else if (nearest) {
-                            lerpLock = Mth.lerp(partialTick, lerpLock , a10Entity.lockTime);
-                            float lockTime = Mth.clamp(20 - lerpLock, 0 ,20);
+                            lerpLock = Mth.lerp(partialTick, lerpLock, a10Entity.lockTime);
+                            float lockTime = Mth.clamp(20 - lerpLock, 0, 20);
                             RenderHelper.blit(poseStack, IND_1, x - 12, y - 12 - lockTime, 0, 0, 24, 24, 24, 24, 1f);
                             RenderHelper.blit(poseStack, IND_2, x - 12, y - 12 + lockTime, 0, 0, 24, 24, 24, 24, 1f);
                             RenderHelper.blit(poseStack, IND_3, x - 12 - lockTime, y - 12, 0, 0, 24, 24, 24, 24, 1f);
@@ -302,7 +294,6 @@ public class AircraftOverlay implements IGuiOverlay {
                     }
                 }
             }
-
 
             poseStack.popPose();
         }
