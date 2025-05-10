@@ -104,6 +104,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Energy", energyStorage.serializeNBT());
+        pCompound.putInt("Level", this.entityData.get(LEVEL));
     }
 
     @Override
@@ -112,6 +113,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         if (pCompound.get("Energy") instanceof IntTag energyNBT) {
             energyStorage.deserializeNBT(energyNBT);
         }
+        this.entityData.set(LEVEL, pCompound.getInt("Level"));
     }
 
     @Override
@@ -137,7 +139,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         } else {
             this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 1, 1, false);
         }
-        return super.hurt(source, amount);
+        return super.hurt(source, (float) (amount / Math.pow(2, getGeneratorLevel())));
     }
 
     @SubscribeEvent
@@ -207,20 +209,21 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
                 }
 
                 // 发电
+                // TODO 修改为更好的数值算法
                 entityCap.ifPresent(cap -> {
                     if (cap instanceof SyncedEntityEnergyStorage storage) {
-                        storage.setMaxReceive(cap.getMaxEnergyStored());
-                        storage.receiveEnergy(Math.round(128 * damage), false);
+                        storage.setMaxReceive(getMaxEnergy());
+                        storage.receiveEnergy((int) Math.round(128 * Math.max(getGeneratorLevel(), 1) * Math.pow(2, getGeneratorLevel()) * damage), false);
                         storage.setMaxReceive(0);
                     }
                 });
             }
 
             // 充能底部方块
-            chargeBlockBelow();
+            this.chargeBlockBelow();
 
             if (this.getHealth() < 0.01) {
-                // TODO 升级
+                this.entityData.set(LEVEL, Math.min(this.entityData.get(LEVEL) + 1, 7));
             }
             this.setHealth(this.getMaxHealth());
         }
@@ -298,10 +301,6 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         return this.cache;
     }
 
-    public int getMaxEnergy() {
-        return 5120;
-    }
-
     protected void chargeBlockBelow() {
         var entityCap = this.energy;
         if (!entityCap.isPresent()) return;
@@ -329,12 +328,38 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
-        return ForgeCapabilities.ENERGY.orEmpty(cap, energy);
+        return ForgeCapabilities.ENERGY.orEmpty(cap, getEnergy());
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
         energy.invalidate();
+    }
+
+    public int getGeneratorLevel() {
+        return this.entityData.get(LEVEL);
+    }
+
+    public LazyOptional<IEnergyStorage> getEnergy() {
+        var storage = new SyncedEntityEnergyStorage(getMaxEnergy(), 0, getMaxTransfer(), this.entityData, ENERGY);
+        return LazyOptional.of(() -> storage);
+    }
+
+    public int getMaxEnergy() {
+        return switch (getGeneratorLevel()) {
+            case 1 -> 25600;
+            case 2 -> 102400;
+            case 3 -> 409600;
+            case 4 -> 1638400;
+            case 5 -> 6553600;
+            case 6 -> 26214400;
+            case 7 -> 104857600;
+            default -> 5120;
+        };
+    }
+
+    public int getMaxTransfer() {
+        return getMaxEnergy() / 2;
     }
 }
