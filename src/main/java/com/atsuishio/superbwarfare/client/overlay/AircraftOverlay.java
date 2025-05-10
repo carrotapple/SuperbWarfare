@@ -42,11 +42,16 @@ import static com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity.HEAT
 public class AircraftOverlay implements IGuiOverlay {
     public static final String ID = Mod.MODID + "_aircraft_hud";
     private static float lerpVy = 1;
+    private static float lerpLock = 1;
     private static float lerpG = 1;
 
-    private static final ResourceLocation FRAME = Mod.loc("textures/screens/frame/frame.png");
-    private static final ResourceLocation FRAME_TARGET = Mod.loc("textures/screens/frame/frame_target.png");
-    private static final ResourceLocation FRAME_LOCK = Mod.loc("textures/screens/frame/frame_lock.png");
+    private static final ResourceLocation FRAME = Mod.loc("textures/screens/aircraft/frame.png");
+    private static final ResourceLocation FRAME_TARGET = Mod.loc("textures/screens/aircraft/frame_target.png");
+    private static final ResourceLocation FRAME_LOCK = Mod.loc("textures/screens/aircraft/frame_lock.png");
+    private static final ResourceLocation IND_1 = Mod.loc("textures/screens/aircraft/locking_ind1.png");
+    private static final ResourceLocation IND_2 = Mod.loc("textures/screens/aircraft/locking_ind2.png");
+    private static final ResourceLocation IND_3 = Mod.loc("textures/screens/aircraft/locking_ind3.png");
+    private static final ResourceLocation IND_4 = Mod.loc("textures/screens/aircraft/locking_ind4.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -102,7 +107,12 @@ public class AircraftOverlay implements IGuiOverlay {
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base.png"),x - 160, y - 160, 0, 0, 320, 320, 320, 320);
+                    if (mobileVehicle instanceof A10Entity a10Entity && weaponVehicle.getWeaponIndex(0) == 3) {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base_missile.png"),x - 160, y - 160, 0, 0, 320, 320, 320, 320);
+                    } else  {
+                        preciseBlit(guiGraphics, Mod.loc("textures/screens/aircraft/hud_base.png"),x - 160, y - 160, 0, 0, 320, 320, 320, 320);
+                    }
+
 
                     //指南针
                     preciseBlit(guiGraphics, Mod.loc("textures/screens/compass.png"), x - 128, y - 122, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
@@ -260,7 +270,7 @@ public class AircraftOverlay implements IGuiOverlay {
 
             if (mobileVehicle instanceof A10Entity a10Entity && a10Entity.getWeaponIndex(0) == 3) {
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), a10Entity.getTargetUuid());
-                List<Entity> entities = SeekTool.seekCustomSizeEntities(a10Entity, player.level(), 384, 20, 0.9);
+                List<Entity> entities = SeekTool.seekCustomSizeEntities(a10Entity, player.level(), 384, 20, 0.9, true);
 
                 for (var e : entities) {
                     Vec3 pos3 = new Vec3(Mth.lerp(partialTick, e.xo, e.getX()), Mth.lerp(partialTick, e.yo + e.getEyeHeight(), e.getEyeY()), Mth.lerp(partialTick, e.zo, e.getZ()));
@@ -275,7 +285,19 @@ public class AircraftOverlay implements IGuiOverlay {
                         float x = (float) point.x;
                         float y = (float) point.y;
 
-                        RenderHelper.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        if (lockOn) {
+                            RenderHelper.blit(poseStack, FRAME_LOCK, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        } else if (nearest) {
+                            lerpLock = Mth.lerp(partialTick, lerpLock , a10Entity.lockTime);
+                            float lockTime = Mth.clamp(20 - lerpLock, 0 ,20);
+                            RenderHelper.blit(poseStack, IND_1, x - 12, y - 12 - lockTime, 0, 0, 24, 24, 24, 24, 1f);
+                            RenderHelper.blit(poseStack, IND_2, x - 12, y - 12 + lockTime, 0, 0, 24, 24, 24, 24, 1f);
+                            RenderHelper.blit(poseStack, IND_3, x - 12 - lockTime, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                            RenderHelper.blit(poseStack, IND_4, x - 12 + lockTime, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                            RenderHelper.blit(poseStack, FRAME_TARGET, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        } else {
+                            RenderHelper.blit(poseStack, FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        }
                         poseStack.popPose();
                     }
                 }
