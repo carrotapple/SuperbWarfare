@@ -55,7 +55,6 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     public static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    // TODO 发电机升级容量+传输速率实现
     protected final SyncedEntityEnergyStorage energyStorage = new SyncedEntityEnergyStorage(5120, 0, 2560, this.entityData, ENERGY);
     protected final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
@@ -154,8 +153,6 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
             if (sourceEntity == null) return;
 
             if (sourceEntity instanceof Player player) {
-                player.displayClientMessage(Component.translatable("tips.superbwarfare.target.down",
-                        FormatTool.format1D(entity.position().distanceTo(sourceEntity.position())), "m"), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 1, 1);
                 generatorEntity.entityData.set(DOWN_TIME, 40);
             }
@@ -197,23 +194,24 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         // 每秒恢复生命并充能下方方块
         if (this.tickCount % 20 == 0) {
             var damage = this.getMaxHealth() - this.getHealth();
-            var entityCap = this.energy;
+            // TODO 这个cap每次都会重置，修改为正确的充能方法
+            var entityCap = this.getCapability(ForgeCapabilities.ENERGY);
 
             if (damage > 0 && entityCap.isPresent()) {
                 // DPS显示
                 if (getLastDamageSource() != null) {
                     var attacker = getLastDamageSource().getEntity();
                     if (attacker instanceof Player player) {
-                        player.displayClientMessage(Component.translatable("tips.superbwarfare.dps_generator.dps", FormatTool.format1D(damage)), true);
+                        player.displayClientMessage(Component.translatable("tips.superbwarfare.dps_generator.dps",
+                                FormatTool.format1D(damage * Math.pow(2, getGeneratorLevel()))), true);
                     }
                 }
 
                 // 发电
-                // TODO 修改为更好的数值算法
                 entityCap.ifPresent(cap -> {
                     if (cap instanceof SyncedEntityEnergyStorage storage) {
                         storage.setMaxReceive(getMaxEnergy());
-                        storage.receiveEnergy((int) Math.round(128 * Math.max(getGeneratorLevel(), 1) * Math.pow(2, getGeneratorLevel()) * damage), false);
+                        storage.receiveEnergy((int) Math.round(128d * Math.max(getGeneratorLevel(), 1) * Math.pow(2, getGeneratorLevel()) * damage), false);
                         storage.setMaxReceive(0);
                     }
                 });
@@ -302,7 +300,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     }
 
     protected void chargeBlockBelow() {
-        var entityCap = this.energy;
+        var entityCap = this.getCapability(ForgeCapabilities.ENERGY);
         if (!entityCap.isPresent()) return;
 
         entityCap.ifPresent(cap -> {
