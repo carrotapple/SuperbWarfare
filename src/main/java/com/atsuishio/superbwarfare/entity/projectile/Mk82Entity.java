@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -37,18 +38,14 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity, AerialBombEntity {
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk82Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private float explosion_damage = 650f;
-    private float explosion_radius = 11f;
 
     public Mk82Entity(EntityType<? extends Mk82Entity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public Mk82Entity(LivingEntity entity, Level level, float explosion_damage, float explosion_radius) {
+    public Mk82Entity(LivingEntity entity, Level level) {
         super(ModEntities.MK_82.get(), entity, level);
-        this.explosion_damage = explosion_damage;
-        this.explosion_radius = explosion_radius;
     }
 
     public Mk82Entity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -125,7 +122,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        ProjectileTool.causeCustomExplode(this, explosion_damage, explosion_radius, 1.2f);
+        ProjectileTool.causeCustomExplode(this, ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get(), ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue(), 1.2f);
         this.discard();
     }
 
@@ -137,7 +134,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
 
         if (tickCount > 600 || this.entityData.get(HEALTH) <= 0) {
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, explosion_damage, explosion_radius, 1.2f);
+                ProjectileTool.causeCustomExplode(this, ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get(), ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue(), 1.2f);
             }
             this.discard();
         }
