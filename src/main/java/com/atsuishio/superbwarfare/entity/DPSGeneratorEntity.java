@@ -52,6 +52,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
 
     public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     // TODO 发电机升级容量+传输速率实现
@@ -72,6 +73,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         super.defineSynchedData();
         this.entityData.define(DOWN_TIME, 0);
         this.entityData.define(ENERGY, 0);
+        this.entityData.define(LEVEL, 0);
     }
 
     @Override
@@ -145,7 +147,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
 
         if (entity instanceof DPSGeneratorEntity generatorEntity) {
             event.setCanceled(true);
-            generatorEntity.setHealth(generatorEntity.getMaxHealth());
+            generatorEntity.setHealth(0.00001F);
 
             if (sourceEntity == null) return;
 
@@ -161,11 +163,6 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     @Override
     public boolean isPickable() {
         return this.entityData.get(DOWN_TIME) == 0;
-    }
-
-    @Override
-    public void die(@NotNull DamageSource source) {
-        super.die(source);
     }
 
     @Override
@@ -213,7 +210,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
                 entityCap.ifPresent(cap -> {
                     if (cap instanceof SyncedEntityEnergyStorage storage) {
                         storage.setMaxReceive(cap.getMaxEnergyStored());
-                        storage.receiveEnergy(Math.round(256 * damage), false);
+                        storage.receiveEnergy(Math.round(128 * damage), false);
                         storage.setMaxReceive(0);
                     }
                 });
