@@ -194,8 +194,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         // 每秒恢复生命并充能下方方块
         if (this.tickCount % 20 == 0) {
             var damage = this.getMaxHealth() - this.getHealth();
-            // TODO 这个cap每次都会重置，修改为正确的充能方法
-            var entityCap = this.getCapability(ForgeCapabilities.ENERGY);
+            var entityCap = this.getEnergy();
 
             if (damage > 0 && entityCap.isPresent()) {
                 // DPS显示
@@ -222,6 +221,13 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
 
             if (this.getHealth() < 0.01) {
                 this.entityData.set(LEVEL, Math.min(this.entityData.get(LEVEL) + 1, 7));
+                entityCap.ifPresent(cap -> {
+                    if (cap instanceof SyncedEntityEnergyStorage storage) {
+                        // TODO 修复重进时未刷新的问题
+                        storage.setCapacity(this.getMaxEnergy());
+                        storage.setMaxExtract(this.getMaxTransfer());
+                    }
+                });
             }
             this.setHealth(this.getMaxHealth());
         }
@@ -300,7 +306,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     }
 
     protected void chargeBlockBelow() {
-        var entityCap = this.getCapability(ForgeCapabilities.ENERGY);
+        var entityCap = this.getEnergy();
         if (!entityCap.isPresent()) return;
 
         entityCap.ifPresent(cap -> {
@@ -340,8 +346,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     }
 
     public LazyOptional<IEnergyStorage> getEnergy() {
-        var storage = new SyncedEntityEnergyStorage(getMaxEnergy(), 0, getMaxTransfer(), this.entityData, ENERGY);
-        return LazyOptional.of(() -> storage);
+        return this.energy;
     }
 
     public int getMaxEnergy() {
