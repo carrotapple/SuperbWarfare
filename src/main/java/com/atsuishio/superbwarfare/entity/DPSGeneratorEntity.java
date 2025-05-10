@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.capability.energy.SyncedEntityEnergyStorage;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
@@ -8,7 +9,10 @@ import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -26,6 +30,10 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PlayMessages;
@@ -43,7 +51,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
 
     public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(DPSGeneratorEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    // TODO 发电机升级容量+传输速率实现
+    protected final SyncedEntityEnergyStorage energyStorage = new SyncedEntityEnergyStorage(5120, 0, 2560, this.entityData, ENERGY);
+    protected final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public DPSGeneratorEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DPS_GENERATOR.get(), world);
@@ -58,6 +71,7 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DOWN_TIME, 0);
+        this.entityData.define(ENERGY, 0);
     }
 
     @Override
@@ -82,6 +96,20 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     @Override
     public boolean shouldRenderAtSqrDistance(double pDistance) {
         return true;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.put("Energy", energyStorage.serializeNBT());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.get("Energy") instanceof IntTag energyNBT) {
+            energyStorage.deserializeNBT(energyNBT);
+        }
     }
 
     @Override
@@ -166,6 +194,39 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
+
+        // 每秒恢复生命并充能下方方块
+        if (this.tickCount % 20 == 0) {
+            var damage = this.getMaxHealth() - this.getHealth();
+            var entityCap = this.energy;
+
+            if (damage > 0 && entityCap.isPresent()) {
+                // DPS显示
+                if (getLastDamageSource() != null) {
+                    var attacker = getLastDamageSource().getEntity();
+                    if (attacker instanceof Player player) {
+                        player.displayClientMessage(Component.translatable("tips.superbwarfare.dps_generator.dps", FormatTool.format1D(damage)), true);
+                    }
+                }
+
+                // 发电
+                entityCap.ifPresent(cap -> {
+                    if (cap instanceof SyncedEntityEnergyStorage storage) {
+                        storage.setMaxReceive(cap.getMaxEnergyStored());
+                        storage.receiveEnergy(Math.round(256 * damage), false);
+                        storage.setMaxReceive(0);
+                    }
+                });
+            }
+
+            // 充能底部方块
+            chargeBlockBelow();
+
+            if (this.getHealth() < 0.01) {
+                // TODO 升级
+            }
+            this.setHealth(this.getMaxHealth());
+        }
     }
 
     @Override
@@ -238,5 +299,45 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public int getMaxEnergy() {
+        return 5120;
+    }
+
+    protected void chargeBlockBelow() {
+        var entityCap = this.energy;
+        if (!entityCap.isPresent()) return;
+
+        entityCap.ifPresent(cap -> {
+            if (!cap.canExtract() || cap.getEnergyStored() <= 0) return;
+
+            var blockPos = this.blockPosition().below();
+            var blockEntity = this.level().getBlockEntity(blockPos);
+            if (blockEntity == null) return;
+            blockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.UP).ifPresent(
+                    blockCap -> {
+                        if (!blockCap.canReceive()) return;
+
+                        var extract = cap.extractEnergy(cap.getEnergyStored(), true);
+                        var extracted = blockCap.receiveEnergy(extract, false);
+                        if (extracted <= 0) return;
+
+                        this.level().blockEntityChanged(blockPos);
+                        cap.extractEnergy(extracted, false);
+                    }
+            );
+        });
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
+        return ForgeCapabilities.ENERGY.orEmpty(cap, energy);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        energy.invalidate();
     }
 }

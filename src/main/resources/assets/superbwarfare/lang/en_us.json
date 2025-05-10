@@ -529,6 +529,7 @@
   "tips.superbwarfare.shoot.rings": "Rings",
   "tips.superbwarfare.annihilator.energy_not_enough": "Insufficient Power!",
   "tips.superbwarfare.target.down": "Target Down %1$s",
+  "tips.superbwarfare.dps_generator.dps": "DPS: %1$s",
   "tips.superbwarfare.target.damage": "Damage: %1$s Distance: %2$s",
   "tips.superbwarfare.mortar.range": "Range: ",
   "tips.superbwarfare.mortar.yaw": "Yaw: ",
