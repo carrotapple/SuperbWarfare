@@ -45,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -657,14 +656,6 @@ public class LivingEventHandler {
     public static void onEffectApply(MobEffectEvent.Applicable event) {
         if (event.getEntity().getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.hidePassenger(event.getEntity())) {
             event.setResult(Event.Result.DENY);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onMountEntity(EntityMountEvent event) {
-        var entity = event.getEntityMounting();
-        if (entity instanceof Player player && player.getVehicle() instanceof VehicleEntity && !(event.getEntityBeingMounted() instanceof VehicleEntity)) {
-            event.setCanceled(true);
         }
     }
 }
