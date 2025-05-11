@@ -205,11 +205,6 @@ public class TaserItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean isMagazineReload(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public String getAmmoDisplayName(GunData data) {
         return "Electrode Rod";
     }
