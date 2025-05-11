@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.compat.clothconfig.ClothConfigHelper;
 import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
-import com.atsuishio.superbwarfare.entity.mixin.CustomStopRiding;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.CannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
@@ -474,8 +473,5 @@ public class ClickHandler {
             return;
         }
         Mod.PACKET_HANDLER.sendToServer(new PlayerStopRidingMessage(0));
-
-        CustomStopRiding customStopRiding = CustomStopRiding.getInstance(player);
-        customStopRiding.superbwarfare$stopRiding();
     }
 }
