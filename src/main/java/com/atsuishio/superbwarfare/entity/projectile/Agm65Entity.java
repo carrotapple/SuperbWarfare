@@ -13,6 +13,8 @@ import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -40,6 +42,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.joml.Math;
@@ -55,6 +58,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Agm65Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(Agm65Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -76,8 +80,6 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
     public Agm65Entity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.AGM_65.get(), level);
     }
-
-   
 
     @Override
     protected Item getDefaultItem() {
@@ -139,7 +141,8 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
         if (this.level() instanceof ServerLevel && tickCount > 8) {
-            if (entity == this.getOwner() || (this.getOwner() != null && entity == this.getOwner().getVehicle())) return;
+            if (entity == this.getOwner() || (this.getOwner() != null && entity == this.getOwner().getVehicle()))
+                return;
             if (this.getOwner() instanceof LivingEntity living) {
                 if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                     living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
@@ -239,7 +242,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
             this.discard();
         }
 
-        float f = (float) Mth.clamp(1 - 0.005 * getDeltaMovement().length() , 0.001, 1);
+        float f = (float) Mth.clamp(1 - 0.005 * getDeltaMovement().length(), 0.001, 1);
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
     }
@@ -299,5 +302,10 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
     @Override
     public float getVolume() {
         return 0.7f;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }
