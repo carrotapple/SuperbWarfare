@@ -15,8 +15,6 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,7 +34,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -89,10 +86,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.playSound(ModSounds.WHEEL_STEP.get(), (float) (getDeltaMovement().length() * 0.3), random.nextFloat() * 0.1f + 1f);
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+   
 
     @Override
     public boolean sendFireStarParticleOnHurt() {

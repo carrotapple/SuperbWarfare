@@ -21,8 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -49,7 +47,6 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
@@ -182,10 +179,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         entityData.set(PITCH, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     @Override
     public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
@@ -310,11 +303,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos, this), laserLengthEntity(BarrelRightPos, this)));
         }
 
-//        if (this.getPassengers().isEmpty()) {
-//            autoAim();
-//        } else {
-//            travel();
-//        }
         if (this.entityData.get(COOL_DOWN) == 20) {
             this.level().playSound(null, this.getOnPos(), ModSounds.ANNIHILATOR_RELOAD.get(), SoundSource.PLAYERS, 1, 1);
         }

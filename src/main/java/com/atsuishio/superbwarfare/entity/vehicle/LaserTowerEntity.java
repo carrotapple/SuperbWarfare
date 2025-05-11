@@ -13,8 +13,6 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.VectorTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -34,7 +32,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -136,10 +133,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         return this.entityData.get(OWNER_UUID).orElse(null);
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+   
 
     @Override
     public DamageModifier getDamageModifier() {
