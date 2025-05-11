@@ -155,9 +155,4 @@ public class HomemadeShotgunItem extends GunItem implements GeoItem {
         var stack = data.stack();
         stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
 }

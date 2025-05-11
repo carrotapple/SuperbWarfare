@@ -113,9 +113,4 @@ public class HuntingRifleItem extends GunItem implements GeoItem {
     public boolean isMagazineReload(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
 }

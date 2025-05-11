@@ -145,9 +145,4 @@ public class M98bItem extends GunItem implements GeoItem {
     public boolean hasBulletInBarrel(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
 }

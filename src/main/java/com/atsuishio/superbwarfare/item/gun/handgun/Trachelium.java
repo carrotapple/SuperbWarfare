@@ -351,9 +351,4 @@ public class Trachelium extends GunItem implements GeoItem {
     public boolean hasCustomStock(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
 }

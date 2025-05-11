@@ -138,9 +138,4 @@ public class DevotionItem extends GunItem implements GeoItem {
     public boolean canEjectShell(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.AUTO.flag;
-    }
 }

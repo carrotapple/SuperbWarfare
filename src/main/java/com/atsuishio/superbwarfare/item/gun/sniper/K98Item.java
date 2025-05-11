@@ -165,9 +165,4 @@ public class K98Item extends GunItem implements GeoItem {
     public boolean isIterativeReload(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
 }

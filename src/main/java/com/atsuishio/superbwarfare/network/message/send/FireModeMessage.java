@@ -44,13 +44,13 @@ public class FireModeMessage {
 
     public static void changeFireMode(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() instanceof GunItem gunItem) {
+        if (stack.getItem() instanceof GunItem) {
             var data = GunData.from(stack);
             int fireMode = data.fireMode.get();
 
             CompoundTag tag = stack.getOrCreateTag();
 
-            int mode = gunItem.getAvailableFireModes();
+            int mode = data.getAvailableFireModes();
             mode &= 0b111;
 
             if (fireMode == 0) {

@@ -234,11 +234,6 @@ public class SentinelItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag;
-    }
-
-    @Override
     public void afterShoot(GunData data, Player player) {
         super.afterShoot(data, player);
         data.stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> cap.extractEnergy(3000, false));

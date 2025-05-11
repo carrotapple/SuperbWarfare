@@ -267,9 +267,4 @@ public class RpkItem extends GunItem implements GeoItem {
     public boolean hasBipod(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public int getAvailableFireModes() {
-        return FireMode.SEMI.flag + FireMode.AUTO.flag;
-    }
 }
