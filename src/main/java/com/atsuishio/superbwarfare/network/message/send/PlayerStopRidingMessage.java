@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.network.message.send;
 
+import com.atsuishio.superbwarfare.entity.mixin.CustomStopRiding;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +31,9 @@ public class PlayerStopRidingMessage {
             var vehicle = player.getVehicle();
             if (!(vehicle instanceof VehicleEntity)) return;
 
-            player.stopRiding();
+            CustomStopRiding customStopRiding = CustomStopRiding.getInstance(player);
+            customStopRiding.superbwarfare$stopRiding();
+
             player.setJumping(false);
         });
         ctx.get().setPacketHandled(true);
