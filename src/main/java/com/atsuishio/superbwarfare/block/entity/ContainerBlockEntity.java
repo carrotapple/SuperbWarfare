@@ -54,13 +54,17 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
                 pLevel.playSound(null, pPos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F) * 0.7F);
             }
         } else {
+            var direction = pState.getValue(ContainerBlock.FACING);
+
             if (blockEntity.entity != null) {
                 blockEntity.entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
+                blockEntity.entity.setYRot(direction.toYRot());
                 pLevel.addFreshEntity(blockEntity.entity);
             } else if (blockEntity.entityType != null) {
                 var entity = blockEntity.entityType.create(pLevel);
                 if (entity != null) {
                     entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
+                    entity.setYRot(direction.toYRot());
                     pLevel.addFreshEntity(entity);
                 }
             }
