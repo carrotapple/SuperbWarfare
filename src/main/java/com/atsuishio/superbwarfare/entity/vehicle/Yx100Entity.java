@@ -949,7 +949,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
         }
 
         explodePassengers();
-        this.discard();
+        super.destroy();
     }
 
     protected void clampRotation(Entity entity) {

@@ -511,7 +511,7 @@ public class Lav150Entity extends ContainerMobileVehicleEntity implements GeoEnt
         }
 
         explodePassengers();
-        this.discard();
+        super.destroy();
     }
 
     protected void clampRotation(Entity entity) {

@@ -674,7 +674,7 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
         }
 
         explodePassengers();
-        this.discard();
+        super.destroy();
     }
 
     protected void clampRotation(Entity entity) {

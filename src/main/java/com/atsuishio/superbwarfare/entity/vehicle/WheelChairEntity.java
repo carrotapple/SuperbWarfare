@@ -305,7 +305,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             ParticleTool.spawnSmallExplosionParticles(this.level(), this.position());
         }
 
-        this.discard();
+        super.destroy();
     }
 
     @Override

@@ -498,7 +498,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
-        this.discard();
+        super.destroy();
     }
 
     @Override
