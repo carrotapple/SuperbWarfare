@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.WeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.item.gun.data.FireMode;
 import com.atsuishio.superbwarfare.item.gun.data.GunData;
 import com.atsuishio.superbwarfare.item.gun.data.value.AttachmentType;
 import com.atsuishio.superbwarfare.network.message.send.*;
@@ -499,7 +500,7 @@ public class ClientEventHandler {
         var data = GunData.from(stack);
 
         var perk = data.perk.get(Perk.Type.AMMO);
-        int mode = data.fireMode.get();
+        var mode = data.fireMode.get();
 
         // 精准度
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -584,7 +585,7 @@ public class ClientEventHandler {
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !GunData.from(stack).bolt.needed.get())
         )) {
-            if (mode == 0) {
+            if (mode == FireMode.SEMI) {
                 if (clientTimer.getProgress() == 0) {
                     clientTimer.start();
                     shootClient(player);
@@ -614,7 +615,7 @@ public class ClientEventHandler {
             }
 
         } else {
-            if (mode != 0 && clientTimer.getProgress() >= cooldown) {
+            if (mode != FireMode.SEMI && clientTimer.getProgress() >= cooldown) {
                 clientTimer.stop();
             }
             fireSpread = 0;
@@ -622,7 +623,7 @@ public class ClientEventHandler {
 
         gunPartMove(times);
 
-        if (mode == 0 && clientTimer.getProgress() >= cooldown) {
+        if (mode == FireMode.SEMI && clientTimer.getProgress() >= cooldown) {
             clientTimer.stop();
         }
 
@@ -663,12 +664,12 @@ public class ClientEventHandler {
         if (!gunItem.canShoot(data)) return;
 
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            int mode = data.fireMode.get();
-            if (mode != 2) {
+            var mode = data.fireMode.get();
+            if (mode != FireMode.AUTO) {
                 holdFire = false;
             }
 
-            if (mode == 1) {
+            if (mode == FireMode.BURST) {
                 if (data.ammo.get() == 1) {
                     burstFireAmount = 1;
                 }

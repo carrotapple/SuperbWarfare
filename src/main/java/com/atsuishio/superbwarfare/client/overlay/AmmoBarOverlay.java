@@ -38,11 +38,11 @@ public class AmmoBarOverlay implements IGuiOverlay {
         return player.isCreative() || InventoryTool.hasCreativeAmmoBox(player);
     }
 
-    private static ResourceLocation getFireMode(ItemStack stack) {
-        return switch (GunData.from(stack).fireMode.get()) {
-            case 1 -> BURST;
-            case 2 -> AUTO;
-            default -> SEMI;
+    private static ResourceLocation getFireMode(GunData data) {
+        return switch (data.fireMode.get()) {
+            case SEMI -> SEMI;
+            case BURST -> BURST;
+            case AUTO -> AUTO;
         };
     }
 
@@ -95,7 +95,7 @@ public class AmmoBarOverlay implements IGuiOverlay {
             }
 
             // 渲染开火模式
-            ResourceLocation fireMode = getFireMode(stack);
+            ResourceLocation fireMode = getFireMode(data);
 
             if (stack.getItem() == ModItems.JAVELIN.get()) {
                 fireMode = stack.getOrCreateTag().getBoolean("TopMode") ? TOP : DIR;

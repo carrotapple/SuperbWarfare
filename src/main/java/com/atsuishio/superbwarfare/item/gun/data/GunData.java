@@ -69,7 +69,7 @@ public class GunData {
         perk = new Perks(this);
 
         ammo = new IntValue(data, "Ammo");
-        fireMode = new IntValue(data, "FireMode", defaultGunData().fireMode);
+        fireMode = new StringEnumValue<>(data, "FireMode", defaultGunData().defaultFireMode, FireMode::fromValue);
         level = new IntValue(data, "Level");
         exp = new DoubleValue(data, "Exp");
         upgradePoint = new DoubleValue(data, "UpgradePoint");
@@ -490,13 +490,13 @@ public class GunData {
         return availablePerks().contains(perk);
     }
 
-    public int getAvailableFireModes() {
+    public Set<FireMode> getAvailableFireModes() {
         return defaultGunData().availableFireModes;
     }
 
     // 可持久化属性开始
     public final IntValue ammo;
-    public final IntValue fireMode;
+    public final StringEnumValue<FireMode> fireMode;
     public final IntValue level;
     public final DoubleValue exp;
     public final DoubleValue upgradePoint;

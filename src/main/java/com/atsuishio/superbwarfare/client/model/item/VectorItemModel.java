@@ -54,15 +54,12 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return;
 
-        int mode = GunData.from(stack).fireMode.get();
-        if (mode == 0) {
-            kmj.setRotX(-120 * Mth.DEG_TO_RAD);
-        }
-        if (mode == 1) {
-            kmj.setRotX(-60 * Mth.DEG_TO_RAD);
-        }
-        if (mode == 2) {
-            kmj.setRotX(0);
+        var data = GunData.from(stack);
+
+        switch (data.fireMode.get()) {
+            case SEMI -> kmj.setRotX(-120 * Mth.DEG_TO_RAD);
+            case BURST -> kmj.setRotX(-60 * Mth.DEG_TO_RAD);
+            case AUTO -> kmj.setRotX(0);
         }
 
         float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
