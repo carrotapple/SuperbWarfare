@@ -115,7 +115,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<PrismTankEntity>> PRISM_TANK = register("prism_tank",
             EntityType.Builder.<PrismTankEntity>of(PrismTankEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(PrismTankEntity::new).fireImmune().sized(5f, 2.6f));
     public static final RegistryObject<EntityType<A10Entity>> A_10A = register("a_10a",
-            EntityType.Builder.<A10Entity>of(A10Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(A10Entity::new).fireImmune().sized(8.625f, 4f));
+            EntityType.Builder.<A10Entity>of(A10Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(A10Entity::new).fireImmune().sized(6f, 3.5f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));
