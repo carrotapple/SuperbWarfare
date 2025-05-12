@@ -39,7 +39,7 @@ public class DPSGeneratorDeployer extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable("des.superbwarfare.dps_generator_deployer").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
@@ -65,7 +65,7 @@ public class DPSGeneratorDeployer extends Item {
             // 禁止堆叠
             if (!level.getEntities(
                     (Entity) null,
-                    ModEntities.DPS_GENERATOR.get().getSpawnAABB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
+                    ModEntities.DPS_GENERATOR.get().getAABB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                     IS_GENERATOR
             ).isEmpty()) {
                 return InteractionResult.FAIL;
@@ -96,7 +96,7 @@ public class DPSGeneratorDeployer extends Item {
                 // 禁止堆叠
                 if (!level.getEntities(
                         (Entity) null,
-                        ModEntities.DPS_GENERATOR.get().getSpawnAABB(blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5),
+                        ModEntities.DPS_GENERATOR.get().getAABB(blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5),
                         IS_GENERATOR
                 ).isEmpty()) {
                     return InteractionResultHolder.fail(itemstack);
