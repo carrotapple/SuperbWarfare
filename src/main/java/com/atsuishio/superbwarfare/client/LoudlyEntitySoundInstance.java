@@ -6,7 +6,10 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class LoudlyEntitySoundInstance extends AbstractTickableSoundInstance {
 
     private final Minecraft client;
@@ -67,6 +70,7 @@ public abstract class LoudlyEntitySoundInstance extends AbstractTickableSoundIns
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static class EntitySound extends LoudlyEntitySoundInstance {
         public EntitySound(Entity entity) {
             super(entity instanceof LoudlyEntity loudlyEntity ? loudlyEntity.getSound() : null, Minecraft.getInstance(), entity);
@@ -91,6 +95,7 @@ public abstract class LoudlyEntitySoundInstance extends AbstractTickableSoundIns
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static class EntitySoundClose extends LoudlyEntitySoundInstance {
         public EntitySoundClose(Entity entity) {
             super(entity instanceof LoudlyEntity loudlyEntity ? loudlyEntity.getCloseSound() : null, Minecraft.getInstance(), entity);
