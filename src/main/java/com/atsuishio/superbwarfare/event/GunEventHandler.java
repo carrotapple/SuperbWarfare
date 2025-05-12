@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.item.gun.data.value.ReloadState;
 import com.atsuishio.superbwarfare.tools.InventoryTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +75,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_bolt"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_bolt"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
 
@@ -188,7 +187,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_reload_empty"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_reload_empty"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }
@@ -207,7 +206,7 @@ public class GunEventHandler {
 
             SoundEvent sound1p;
 
-            sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_reload_normal"));
+            sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_reload_normal"));
 
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
@@ -370,7 +369,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_prepare"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_prepare"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }
@@ -386,7 +385,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_prepare_empty"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_prepare_empty"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
@@ -414,7 +413,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_prepare_load"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_prepare_load"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
@@ -444,7 +443,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_loop"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_loop"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }
@@ -461,7 +460,7 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, name + "_end"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc(name + "_end"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
@@ -483,7 +482,7 @@ public class GunEventHandler {
         if (data.charge.starter.start()) {
             data.charge.timer.set(127);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Mod.MODID, "sentinel_charge"));
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(Mod.loc("sentinel_charge"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
             }
