@@ -43,6 +43,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -55,7 +56,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity {
+public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity, ExplosiveProjectile {
 
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(SwarmDroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> TARGET_X = SynchedEntityData.defineId(SwarmDroneEntity.class, EntityDataSerializers.FLOAT);
@@ -69,7 +70,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     private float explosionRadius = 5f;
 
     private float randomFloat;
-    private int guide_type = 0;
+    private int guideType = 0;
 
     public SwarmDroneEntity(EntityType<? extends SwarmDroneEntity> type, Level level) {
         super(type, level);
@@ -107,7 +108,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     }
 
     public void setGuideType(int guideType) {
-        this.guide_type = guideType;
+        this.guideType = guideType;
     }
 
     public void setTargetVec(Vec3 targetPos) {
@@ -233,7 +234,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
             Entity shooter = this.getOwner();
             Vec3 targetPos;
 
-            if (guide_type == 0 && entity!= null) {
+            if (guideType == 0 && entity!= null) {
                 targetPos = entity.getEyePosition();
                 this.entityData.set(TARGET_X, (float) targetPos.x);
                 this.entityData.set(TARGET_Y, (float) targetPos.y);
@@ -309,12 +310,26 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     }
 
     @Override
-    public SoundEvent getSound() {
+    public @NotNull SoundEvent getSound() {
         return ModSounds.DRONE_SOUND.get();
     }
 
     @Override
     public float getVolume() {
         return 0.07f;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+    }
+
+    @Override
+    public void setExplosionDamage(float explosionDamage) {
+        this.explosionDamage = explosionDamage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.explosionRadius = radius;
     }
 }

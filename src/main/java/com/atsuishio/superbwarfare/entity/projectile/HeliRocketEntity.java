@@ -33,6 +33,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -44,7 +45,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class HeliRocketEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity {
+public class HeliRocketEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity, ExplosiveProjectile {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float damage = 140f;
@@ -186,17 +187,32 @@ public class HeliRocketEntity extends FastThrowableProjectile implements GeoEnti
     }
 
     @Override
-    public SoundEvent getCloseSound() {
+    public @NotNull SoundEvent getCloseSound() {
         return ModSounds.ROCKET_ENGINE.get();
     }
 
     @Override
-    public SoundEvent getSound() {
+    public @NotNull SoundEvent getSound() {
         return ModSounds.ROCKET_FLY.get();
     }
 
     @Override
     public float getVolume() {
         return 0.1f;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public void setExplosionDamage(float damage) {
+        this.explosionDamage = damage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.explosionRadius = radius;
     }
 }

@@ -44,7 +44,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity {
+public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity, ExplosiveProjectile {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -84,14 +84,17 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
-    public void setExplosionRadius(float explosionRadius) {
-        this.explosionRadius = explosionRadius;
-    }
-
+    @Override
     public void setDamage(float damage) {
         this.damage = damage;
     }
 
+    @Override
+    public void setExplosionRadius(float explosionRadius) {
+        this.explosionRadius = explosionRadius;
+    }
+
+    @Override
     public void setExplosionDamage(float explosionDamage) {
         this.explosionDamage = explosionDamage;
     }

@@ -51,7 +51,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CannonShellEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity {
+public class CannonShellEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity, ExplosiveProjectile {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float damage = 0;
@@ -362,5 +362,20 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
     @Override
     public float getVolume() {
         return 0.07f;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public void setExplosionDamage(float damage) {
+        this.explosionDamage = damage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.radius = radius;
     }
 }

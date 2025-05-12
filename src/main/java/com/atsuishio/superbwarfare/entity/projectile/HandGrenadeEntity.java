@@ -35,7 +35,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class HandGrenadeEntity extends FastThrowableProjectile implements GeoEntity {
+public class HandGrenadeEntity extends FastThrowableProjectile implements GeoEntity, ExplosiveProjectile {
 
     private int fuse = 100;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -163,5 +163,21 @@ public class HandGrenadeEntity extends FastThrowableProjectile implements GeoEnt
     @Override
     protected float getGravity() {
         return 0.07F;
+    }
+
+    // TODO setter
+    @Override
+    public void setDamage(float damage) {
+
+    }
+
+    @Override
+    public void setExplosionDamage(float explosionDamage) {
+
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+
     }
 }

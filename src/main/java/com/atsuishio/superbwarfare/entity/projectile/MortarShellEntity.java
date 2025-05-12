@@ -51,9 +51,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class MortarShellEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity {
+public class MortarShellEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity, ExplosiveProjectile {
 
-    private float damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
+    private float damage = 50;
+    private float explosionDamage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
     private int life = 600;
     private float radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -76,14 +77,14 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
         super(ModEntities.MORTAR_SHELL.get(), entity, level);
     }
 
-    public MortarShellEntity(LivingEntity entity, Level world, float damage) {
+    public MortarShellEntity(LivingEntity entity, Level world, float explosionDamage) {
         super(ModEntities.MORTAR_SHELL.get(), entity, world);
-        this.damage = damage;
+        this.explosionDamage = explosionDamage;
     }
 
-    public MortarShellEntity(LivingEntity entity, Level world, float damage, float radius) {
+    public MortarShellEntity(LivingEntity entity, Level world, float explosionDamage, float radius) {
         super(ModEntities.MORTAR_SHELL.get(), entity, world);
-        this.damage = damage;
+        this.explosionDamage = explosionDamage;
         this.radius = radius;
     }
 
@@ -111,6 +112,7 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putFloat("Damage", this.damage);
+        pCompound.putFloat("ExplosionDamage", this.explosionDamage);
         pCompound.putInt("Life", this.life);
         pCompound.putFloat("Radius", this.radius);
 
@@ -138,10 +140,17 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+
         if (pCompound.contains("Damage")) {
             this.damage = pCompound.getFloat("Damage");
         } else {
-            this.damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
+            this.damage = 50f;
+        }
+
+        if (pCompound.contains("ExplosionDamage")) {
+            this.explosionDamage = pCompound.getFloat("ExplosionDamage");
+        } else {
+            this.explosionDamage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
         }
 
         if (pCompound.contains("Life")) {
@@ -190,7 +199,7 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
     public void onHitEntity(EntityHitResult entityHitResult) {
         if (this.tickCount > 1) {
             Entity entity = entityHitResult.getEntity();
-            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 50);
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             if (this.level() instanceof ServerLevel) {
                 causeExplode(entityHitResult.getLocation());
                 this.createAreaCloud(this.level(), entityHitResult.getLocation());
@@ -240,7 +249,7 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
                         this,
                         this.getOwner()),
-                damage,
+                explosionDamage,
                 vec3.x,
                 vec3.y,
                 vec3.z,
@@ -280,7 +289,7 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
 
         AreaEffectCloud cloud = new AreaEffectCloud(level, pos.x, pos.y, pos.z);
         cloud.setPotion(this.potion);
-        cloud.setDuration((int) this.damage);
+        cloud.setDuration((int) this.explosionDamage);
         cloud.setRadius(this.radius);
         if (this.getOwner() instanceof LivingEntity living) {
             cloud.setOwner(living);
@@ -296,5 +305,20 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
     @Override
     public float getVolume() {
         return 0.06f;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public void setExplosionDamage(float explosionDamage) {
+        this.explosionDamage = explosionDamage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.radius = radius;
     }
 }

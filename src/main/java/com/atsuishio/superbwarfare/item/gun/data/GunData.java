@@ -184,6 +184,10 @@ public class GunData {
         return magazine() <= 0;
     }
 
+    public String projectileType() {
+        return defaultGunData().projectileType;
+    }
+
     public int projectileAmount() {
         return defaultGunData().projectileAmount;
     }

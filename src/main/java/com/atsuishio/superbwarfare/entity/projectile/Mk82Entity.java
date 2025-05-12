@@ -39,6 +39,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity, AerialBombEntity {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk82Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -181,5 +182,21 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     @Override
     public boolean shouldSyncMotion() {
         return true;
+    }
+
+    // TODO setter
+    @Override
+    public void setDamage(float damage) {
+
+    }
+
+    @Override
+    public void setExplosionDamage(float damage) {
+
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+
     }
 }

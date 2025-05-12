@@ -60,7 +60,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class JavelinMissileEntity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity {
+public class JavelinMissileEntity extends FastThrowableProjectile implements GeoEntity, DestroyableProjectileEntity, LoudlyEntity, ExplosiveProjectile {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> TOP = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.BOOLEAN);
@@ -70,22 +71,22 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float monsterMultiplier = 0.0f;
     private float damage = 500.0f;
-    private float explosion_damage = 140f;
-    private float explosion_radius = 6f;
+    private float explosionDamage = 140f;
+    private float explosionRadius = 6f;
     private boolean distracted = false;
-    private int guide_type = 0;
+    private int guideType = 0;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius, int guide_type, Vec3 targetPos) {
+    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius, int guideType, Vec3 targetPos) {
         super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
-        this.explosion_damage = explosion_damage;
-        this.explosion_radius = explosion_radius;
-        this.guide_type = guide_type;
+        this.explosionDamage = explosionDamage;
+        this.explosionRadius = explosionRadius;
+        this.guideType = guideType;
         this.entityData.set(TARGET_X, (float) targetPos.x);
         this.entityData.set(TARGET_Y, (float) targetPos.y);
         this.entityData.set(TARGET_Z, (float) targetPos.z);
@@ -242,7 +243,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
             }
         }
 
-        if (guide_type == 0 || !entityData.get(TARGET_UUID).equals("none")) {
+        if (guideType == 0 || !entityData.get(TARGET_UUID).equals("none")) {
             if (entity != null) {
                 if (entity.level() instanceof ServerLevel) {
                     this.entityData.set(TARGET_X, (float) entity.getX());
@@ -283,7 +284,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
                     }
                 }
             }
-        } else if (guide_type == 1) {
+        } else if (guideType == 1) {
             double px = this.getX();
             double ex = this.entityData.get(TARGET_X);
             double pz = this.getZ();
@@ -331,7 +332,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                        this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
             this.discard();
         }
@@ -353,11 +354,11 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
                         this,
                         this.getOwner()),
-                explosion_damage,
+                explosionDamage,
                 this.getX(),
                 this.getEyeY(),
                 this.getZ(),
-                explosion_radius,
+                explosionRadius,
                 ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP, true).
                 setDamageMultiplier(this.monsterMultiplier);
         explosion.explode();
@@ -403,5 +404,20 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     @Override
     public float getVolume() {
         return 0.4f;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public void setExplosionDamage(float damage) {
+        this.explosionDamage = damage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.explosionRadius = radius;
     }
 }

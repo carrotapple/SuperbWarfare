@@ -37,7 +37,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class SmallCannonShellEntity extends FastThrowableProjectile implements GeoEntity {
+public class SmallCannonShellEntity extends FastThrowableProjectile implements GeoEntity, ExplosiveProjectile {
 
     private float damage = 40.0f;
     private float explosionDamage = 80f;
@@ -191,5 +191,20 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public void setExplosionDamage(float explosionDamage) {
+        this.explosionDamage = explosionDamage;
+    }
+
+    @Override
+    public void setExplosionRadius(float radius) {
+        this.explosionRadius = radius;
     }
 }
