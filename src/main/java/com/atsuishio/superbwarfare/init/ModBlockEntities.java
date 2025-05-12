@@ -23,4 +23,6 @@ public class ModBlockEntities {
             () -> BlockEntityType.Builder.of(SmallContainerBlockEntity::new, ModBlocks.SMALL_CONTAINER.get()).build(null));
     public static final RegistryObject<BlockEntityType<VehicleDeployerBlockEntity>> VEHICLE_DEPLOYER = REGISTRY.register("vehicle_deployer",
             () -> BlockEntityType.Builder.of(VehicleDeployerBlockEntity::new, ModBlocks.VEHICLE_DEPLOYER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<AircraftCatapultBlockEntity>> AIRCRAFT_CATAPULT = REGISTRY.register("aircraft_catapult",
+            () -> BlockEntityType.Builder.of(AircraftCatapultBlockEntity::new, ModBlocks.AIRCRAFT_CATAPULT.get()).build(null));
 }

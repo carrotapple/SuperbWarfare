@@ -282,6 +282,7 @@ public class ModItems {
     public static final RegistryObject<Item> CONTAINER = BLOCKS.register("container", ContainerBlockItem::new);
     public static final RegistryObject<Item> SMALL_CONTAINER = BLOCKS.register("small_container", SmallContainerBlockItem::new);
     public static final RegistryObject<Item> VEHICLE_DEPLOYER = BLOCKS.register("vehicle_deployer", VehicleDeployerBlockItem::new);
+    public static final RegistryObject<Item> AIRCRAFT_CATAPULT = block(ModBlocks.AIRCRAFT_CATAPULT);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
