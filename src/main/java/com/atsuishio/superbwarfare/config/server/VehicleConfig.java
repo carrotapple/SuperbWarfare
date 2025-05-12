@@ -65,6 +65,7 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue AH_6_ROCKET_DAMAGE;
     public static ForgeConfigSpec.IntValue AH_6_ROCKET_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue AH_6_ROCKET_EXPLOSION_RADIUS;
+    public static ForgeConfigSpec.BooleanValue AH_6_CANNON_DESTROY;
 
     public static ForgeConfigSpec.IntValue LAV_150_HP;
     public static ForgeConfigSpec.IntValue LAV_150_ENERGY_COST;
@@ -307,6 +308,9 @@ public class VehicleConfig {
 
         builder.comment("The rocket explosion radius of AH-6");
         AH_6_ROCKET_EXPLOSION_RADIUS = builder.defineInRange("ah_6_rocket_explosion_radius", 5, 1, 10000000);
+
+        builder.comment("Whether to destroy the block when cannon of AH-6 hits a block");
+        AH_6_CANNON_DESTROY = builder.define("ah_6_cannon_destroy", true);
 
         builder.pop();
 
