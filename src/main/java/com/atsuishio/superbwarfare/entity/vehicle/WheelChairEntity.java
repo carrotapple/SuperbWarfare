@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
@@ -31,6 +32,8 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -44,12 +47,14 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public int jumpCoolDown;
     public int handBusyTime;
 
     public WheelChairEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.WHEEL_CHAIR.get(), world);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
     public WheelChairEntity(EntityType<WheelChairEntity> type, Level world) {
@@ -95,7 +100,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         this.playSound(ModSounds.WHEEL_STEP.get(), (float) (getDeltaMovement().length() * 0.3), random.nextFloat() * 0.15f + 1);
     }
 
-   
 
     @Override
     public boolean sendFireStarParticleOnHurt() {

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
@@ -20,7 +21,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -33,7 +33,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -45,12 +47,14 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
+
     public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float yRotSync;
 
     public Tom6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.TOM_6.get(), world);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
     public Tom6Entity(EntityType<Tom6Entity> type, Level world) {
@@ -137,8 +141,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public void travel() {
         Entity passenger = this.getFirstPassenger();
 
-//        if (this.getEnergy() <= 0) return;
-
         float diffX;
         float diffY;
 
@@ -154,10 +156,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                 this.setXRot(Mth.clamp(this.getXRot() + 0.1f, -89, 89));
             }
         } else if (passenger instanceof Player player) {
-//            if (level().isClientSide && this.getEnergy() > 0) {
-//                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1.2f), false);
-//            }
-
             if (forwardInputDown && getEnergy() > 0) {
                 this.consumeEnergy(VehicleConfig.TOM_6_ENERGY_COST.get());
                 this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.1f, 1f));
@@ -213,24 +211,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.995f);
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
 
-
         this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale(0.03 * this.entityData.get(POWER))));
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 20)) * Mth.DEG_TO_RAD) * Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD) * getDeltaMovement().dot(getViewVector(1)) * 0.04, -0.04, 0.09), 0.0f));
-
-//        Vector3f direction = getRightDirection().mul(-Math.sin(this.getRoll() * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
-//        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(3)));
-//
-//        this.setDeltaMovement(this.getDeltaMovement().add(
-//                Mth.sin(-this.getYRot() * 0.017453292F) * 0.19 * this.entityData.get(POWER),
-//                Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().dot(getViewVector(1)) * 0.067, -0.04, 0.09),
-//                Mth.cos(this.getYRot() * 0.017453292F) * 0.19 * this.entityData.get(POWER)
-//        ));
-    }
-
-    @Override
-    public SoundEvent getEngineSound() {
-        return SoundEvents.EMPTY;
     }
 
     @Override
