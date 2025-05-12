@@ -48,4 +48,5 @@ public class ModBlocks {
     public static final RegistryObject<Block> FUMO_25 = REGISTRY.register("fumo_25", FuMO25Block::new);
     public static final RegistryObject<Block> SMALL_CONTAINER = REGISTRY.register("small_container", SmallContainerBlock::new);
     public static final RegistryObject<Block> VEHICLE_DEPLOYER = REGISTRY.register("vehicle_deployer", VehicleDeployerBlock::new);
+    public static final RegistryObject<Block> AIRCRAFT_CATAPULT = REGISTRY.register("aircraft_catapult", AircraftCatapultBlock::new);
 }
