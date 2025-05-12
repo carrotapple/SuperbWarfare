@@ -43,6 +43,9 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk82Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    private float explosionDamage = ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get();
+    private float explosionRadius = ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue();
+
     public Mk82Entity(EntityType<? extends Mk82Entity> type, Level world) {
         super(type, world);
         this.noCulling = true;
@@ -69,7 +72,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.JAVELIN_MISSILE.get();
+        return ModItems.MEDIUM_AERIAL_BOMB.get();
     }
 
     @Override
@@ -127,7 +130,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        ProjectileTool.causeCustomExplode(this, ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get(), ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue(), 1.2f);
+        ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, 1.2f);
         this.discard();
     }
 
@@ -135,11 +138,9 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     public void tick() {
         super.tick();
 
-//        this.setDeltaMovement(this.getDeltaMovement().multiply(0.98, 0.98, 0.98));
-
         if (tickCount > 600 || this.entityData.get(HEALTH) <= 0) {
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get(), ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue(), 1.2f);
+                ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, 1.2f);
             }
             this.discard();
         }
@@ -184,19 +185,17 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
         return true;
     }
 
-    // TODO setter
     @Override
     public void setDamage(float damage) {
-
     }
 
     @Override
     public void setExplosionDamage(float damage) {
-
+        this.explosionDamage = damage;
     }
 
     @Override
     public void setExplosionRadius(float radius) {
-
+        this.explosionRadius = radius;
     }
 }
