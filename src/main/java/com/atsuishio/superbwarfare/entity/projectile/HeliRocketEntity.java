@@ -12,6 +12,7 @@ import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessag
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -72,6 +73,28 @@ public class HeliRocketEntity extends FastThrowableProjectile implements GeoEnti
     public HeliRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.HELI_ROCKET.get(), level);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putFloat("Damage", this.damage);
+        pCompound.putFloat("ExplosionDamage", this.explosionDamage);
+        pCompound.putFloat("Radius", this.explosionRadius);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("Damage")) {
+            this.damage = pCompound.getFloat("Damage");
+        }
+        if (pCompound.contains("ExplosionDamage")) {
+            this.explosionDamage = pCompound.getFloat("ExplosionDamage");
+        }
+        if (pCompound.contains("Radius")) {
+            this.explosionRadius = pCompound.getFloat("Radius");
+        }
     }
 
     @Override

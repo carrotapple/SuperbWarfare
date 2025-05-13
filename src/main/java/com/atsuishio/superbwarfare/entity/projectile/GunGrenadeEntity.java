@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -56,6 +57,28 @@ public class GunGrenadeEntity extends FastThrowableProjectile implements GeoEnti
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.GUN_GRENADE.get(), level);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putFloat("Damage", this.damage);
+        pCompound.putFloat("ExplosionDamage", this.explosionDamage);
+        pCompound.putFloat("Radius", this.explosionRadius);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("Damage")) {
+            this.damage = pCompound.getFloat("Damage");
+        }
+        if (pCompound.contains("ExplosionDamage")) {
+            this.explosionDamage = pCompound.getFloat("ExplosionDamage");
+        }
+        if (pCompound.contains("Radius")) {
+            this.explosionRadius = pCompound.getFloat("Radius");
+        }
     }
 
     @Override
