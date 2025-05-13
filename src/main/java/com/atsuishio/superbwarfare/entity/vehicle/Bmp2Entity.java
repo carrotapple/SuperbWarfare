@@ -773,4 +773,9 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     public boolean hasDecoy() {
         return true;
     }
+
+    @Override
+    public double getSensitivity(double original, boolean zoom, int seatIndex, boolean isOnGround) {
+        return zoom ? 0.22 : 0.27;
+    }
 }

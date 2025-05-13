@@ -350,4 +350,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public boolean allowFreeCam() {
         return true;
     }
+
+    @Override
+    public double getSensitivity(double original, boolean zoom, int seatIndex, boolean isOnGround) {
+        return 0.3;
+    }
 }

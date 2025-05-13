@@ -183,7 +183,6 @@ public class Hpj11Entity extends ContainerMobileVehicleEntity implements GeoEnti
         return super.interact(player, hand);
     }
 
-   
 
     @Override
     public DamageModifier getDamageModifier() {
@@ -599,6 +598,7 @@ public class Hpj11Entity extends ContainerMobileVehicleEntity implements GeoEnti
     public int getWeaponHeat(Player player) {
         return entityData.get(HEAT);
     }
+
     @Override
     public Vec3 getBarrelVector(float pPartialTicks) {
         if (getFirstPassenger() != null) {
@@ -610,5 +610,10 @@ public class Hpj11Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public ResourceLocation getVehicleIcon() {
         return Mod.loc("textures/vehicle_icon/hpj_11.png");
+    }
+
+    @Override
+    public double getSensitivity(double original, boolean zoom, int seatIndex, boolean isOnGround) {
+        return zoom ? 0.25 : 0.3;
     }
 }

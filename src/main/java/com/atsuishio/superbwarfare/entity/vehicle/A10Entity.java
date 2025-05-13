@@ -1066,4 +1066,9 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public int getDecoy() {
         return this.entityData.get(DECOY_COUNT);
     }
+
+    @Override
+    public double getSensitivity(double original, boolean zoom, int seatIndex, boolean isOnGround) {
+        return 0.25;
+    }
 }
