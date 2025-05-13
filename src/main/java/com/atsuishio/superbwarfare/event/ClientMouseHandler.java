@@ -14,9 +14,10 @@ import static com.atsuishio.superbwarfare.event.ClientEventHandler.isFreeCam;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientMouseHandler {
-    public static Vec2 posO = new Vec2(0 , 0);
-    public static Vec2 posN = new Vec2(0 , 0);
-    public static Vec2 mousePos = new Vec2(0 , 0);
+
+    public static Vec2 posO = new Vec2(0, 0);
+    public static Vec2 posN = new Vec2(0, 0);
+    public static Vec2 mousePos = new Vec2(0, 0);
     public static double PosX = 0;
     public static double lerpPosX = 0;
     public static double PosY = 0;
@@ -49,20 +50,20 @@ public class ClientMouseHandler {
             mousePos = posN.add(posO.scale(-1));
 
             if (mousePos.x != 0) {
-                lerpPosX = Mth.lerp(0.1,PosX,mousePos.x);
+                lerpPosX = Mth.lerp(0.1, PosX, mousePos.x);
             }
             if (mousePos.y != 0) {
-                lerpPosY = Mth.lerp(0.1,PosY,mousePos.y);
+                lerpPosY = Mth.lerp(0.1, PosY, mousePos.y);
             }
         }
 
-        lerpPosX = Mth.clamp(Mth.lerp(event.getPartialTick(),lerpPosX,0), -1, 1);
-        lerpPosY = Mth.clamp(Mth.lerp(event.getPartialTick(),lerpPosY,0), -1, 1);
+        lerpPosX = Mth.clamp(Mth.lerp(event.getPartialTick(), lerpPosX, 0), -1, 1);
+        lerpPosY = Mth.clamp(Mth.lerp(event.getPartialTick(), lerpPosY, 0), -1, 1);
 
 
         if (isFreeCam(player)) {
-            freeCameraYaw = Mth.clamp(freeCameraYaw + 4 * lerpPosX, -100 , 100);
-            freeCameraPitch = Mth.clamp(freeCameraPitch + 4 * lerpPosY, -90 , 90);
+            freeCameraYaw = Mth.clamp(freeCameraYaw + 4 * lerpPosX, -100, 100);
+            freeCameraPitch = Mth.clamp(freeCameraPitch + 4 * lerpPosY, -90, 90);
         }
 
         float yaw = event.getYaw();
