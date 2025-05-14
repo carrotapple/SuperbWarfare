@@ -1,8 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.AirEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -76,13 +75,11 @@ public class MouseHandlerMixin {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
 
+        // 反转鼠标
+
         if (player == null) return i;
 
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player) {
-            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
-        }
-
-        if (player.getVehicle() instanceof Tom6Entity tom6 && tom6.getFirstPassenger() == player) {
+        if (player.getVehicle() instanceof VehicleEntity vehicle && vehicle instanceof AirEntity && vehicle.getFirstPassenger() == player) {
             return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
         }
         return i;
