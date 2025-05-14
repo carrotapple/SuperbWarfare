@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.superbwarfare.refmap.json",
   "mixins": [
+    "BeastMixin",
     "ClientboundSetPassengersPacketMixin",
     "EntityMixin",
     "ExplosionMixin",
