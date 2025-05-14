@@ -31,11 +31,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -102,7 +105,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
         super.readAdditionalSaveData(compound);
     }
 
-   
 
     @Override
     public double getPassengersRidingOffset() {
@@ -417,7 +419,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             r2 = a / 90f;
         } else {
             if (a < 0) {
-                r2 = - (180f + a) / 90f;
+                r2 = -(180f + a) / 90f;
             } else {
                 r2 = (180f - a) / 90f;
             }
@@ -482,7 +484,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
             r2 = a / 90f;
         } else {
             if (a < 0) {
-                r2 = - (180f + a) / 90f;
+                r2 = -(180f + a) / 90f;
             } else {
                 r2 = (180f - a) / 90f;
             }
@@ -589,5 +591,23 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public Vec3 getGunVec(float ticks) {
         return getBarrelVector(ticks);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public @Nullable Vec2 getCameraRotation(float partialTicks, Player player, boolean zoom, boolean isFirstPerson) {
+        if (this.getSeatIndex(player) == 0 && zoom) {
+            return new Vec2((float) -getYRotFromVector(this.getBarrelVec(partialTicks)), (float) -getXRotFromVector(this.getBarrelVec(partialTicks)));
+        }
+        return super.getCameraRotation(partialTicks, player, zoom, isFirstPerson);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public Vec3 getCameraPosition(float partialTicks, Player player, boolean zoom, boolean isFirstPerson) {
+        if (this.getSeatIndex(player) == 0 && zoom) {
+            return new Vec3(this.driverZoomPos(partialTicks).x, this.driverZoomPos(partialTicks).y, this.driverZoomPos(partialTicks).z);
+        }
+        return super.getCameraPosition(partialTicks, player, zoom, isFirstPerson);
     }
 }
