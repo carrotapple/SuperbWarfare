@@ -24,7 +24,8 @@ public class TACZGunEventHandler {
     }
 
     public static boolean displayCompat() {
-        return hasMod() && ModList.get().getModFileById("tacz") != null && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4");
+        return hasMod() && ModList.get().getModFileById("tacz") != null &&
+                (ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4") || ModList.get().getModFileById("tacz").versionString().startsWith("1.1.5"));
     }
 
     public static ResourceLocation getTaczCompatIcon(ItemStack stack) {
