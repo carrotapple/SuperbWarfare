@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -19,32 +18,19 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     @Inject(method = "setupRotations", at = @At("TAIL"))
     public void render(T entity, PoseStack matrices, float animationProgress, float bodyYaw, float tickDelta, CallbackInfo ci) {
         if (entity.getRootVehicle() != entity && entity.getRootVehicle() instanceof VehicleEntity vehicle) {
-            if (vehicle instanceof Tom6Entity || vehicle instanceof WheelChairEntity || vehicle instanceof SpeedboatEntity || vehicle instanceof A10Entity) {
-                matrices.mulPose(Axis.XP.rotationDegrees(-vehicle.getViewXRot(tickDelta)));
-                matrices.mulPose(Axis.ZP.rotationDegrees(-vehicle.getRoll(tickDelta)));
-            } else if (vehicle instanceof Ah6Entity ah6Entity) {
-                if (entity == ah6Entity.getNthEntity(2)) {
-                    matrices.mulPose(Axis.XP.rotationDegrees(-ah6Entity.getRoll(tickDelta)));
-                    matrices.mulPose(Axis.ZP.rotationDegrees(ah6Entity.getViewXRot(tickDelta)));
-                } else if (entity == ah6Entity.getNthEntity(3)) {
-                    matrices.mulPose(Axis.XP.rotationDegrees(ah6Entity.getRoll(tickDelta)));
-                    matrices.mulPose(Axis.ZP.rotationDegrees(-ah6Entity.getViewXRot(tickDelta)));
-                } else {
-                    matrices.mulPose(Axis.XP.rotationDegrees(-ah6Entity.getViewXRot(tickDelta)));
-                    matrices.mulPose(Axis.ZP.rotationDegrees(-ah6Entity.getRoll(tickDelta)));
-                }
+            var rotation = vehicle.getPassengerRotation(entity, tickDelta);
+            if (rotation != null) {
+                matrices.mulPose(rotation.first());
+                matrices.mulPose(rotation.second());
             } else {
                 float a = Mth.wrapDegrees(Mth.lerp(tickDelta, entity.yBodyRotO, entity.yBodyRot) - Mth.lerp(tickDelta, vehicle.yRotO, vehicle.getYRot()));
-
                 float r = (Mth.abs(a) - 90f) / 90f;
-
                 float r2;
-
                 if (Mth.abs(a) <= 90f) {
                     r2 = a / 90f;
                 } else {
                     if (a < 0) {
-                        r2 = - (180f + a) / 90f;
+                        r2 = -(180f + a) / 90f;
                     } else {
                         r2 = (180f - a) / 90f;
                     }
