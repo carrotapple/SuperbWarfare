@@ -19,7 +19,7 @@ public class ClientSoundHandler {
             Minecraft.getInstance().getSoundManager().play(new LoudlyEntitySoundInstance.EntitySound(entity));
             Minecraft.getInstance().getSoundManager().play(new LoudlyEntitySoundInstance.EntitySoundClose(entity));
         } else {
-            Mod.queueClientWork(30, () -> {
+            Mod.queueClientWork(60, () -> {
                 if (entity instanceof MobileVehicleEntity mobileVehicle) {
                     if (mobileVehicle instanceof TrackEntity) {
                         Minecraft.getInstance().getSoundManager().play(new VehicleSoundInstance.TrackSound(mobileVehicle));
