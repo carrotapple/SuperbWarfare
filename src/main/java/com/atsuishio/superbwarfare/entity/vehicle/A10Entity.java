@@ -1096,4 +1096,9 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
         }
         return super.getCameraPosition(partialTicks, player, false, false);
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean useFixedCameraPos(Entity entity) {
+        return true;
+    }
 }

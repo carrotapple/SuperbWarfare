@@ -548,4 +548,9 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, CannonEnt
         }
         return super.getCameraPosition(partialTicks, player, false, false);
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean useFixedCameraPos(Entity entity) {
+        return true;
+    }
 }
