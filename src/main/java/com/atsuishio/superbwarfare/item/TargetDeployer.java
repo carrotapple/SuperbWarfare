@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,16 +22,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class TargetDeployer extends Item {
     public TargetDeployer() {
         super(new Item.Properties());
     }
 
+
+    private static final Predicate<Entity> IS_TARGET = e -> e instanceof TargetEntity;
+
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
+    public @NotNull InteractionResult useOn(UseOnContext pContext) {
         Level level = pContext.getLevel();
         if (!(level instanceof ServerLevel)) {
             return InteractionResult.SUCCESS;
@@ -39,14 +46,23 @@ public class TargetDeployer extends Item {
             BlockPos blockpos = pContext.getClickedPos();
             Direction direction = pContext.getClickedFace();
             BlockState blockstate = level.getBlockState(blockpos);
-            BlockPos blockpos1;
+            BlockPos pos;
             if (blockstate.getCollisionShape(level, blockpos).isEmpty()) {
-                blockpos1 = blockpos;
+                pos = blockpos;
             } else {
-                blockpos1 = blockpos.relative(direction);
+                pos = blockpos.relative(direction);
             }
 
-            if (ModEntities.TARGET.get().spawn((ServerLevel)level, itemstack, pContext.getPlayer(), blockpos1, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP) != null) {
+            // 禁止堆叠
+            if (!level.getEntities(
+                    (Entity) null,
+                    ModEntities.TARGET.get().getAABB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
+                    IS_TARGET
+            ).isEmpty()) {
+                return InteractionResult.FAIL;
+            }
+
+            if (ModEntities.TARGET.get().spawn((ServerLevel) level, itemstack, pContext.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, pos) && direction == Direction.UP) != null) {
                 itemstack.shrink(1);
                 level.gameEvent(pContext.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);
             }
@@ -56,7 +72,8 @@ public class TargetDeployer extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    @ParametersAreNonnullByDefault
+    public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         BlockHitResult blockhitresult = getPlayerPOVHitResult(pLevel, pPlayer, ClipContext.Fluid.SOURCE_ONLY);
         if (blockhitresult.getType() != HitResult.Type.BLOCK) {
@@ -68,7 +85,16 @@ public class TargetDeployer extends Item {
             if (!(pLevel.getBlockState(blockpos).getBlock() instanceof LiquidBlock)) {
                 return InteractionResultHolder.pass(itemstack);
             } else if (pLevel.mayInteract(pPlayer, blockpos) && pPlayer.mayUseItemAt(blockpos, blockhitresult.getDirection(), itemstack)) {
-                Entity entity = ModEntities.TARGET.get().spawn((ServerLevel)pLevel, itemstack, pPlayer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
+                // 禁止堆叠
+                if (!pLevel.getEntities(
+                        (Entity) null,
+                        ModEntities.TARGET.get().getAABB(blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5),
+                        IS_TARGET
+                ).isEmpty()) {
+                    return InteractionResultHolder.fail(itemstack);
+                }
+
+                TargetEntity entity = ModEntities.TARGET.get().spawn((ServerLevel) pLevel, itemstack, pPlayer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
                 if (entity == null) {
                     return InteractionResultHolder.pass(itemstack);
                 } else {

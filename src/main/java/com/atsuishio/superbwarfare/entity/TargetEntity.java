@@ -29,6 +29,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -60,26 +61,26 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public MobType getMobType() {
+    public @NotNull MobType getMobType() {
         return super.getMobType();
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
+    public @NotNull Iterable<ItemStack> getArmorSlots() {
         return NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot pSlot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
+    public void setItemSlot(@NotNull EquipmentSlot pSlot, @NotNull ItemStack pStack) {
     }
 
     @Override
-    public boolean causeFallDamage(float l, float d, DamageSource source) {
+    public boolean causeFallDamage(float l, float d, @NotNull DamageSource source) {
         return false;
     }
 
@@ -142,12 +143,12 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         super.die(source);
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
         if (player.isShiftKeyDown()) {
             if (!this.level().isClientSide()) {
                 this.discard();
@@ -157,6 +158,10 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
                 player.addItem(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
             }
         } else {
+            if (player.getMainHandItem() != ItemStack.EMPTY) {
+                return InteractionResult.PASS;
+            }
+
             this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
             this.setXRot(0);
             this.xRotO = this.getXRot();
@@ -175,7 +180,7 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public Vec3 getDeltaMovement() {
+    public @NotNull Vec3 getDeltaMovement() {
         return new Vec3(0, 0, 0);
     }
 
@@ -185,12 +190,12 @@ public class TargetEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public HumanoidArm getMainArm() {
+    public @NotNull HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
 
     @Override
-    protected void doPush(Entity entityIn) {
+    protected void doPush(@NotNull Entity entityIn) {
     }
 
     @Override

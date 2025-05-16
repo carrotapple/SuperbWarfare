@@ -100,14 +100,14 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Energy", energyStorage.serializeNBT());
         pCompound.putInt("Level", this.entityData.get(LEVEL));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.get("Energy") instanceof IntTag energyNBT) {
             energyStorage.deserializeNBT(energyNBT);
@@ -178,6 +178,10 @@ public class DPSGeneratorEntity extends LivingEntity implements GeoEntity {
                 player.addItem(new ItemStack(ModItems.DPS_GENERATOR_DEPLOYER.get()));
             }
         } else {
+            if (player.getMainHandItem() != ItemStack.EMPTY) {
+                return InteractionResult.PASS;
+            }
+
             this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
             this.setXRot(0);
             this.xRotO = this.getXRot();
