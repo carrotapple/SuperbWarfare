@@ -7,17 +7,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.*;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-@EventBusSubscriber(modid = Mod.MODID)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID)
 public class LaunchableEntityTool {
+
     public static HashMap<String, JsonObject> launchableEntitiesData = new HashMap<>();
 
     /**
