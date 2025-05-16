@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.Glock18LightLayer;
+import com.atsuishio.superbwarfare.client.CustomRenderer;
 import com.atsuishio.superbwarfare.client.model.item.Glock18ItemModel;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
@@ -20,17 +20,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class Glock18ItemRenderer extends GeoItemRenderer<Glock18Item> {
+public class Glock18ItemRenderer extends CustomRenderer<Glock18Item> {
 
     public Glock18ItemRenderer() {
         super(new Glock18ItemModel());
-        this.addRenderLayer(new Glock18LightLayer(this));
     }
 
     @Override
