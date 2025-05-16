@@ -23,8 +23,8 @@ public class CustomRenderer<T extends Item & GeoAnimatable> extends GeoItemRende
             return;
 
         for (GeoBone childBone : bone.getChildBones()) {
-            if (childBone.getName().endsWith("_l")) {
-                var type = ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable));
+            if (childBone.getName().endsWith("_illuminated")) {
+                var type = ModRenderTypes.GUN_ILLUMINATED.apply(this.getTextureLocation(animatable));
                 renderRecursively(poseStack, animatable, childBone, type, bufferSource, bufferSource.getBuffer(type), isReRender, partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
             } else {
                 renderRecursively(poseStack, animatable, childBone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
