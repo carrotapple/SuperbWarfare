@@ -280,7 +280,7 @@ public class AircraftOverlay implements IGuiOverlay {
                         if (lockOn) {
                             RenderHelper.blit(poseStack, FRAME_LOCK, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                         } else if (nearest) {
-                            lerpLock = Mth.lerp(partialTick, lerpLock, a10Entity.lockTime);
+                            lerpLock = Mth.lerp(partialTick, lerpLock,  2 * a10Entity.lockTime);
                             float lockTime = Mth.clamp(20 - lerpLock, 0, 20);
                             RenderHelper.blit(poseStack, IND_1, x - 12, y - 12 - lockTime, 0, 0, 24, 24, 24, 24, 1f);
                             RenderHelper.blit(poseStack, IND_2, x - 12, y - 12 + lockTime, 0, 0, 24, 24, 24, 24, 1f);

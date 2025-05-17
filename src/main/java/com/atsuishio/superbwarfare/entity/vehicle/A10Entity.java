@@ -442,7 +442,7 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
             resetSeek(player);
         }
 
-        Entity entity = SeekTool.seekCustomSizeEntity(this, this.level(), 384, 20, 0.9, true);
+        Entity entity = SeekTool.seekCustomSizeEntity(this, this.level(), 384, 18, 0.9, true);
         if (entity != null) {
             if (lockTime == 0) {
                 setTargetUuid(String.valueOf(entity.getUUID()));
@@ -461,7 +461,7 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
             }
         }
 
-        if (lockTime > 20) {
+        if (lockTime > 10) {
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.JET_LOCKON.get(), 2, 1);
             }
@@ -972,7 +972,7 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
                 Agm65Entity.setTargetUuid(getTargetUuid());
             }
             Agm65Entity.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            Agm65Entity.shoot(getDeltaMovement().x, getDeltaMovement().y, getDeltaMovement().z, (float) getDeltaMovement().length() + 1, 1);
+            Agm65Entity.shoot(getLookAngle().x, getLookAngle().y, getLookAngle().z, (float) getDeltaMovement().length() + 1, 1);
             player.level().addFreshEntity(Agm65Entity);
 
             BlockPos pos = BlockPos.containing(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z));
