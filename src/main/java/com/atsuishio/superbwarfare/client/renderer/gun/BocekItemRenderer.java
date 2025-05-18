@@ -11,14 +11,9 @@ import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -67,7 +62,7 @@ public class BocekItemRenderer extends CustomGunRenderer<BocekItem> {
             renderingArms = true;
         }
 
-        Player player = mc.player;
+        var player = mc.player;
         if (player == null) return;
 
         ItemStack itemStack = player.getMainHandItem();
@@ -85,36 +80,8 @@ public class BocekItemRenderer extends CustomGunRenderer<BocekItem> {
 
         AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0.002, 0.1790625, 0.13, 0.08f, 255, 0, 0, 255, "dot", false);
 
-        if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer localPlayer = mc.player;
-
-            if (localPlayer == null) {
-                return;
-            }
-
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
-            PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
-            stack.pushPose();
-            RenderUtils.translateMatrixToBone(stack, bone);
-            RenderUtils.translateToPivotPoint(stack, bone);
-            RenderUtils.rotateMatrixAroundBone(stack, bone);
-            RenderUtils.scaleMatrixForBone(stack, bone);
-            RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = localPlayer.getSkinTextureLocation();
-            VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
-            VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
-            if (name.equals("Lefthand")) {
-                stack.translate(-1.0f * SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
-                AnimationHelper.renderPartOverBone2(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-                AnimationHelper.renderPartOverBone2(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-            } else {
-                stack.translate(SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
-                AnimationHelper.renderPartOverBone2(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-                AnimationHelper.renderPartOverBone2(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-            }
-
-            this.currentBuffer.getBuffer(this.renderType);
-            stack.popPose();
+        if (renderingArms) {
+            AnimationHelper.renderArms(player, this.transformType, stack, name, bone, buffer, type, packedLightIn, false);
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }

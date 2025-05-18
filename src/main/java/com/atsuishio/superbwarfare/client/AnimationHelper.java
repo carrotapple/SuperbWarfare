@@ -1,18 +1,25 @@
 package com.atsuishio.superbwarfare.client;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.renderer.CustomGunRenderer;
 import com.atsuishio.superbwarfare.client.renderer.ModRenderTypes;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.data.gun.value.AttachmentType;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -111,10 +118,10 @@ public class AnimationHelper {
     }
 
     private static void vertex(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, int pLightmapUV, float pX, float pY, int pU, int pV) {
-        pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(255, 255, 255, 255).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+        pConsumer.vertex(pPose, pX - 0.5F, pY - 0.5F, 0.0F).color(255, 255, 255, 255).uv((float) pU, (float) pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, double x, double y, double z, float size, int r, int g, int b, int a ,String name, boolean hasBlackPart) {
+    public static void handleZoomCrossHair(MultiBufferSource currentBuffer, RenderType renderType, String boneName, PoseStack stack, GeoBone bone, MultiBufferSource buffer, double x, double y, double z, float size, int r, int g, int b, int a, String name, boolean hasBlackPart) {
         if (boneName.equals("cross") && ClientEventHandler.zoomPos > 0.8) {
             stack.pushPose();
             stack.translate(x, y, -z);
@@ -147,6 +154,51 @@ public class AnimationHelper {
     }
 
     private static void vertexRGB(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, int pLightmapUV, float pX, float pY, int pU, int pV, int r, int g, int b, int a, float size) {
-        pConsumer.vertex(pPose, pX - 0.5F * size, pY - 0.5F * size, 0.0F).color(r, g, b, a).uv((float)pU, (float)pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+        pConsumer.vertex(pPose, pX - 0.5F * size, pY - 0.5F * size, 0.0F).color(r, g, b, a).uv((float) pU, (float) pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+    }
+
+    public static void renderArms(LocalPlayer localPlayer, ItemDisplayContext transformType, PoseStack stack, String name, GeoBone bone,
+                                  MultiBufferSource currentBuffer, RenderType renderType, int packedLightIn, boolean useOldHandRender) {
+        if (transformType.firstPerson()) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (localPlayer == null) {
+                return;
+            }
+
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
+            PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
+            stack.pushPose();
+            RenderUtils.translateMatrixToBone(stack, bone);
+            RenderUtils.translateToPivotPoint(stack, bone);
+            RenderUtils.rotateMatrixAroundBone(stack, bone);
+            RenderUtils.scaleMatrixForBone(stack, bone);
+            RenderUtils.translateAwayFromPivotPoint(stack, bone);
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
+            VertexConsumer armBuilder = currentBuffer.getBuffer(RenderType.entitySolid(loc));
+            VertexConsumer sleeveBuilder = currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
+            if (name.equals("Lefthand")) {
+                stack.translate(-1.0f * CustomGunRenderer.SCALE_RECIPROCAL, 2.0f * CustomGunRenderer.SCALE_RECIPROCAL, 0.0f);
+                if (useOldHandRender) {
+                    AnimationHelper.renderPartOverBone(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                    AnimationHelper.renderPartOverBone(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                } else {
+                    AnimationHelper.renderPartOverBone2(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                    AnimationHelper.renderPartOverBone2(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                }
+            } else {
+                stack.translate(CustomGunRenderer.SCALE_RECIPROCAL, 2.0f * CustomGunRenderer.SCALE_RECIPROCAL, 0.0f);
+                if (useOldHandRender) {
+                    AnimationHelper.renderPartOverBone(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                    AnimationHelper.renderPartOverBone(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                } else {
+                    AnimationHelper.renderPartOverBone2(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                    AnimationHelper.renderPartOverBone2(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                }
+            }
+
+            currentBuffer.getBuffer(renderType);
+            stack.popPose();
+        }
     }
 }
