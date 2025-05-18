@@ -5,10 +5,10 @@
 			"animation_length": 1,
             "bones": {
               "rot1": {
-                "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / math.pi * 360"]
+                "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / math.pi * 360"]
               },
               "rot2": {
-                "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / math.pi * (-360)"]
+                "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / math.pi * (-360)"]
               }
             }
 		},
@@ -487,10 +487,10 @@
 					}
 				},
                 "rot1": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 3 / math.pi * 360"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 3 / math.pi * 360"]
                 },
                 "rot2": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 3 / math.pi * (-360)"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 3 / math.pi * (-360)"]
                 }
 			}
 		},
@@ -554,10 +554,10 @@
 					}
 				},
                 "rot1": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.8 / math.pi * 360"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 0.8 / math.pi * 360"]
                 },
                 "rot2": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.8 / math.pi * (-360)"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 0.8 / math.pi * (-360)"]
                 }
 			}
 		},
@@ -626,10 +626,10 @@
 					}
 				},
                 "rot1": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.7 / math.pi * 360"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 0.7 / math.pi * 360"]
                 },
                 "rot2": {
-                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.7 / math.pi * (-360)"]
+                  "rotation": [0, 0, "(query.sbw_system_time % 36000000) / 1600 / 0.7 / math.pi * (-360)"]
                 }
 			}
 		}

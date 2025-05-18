@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.molang.MolangVariable;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -14,10 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.molang.MolangParser;
-import software.bernie.geckolib.model.GeoModel;
 
-public class InsidiousItemModel extends GeoModel<InsidiousItem> {
+public class InsidiousItemModel extends CustomGunModel<InsidiousItem> {
 
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
@@ -90,11 +87,5 @@ public class InsidiousItemModel extends GeoModel<InsidiousItem> {
 
         AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.handleReloadShake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-    }
-
-    @Override
-    public void applyMolangQueries(InsidiousItem animatable, double animTime) {
-        super.applyMolangQueries(animatable, animTime);
-        MolangParser.INSTANCE.setValue(MolangVariable.SBW_SYSTEM_TIME, System::currentTimeMillis);
     }
 }
