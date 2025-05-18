@@ -3,9 +3,14 @@ package com.atsuishio.superbwarfare.client.molang;
 import software.bernie.geckolib.core.molang.LazyVariable;
 import software.bernie.geckolib.core.molang.MolangParser;
 
-public class MolangVariable {
+import java.util.function.DoubleSupplier;
 
+public class MolangVariable {
     public static void register() {
-        MolangParser.INSTANCE.register(new LazyVariable("sbw.system_time", System::currentTimeMillis));
+        register("sbw.system_time", System::currentTimeMillis);
+    }
+
+    private static void register(String name, DoubleSupplier supplier) {
+        MolangParser.INSTANCE.register(new LazyVariable(name, supplier));
     }
 }
