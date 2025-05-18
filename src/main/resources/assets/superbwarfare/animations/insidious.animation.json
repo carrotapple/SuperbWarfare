@@ -2,7 +2,15 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.insidious.idle": {
-			"animation_length": 1
+			"animation_length": 1,
+            "bones": {
+              "rot1": {
+                "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / math.pi * 360"]
+              },
+              "rot2": {
+                "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / math.pi * (-360)"]
+              }
+            }
 		},
 		"animation.insidious.reload": {
 			"animation_length": 3,
@@ -477,7 +485,13 @@
 							"lerp_mode": "catmullrom"
 						}
 					}
-				}
+				},
+                "rot1": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 3 / math.pi * 360"]
+                },
+                "rot2": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 3 / math.pi * (-360)"]
+                }
 			}
 		},
 		"animation.insidious.run": {
@@ -538,7 +552,13 @@
 						"0.6": [0.3, 0, -0.3],
 						"0.8": [-0.3, -0.3, 0.3]
 					}
-				}
+				},
+                "rot1": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.8 / math.pi * 360"]
+                },
+                "rot2": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.8 / math.pi * (-360)"]
+                }
 			}
 		},
 		"animation.insidious.run_fast": {
@@ -604,7 +624,13 @@
 						"0.525": [0.3, 0, -0.3],
 						"0.7": [-0.3, -0.3, 0.3]
 					}
-				}
+				},
+                "rot1": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.7 / math.pi * 360"]
+                },
+                "rot2": {
+                  "rotation": [0, 0, "(sbw.system_time % 36000000) / 1600 / 0.7 / math.pi * (-360)"]
+                }
 			}
 		}
 	}

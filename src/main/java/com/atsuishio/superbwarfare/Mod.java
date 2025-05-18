@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare;
 
 import com.atsuishio.superbwarfare.api.event.RegisterContainersEvent;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
+import com.atsuishio.superbwarfare.client.molang.MolangVariable;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.ClientConfig;
 import com.atsuishio.superbwarfare.config.CommonConfig;
@@ -194,6 +195,8 @@ public class Mod {
                 Ingredient.of(Items.REDSTONE), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.LONG_SHOCK.get())));
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())),
                 Ingredient.of(Items.GLOWSTONE_DUST), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.STRONG_SHOCK.get())));
+
+        MolangVariable.register();
 
         var registerContainerEvent = new RegisterContainersEvent();
         FMLJavaModLoadingContext.get().getModEventBus().post(registerContainerEvent);
