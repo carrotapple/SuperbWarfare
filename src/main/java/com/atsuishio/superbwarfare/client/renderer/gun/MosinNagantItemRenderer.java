@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer.gun;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.model.item.MosinNagantItemModel;
+import com.atsuishio.superbwarfare.client.renderer.CustomGunRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.MosinNagantItem;
@@ -16,53 +17,14 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class MosinNagantItemRenderer extends GeoItemRenderer<MosinNagantItem> {
+public class MosinNagantItemRenderer extends CustomGunRenderer<MosinNagantItem> {
 
     public MosinNagantItemRenderer() {
         super(new MosinNagantItemModel());
-    }
-
-    @Override
-    public RenderType getRenderType(MosinNagantItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    private static final float SCALE_RECIPROCAL = 1.0f / 16.0f;
-    protected boolean renderArms = false;
-    protected MultiBufferSource currentBuffer;
-    protected RenderType renderType;
-    public ItemDisplayContext transformType;
-    protected MosinNagantItem animatable;
-    private final Set<String> hiddenBones = new HashSet<>();
-
-    @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        this.transformType = transformType;
-        if (this.animatable != null)
-            this.animatable.getTransformType(transformType);
-        super.renderByItem(stack, transformType, matrixStack, bufferIn, combinedLightIn, p_239207_6_);
-    }
-
-    @Override
-    public void actuallyRender(PoseStack matrixStackIn, MosinNagantItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
-                               int packedOverlayIn, float red, float green, float blue, float alpha) {
-        this.currentBuffer = renderTypeBuffer;
-        this.renderType = type;
-        this.animatable = animatable;
-        super.actuallyRender(matrixStackIn, animatable, model, type, renderTypeBuffer, vertexBuilder, isRenderer, partialTicks, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        if (this.renderArms) {
-            this.renderArms = false;
-        }
     }
 
     @Override
@@ -74,15 +36,12 @@ public class MosinNagantItemRenderer extends GeoItemRenderer<MosinNagantItem> {
         if (name.equals("Lefthand") || name.equals("Righthand")) {
             bone.setHidden(true);
             renderingArms = true;
-        } else {
-            bone.setHidden(this.hiddenBones.contains(name));
         }
 
         Player player = mc.player;
         if (player == null) return;
         ItemStack itemStack = player.getMainHandItem();
         if (!(itemStack.getItem() instanceof GunItem)) return;
-
 
         if (name.equals("jia") || name.equals("b1") || name.equals("b2")) {
             bone.setHidden(ClientEventHandler.zoomPos > 0.7);
@@ -124,10 +83,5 @@ public class MosinNagantItemRenderer extends GeoItemRenderer<MosinNagantItem> {
             stack.popPose();
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(MosinNagantItem instance) {
-        return super.getTextureLocation(instance);
     }
 }

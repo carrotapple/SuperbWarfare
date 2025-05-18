@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -34,7 +33,6 @@ import java.util.function.Consumer;
 public class MosinNagantItem extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static ItemDisplayContext transformType;
 
     public MosinNagantItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.RARE));
@@ -56,10 +54,6 @@ public class MosinNagantItem extends GunItem implements GeoItem {
                 return PoseTool.pose(entityLiving, hand, stack);
             }
         });
-    }
-
-    public void getTransformType(ItemDisplayContext type) {
-        transformType = type;
     }
 
     private PlayState fireAnimPredicate(AnimationState<MosinNagantItem> event) {
