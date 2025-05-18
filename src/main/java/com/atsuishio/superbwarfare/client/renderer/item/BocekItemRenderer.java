@@ -1,10 +1,11 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.BocekLayer;
-import com.atsuishio.superbwarfare.client.layer.gun.BocekPowerLightLayer;
+import com.atsuishio.superbwarfare.client.CustomRenderer;
+import com.atsuishio.superbwarfare.client.ModRenderTypes;
 import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.data.gun.GunData;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,20 +21,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
+public class BocekItemRenderer extends CustomRenderer<BocekItem> {
 
     public BocekItemRenderer() {
         super(new BocekItemModel());
-        this.addRenderLayer(new BocekLayer(this));
-        this.addRenderLayer(new BocekPowerLightLayer(this));
     }
 
     @Override
@@ -48,6 +47,32 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
     public ItemDisplayContext transformType;
     protected BocekItem animatable;
     private final Set<String> hiddenBones = new HashSet<>();
+
+    @Override
+    public void illuminatedRender(PoseStack poseStack, BocekItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight,
+                                  int packedOverlay, float red, float green, float blue, float alpha) {
+        if (bone.isTrackingMatrices()) {
+            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+
+            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
+            bone.setLocalSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.itemRenderTranslations));
+        }
+
+        poseStack.pushPose();
+        RenderUtils.prepMatrixForBone(poseStack, bone);
+
+        if (bone.getName().endsWith("_illuminated")) {
+            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable))),
+                    packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+        }
+
+        if (bone.getName().equals("power_light")) {
+            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable))),
+                    packedLight, OverlayTexture.NO_OVERLAY, (float) ClientEventHandler.bowPower, (float) ClientEventHandler.bowPower, (float) ClientEventHandler.bowPower, alpha);
+        }
+        this.illuminatedRenderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        poseStack.popPose();
+    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {

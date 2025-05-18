@@ -5238,7 +5238,7 @@
 					]
 				},
 				{
-					"name": "charge",
+					"name": "charge_illuminated",
 					"parent": "0",
 					"pivot": [0, 1.36209, -1.71313],
 					"cubes": [

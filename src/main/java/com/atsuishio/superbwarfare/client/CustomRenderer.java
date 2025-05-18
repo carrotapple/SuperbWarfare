@@ -88,7 +88,7 @@ public class CustomRenderer<T extends Item & GeoAnimatable> extends GeoItemRende
         RenderUtils.prepMatrixForBone(poseStack, bone);
 
         if (bone.getName().endsWith("_illuminated")) {
-            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.GUN_ILLUMINATED.apply(this.getTextureLocation(animatable))),
+            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable))),
                     packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
         }
         this.illuminatedRenderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);

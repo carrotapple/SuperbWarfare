@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.layer.gun.SentinelLightLayer;
+import com.atsuishio.superbwarfare.client.CustomRenderer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
@@ -21,18 +21,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
+public class SentinelItemRenderer extends CustomRenderer<SentinelItem> {
 
     public SentinelItemRenderer() {
         super(new SentinelItemModel());
-        this.addRenderLayer(new SentinelLightLayer(this));
     }
 
     @Override
@@ -91,8 +89,9 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
                 iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
         );
 
-        if (name.equals("charge")) {
+        if (name.equals("charge_illuminated")) {
             bone.setHidden(!flag.get());
+            bone.setRotZ((System.currentTimeMillis() % 36000000) / 200f);
         }
 
         AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.265, -0.05, 0.075f, 255, 0, 0, 255, "apex_3x", false);
