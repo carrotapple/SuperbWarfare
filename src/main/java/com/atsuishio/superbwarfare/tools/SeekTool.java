@@ -194,8 +194,6 @@ public class SeekTool {
                 onGround.set(true);
             }
         });
-
-
         return entity.onGround() || entity.isInWater() || onGround.get();
     }
 

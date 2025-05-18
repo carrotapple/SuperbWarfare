@@ -63,6 +63,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GEAR_ROT = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> GEAR_UP = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Float> PLANE_BREAK = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
 
     private Vec3 previousVelocity = Vec3.ZERO;
@@ -865,6 +866,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(DECOY_COUNT, 0);
         this.entityData.define(GEAR_ROT, 0);
+        this.entityData.define(GEAR_UP, false);
         this.entityData.define(PLANE_BREAK, 0f);
     }
 
@@ -874,6 +876,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         this.entityData.set(POWER, compound.getFloat("Power"));
         this.entityData.set(DECOY_COUNT, compound.getInt("DecoyCount"));
         this.entityData.set(GEAR_ROT, compound.getInt("GearRot"));
+        this.entityData.set(GEAR_UP, compound.getBoolean("GearUp"));
     }
 
     @Override
@@ -882,6 +885,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         compound.putFloat("Power", this.entityData.get(POWER));
         compound.putInt("DecoyCount", this.entityData.get(DECOY_COUNT));
         compound.putInt("GearRot", this.entityData.get(GEAR_ROT));
+        compound.putBoolean("GearUp", this.entityData.get(GEAR_UP));
     }
 
     public boolean canCrushEntities() {
