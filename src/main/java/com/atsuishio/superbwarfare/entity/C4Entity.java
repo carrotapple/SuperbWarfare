@@ -346,7 +346,7 @@ public class C4Entity extends Entity implements GeoEntity, OwnableEntity {
             return false;
         } else {
             Entity entity = this.getOwner();
-            return entity == null || entity == pTarget || !entity.isPassengerOfSameVehicle(pTarget);
+            return entity == null || (entity == pTarget && this.tickCount > 2) || !entity.isPassengerOfSameVehicle(pTarget);
         }
     }
 
