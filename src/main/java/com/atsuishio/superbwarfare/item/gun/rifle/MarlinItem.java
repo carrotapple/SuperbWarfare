@@ -16,7 +16,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -35,7 +34,6 @@ import java.util.function.Consumer;
 public class MarlinItem extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static ItemDisplayContext transformType;
 
     public MarlinItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
@@ -57,10 +55,6 @@ public class MarlinItem extends GunItem implements GeoItem {
                 return PoseTool.pose(entityLiving, hand, stack);
             }
         });
-    }
-
-    public void getTransformType(ItemDisplayContext type) {
-        transformType = type;
     }
 
     private PlayState fireAnimPredicate(AnimationState<MarlinItem> event) {
@@ -100,23 +94,19 @@ public class MarlinItem extends GunItem implements GeoItem {
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
         var data = GunData.from(stack);
 
-        if (transformType != null && transformType.firstPerson()) {
-            if (player.isSprinting()
-                    && player.onGround()
-                    && ClientEventHandler.cantSprint == 0
-                    && ClientEventHandler.drawTime < 0.01
-                    && !data.reloading()) {
-                if (ClientEventHandler.tacticalSprint) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run"));
-                }
+        if (player.isSprinting() && player.onGround()
+                && ClientEventHandler.cantSprint == 0
+                && ClientEventHandler.drawTime < 0.01
+                && !data.reloading()) {
+            if (ClientEventHandler.tacticalSprint) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run"));
             }
-
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.marlin.idle"));
-            return PlayState.CONTINUE;
         }
-        return PlayState.STOP;
+
+        event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.marlin.idle"));
+        return PlayState.CONTINUE;
     }
 
     @Override

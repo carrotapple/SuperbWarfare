@@ -5,12 +5,12 @@ import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SecondaryCataclysmRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.SecondaryCataclysmImageComponent;
+import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -34,7 +34,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -62,7 +61,6 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
     private final Supplier<Integer> energyCapacity = () -> 24000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static ItemDisplayContext transformType;
 
     public SecondaryCataclysm() {
         super(new Properties().stacksTo(1).fireResistant().rarity(RarityTool.LEGENDARY));
@@ -117,10 +115,6 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
                 return PoseTool.pose(entityLiving, hand, stack);
             }
         });
-    }
-
-    public void getTransformType(ItemDisplayContext type) {
-        transformType = type;
     }
 
     private PlayState reloadAnimPredicate(AnimationState<SecondaryCataclysm> event) {
