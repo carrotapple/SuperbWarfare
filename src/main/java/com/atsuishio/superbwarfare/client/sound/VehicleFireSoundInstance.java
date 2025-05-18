@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.client;
+package com.atsuishio.superbwarfare.client.sound;
 
 import com.atsuishio.superbwarfare.entity.vehicle.A10Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Hpj11Entity;

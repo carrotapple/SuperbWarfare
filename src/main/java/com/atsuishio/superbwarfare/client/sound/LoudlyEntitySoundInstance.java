@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.client;
+package com.atsuishio.superbwarfare.client.sound;
 
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import net.minecraft.client.Minecraft;

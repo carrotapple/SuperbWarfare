@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.CustomRenderer;
+import com.atsuishio.superbwarfare.client.CustomGunRenderer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
@@ -23,18 +23,11 @@ import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SentinelItemRenderer extends CustomRenderer<SentinelItem> {
+public class SentinelItemRenderer extends CustomGunRenderer<SentinelItem> {
 
     public SentinelItemRenderer() {
         super(new SentinelItemModel());
     }
-
-    @Override
-    public RenderType getRenderType(SentinelItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    private static final float SCALE_RECIPROCAL = 1.0f / 16.0f;
 
     @Override
     public void renderRecursively(PoseStack stack, SentinelItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
@@ -98,10 +91,5 @@ public class SentinelItemRenderer extends CustomRenderer<SentinelItem> {
             stack.popPose();
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(SentinelItem instance) {
-        return super.getTextureLocation(instance);
     }
 }

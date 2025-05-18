@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.CustomRenderer;
+import com.atsuishio.superbwarfare.client.CustomGunRenderer;
 import com.atsuishio.superbwarfare.client.model.item.MinigunItemModel;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -21,18 +21,11 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.util.RenderUtils;
 
-public class MinigunItemRenderer extends CustomRenderer<MinigunItem> {
+public class MinigunItemRenderer extends CustomGunRenderer<MinigunItem> {
 
     public MinigunItemRenderer() {
         super(new MinigunItemModel());
     }
-
-    @Override
-    public RenderType getRenderType(MinigunItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    private static final float SCALE_RECIPROCAL = 1.0f / 16.0f;
 
     @Override
     public void renderRecursively(PoseStack stack, MinigunItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
@@ -91,10 +84,5 @@ public class MinigunItemRenderer extends CustomRenderer<MinigunItem> {
             stack.popPose();
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(MinigunItem instance) {
-        return super.getTextureLocation(instance);
     }
 }

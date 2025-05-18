@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.CustomRenderer;
+import com.atsuishio.superbwarfare.client.CustomGunRenderer;
 import com.atsuishio.superbwarfare.client.model.item.Glock18ItemModel;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
@@ -20,18 +20,11 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.util.RenderUtils;
 
-public class Glock18ItemRenderer extends CustomRenderer<Glock18Item> {
+public class Glock18ItemRenderer extends CustomGunRenderer<Glock18Item> {
 
     public Glock18ItemRenderer() {
         super(new Glock18ItemModel());
     }
-
-    @Override
-    public RenderType getRenderType(Glock18Item animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
-
-    private static final float SCALE_RECIPROCAL = 1.0f / 16.0f;
 
     @Override
     public void renderRecursively(PoseStack stack, Glock18Item animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
@@ -83,10 +76,5 @@ public class Glock18ItemRenderer extends CustomRenderer<Glock18Item> {
             stack.popPose();
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(Glock18Item instance) {
-        return super.getTextureLocation(instance);
     }
 }
