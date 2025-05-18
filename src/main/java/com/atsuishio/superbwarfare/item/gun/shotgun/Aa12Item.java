@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.gun.shotgun;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.Aa12ItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.Aa12ItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.ShotgunImageComponent;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +39,6 @@ public class Aa12Item extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
-    public static ItemDisplayContext transformType;
 
     public Aa12Item() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
@@ -62,10 +60,6 @@ public class Aa12Item extends GunItem implements GeoItem {
                 return PoseTool.pose(entityLiving, hand, stack);
             }
         });
-    }
-
-    public void getTransformType(ItemDisplayContext type) {
-        transformType = type;
     }
 
     private PlayState idlePredicate(AnimationState<Aa12Item> event) {
@@ -97,16 +91,14 @@ public class Aa12Item extends GunItem implements GeoItem {
     }
 
     private PlayState procedurePredicate(AnimationState<Aa12Item> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
+        if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
+            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                this.animationProcedure = "empty";
+                event.getController().forceAnimationReset();
             }
+        } else if (this.animationProcedure.equals("empty")) {
+            return PlayState.STOP;
         }
         return PlayState.CONTINUE;
     }

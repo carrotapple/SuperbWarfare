@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.item.gun.sniper;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.SentinelItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.SentinelItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.SentinelImageComponent;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;

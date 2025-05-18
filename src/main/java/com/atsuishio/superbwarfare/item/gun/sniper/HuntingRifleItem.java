@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.gun.sniper;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.HuntingRifleItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.HuntingRifleItemRenderer;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;

@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.item.gun.machinegun;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.M60ItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.M60ItemRenderer;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;

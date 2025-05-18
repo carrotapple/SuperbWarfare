@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.item.gun.launcher;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.SecondaryCataclysmRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.SecondaryCataclysmRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.SecondaryCataclysmImageComponent;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;

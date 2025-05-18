@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.item.gun.rifle;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.client.PoseTool;
-import com.atsuishio.superbwarfare.client.renderer.item.AK47ItemRenderer;
+import com.atsuishio.superbwarfare.client.renderer.gun.AK47ItemRenderer;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.data.gun.value.AttachmentType;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -19,7 +19,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -38,7 +37,6 @@ import java.util.function.Consumer;
 public class AK47Item extends GunItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static ItemDisplayContext transformType;
 
     @Override
     public Set<SoundEvent> getReloadSound() {
@@ -65,10 +63,6 @@ public class AK47Item extends GunItem implements GeoItem {
                 return PoseTool.pose(entityLiving, hand, stack);
             }
         });
-    }
-
-    public void getTransformType(ItemDisplayContext type) {
-        transformType = type;
     }
 
     private PlayState idlePredicate(AnimationState<AK47Item> event) {
