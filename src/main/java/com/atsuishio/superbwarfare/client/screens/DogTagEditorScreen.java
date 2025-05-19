@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.menu.DogTagEditorMenu;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -15,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Arrays;
+
 @OnlyIn(Dist.CLIENT)
 public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu> {
 
@@ -23,7 +26,8 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     private ItemStack stack;
     // TODO 改名怎么写？
     private EditBox name;
-    private int currentColor = 0;
+    private short currentColor = 0;
+    private final short[][] icon = new short[16][16];
 
     public DogTagEditorScreen(DogTagEditorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -37,20 +41,49 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+
+        ItemStack stack = DogTagEditorScreen.this.menu.stack;
+        pGuiGraphics.renderItem(stack, i + 18, j + 36);
+
+        var pose = pGuiGraphics.pose();
+
+        pose.pushPose();
+
+        // TODO 为什么渲染不了色块
+        for (int x = 0; x < this.icon.length; x++) {
+            for (int y = 0; y < this.icon.length; y++) {
+                int num = this.icon[x][y];
+                if (num != -1) {
+                    var color = ChatFormatting.getById(num);
+                    if (color != null && color.getColor() != null) {
+                        pGuiGraphics.fill(i + 58 + x * 9, j + 36 + y * 9, i + 66 + x * 9, j + 44 + y * 9,
+                                -90, color.getColor());
+                    }
+                }
+            }
+        }
+
+        pose.popPose();
     }
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
 
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        ItemStack stack = DogTagEditorScreen.this.menu.stack;
-        pGuiGraphics.renderItem(stack, i + 18, j + 36);
+        // TODO 替换成更精细的单格子判断
+        if (pMouseX >= i + 57 && pMouseX <= i + 201 && pMouseY >= j + 36 && pMouseY <= j + 179) {
+            this.icon[0][0] = this.currentColor;
+        }
 
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
     @Override
@@ -64,14 +97,18 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         super.init();
         this.subInit();
 
+        for (var el : this.icon) {
+            Arrays.fill(el, (short) -1);
+        }
+
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        for (int k = 0; k < 16; k++) {
+        for (short k = 0; k < 16; k++) {
             var button = new ColorButton(k, i + 6 + (k % 2) * 22, j + 62 + (k / 2) * 10, 18, 8);
             this.addRenderableWidget(button);
         }
-        var eraserButton = new ColorButton(-1, i + 17, j + 143, 18, 8);
+        var eraserButton = new ColorButton((short) -1, i + 17, j + 143, 18, 8);
         this.addRenderableWidget(eraserButton);
     }
 
@@ -112,9 +149,9 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     @OnlyIn(Dist.CLIENT)
     class ColorButton extends AbstractButton {
 
-        int color;
+        short color;
 
-        public ColorButton(int color, int pX, int pY, int pWidth, int pHeight) {
+        public ColorButton(short color, int pX, int pY, int pWidth, int pHeight) {
             super(pX, pY, pWidth, pHeight, Component.literal(""));
             this.color = color;
         }
