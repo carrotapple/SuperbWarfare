@@ -19,6 +19,7 @@ public abstract class EnergyVehicleEntity extends VehicleEntity {
 
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
 
+    // TODO 在数据更新时修改能量相关属性
     protected final SyncedEntityEnergyStorage energyStorage = new SyncedEntityEnergyStorage(this.getMaxEnergy(), this.entityData, ENERGY);
     protected final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 

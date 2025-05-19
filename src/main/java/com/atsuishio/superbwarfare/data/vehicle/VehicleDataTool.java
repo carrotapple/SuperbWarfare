@@ -18,6 +18,8 @@ public class VehicleDataTool {
 
     public static void initJsonData(ResourceManager manager) {
         vehicleData.clear();
+        VehicleData.dataCache.invalidateAll();
+
         for (var entry : manager.listResources(VEHICLE_DATA_FOLDER, file -> file.getPath().endsWith(".json")).entrySet()) {
             var attribute = entry.getValue();
 
