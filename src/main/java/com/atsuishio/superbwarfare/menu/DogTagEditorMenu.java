@@ -15,14 +15,8 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE)
 public class DogTagEditorMenu extends AbstractContainerMenu {
-
-    // TODO 这个东西真的有用吗？
-    private final Map<ServerPlayer, ItemStack> playerStacks = new HashMap<>();
 
     protected final Container container;
     protected final ContainerLevelAccess access;
@@ -66,11 +60,4 @@ public class DogTagEditorMenu extends AbstractContainerMenu {
             }
         }
     }
-
-//    @SubscribeEvent
-//    public static void onContainerClosed(PlayerContainerEvent.Close event) {
-//        if (event.getContainer() instanceof DogTagEditorMenu menu && event.getEntity() instanceof ServerPlayer serverPlayer) {
-//            menu.playerStacks.remove(serverPlayer);
-//        }
-//    }
 }
