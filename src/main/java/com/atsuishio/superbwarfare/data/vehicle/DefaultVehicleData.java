@@ -22,6 +22,9 @@ public class DefaultVehicleData {
     @SerializedName("UpStep")
     public float upStep = 0;
 
+    @SerializedName("AllowFreeCam")
+    public boolean allowFreeCam = false;
+
     // TODO damage modifier
 //    @SerializedName("DamageModifier")
 //    private List<DamageModify> damageModifier;

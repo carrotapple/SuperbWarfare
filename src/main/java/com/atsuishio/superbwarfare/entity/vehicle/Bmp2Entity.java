@@ -86,7 +86,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
 
     public Bmp2Entity(EntityType<Bmp2Entity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(2.25f);
     }
 
     @Override
@@ -672,16 +671,6 @@ public class Bmp2Entity extends ContainerMobileVehicleEntity implements GeoEntit
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public int getMaxEnergy() {
-        return VehicleConfig.BMP_2_MAX_ENERGY.get();
-    }
-
-    @Override
-    public float getMaxHealth() {
-        return VehicleConfig.BMP_2_HP.get();
     }
 
     @Override

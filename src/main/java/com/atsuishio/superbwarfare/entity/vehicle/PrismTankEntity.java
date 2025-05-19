@@ -731,16 +731,6 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public int getMaxEnergy() {
-        return VehicleConfig.PRISM_TANK_MAX_ENERGY.get();
-    }
-
-    @Override
-    public float getMaxHealth() {
-        return VehicleConfig.PRISM_TANK_HP.get();
-    }
-
-    @Override
     public int mainGunRpm(Player player) {
         if (getWeaponIndex(0) == 0) {
             return 30;

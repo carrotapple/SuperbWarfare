@@ -74,7 +74,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Float> DELTA_X_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 5;
 
     public boolean fire;
     public int collisionCoolDown;
@@ -120,11 +119,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         return false;
     }
 
-    @Override
-    public float getMaxHealth() {
-        return MAX_HEALTH;
-    }
-
     public DroneEntity(EntityType<? extends DroneEntity> type, Level world, float moveX, float moveY, float moveZ) {
         super(type, world);
     }
@@ -138,7 +132,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.define(KAMIKAZE_MODE, 0);
     }
 
-   
 
     @Override
     public boolean causeFallDamage(float l, float d, DamageSource source) {
