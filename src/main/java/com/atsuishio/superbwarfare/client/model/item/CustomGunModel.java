@@ -24,10 +24,8 @@ public abstract class CustomGunModel<T extends GunItem & GeoAnimatable> extends 
         }
 
         parser.setValue(MolangVariable.SBW_SYSTEM_TIME, System::currentTimeMillis);
-        parser.setValue(MolangVariable.SBW_SYSTEM_TIME, System::currentTimeMillis);
 
         // GunData
-
         var player = mc.player;
         if (player == null) return;
 
