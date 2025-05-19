@@ -65,7 +65,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
     public Tom6Entity(EntityType<Tom6Entity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(0.5f);
     }
 
     @Override
