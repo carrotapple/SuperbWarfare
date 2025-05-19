@@ -36,6 +36,8 @@ public class RpgItemRenderer extends CustomGunRenderer<RpgItem> {
         if (name.equals("Lefthand") || name.equals("Righthand")) {
             bone.setHidden(true);
             renderingArms = true;
+        } else {
+            bone.setHidden(false);
         }
 
         Player player = mc.player;

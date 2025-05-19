@@ -39,6 +39,8 @@ public class SvdItemRenderer extends CustomGunRenderer<SvdItem> {
         if (name.equals("Lefthand") || name.equals("Righthand")) {
             bone.setHidden(true);
             renderingArms = true;
+        } else {
+            bone.setHidden(false);
         }
 
         Player player = mc.player;

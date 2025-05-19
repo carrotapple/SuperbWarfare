@@ -24,5 +24,9 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+
+
+
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 }
