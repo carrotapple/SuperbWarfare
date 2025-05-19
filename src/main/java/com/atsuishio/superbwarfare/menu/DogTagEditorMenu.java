@@ -4,6 +4,9 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
 import com.atsuishio.superbwarfare.network.message.receive.DogTagEditorMessage;
+import net.minecraft.SharedConstants;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -15,11 +18,15 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
+import javax.annotation.Nullable;
+
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE)
 public class DogTagEditorMenu extends AbstractContainerMenu {
 
     protected final Container container;
     protected final ContainerLevelAccess access;
+    @Nullable
+    private String itemName;
 
     public ItemStack stack;
 
@@ -49,6 +56,29 @@ public class DogTagEditorMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return pPlayer.isAlive();
+    }
+
+    public boolean setItemName(String pItemName) {
+        String s = validateName(pItemName);
+        if (s != null && !s.equals(this.itemName)) {
+            this.itemName = s;
+            if (!this.stack.isEmpty()) {
+                if (Util.isBlank(s)) {
+                    this.stack.resetHoverName();
+                } else {
+                    this.stack.setHoverName(Component.literal(s));
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Nullable
+    private static String validateName(String pItemName) {
+        String s = SharedConstants.filterText(pItemName);
+        return s.length() <= 50 ? s : null;
     }
 
     @SubscribeEvent
