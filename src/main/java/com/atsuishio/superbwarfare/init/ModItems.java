@@ -280,10 +280,13 @@ public class ModItems {
     public static final RegistryObject<Item> SILVER_BLOCK = block(ModBlocks.SILVER_BLOCK);
     public static final RegistryObject<Item> CEMENTED_CARBIDE_BLOCK = block(ModBlocks.CEMENTED_CARBIDE_BLOCK);
     public static final RegistryObject<Item> FUMO_25 = block(ModBlocks.FUMO_25);
-    public static final RegistryObject<Item> CONTAINER = BLOCKS.register("container", ContainerBlockItem::new);
-    public static final RegistryObject<Item> SMALL_CONTAINER = BLOCKS.register("small_container", SmallContainerBlockItem::new);
     public static final RegistryObject<Item> VEHICLE_DEPLOYER = BLOCKS.register("vehicle_deployer", VehicleDeployerBlockItem::new);
     public static final RegistryObject<Item> AIRCRAFT_CATAPULT = block(ModBlocks.AIRCRAFT_CATAPULT);
+    public static final RegistryObject<Item> DOG_TAG_EDITOR = block(ModBlocks.DOG_TAG_EDITOR);
+
+    // 这俩放最后
+    public static final RegistryObject<Item> CONTAINER = BLOCKS.register("container", ContainerBlockItem::new);
+    public static final RegistryObject<Item> SMALL_CONTAINER = BLOCKS.register("small_container", SmallContainerBlockItem::new);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));

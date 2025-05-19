@@ -1,10 +1,7 @@
 package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.Mod;
-import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
-import com.atsuishio.superbwarfare.menu.FuMO25Menu;
-import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
-import com.atsuishio.superbwarfare.menu.VehicleMenu;
+import com.atsuishio.superbwarfare.menu.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,4 +24,7 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<FuMO25Menu>> FUMO_25_MENU =
             REGISTRY.register("fumo_25_menu",
                     () -> IForgeMenuType.create((windowId, inv, data) -> new FuMO25Menu(windowId, inv)));
+    public static final RegistryObject<MenuType<DogTagEditorMenu>> DOG_TAG_EDITOR_MENU =
+            REGISTRY.register("dog_tag_editor_menu",
+                    () -> IForgeMenuType.create((windowId, inv, data) -> new DogTagEditorMenu(windowId, inv)));
 }

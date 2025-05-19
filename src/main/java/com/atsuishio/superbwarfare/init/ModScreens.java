@@ -1,9 +1,6 @@
 package com.atsuishio.superbwarfare.init;
 
-import com.atsuishio.superbwarfare.client.screens.ChargingStationScreen;
-import com.atsuishio.superbwarfare.client.screens.FuMO25Screen;
-import com.atsuishio.superbwarfare.client.screens.ReforgingTableScreen;
-import com.atsuishio.superbwarfare.client.screens.VehicleScreen;
+import com.atsuishio.superbwarfare.client.screens.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +17,7 @@ public class ModScreens {
             MenuScreens.register(ModMenuTypes.CHARGING_STATION_MENU.get(), ChargingStationScreen::new);
             MenuScreens.register(ModMenuTypes.VEHICLE_MENU.get(), VehicleScreen::new);
             MenuScreens.register(ModMenuTypes.FUMO_25_MENU.get(), FuMO25Screen::new);
+            MenuScreens.register(ModMenuTypes.DOG_TAG_EDITOR_MENU.get(), DogTagEditorScreen::new);
         });
     }
 }
