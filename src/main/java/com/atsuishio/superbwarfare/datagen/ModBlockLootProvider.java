@@ -39,7 +39,6 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.FUMO_25.get());
         this.dropSelf(ModBlocks.VEHICLE_DEPLOYER.get());
         this.dropSelf(ModBlocks.AIRCRAFT_CATAPULT.get());
-        this.dropSelf(ModBlocks.DOG_TAG_EDITOR.get());
 
         this.add(ModBlocks.CHARGING_STATION.get(), createCopyNBTDrops(ModBlocks.CHARGING_STATION.get(),
                 List.of(Pair.of("Energy", "BlockEntityTag.Energy"),

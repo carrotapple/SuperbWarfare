@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-19T16:28:49.885026	Loot Tables
+// 1.20.1	2025-05-19T17:38:42.9583715	Loot Tables
 e71d9e1055ddb98520b16fafd202f9db3a696f54 data/superbwarfare/loot_tables/blocks/aircraft_catapult.json
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
 811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
@@ -8,7 +8,6 @@ c7b613c897b0eeca4dbade5eb65f718015dcb853 data/superbwarfare/loot_tables/blocks/c
 dabbe17417c944567dc6dfcdcba32b8377c24f69 data/superbwarfare/loot_tables/blocks/deepslate_galena_ore.json
 a7c1af3e194d35a64544902468bd964f45f2f9ef data/superbwarfare/loot_tables/blocks/deepslate_scheelite_ore.json
 76fa64ff714374c1655f4d11776fda132287a014 data/superbwarfare/loot_tables/blocks/deepslate_silver_ore.json
-30b0d083947d3cea5a39c89050943806d876a8bd data/superbwarfare/loot_tables/blocks/dog_tag_editor.json
 e80a153391c34dbca9130a140e6401242e3add4c data/superbwarfare/loot_tables/blocks/dragon_teeth.json
 cd1305462caefccc6914a6fcc83caccf1a441e81 data/superbwarfare/loot_tables/blocks/fumo_25.json
 cdd4acb439988069ca04920cb3905f01b7257362 data/superbwarfare/loot_tables/blocks/galena_ore.json

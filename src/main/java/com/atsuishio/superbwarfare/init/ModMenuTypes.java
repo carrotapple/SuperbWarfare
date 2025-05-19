@@ -26,5 +26,5 @@ public class ModMenuTypes {
                     () -> IForgeMenuType.create((windowId, inv, data) -> new FuMO25Menu(windowId, inv)));
     public static final RegistryObject<MenuType<DogTagEditorMenu>> DOG_TAG_EDITOR_MENU =
             REGISTRY.register("dog_tag_editor_menu",
-                    () -> IForgeMenuType.create((windowId, inv, data) -> new DogTagEditorMenu(windowId, inv)));
+                    () -> IForgeMenuType.create((windowId, inv, data) -> new DogTagEditorMenu(windowId)));
 }
