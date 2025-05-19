@@ -21,7 +21,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     public DogTagEditorScreen(DogTagEditorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = 207;
-        imageHeight = 155;
+        imageHeight = 185;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         int j = (this.height - this.imageHeight) / 2;
 
         ItemStack stack = DogTagEditorScreen.this.menu.stack;
-        pGuiGraphics.renderItem(stack, i + 18, j + 6);
+        pGuiGraphics.renderItem(stack, i + 18, j + 36);
 
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
