@@ -86,7 +86,7 @@ public class Beast extends SwordItem {
             );
 
             if (MiscConfig.SEND_KILL_FEEDBACK.get()) {
-                Mod.PACKET_HANDLER.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), new PlayerGunKillMessage(player.getId(), target.getId(), false, ModDamageTypes.BEAST));
+                Mod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), target.getId(), false, ModDamageTypes.BEAST));
             }
         }
 
