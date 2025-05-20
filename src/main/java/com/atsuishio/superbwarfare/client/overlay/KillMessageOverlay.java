@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.RenderHelper;
+import com.atsuishio.superbwarfare.client.screens.DogTagEditorScreen;
+import com.atsuishio.superbwarfare.client.tooltip.ClientDogTagImageTooltip;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
@@ -8,19 +11,23 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.item.DogTag;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.DamageTypeTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,9 +36,8 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @OnlyIn(Dist.CLIENT)
 public class KillMessageOverlay implements IGuiOverlay {
@@ -172,11 +178,17 @@ public class KillMessageOverlay implements IGuiOverlay {
                     false
             );
 
+            // 渲染狗牌图标
+            if (record.target instanceof LivingEntity living && shouldRenderDogTagIcon(living)) {
+                currentPosX -= 14;
+                renderDogTagIcon(guiGraphics, living, currentPosX, top - 0.5f);
+            }
+
             // 渲染伤害类型图标
             ResourceLocation damageTypeIcon = getDamageTypeIcon(record);
             if (damageTypeIcon != null) {
                 currentPosX -= 18;
-                preciseBlit(guiGraphics,
+                RenderHelper.preciseBlit(guiGraphics,
                         damageTypeIcon,
                         currentPosX,
                         top - 2,
@@ -193,7 +205,7 @@ public class KillMessageOverlay implements IGuiOverlay {
             ResourceLocation currentWeaponIcon = getWeaponIcon(record);
             if (currentWeaponIcon != null) {
                 currentPosX -= 36;
-                preciseBlit(guiGraphics,
+                RenderHelper.preciseBlit(guiGraphics,
                         currentWeaponIcon,
                         currentPosX,
                         top,
@@ -218,8 +230,20 @@ public class KillMessageOverlay implements IGuiOverlay {
                     record.attacker.getTeamColor(),
                     false
             );
+
+            // 渲染狗牌图标
+            if (shouldRenderDogTagIcon(record.attacker)) {
+                currentPosX -= 14;
+                renderDogTagIcon(guiGraphics, record.attacker, currentPosX, top - 0.5f);
+            }
         } else {
             float currentPosX = width + 10f;
+
+            // 渲染狗牌图标
+            if (shouldRenderDogTagIcon(record.attacker)) {
+                renderDogTagIcon(guiGraphics, record.attacker, currentPosX, top - 0.5f);
+                currentPosX += 14;
+            }
 
             // 渲染击杀者名称
             String attackerName = getEntityName(record.attacker);
@@ -237,7 +261,7 @@ public class KillMessageOverlay implements IGuiOverlay {
             // 渲染武器图标
             ResourceLocation currentWeaponIcon = getWeaponIcon(record);
             if (currentWeaponIcon != null) {
-                preciseBlit(guiGraphics,
+                RenderHelper.preciseBlit(guiGraphics,
                         currentWeaponIcon,
                         currentPosX,
                         top,
@@ -254,7 +278,7 @@ public class KillMessageOverlay implements IGuiOverlay {
             // 渲染伤害类型图标
             ResourceLocation damageTypeIcon = getDamageTypeIcon(record);
             if (damageTypeIcon != null) {
-                preciseBlit(guiGraphics,
+                RenderHelper.preciseBlit(guiGraphics,
                         damageTypeIcon,
                         currentPosX,
                         top - 2,
@@ -266,6 +290,12 @@ public class KillMessageOverlay implements IGuiOverlay {
                         12
                 );
                 currentPosX += 18;
+            }
+
+            // 渲染狗牌图标
+            if (record.target instanceof LivingEntity living && shouldRenderDogTagIcon(living)) {
+                renderDogTagIcon(guiGraphics, living, currentPosX, top - 0.5f);
+                currentPosX += 14;
             }
 
             // 渲染被击杀者名称
@@ -378,5 +408,45 @@ public class KillMessageOverlay implements IGuiOverlay {
             }
         }
         return null;
+    }
+
+    public static boolean shouldRenderDogTagIcon(LivingEntity living) {
+        AtomicBoolean flag = new AtomicBoolean(false);
+        CuriosApi.getCuriosInventory(living).ifPresent(
+                c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
+                        s -> {
+                            var stack = s.stack();
+                            if (ClientDogTagImageTooltip.shouldRenderIcon(stack)) {
+                                flag.set(true);
+                            }
+                        }
+                )
+        );
+        return flag.get();
+    }
+
+    public static void renderDogTagIcon(GuiGraphics guiGraphics, LivingEntity living, float x, float y) {
+        CuriosApi.getCuriosInventory(living).ifPresent(
+                c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
+                        s -> {
+                            var stack = s.stack();
+                            short[][] icon = DogTag.getColors(stack);
+
+                            guiGraphics.pose().pushPose();
+
+                            for (int i = 0; i < 16; i++) {
+                                for (int j = 0; j < 16; j++) {
+                                    if (icon[i][j] == -1) continue;
+                                    var color = ChatFormatting.getById(icon[i][j]);
+                                    RenderHelper.fill(guiGraphics, RenderType.gui(),
+                                            x + i * 0.6f, y + j * 0.6f, x + (i + 1) * 0.6f, y + (j + 1) * 0.6f,
+                                            0, DogTagEditorScreen.getColorFromFormatting(color));
+                                }
+                            }
+
+                            guiGraphics.pose().popPose();
+                        }
+                )
+        );
     }
 }
