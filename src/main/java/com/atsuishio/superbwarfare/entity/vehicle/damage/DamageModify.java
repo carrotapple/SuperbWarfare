@@ -91,13 +91,21 @@ public class DamageModify {
     private void generateSourceType() {
         if (source.startsWith("#")) {
             sourceType = SourceType.TAG_KEY;
-            this.sourceTagKey = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse(source.substring(1)));
+            var location = ResourceLocation.tryParse(source.substring(1));
+
+            if (location != null) {
+                this.sourceTagKey = TagKey.create(Registries.DAMAGE_TYPE, location);
+            }
         } else if (source.startsWith("@")) {
             sourceType = SourceType.ENTITY_ID;
             this.entityId = source.substring(1);
         } else if (!source.equals("All")) {
             sourceType = SourceType.RESOURCE_KEY;
-            this.sourceKey = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse(source));
+            var location = ResourceLocation.tryParse(source);
+
+            if (location != null) {
+                this.sourceKey = ResourceKey.create(Registries.DAMAGE_TYPE, location);
+            }
         } else {
             sourceType = SourceType.ALL;
         }
