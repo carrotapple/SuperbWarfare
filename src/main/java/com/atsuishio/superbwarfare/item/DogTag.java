@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.menu.DogTagEditorMenu;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,6 +16,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DogTag extends Item implements ICurioItem {
@@ -42,5 +44,23 @@ public class DogTag extends Item implements ICurioItem {
                     new DogTagEditorMenu(i, ContainerLevelAccess.create(pLevel, pPlayer.getOnPos()), stack), Component.literal("")));
             return InteractionResultHolder.consume(stack);
         }
+    }
+
+    public static short[][] getColors(ItemStack stack) {
+        short[][] colors = new short[16][16];
+        for (var el : colors) {
+            Arrays.fill(el, (short) -1);
+        }
+
+        if (stack.getTag() == null) return colors;
+        CompoundTag tag = stack.getTag().getCompound("Colors");
+        for (int i = 0; i < 16; i++) {
+            int[] color = tag.getIntArray("Color" + i);
+            for (int j = 0; j < color.length; j++) {
+                colors[i][j] = (short) color[j];
+            }
+        }
+
+        return colors;
     }
 }

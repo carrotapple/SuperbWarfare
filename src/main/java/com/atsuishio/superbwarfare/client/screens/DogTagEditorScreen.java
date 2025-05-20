@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.item.DogTag;
 import com.atsuishio.superbwarfare.menu.DogTagEditorMenu;
 import com.atsuishio.superbwarfare.network.message.send.DogTagFinishEditMessage;
 import net.minecraft.ChatFormatting;
@@ -27,7 +28,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
 
     public EditBox name;
     private short currentColor = 0;
-    private final short[][] icon = new short[16][16];
+    private short[][] icon = new short[16][16];
     public ItemStack stack;
     private boolean init = false;
 
@@ -109,6 +110,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         if (!this.init) {
             if (!this.stack.isEmpty()) {
                 this.name.setValue(this.stack.getHoverName().getString());
+                this.icon = DogTag.getColors(this.stack);
             }
             this.init = true;
         }
