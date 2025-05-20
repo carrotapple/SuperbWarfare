@@ -53,6 +53,7 @@ public class ModItems {
     public static final RegistryObject<Item> GLOCK_18 = GUNS.register("glock_18", Glock18Item::new);
     public static final RegistryObject<Item> MP_443 = GUNS.register("mp_443", Mp443Item::new);
     public static final RegistryObject<Item> M_1911 = GUNS.register("m_1911", M1911Item::new);
+    public static final RegistryObject<Item> AURELIA_SCEPTRE = GUNS.register("aurelia_sceptre", AureliaSceptre::new);
     public static final RegistryObject<Item> HOMEMADE_SHOTGUN = GUNS.register("homemade_shotgun", HomemadeShotgunItem::new);
     public static final RegistryObject<Item> TRACHELIUM = GUNS.register("trachelium", Trachelium::new);
     public static final RegistryObject<Item> VECTOR = GUNS.register("vector", VectorItem::new);
