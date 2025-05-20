@@ -4,12 +4,15 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.*;
+import com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.*;
 import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
-import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.Ammo;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -24,7 +27,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +41,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -53,6 +56,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
@@ -116,44 +120,12 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public DamageModifier getDamageModifier() {
         return super.getDamageModifier()
-                .multiply(0.5f)
-                .multiply(0.2f, DamageTypes.ARROW)
-                .multiply(0.4f, DamageTypes.TRIDENT)
-                .multiply(0.4f, DamageTypes.MOB_ATTACK)
-                .multiply(0.4f, DamageTypes.MOB_ATTACK_NO_AGGRO)
-                .multiply(0.4f, DamageTypes.MOB_PROJECTILE)
-                .multiply(0.4f, DamageTypes.PLAYER_ATTACK)
-                .multiply(4, DamageTypes.LAVA)
-                .multiply(4, DamageTypes.EXPLOSION)
-                .multiply(4, DamageTypes.PLAYER_EXPLOSION)
-                .multiply(0.8f, ModDamageTypes.CANNON_FIRE)
-                .multiply(0.2f, ModTags.DamageTypes.PROJECTILE)
-                .multiply(2, ModDamageTypes.VEHICLE_STRIKE)
                 .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof CannonShellEntity) {
-                        return 0.9f * damage;
-                    }
-                    if (source.getDirectEntity() instanceof SmallCannonShellEntity) {
-                        return 1.3f * damage;
-                    }
-                    if (source.getDirectEntity() instanceof GunGrenadeEntity) {
-                        return 2.2f * damage;
-                    }
                     if (source.getDirectEntity() instanceof AerialBombEntity) {
                         return 2f * damage;
                     }
-                    if (source.getDirectEntity() instanceof RgoGrenadeEntity) {
-                        return 6f * damage;
-                    }
-                    if (source.getDirectEntity() instanceof HandGrenadeEntity) {
-                        return 5f * damage;
-                    }
-                    if (source.getDirectEntity() instanceof MortarShellEntity) {
-                        return 4f * damage;
-                    }
                     return damage;
-                })
-                .reduce(2);
+                });
     }
 
     @Override
@@ -198,7 +170,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     private void handleAmmo() {
-        if (!(this.getFirstPassenger() instanceof Player player)) return;
+        if (!(this.getFirstPassenger() instanceof Player)) return;
 
         int ammoCount = this.getItemStacks().stream().filter(stack -> {
             if (stack.is(ModItems.AMMO_BOX.get())) {
@@ -235,7 +207,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
                 (float) 0.4);
         this.level().addFreshEntity(projectile);
 
-        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(HEAT)));
+//        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * Math.abs(60 - this.entityData.get(HEAT)));
 
         if (!player.level().isClientSide) {
             playShootSound3p(player, 0, 4, 12, 24);
@@ -348,6 +320,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     protected void positionRider(Entity passenger, MoveFunction callback) {
         if (!this.hasPassenger(passenger)) {
             return;
@@ -443,7 +416,7 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     }
 
     @Override
-    public void onPassengerTurned(Entity entity) {
+    public void onPassengerTurned(@NotNull Entity entity) {
         this.clampRotation(entity);
     }
 
