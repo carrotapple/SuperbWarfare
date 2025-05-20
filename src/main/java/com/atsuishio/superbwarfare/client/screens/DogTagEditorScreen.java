@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.menu.DogTagEditorMenu;
+import com.atsuishio.superbwarfare.network.message.send.DogTagFinishEditMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -24,11 +25,11 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
 
     private static final ResourceLocation TEXTURE = Mod.loc("textures/gui/dog_tag_editor.png");
 
-    private ItemStack stack;
-    // TODO 改名怎么写？
-    private EditBox name;
+    public EditBox name;
     private short currentColor = 0;
     private final short[][] icon = new short[16][16];
+    public ItemStack stack;
+    private boolean init = false;
 
     public DogTagEditorScreen(DogTagEditorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -68,11 +69,23 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.name.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        this.drawColor(pMouseX, pMouseY, pButton);
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        this.drawColor(pMouseX, pMouseY, pButton);
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    }
+
+    private void drawColor(double pMouseX, double pMouseY, int pButton) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
@@ -80,21 +93,25 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
             double posX = pMouseX - i - 57;
             double posY = pMouseY - j - 36;
             if (Math.ceil(posX) % 9 == 0 || Math.ceil(posY) % 9 == 0)
-                return super.mouseClicked(pMouseX, pMouseY, pButton);
+                return;
 
             int x = (int) Math.floor(posX / 9);
             int y = (int) Math.floor(posY / 9);
 
             this.icon[Mth.clamp(x, 0, 15)][Mth.clamp(y, 0, 15)] = pButton == 0 ? this.currentColor : -1;
         }
-
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
     @Override
     public void containerTick() {
         super.containerTick();
         this.name.tick();
+        if (!this.init) {
+            if (!this.stack.isEmpty()) {
+                this.name.setValue(this.stack.getHoverName().getString());
+            }
+            this.init = true;
+        }
     }
 
     @Override
@@ -115,19 +132,22 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         }
         var eraserButton = new ColorButton((short) -1, i + 17, j + 143, 18, 8);
         this.addRenderableWidget(eraserButton);
+
+        var finishButton = new FinishButton(i + 6, j + 167, 40, 13);
+        this.addRenderableWidget(finishButton);
     }
 
     protected void subInit() {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.name = new EditBox(this.font, i + 9, j + 7, 180, 12, stack.getHoverName());
+        this.name = new EditBox(this.font, i + 9, j + 11, 180, 12, Component.literal(""));
         this.name.setCanLoseFocus(false);
         this.name.setTextColor(-1);
         this.name.setTextColorUneditable(-1);
         this.name.setBordered(false);
-        this.name.setMaxLength(50);
+        this.name.setMaxLength(30);
         this.name.setResponder(this::onNameChanged);
-        this.name.setValue("");
+//        this.name.setValue(this.stack.getHoverName().getString());
         this.addWidget(this.name);
         this.setInitialFocus(this.name);
         this.name.setEditable(true);
@@ -135,6 +155,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
 
     private void onNameChanged(String name) {
         String s = name;
+        ItemStack stack = DogTagEditorScreen.this.menu.stack;
         if (!stack.hasCustomHoverName() && name.equals(stack.getHoverName().getString())) {
             s = "";
         }
@@ -181,6 +202,32 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
                             18, 8, 256, 256);
                 }
             }
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    class FinishButton extends AbstractButton {
+
+        public FinishButton(int pX, int pY, int pWidth, int pHeight) {
+            super(pX, pY, pWidth, pHeight, Component.literal(""));
+        }
+
+        @Override
+        public void onPress() {
+            if (!DogTagEditorScreen.this.init) return;
+            Mod.PACKET_HANDLER.sendToServer(new DogTagFinishEditMessage(DogTagEditorScreen.this.icon, DogTagEditorScreen.this.name.getValue()));
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            if (this.isHovered) {
+                pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 0, 195,
+                        40, 13, 256, 256);
+            }
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
         }
     }
 

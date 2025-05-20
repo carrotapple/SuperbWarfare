@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DogTag extends Item implements ICurioItem {
 
-    private static final Component CONTAINER_TITLE = Component.translatable("container.superbwarfare.dog_tag_editor");
-
     public DogTag() {
         super(new Properties().stacksTo(1));
     }
@@ -41,7 +39,7 @@ public class DogTag extends Item implements ICurioItem {
             return InteractionResultHolder.success(stack);
         } else {
             pPlayer.openMenu(new SimpleMenuProvider((i, inventory, player) ->
-                    new DogTagEditorMenu(i, ContainerLevelAccess.create(pLevel, pPlayer.getOnPos()), stack), CONTAINER_TITLE));
+                    new DogTagEditorMenu(i, ContainerLevelAccess.create(pLevel, pPlayer.getOnPos()), stack), Component.literal("")));
             return InteractionResultHolder.consume(stack);
         }
     }

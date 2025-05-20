@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.overlay.DroneHudOverlay;
+import com.atsuishio.superbwarfare.client.screens.DogTagEditorScreen;
 import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.config.server.MiscConfig;
@@ -119,6 +120,9 @@ public class ClientPacketHandler {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null && mc.player.containerMenu.containerId == containerId) {
                 ((DogTagEditorMenu) mc.player.containerMenu).stack = stack;
+                if (mc.screen instanceof DogTagEditorScreen dogTagEditorScreen) {
+                    dogTagEditorScreen.stack = stack;
+                }
             }
         }
     }
