@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundRenameItemPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,16 +50,13 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
 
         pose.pushPose();
 
-        // TODO 为什么渲染不了色块
         for (int x = 0; x < this.icon.length; x++) {
             for (int y = 0; y < this.icon.length; y++) {
                 int num = this.icon[x][y];
                 if (num != -1) {
                     var color = ChatFormatting.getById(num);
-                    if (color != null && color.getColor() != null) {
-                        pGuiGraphics.fill(i + 58 + x * 9, j + 36 + y * 9, i + 66 + x * 9, j + 44 + y * 9,
-                                -90, color.getColor());
-                    }
+                    pGuiGraphics.fill(i + 66 + x * 9, j + 44 + y * 9, i + 58 + x * 9, j + 36 + y * 9,
+                            getColorFromFormatting(color));
                 }
             }
         }
@@ -78,9 +76,16 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        // TODO 替换成更精细的单格子判断
         if (pMouseX >= i + 57 && pMouseX <= i + 201 && pMouseY >= j + 36 && pMouseY <= j + 179) {
-            this.icon[0][0] = this.currentColor;
+            double posX = pMouseX - i - 57;
+            double posY = pMouseY - j - 36;
+            if (Math.ceil(posX) % 9 == 0 || Math.ceil(posY) % 9 == 0)
+                return super.mouseClicked(pMouseX, pMouseY, pButton);
+
+            int x = (int) Math.floor(posX / 9);
+            int y = (int) Math.floor(posY / 9);
+
+            this.icon[Mth.clamp(x, 0, 15)][Mth.clamp(y, 0, 15)] = pButton == 0 ? this.currentColor : -1;
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);
@@ -177,5 +182,30 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
                 }
             }
         }
+    }
+
+    public static int getColorFromFormatting(ChatFormatting chatFormatting) {
+        if (chatFormatting == null) {
+            return -1;
+        }
+        return switch (chatFormatting) {
+            case BLACK -> 0xFF000000;
+            case DARK_BLUE -> 0xFF0000AA;
+            case DARK_GREEN -> 0xFF00AA00;
+            case DARK_AQUA -> 0xFF00AAAA;
+            case DARK_RED -> 0xFFAA0000;
+            case DARK_PURPLE -> 0xFFAA00AA;
+            case GOLD -> 0xFFFFAA00;
+            case GRAY -> 0xFFAAAAAA;
+            case DARK_GRAY -> 0xFF555555;
+            case BLUE -> 0xFF5555FF;
+            case GREEN -> 0xFF55FF55;
+            case AQUA -> 0xFF55FFFF;
+            case RED -> 0xFFFF5555;
+            case LIGHT_PURPLE -> 0xFFFF55FF;
+            case YELLOW -> 0xFFFFFF55;
+            case WHITE -> 0xFFFFFFFF;
+            default -> -1;
+        };
     }
 }
