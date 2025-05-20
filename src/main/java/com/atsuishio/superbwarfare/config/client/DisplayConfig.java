@@ -10,6 +10,8 @@ public class DisplayConfig {
     public static ForgeConfigSpec.BooleanValue CAMERA_ROTATE;
     public static ForgeConfigSpec.BooleanValue ARMOR_PLATE_HUD;
     public static ForgeConfigSpec.BooleanValue STAMINA_HUD;
+    public static ForgeConfigSpec.BooleanValue DOG_TAG_NAME_VISIBLE;
+    public static ForgeConfigSpec.BooleanValue DOG_TAG_ICON_VISIBLE;
     public static ForgeConfigSpec.IntValue WEAPON_SCREEN_SHAKE;
     public static ForgeConfigSpec.IntValue EXPLOSION_SCREEN_SHAKE;
     public static ForgeConfigSpec.IntValue SHOCK_SCREEN_SHAKE;
@@ -34,6 +36,12 @@ public class DisplayConfig {
 
         builder.comment("Set true to enable stamina hud");
         STAMINA_HUD = builder.define("stamina_hud", true);
+
+        builder.comment("Set true to show the name of dog tag in kill messages");
+        DOG_TAG_NAME_VISIBLE = builder.define("dog_tag_name_visible", true);
+
+        builder.comment("Set true to show the icon of dog tag in kill messages");
+        DOG_TAG_ICON_VISIBLE = builder.define("dog_tag_icon_visible", false);
 
         builder.comment("The strength of screen shaking while firing with a weapon");
         WEAPON_SCREEN_SHAKE = builder.defineInRange("weapon_screen_shake", 100, 0, 100);

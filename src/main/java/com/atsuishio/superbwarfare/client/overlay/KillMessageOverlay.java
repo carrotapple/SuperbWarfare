@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.client.screens.DogTagEditorScreen;
 import com.atsuishio.superbwarfare.client.tooltip.ClientDogTagImageTooltip;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
+import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
@@ -366,6 +367,7 @@ public class KillMessageOverlay implements IGuiOverlay {
 
     public static String getEntityName(Entity entity) {
         AtomicReference<String> targetName = new AtomicReference<>(entity.getDisplayName().getString());
+        if (!DisplayConfig.DOG_TAG_NAME_VISIBLE.get()) return targetName.get();
         if (entity instanceof Player targetPlayer) {
             CuriosApi.getCuriosInventory(targetPlayer).ifPresent(
                     c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
@@ -422,7 +424,7 @@ public class KillMessageOverlay implements IGuiOverlay {
                         }
                 )
         );
-        return flag.get();
+        return flag.get() && DisplayConfig.DOG_TAG_ICON_VISIBLE.get();
     }
 
     public static void renderDogTagIcon(GuiGraphics guiGraphics, LivingEntity living, float x, float y) {
