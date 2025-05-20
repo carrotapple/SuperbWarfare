@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundRenameItemPacket;
@@ -121,9 +122,7 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         super.init();
         this.subInit();
 
-        for (var el : this.icon) {
-            Arrays.fill(el, (short) -1);
-        }
+        this.clearColors();
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
@@ -174,6 +173,12 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
     }
 
+    public void clearColors() {
+        for (var el : this.icon) {
+            Arrays.fill(el, (short) -1);
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     class ColorButton extends AbstractButton {
 
@@ -187,6 +192,9 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         @Override
         public void onPress() {
             DogTagEditorScreen.this.currentColor = this.color;
+            if (this.color == -1 && Screen.hasShiftDown()) {
+                DogTagEditorScreen.this.clearColors();
+            }
         }
 
         @Override
