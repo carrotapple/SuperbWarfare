@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-22T00:53:53.9668041	Item Models: superbwarfare
+// 1.20.1	2025-05-22T01:34:34.8426176	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -184,7 +184,10 @@ ca25f24e508ec932dcd88237354656ea9678947e assets/superbwarfare/models/item/rpg.js
 afe7d26dcc67b2c382ebb4c5f3716282399ad75c assets/superbwarfare/models/item/rpg_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpg_blueprint.json
 74622750e9056085af88711611dbb7669881d729 assets/superbwarfare/models/item/rpg_icon.json
+05b14e75cf8cd65ac8ab23e437160c3515c0ac07 assets/superbwarfare/models/item/rpk.json
+07a04348a96e9c040b540bbed2bb3d9afe9a0657 assets/superbwarfare/models/item/rpk_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpk_blueprint.json
+50841a70c3ede14ed4498a84dba50621936eda97 assets/superbwarfare/models/item/rpk_icon.json
 34aecddee2e3b903c075b1625e1b23c57ea23fd1 assets/superbwarfare/models/item/ru_chest_6b43.json
 66a2586547a7cc44a80f950036a1795af580518a assets/superbwarfare/models/item/ru_helmet_6b47.json
 ce2232fbc6a9186371c6ae6745ec3be2a0a33546 assets/superbwarfare/models/item/scheelite.json
