@@ -1,5 +1,5 @@
 {
-  "parent": "item/generated",
+  "parent": "superbwarfare:displaysettings/aa_12.item",
   "textures": {
     "layer0": "superbwarfare:item/aa_12"
   }
