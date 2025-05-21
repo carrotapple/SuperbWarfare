@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-21T20:26:52.4650978	Item Models: superbwarfare
+// 1.20.1	2025-05-21T20:40:21.7822268	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -88,7 +88,10 @@ ae41106ffe287797e401c35110a804f5ba6d774c assets/superbwarfare/models/item/huntin
 e04bbd61e716fc5d53c9425aba508fc3287bfd57 assets/superbwarfare/models/item/iron_powder.json
 00e7fd942d22c0fbf1f5b70cd5f4d86cc6f5be1d assets/superbwarfare/models/item/iron_spring.json
 590c0efcf223fdc2e98660ff3b293a68f87ac02e assets/superbwarfare/models/item/iron_trigger.json
+bf5d08de507add53fc244e06dfef98645b13e0fe assets/superbwarfare/models/item/javelin.json
+96f57707aa46dfc28da03d427ce8c8cf2b94dcde assets/superbwarfare/models/item/javelin_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/javelin_blueprint.json
+00908dfc5fd1cdf7f52fe550cb33d71ec46cc112 assets/superbwarfare/models/item/javelin_icon.json
 195c1b7cbcce9b0ac42ecbfc21a8cafff8c78372 assets/superbwarfare/models/item/jump_pad.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/k_98_blueprint.json
 02214d593955d899847663e54f3dbcd396da0760 assets/superbwarfare/models/item/large_battery_pack.json
