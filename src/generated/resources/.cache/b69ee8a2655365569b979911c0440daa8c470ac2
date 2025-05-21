@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-21T19:42:35.7441161	Item Models: superbwarfare
+// 1.20.1	2025-05-21T20:09:30.4509608	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -75,7 +75,10 @@ d450d0a3c49b47b3f596b13d050343d5ff22531c assets/superbwarfare/models/item/hk_416
 3bce212de9120457cba07ffb5214d45af88d191b assets/superbwarfare/models/item/homemade_shotgun_base.json
 d7d1a02a23157105ef8691ad0eba016f0af92ab7 assets/superbwarfare/models/item/homemade_shotgun_icon.json
 a5cf666a970906ba6ac0af9a4d5d52dd0e093dec assets/superbwarfare/models/item/hpj_11_blueprint.json
+ae41106ffe287797e401c35110a804f5ba6d774c assets/superbwarfare/models/item/hunting_rifle.json
+9bb0dce4eb911575ecbdfc1522d00112db0af5e7 assets/superbwarfare/models/item/hunting_rifle_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/hunting_rifle_blueprint.json
+44fb3218404452aa2479bde28785fcc4f56ef8b4 assets/superbwarfare/models/item/hunting_rifle_icon.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/insidious_blueprint.json
 3c9dcc3393e16ca354b01162316f1ddae92338ec assets/superbwarfare/models/item/iron_action.json
 6e7a2bd5ffb78bd218e3a55daba3e9c256470757 assets/superbwarfare/models/item/iron_barrel.json
