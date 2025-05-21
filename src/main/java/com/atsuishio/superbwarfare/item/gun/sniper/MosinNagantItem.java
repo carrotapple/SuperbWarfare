@@ -64,30 +64,30 @@ public class MosinNagantItem extends GunItem implements GeoItem {
         var data = GunData.from(stack);
 
         if (GunData.from(stack).bolt.actionTimer.get() > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.shift"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.shift"));
         }
 
         if (data.reload.stage() == 1 && GunData.from(stack).ammo.get() == 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.prepare_empty"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.prepare_empty"));
         }
 
         if (data.reload.stage() == 1 && GunData.from(stack).ammo.get() > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.prepare"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.prepare"));
         }
 
         if (GunData.from(stack).loadIndex.get() == 0 && data.reload.stage() == 2) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.iterativeload"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.iterativeload"));
         }
 
         if (GunData.from(stack).loadIndex.get() == 1 && data.reload.stage() == 2) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.iterativeload2"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.iterativeload2"));
         }
 
         if (data.reload.stage() == 3) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.finish"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin_nagant.finish"));
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin_nagant.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<MosinNagantItem> event) {
@@ -106,13 +106,13 @@ public class MosinNagantItem extends GunItem implements GeoItem {
                 && ClientEventHandler.drawTime < 0.01
                 && !data.reloading()) {
             if (ClientEventHandler.tacticalSprint && GunData.from(stack).bolt.actionTimer.get() == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.run_fast"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin_nagant.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin_nagant.run"));
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin_nagant.idle"));
     }
 
     @Override

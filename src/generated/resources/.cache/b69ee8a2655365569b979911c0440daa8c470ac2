@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-21T23:42:14.076462	Item Models: superbwarfare
+// 1.20.1	2025-05-21T23:53:08.6597729	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -127,7 +127,10 @@ db96dbb75327701d7901c2de48a539bda9fe31c4 assets/superbwarfare/models/item/mortar
 ac9c6bc308bd741ada7f19d808d0c0722fceb976 assets/superbwarfare/models/item/mortar_bipod.json
 9baf936f4340d41a0b5581857313240627b00386 assets/superbwarfare/models/item/mortar_deployer.json
 41381cc65305bbfc1324a08b580125073d198e11 assets/superbwarfare/models/item/mortar_shell.json
+cf616f06625815725f1e053b44dddf83480e3b89 assets/superbwarfare/models/item/mosin_nagant.json
+469823515e0557a5de01f6c3c3cb4e291c010c0b assets/superbwarfare/models/item/mosin_nagant_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mosin_nagant_blueprint.json
+264482666ae2b2be05f1ab7dbc0cf7b3360cf183 assets/superbwarfare/models/item/mosin_nagant_icon.json
 4de8d6e0cddd28963febd35e9b66334a41a25d4c assets/superbwarfare/models/item/motor.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mp_443_blueprint.json
 b47286060c5764cae795795f3bb56afd4f2c9cc2 assets/superbwarfare/models/item/m_1911.json
