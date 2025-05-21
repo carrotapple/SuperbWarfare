@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-22T00:20:27.8514162	Item Models: superbwarfare
+// 1.20.1	2025-05-22T00:42:32.04932	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -170,7 +170,10 @@ f5b4fc1445373e6acfaa077e109de693c624eb1e assets/superbwarfare/models/item/nether
 c838909fa1bd0feac2193cf440e7a6bbcdcdbb06 assets/superbwarfare/models/item/ntw_20_icon.json
 664f19730a1a7cf0ec961fc01a4ba8730a77ec8e assets/superbwarfare/models/item/primer.json
 2f3de54bf0df768c5986559060cfc61f5650cc7f assets/superbwarfare/models/item/propeller.json
+69d8ba0f0bae4864f105652b6ad8d1dfcc4d7d5e assets/superbwarfare/models/item/qbz_95.json
+b4ef2f780db659ad12d86c8ee878955d70821c7b assets/superbwarfare/models/item/qbz_95_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/qbz_95_blueprint.json
+278dc955da80a1d9d53b1cd4afca0f2f99958f7f assets/superbwarfare/models/item/qbz_95_icon.json
 e821640d80c55763e7e7b62f7b80c60ff56dcc4f assets/superbwarfare/models/item/rare_material_pack.json
 ce0f0949b0545d8ef08aeaa52dd423dbe592f704 assets/superbwarfare/models/item/raw_cemented_carbide_powder.json
 59cbca463403cfc50d964229268638c55dd915fb assets/superbwarfare/models/item/raw_silver.json
