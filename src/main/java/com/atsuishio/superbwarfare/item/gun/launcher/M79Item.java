@@ -78,18 +78,18 @@ public class M79Item extends GunItem implements GeoItem {
         var data = GunData.from(stack);
 
         if (data.reload.empty()) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m_79.reload"));
         }
 
         if (player.isSprinting() && player.onGround() && ClientEventHandler.cantSprint == 0 && ClientEventHandler.drawTime < 0.01) {
             if (ClientEventHandler.tacticalSprint) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run_fast"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_79.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_79.run"));
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_79.idle"));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class M79Item extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return Mod.loc("textures/gun_icon/m79_icon.png");
+        return Mod.loc("textures/gun_icon/m_79_icon.png");
     }
 
     @Override

@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-21T21:23:09.6576603	Item Models: superbwarfare
+// 1.20.1	2025-05-21T21:45:57.7700919	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -130,7 +130,10 @@ e4cd143c46f233472e081fd2c3369edb8543f053 assets/superbwarfare/models/item/m_4.js
 2a1130d781ff276a8dc7ba13a992583f1e484f80 assets/superbwarfare/models/item/m_60_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m_60_blueprint.json
 e141044945c8a873fc0df3dcf9e7a486726c0807 assets/superbwarfare/models/item/m_60_icon.json
+d21699fc4dc936bf09b388b888f113db99c156d4 assets/superbwarfare/models/item/m_79.json
+6c66b12b6402a01d28c5e514c04ba8fb3d23519b assets/superbwarfare/models/item/m_79_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m_79_blueprint.json
+a16e65b4895406036d6348e601f1520f994b3795 assets/superbwarfare/models/item/m_79_icon.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m_870_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m_98b_blueprint.json
 26848edc4a8e0971321c5fccb47dd7d0e89a9f18 assets/superbwarfare/models/item/netherite_action.json
