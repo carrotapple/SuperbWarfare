@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-22T02:24:03.4283713	Item Models: superbwarfare
+// 1.20.1	2025-05-22T02:34:10.8650528	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -224,7 +224,10 @@ dbba3ca532b6aa949c84ea8b3f10fe3a0bf472e7 assets/superbwarfare/models/item/target
 4e13b6514fceebc4ebbbd99843286aeb345472d0 assets/superbwarfare/models/item/taser_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/taser_blueprint.json
 0cc739b5d7b7a16fe450d23b0e0879fd9743cdb4 assets/superbwarfare/models/item/taser_icon.json
+31ff709fb7e2aeeea28c9ba77c3d6ccbd1c3fb9a assets/superbwarfare/models/item/trachelium.json
+e7af5ecb95087c55664d4d7a701afa0516818e38 assets/superbwarfare/models/item/trachelium_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/trachelium_blueprint.json
+ac18e98e138b7d80b0783968be0c00180dc89e49 assets/superbwarfare/models/item/trachelium_icon.json
 a6d50c9f0c57dc33828a35f45f3f9ca59725c1a1 assets/superbwarfare/models/item/track.json
 cae31335c134b57962bd7b318d02c71655ef5479 assets/superbwarfare/models/item/transcript.json
 f391a7df36c738dfaeb2ab82ac077e3442a59b98 assets/superbwarfare/models/item/tungsten_ingot.json
