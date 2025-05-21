@@ -3,12 +3,15 @@ package com.atsuishio.superbwarfare.datagen;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModItems;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -22,6 +25,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+        // test
+        gunItem(ModItems.AURELIA_SCEPTRE);
+
         simpleItem(ModItems.EMPTY_PERK, "perk/");
 
         simpleItem(ModItems.MORTAR_SHELL);
@@ -203,5 +209,40 @@ public class ModItemModelProvider extends ItemModelProvider {
     private ItemModelBuilder handheldItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/handheld"))
                 .texture("layer0", Mod.loc("item/" + item.getId().getPath()));
+    }
+
+    private ItemModelBuilder gunIcon(RegistryObject<Item> item) {
+        return withExistingParent(item.getId().getPath() + "_icon", new ResourceLocation("item/generated"))
+                .texture("layer0", Mod.loc("item/" + item.getId().getPath() + "_icon"));
+    }
+
+    private ItemModelBuilder gunBase(RegistryObject<Item> item) {
+        return getBuilder(item.getId().getPath() + "_base")
+                .parent(new ModelFile.UncheckedModelFile(modLoc("displaysettings/" + item.getId().getPath() + ".item")))
+                .texture("layer0", Mod.loc("item/" + item.getId().getPath()));
+    }
+
+    private ItemModelBuilder customSeparatedGunModel(RegistryObject<Item> item) {
+        String lod = modLoc("lod/" + item.getId().getPath()).toString();
+        String base = modLoc("item/" + item.getId().getPath() + "_base").toString();
+        String icon = modLoc("item/" + item.getId().getPath() + "_icon").toString();
+
+        return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
+                .guiLight(BlockModel.GuiLight.FRONT)
+                .customLoader(CustomSeparateModelBuilder::begin)
+                .base(base)
+                .perspective(ItemDisplayContext.FIXED, lod)
+                .perspective(ItemDisplayContext.HEAD, lod)
+                .perspective(ItemDisplayContext.GROUND, lod)
+                .perspective(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, lod)
+                .perspective(ItemDisplayContext.THIRD_PERSON_LEFT_HAND, lod)
+                .perspective(ItemDisplayContext.GUI, icon)
+                .end();
+    }
+
+    private void gunItem(RegistryObject<Item> item) {
+        this.gunIcon(item);
+        this.gunBase(item);
+        this.customSeparatedGunModel(item);
     }
 }
