@@ -2,12 +2,14 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
@@ -25,11 +27,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BellBlock;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
@@ -174,22 +177,48 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
     }
 
     @Override
-    public void onHitBlock(@NotNull BlockHitResult blockHitResult) {
-        super.onHitBlock(blockHitResult);
-        BlockPos resultPos = blockHitResult.getBlockPos();
-        BlockState state = this.level().getBlockState(resultPos);
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        if (this.level() instanceof ServerLevel) {
+            double x = blockHitResult.getLocation().x;
+            double y = blockHitResult.getLocation().y;
+            double z = blockHitResult.getLocation().z;
 
-        if (state.getBlock() instanceof BellBlock bell) {
-            bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
-        }
+            if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
+                if (hardness <= 50) {
+                    BlockPos blockPos = BlockPos.containing(x, y, z);
+                    Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
+                    this.level().destroyBlock(blockPos, true);
+                }
+            }
 
-        if (this.tickCount > 1) {
-            if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
+            if (this.tickCount > 1) {
+                for (int i = 1; i < 3; i++) {
+                    apExplode(blockHitResult, i);
+                }
+
+                if (this.level() instanceof ServerLevel) {
+                    ProjectileTool.causeCustomExplode(this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
+                }
             }
         }
+    }
 
-        this.discard();
+    private void apExplode(HitResult result, int index) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosionDamage,
+                result.getLocation().x + index * getDeltaMovement().normalize().x,
+                result.getLocation().y + index * getDeltaMovement().normalize().y,
+                result.getLocation().z + index * getDeltaMovement().normalize().z,
+                0.5f * explosionRadius,
+                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP, true).
+                setDamageMultiplier(this.monsterMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
     }
 
     @Override
