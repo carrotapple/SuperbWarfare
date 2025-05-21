@@ -64,18 +64,18 @@ public class M98bItem extends GunItem implements GeoItem {
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
 
         if (GunData.from(stack).bolt.actionTimer.get() > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m_98b.shift"));
         }
 
         if (GunData.from(stack).reload.empty()) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_empty"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m_98b.reload_empty"));
         }
 
         if (GunData.from(stack).reload.normal()) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_normal"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m_98b.reload_normal"));
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_98b.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<M98bItem> event) {
@@ -88,13 +88,13 @@ public class M98bItem extends GunItem implements GeoItem {
                 && ClientEventHandler.cantSprint == 0
                 && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty()) && ClientEventHandler.drawTime < 0.01) {
             if (ClientEventHandler.tacticalSprint && GunData.from(stack).bolt.actionTimer.get() == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run_fast"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_98b.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_98b.run"));
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m_98b.idle"));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class M98bItem extends GunItem implements GeoItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return Mod.loc("textures/gun_icon/m98b_icon.png");
+        return Mod.loc("textures/gun_icon/m_98b_icon.png");
     }
 
     @Override
