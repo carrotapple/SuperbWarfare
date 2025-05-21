@@ -33,6 +33,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         gunItem(ModItems.BOCEK);
         gunItem(ModItems.DEVOTION);
         gunItem(ModItems.GLOCK_17);
+        gunItem(ModItems.GLOCK_18, "glock_17");
 
         simpleItem(ModItems.EMPTY_PERK, "perk/");
 
@@ -217,21 +218,21 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .texture("layer0", Mod.loc("item/" + item.getId().getPath()));
     }
 
-    private ItemModelBuilder gunIcon(RegistryObject<Item> item) {
+    private ItemModelBuilder gunIcon(RegistryObject<Item> item, String name) {
         return withExistingParent(item.getId().getPath() + "_icon", new ResourceLocation("item/generated"))
-                .texture("layer0", Mod.loc("item/" + item.getId().getPath() + "_icon"));
+                .texture("layer0", Mod.loc("item/" + name + "_icon"));
     }
 
-    private ItemModelBuilder gunBase(RegistryObject<Item> item) {
+    private ItemModelBuilder gunBase(RegistryObject<Item> item, String name) {
         return getBuilder(item.getId().getPath() + "_base")
-                .parent(new ModelFile.UncheckedModelFile(modLoc("displaysettings/" + item.getId().getPath() + ".item")))
-                .texture("layer0", Mod.loc("item/" + item.getId().getPath()));
+                .parent(new ModelFile.UncheckedModelFile(modLoc("displaysettings/" + name + ".item")))
+                .texture("layer0", Mod.loc("item/" + name));
     }
 
-    private ItemModelBuilder customSeparatedGunModel(RegistryObject<Item> item) {
-        String lod = modLoc("lod/" + item.getId().getPath()).toString();
-        String base = modLoc("item/" + item.getId().getPath() + "_base").toString();
-        String icon = modLoc("item/" + item.getId().getPath() + "_icon").toString();
+    private ItemModelBuilder customSeparatedGunModel(RegistryObject<Item> item, String name) {
+        String lod = modLoc("lod/" + name).toString();
+        String base = modLoc("item/" + name + "_base").toString();
+        String icon = modLoc("item/" + name + "_icon").toString();
 
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
                 .guiLight(BlockModel.GuiLight.FRONT)
@@ -247,8 +248,12 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     public void gunItem(RegistryObject<Item> item) {
-        this.gunIcon(item);
-        this.gunBase(item);
-        this.customSeparatedGunModel(item);
+        this.gunItem(item, item.getId().getPath());
+    }
+
+    public void gunItem(RegistryObject<Item> item, String name) {
+        this.gunIcon(item, name);
+        this.gunBase(item, name);
+        this.customSeparatedGunModel(item, name);
     }
 }
