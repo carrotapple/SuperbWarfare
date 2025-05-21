@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-22T01:50:53.8121897	Item Models: superbwarfare
+// 1.20.1	2025-05-22T02:00:02.9765703	Item Models: superbwarfare
 a9978856baf1f8f42ad564dccfb4e170bfd49072 assets/superbwarfare/models/item/aa_12.json
 fb3a995587b2c253571c3160ff02c2ad8c73ecf8 assets/superbwarfare/models/item/aa_12_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
@@ -196,7 +196,10 @@ d41e4710bf25717a92dcb9c02167d71b6614a3ac assets/superbwarfare/models/item/second
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/secondary_cataclysm_blueprint.json
 8dc3dda5bfc8dbbce4bdb8cd064432a3e49e3ab0 assets/superbwarfare/models/item/secondary_cataclysm_icon.json
 c010baff106b3307ec585df4757f7c3d756e9794 assets/superbwarfare/models/item/seeker.json
+567ed5ec1a5d0a36a1bbdf4cfdcb9e3120acda96 assets/superbwarfare/models/item/sentinel.json
+576fdd45bbe4151f941d72cc9ca82ee8e0f86021 assets/superbwarfare/models/item/sentinel_base.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sentinel_blueprint.json
+18faf18e076b3731516e06b34a63e1c8d0d4fe8a assets/superbwarfare/models/item/sentinel_icon.json
 ab3c63c249ab9f48dfb7b21bb4e85d55c50527e8 assets/superbwarfare/models/item/shotgun_ammo.json
 129239c26d14526d65764dc10ef99864c9ef7fff assets/superbwarfare/models/item/silver_ingot.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sks_blueprint.json
