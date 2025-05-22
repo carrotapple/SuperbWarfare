@@ -1,8 +1,10 @@
 package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.init.ModItems;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,31 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 public class Hammer extends SwordItem {
 
     public Hammer() {
-        super(new Tier() {
-            public int getUses() {
-                return 400;
-            }
-
-            public float getSpeed() {
-                return 4f;
-            }
-
-            public float getAttackDamageBonus() {
-                return 8f;
-            }
-
-            public int getLevel() {
-                return 1;
-            }
-
-            public int getEnchantmentValue() {
-                return 9;
-            }
-
-            public Ingredient getRepairIngredient() {
-                return Ingredient.of(new ItemStack(Items.IRON_INGOT));
-            }
-        }, 3, -3.2f, new Item.Properties());
+        super(Tiers.IRON, 9, -3.2f, new Item.Properties().durability(400));
     }
 
     @Override
