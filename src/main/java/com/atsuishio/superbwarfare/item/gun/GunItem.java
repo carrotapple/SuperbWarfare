@@ -306,7 +306,7 @@ public abstract class GunItem extends Item {
      * @param stack 武器物品
      */
     public boolean hasMeleeAttack(ItemStack stack) {
-        return false;
+        return GunData.from(stack).meleeDamage() > 0;
     }
 
     /**
