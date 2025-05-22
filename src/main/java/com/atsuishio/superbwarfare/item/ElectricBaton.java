@@ -30,8 +30,8 @@ import java.util.function.Supplier;
 
 public class ElectricBaton extends SwordItem {
 
-    public static final int MAX_ENERGY = 6000;
-    public static final int ENERGY_COST = 1000;
+    public static final int MAX_ENERGY = 30000;
+    public static final int ENERGY_COST = 1500;
     public static final String TAG_OPEN = "Open";
     private final Supplier<Integer> energyCapacity;
 
@@ -56,7 +56,7 @@ public class ElectricBaton extends SwordItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        if (pPlayer.isCrouching()) {
+        if (pPlayer.isShiftKeyDown()) {
             stack.getOrCreateTag().putBoolean(TAG_OPEN, !stack.getOrCreateTag().getBoolean(TAG_OPEN));
             pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.electric_baton." + (stack.getOrCreateTag().getBoolean(TAG_OPEN) ? "open" : "close")), true);
         }
