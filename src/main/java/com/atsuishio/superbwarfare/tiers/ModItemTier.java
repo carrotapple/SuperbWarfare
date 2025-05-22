@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum ModItemTier implements Tier {
-    STEEL(2, 400, 6.0f, 5.5f, 15, () -> Ingredient.of(ModItems.STEEL_INGOT.get())),
+    STEEL(2, 400, 6.0f, 5.0f, 15, () -> Ingredient.of(ModItems.STEEL_INGOT.get())),
     ;
 
     private final int level;

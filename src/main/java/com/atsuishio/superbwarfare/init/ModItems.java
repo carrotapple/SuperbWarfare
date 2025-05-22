@@ -144,7 +144,7 @@ public class ModItems {
     public static final RegistryObject<Item> DETONATOR = ITEMS.register("detonator", Detonator::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
     public static final RegistryObject<Item> DPS_GENERATOR_DEPLOYER = ITEMS.register("dps_generator_deployer", DPSGeneratorDeployer::new);
-    public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", () -> new SwordItem(ModItemTier.STEEL, 0, -1.8f, new Item.Properties()));
+    public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", () -> new SwordItem(ModItemTier.STEEL, 0, -1.8f, new Item.Properties().durability(1200)));
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> ELECTRIC_BATON = ITEMS.register("electric_baton", ElectricBaton::new);
     public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar", Crowbar::new);
