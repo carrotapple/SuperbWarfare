@@ -77,6 +77,10 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
         this.noCulling = true;
     }
 
+    public SwarmDroneEntity(double x, double y, double z, Level level) {
+        super(ModEntities.SWARM_DRONE.get(), x, y, z, level);
+    }
+
     public SwarmDroneEntity(LivingEntity entity, Level level, float explosionDamage, float explosionRadius) {
         super(ModEntities.SWARM_DRONE.get(), entity, level);
         this.explosionDamage = explosionDamage;
@@ -242,7 +246,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
             Entity shooter = this.getOwner();
             Vec3 targetPos;
 
-            if (guideType == 0 && entity!= null) {
+            if (guideType == 0 && entity != null) {
                 targetPos = entity.getEyePosition();
                 this.entityData.set(TARGET_X, (float) targetPos.x);
                 this.entityData.set(TARGET_Y, (float) targetPos.y);
@@ -251,15 +255,15 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
                 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y), this.entityData.get(TARGET_Z));
             }
 
-            if (tickCount %5 == 0) {
+            if (tickCount % 5 == 0) {
                 randomFloat = random.nextFloat();
             }
 
             double dis = position().distanceTo(targetPos);
             double disShooter = shooter.position().distanceTo(targetPos);
-            double randomPos = Mth.sin(0.25f * (tickCount + randomFloat)) * randomFloat * Mth.clamp(Mth.sin((float) (Mth.PI * (dis / disShooter))), 0 , 0.8);
+            double randomPos = Mth.sin(0.25f * (tickCount + randomFloat)) * randomFloat * Mth.clamp(Mth.sin((float) (Mth.PI * (dis / disShooter))), 0, 0.8);
 
-            Vec3 toVec = this.position().vectorTo(targetPos).normalize().add(new Vec3(randomPos,0.1 * randomPos,randomPos));
+            Vec3 toVec = this.position().vectorTo(targetPos).normalize().add(new Vec3(randomPos, 0.1 * randomPos, randomPos));
             setDeltaMovement(getDeltaMovement().add(toVec.scale(0.5)));
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.85, 0.85, 0.85));
 
