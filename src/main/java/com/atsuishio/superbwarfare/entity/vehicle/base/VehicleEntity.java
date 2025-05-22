@@ -984,6 +984,10 @@ public abstract class VehicleEntity extends Entity {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    public float getMass() {
+        return data().mass();
+    }
+
     /**
      * 玩家在载具上的灵敏度调整
      *

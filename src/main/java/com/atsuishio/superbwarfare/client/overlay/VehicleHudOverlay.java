@@ -190,7 +190,7 @@ public class VehicleHudOverlay implements IGuiOverlay {
                 poseStack.popPose();
 
                 // 时速
-                guiGraphics.drawString(mc.font, Component.literal(FormatTool.format0D(mobileVehicle.getDeltaMovement().length() * 72, " km/h")),
+                guiGraphics.drawString(mc.font, Component.literal(FormatTool.format0D(mobileVehicle.getDeltaMovement().dot(mobileVehicle.getViewVector(partialTick)) * 72, " km/h")),
                         screenWidth / 2 + 160, screenHeight / 2 - 48, 0x66FF00, false);
 
                 // 低电量警告
