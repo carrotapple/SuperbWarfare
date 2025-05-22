@@ -49,6 +49,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -102,12 +103,12 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return ModItems.JAVELIN_MISSILE.get();
     }
 
@@ -156,7 +157,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
@@ -173,7 +174,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Damage", this.damage);
@@ -224,7 +225,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     }
 
     @Override
-    public void onHitBlock(BlockHitResult blockHitResult) {
+    public void onHitBlock(@NotNull BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
@@ -285,13 +286,13 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
                         } else {
                             boolean lostTarget = this.getY() < entity.getY();
                             if (!lostTarget) {
-                                setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                                setDeltaMovement(getDeltaMovement().add(toVec).scale(0.87));
                             }
                         }
                     } else {
                         boolean lostTarget = (VectorTool.calculateAngle(getDeltaMovement(), toVec) > 80);
                         if (!lostTarget) {
-                            setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                            setDeltaMovement(getDeltaMovement().add(toVec).scale(0.87));
                         }
                     }
                 }
@@ -314,13 +315,13 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
                     } else {
                         boolean lostTarget = this.getY() < this.entityData.get(TARGET_Y);
                         if (!lostTarget) {
-                            setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                            setDeltaMovement(getDeltaMovement().add(toVec).scale(0.87));
                         }
                     }
                 } else {
                     boolean lostTarget = (VectorTool.calculateAngle(getDeltaMovement(), toVec) > 80);
                     if (!lostTarget) {
-                        setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
+                        setDeltaMovement(getDeltaMovement().add(toVec).scale(0.87));
                     }
                 }
             }
@@ -404,12 +405,12 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     }
 
     @Override
-    public SoundEvent getCloseSound() {
+    public @NotNull SoundEvent getCloseSound() {
         return ModSounds.ROCKET_ENGINE.get();
     }
 
     @Override
-    public SoundEvent getSound() {
+    public @NotNull SoundEvent getSound() {
         return ModSounds.ROCKET_FLY.get();
     }
 

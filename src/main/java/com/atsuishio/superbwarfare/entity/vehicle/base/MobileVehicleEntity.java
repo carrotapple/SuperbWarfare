@@ -648,7 +648,7 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             if (!this.canCrushEntities()) return;
             if (velocity.horizontalDistance() < 0.25) return;
             if (isRemoved()) return;
-            var frontBox = getBoundingBox().move(velocity.scale(1));
+            var frontBox = getBoundingBox().move(velocity);
 
             var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
                             entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
