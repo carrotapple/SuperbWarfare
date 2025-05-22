@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.client.tooltip;
 import com.atsuishio.superbwarfare.client.screens.DogTagEditorScreen;
 import com.atsuishio.superbwarfare.client.tooltip.component.DogTagImageComponent;
 import com.atsuishio.superbwarfare.item.DogTag;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -32,9 +31,8 @@ public class ClientDogTagImageTooltip implements ClientTooltipComponent {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 if (colors[i][j] == -1) continue;
-                var color = ChatFormatting.getById(colors[i][j]);
                 pGuiGraphics.fill(5 + pX + i * 4 + 4, 5 + pY + j * 4 + 4, 5 + pX + i * 4, 5 + pY + j * 4,
-                        DogTagEditorScreen.getColorFromFormatting(color));
+                        DogTagEditorScreen.getColorByNum(colors[i][j]));
             }
         }
 

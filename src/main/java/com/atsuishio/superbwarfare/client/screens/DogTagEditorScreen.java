@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.item.DogTag;
 import com.atsuishio.superbwarfare.menu.DogTagEditorMenu;
 import com.atsuishio.superbwarfare.network.message.send.DogTagFinishEditMessage;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -55,11 +54,10 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
 
         for (int x = 0; x < this.icon.length; x++) {
             for (int y = 0; y < this.icon.length; y++) {
-                int num = this.icon[x][y];
+                short num = this.icon[x][y];
                 if (num != -1) {
-                    var color = ChatFormatting.getById(num);
                     pGuiGraphics.fill(i + 66 + x * 9, j + 44 + y * 9, i + 58 + x * 9, j + 36 + y * 9,
-                            getColorFromFormatting(color));
+                            getColorByNum(num));
                 }
             }
         }
@@ -148,7 +146,6 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         this.name.setBordered(false);
         this.name.setMaxLength(30);
         this.name.setResponder(this::onNameChanged);
-//        this.name.setValue(this.stack.getHoverName().getString());
         this.addWidget(this.name);
         this.setInitialFocus(this.name);
         this.name.setEditable(true);
@@ -241,27 +238,24 @@ public class DogTagEditorScreen extends AbstractContainerScreen<DogTagEditorMenu
         }
     }
 
-    public static int getColorFromFormatting(ChatFormatting chatFormatting) {
-        if (chatFormatting == null) {
-            return -1;
-        }
-        return switch (chatFormatting) {
-            case BLACK -> 0xFF000000;
-            case DARK_BLUE -> 0xFF0000AA;
-            case DARK_GREEN -> 0xFF00AA00;
-            case DARK_AQUA -> 0xFF00AAAA;
-            case DARK_RED -> 0xFFAA0000;
-            case DARK_PURPLE -> 0xFFAA00AA;
-            case GOLD -> 0xFFFFAA00;
-            case GRAY -> 0xFFAAAAAA;
-            case DARK_GRAY -> 0xFF555555;
-            case BLUE -> 0xFF5555FF;
-            case GREEN -> 0xFF55FF55;
-            case AQUA -> 0xFF55FFFF;
-            case RED -> 0xFFFF5555;
-            case LIGHT_PURPLE -> 0xFFFF55FF;
-            case YELLOW -> 0xFFFFFF55;
-            case WHITE -> 0xFFFFFFFF;
+    public static int getColorByNum(short num) {
+        return switch (num) {
+            case 0 -> 0xFF000000;
+            case 1 -> 0xFFFFFFFF;
+            case 2 -> 0xFF808080;
+            case 3 -> 0xFFD42424;
+            case 4 -> 0xFFFFAA00;
+            case 5 -> 0xFFFFFF00;
+            case 6 -> 0xFF3CE03C;
+            case 7 -> 0xFF66CCFF;
+            case 8 -> 0xFF3A4FFF;
+            case 9 -> 0xFFB654FF;
+            case 10 -> 0xFF7D5841;
+            case 11 -> 0xFFFF97A7;
+            case 12 -> 0xFF76945E;
+            case 13 -> 0xFFFFC400;
+            case 14 -> 0xFF4C425B;
+            case 15 -> 0xFFF8E4D0;
             default -> -1;
         };
     }

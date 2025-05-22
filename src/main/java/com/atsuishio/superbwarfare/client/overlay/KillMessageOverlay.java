@@ -18,7 +18,6 @@ import com.atsuishio.superbwarfare.tools.DamageTypeTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -439,10 +438,9 @@ public class KillMessageOverlay implements IGuiOverlay {
                             for (int i = 0; i < 16; i++) {
                                 for (int j = 0; j < 16; j++) {
                                     if (icon[i][j] == -1) continue;
-                                    var color = ChatFormatting.getById(icon[i][j]);
                                     RenderHelper.fill(guiGraphics, RenderType.gui(),
                                             x + i * 0.6f, y + j * 0.6f, x + (i + 1) * 0.6f, y + (j + 1) * 0.6f,
-                                            0, DogTagEditorScreen.getColorFromFormatting(color));
+                                            0, DogTagEditorScreen.getColorByNum(icon[i][j]));
                                 }
                             }
 
