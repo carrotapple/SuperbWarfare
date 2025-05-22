@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public class ElectricBaton extends SwordItem {
 
     public static final int MAX_ENERGY = 30000;
-    public static final int ENERGY_COST = 1500;
+    public static final int ENERGY_COST = 2000;
     public static final String TAG_OPEN = "Open";
     private final Supplier<Integer> energyCapacity;
 
@@ -89,7 +89,7 @@ public class ElectricBaton extends SwordItem {
             if (energy >= ENERGY_COST) {
                 pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(e -> e.extractEnergy(ENERGY_COST, false));
                 if (!pTarget.level().isClientSide) {
-                    pTarget.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 200, 2), pAttacker);
+                    pTarget.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 20, 2), pAttacker);
                 }
             }
         }
