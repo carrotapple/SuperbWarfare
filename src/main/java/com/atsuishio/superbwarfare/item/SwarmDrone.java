@@ -62,7 +62,7 @@ public class SwarmDrone extends Item implements DispenserLaunchable {
 
             @Override
             protected float getPower() {
-                return 0.5F;
+                return 1.5F;
             }
 
             @Override
