@@ -54,7 +54,7 @@ public class GunData {
         this.item = gunItem;
         this.stack = stack;
         var id = stack.getDescriptionId();
-        this.id = id.substring(id.lastIndexOf(".") + 1);
+        this.id = id.substring(id.indexOf(".") + 1).replace('.', ':');
 
         this.tag = stack.getOrCreateTag();
 
