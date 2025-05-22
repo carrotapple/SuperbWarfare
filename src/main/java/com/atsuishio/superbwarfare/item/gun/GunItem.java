@@ -148,13 +148,24 @@ public abstract class GunItem extends Item {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         UUID uuid = new UUID(slot.toString().hashCode(), 0);
-        if (slot == EquipmentSlot.MAINHAND) {
-            var data = GunData.from(stack);
-            map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(
+        if (slot != EquipmentSlot.MAINHAND) return map;
+
+        var data = GunData.from(stack);
+        map = HashMultimap.create(map);
+
+        // 移速
+        map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(
+                uuid, Mod.ATTRIBUTE_MODIFIER,
+                -0.01f - 0.005f * data.weight(),
+                AttributeModifier.Operation.MULTIPLY_BASE
+        ));
+
+        // 近战伤害
+        if (data.meleeDamage() > 0) {
+            map.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                     uuid, Mod.ATTRIBUTE_MODIFIER,
-                    -0.01f - 0.005f * data.weight(),
-                    AttributeModifier.Operation.MULTIPLY_BASE
+                    data.meleeDamage(),
+                    AttributeModifier.Operation.ADDITION
             ));
         }
         return map;
