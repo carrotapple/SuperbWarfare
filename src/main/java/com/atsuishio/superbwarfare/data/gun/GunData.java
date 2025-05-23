@@ -69,7 +69,13 @@ public class GunData {
         perk = new Perks(this);
 
         ammo = new IntValue(data, "Ammo");
-        fireMode = new StringEnumValue<>(data, "FireMode", defaultGunData().defaultFireMode, FireMode::fromValue);
+
+        var defaultFireMode = defaultGunData().defaultFireMode;
+        if (defaultFireMode == null) {
+            defaultFireMode = FireMode.SEMI;
+        }
+
+        fireMode = new StringEnumValue<>(data, "FireMode", defaultFireMode, FireMode::fromValue);
         level = new IntValue(data, "Level");
         exp = new DoubleValue(data, "Exp");
         upgradePoint = new DoubleValue(data, "UpgradePoint");
@@ -200,7 +206,10 @@ public class GunData {
     }
 
     public ProjectileInfo projectileInfo() {
-        return defaultGunData().projectile;
+        var info = defaultGunData().projectile;
+        if (info == null) return new ProjectileInfo();
+
+        return info;
     }
 
     public String projectileType() {
@@ -224,6 +233,8 @@ public class GunData {
     }
 
     public Set<ReloadType> reloadTypes() {
+        if (defaultGunData().reloadTypes == null) return Set.of();
+
         return defaultGunData().reloadTypes;
     }
 
@@ -353,7 +364,7 @@ public class GunData {
 
     public AmmoTypeInfo ammoTypeInfo() {
         var ammoType = defaultGunData().ammoType;
-        if (ammoType.isEmpty()) {
+        if (ammoType == null || ammoType.isEmpty()) {
             return new AmmoTypeInfo(AmmoConsumeType.INVALID, "");
         }
 
@@ -534,6 +545,8 @@ public class GunData {
     }
 
     public Set<FireMode> getAvailableFireModes() {
+        if (defaultGunData().availableFireModes == null) return Set.of();
+
         return defaultGunData().availableFireModes;
     }
 
