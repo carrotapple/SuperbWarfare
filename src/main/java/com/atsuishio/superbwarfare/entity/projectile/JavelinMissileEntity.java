@@ -143,6 +143,7 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(HEALTH, 10f);
         this.entityData.define(TARGET_UUID, "none");
         this.entityData.define(TOP, false);

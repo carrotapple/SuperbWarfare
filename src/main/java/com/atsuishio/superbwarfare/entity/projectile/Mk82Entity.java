@@ -100,6 +100,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(HEALTH, 50f);
     }
 

@@ -104,7 +104,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.DRONE.get();
+        return ModItems.SWARM_DRONE.get();
     }
 
     public void setTargetUuid(String uuid) {
@@ -147,6 +147,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(HEALTH, 10f);
         this.entityData.define(TARGET_UUID, "none");
         this.entityData.define(TARGET_X, 0f);

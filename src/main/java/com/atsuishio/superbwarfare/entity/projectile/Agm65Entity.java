@@ -118,6 +118,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(HEALTH, 30f);
         this.entityData.define(TARGET_UUID, "none");
     }

@@ -108,6 +108,7 @@ public class WgMissileEntity extends FastThrowableProjectile implements GeoEntit
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(HEALTH, 10f);
     }
 
