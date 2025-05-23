@@ -216,6 +216,9 @@ public class ClientEventHandler {
         if (player == null) {
             return;
         }
+        if (event.phase == TickEvent.Phase.START) {
+            return;
+        }
 
         ItemStack stack = player.getMainHandItem();
 
@@ -238,9 +241,6 @@ public class ClientEventHandler {
         if (notInGame() && !ClickHandler.switchZoom) {
             zoom = false;
         }
-
-        isProne(player);
-        beamShoot(player, stack);
 
         var options = Minecraft.getInstance().options;
         short keys = 0;
@@ -287,15 +287,15 @@ public class ClientEventHandler {
             canDoubleJump = false;
         }
 
-        if (event.phase == TickEvent.Phase.END) {
-            handleVariableDecrease();
-            aimAtVillager(player);
-            CrossHairOverlay.handleRenderDamageIndicator();
-            staminaSystem();
-            handlePlayerSprint();
-            handleLungeAttack(player, stack);
-            handleGunMelee(player, stack);
-        }
+        isProne(player);
+        beamShoot(player, stack);
+        handleVariableDecrease();
+        aimAtVillager(player);
+        CrossHairOverlay.handleRenderDamageIndicator();
+        staminaSystem();
+        handlePlayerSprint();
+        handleLungeAttack(player, stack);
+        handleGunMelee(player, stack);
     }
 
     // 耐力
