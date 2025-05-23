@@ -1,11 +1,15 @@
 package com.atsuishio.superbwarfare.data.vehicle;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.network.message.receive.GunsDataMessage;
 import com.google.gson.Gson;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -37,6 +41,13 @@ public class VehicleDataTool {
     }
 
     @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), GunsDataMessage.create());
+        }
+    }
+
+    @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
         initJsonData(event.getServer().getResourceManager());
     }
@@ -44,5 +55,7 @@ public class VehicleDataTool {
     @SubscribeEvent
     public static void onDataPackSync(OnDatapackSyncEvent event) {
         initJsonData(event.getPlayerList().getServer().getResourceManager());
+
+        Mod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), GunsDataMessage.create());
     }
 }
