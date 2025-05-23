@@ -163,7 +163,7 @@ public abstract class GunItem extends Item {
         // 近战伤害
         if (data.meleeDamage() > 0) {
             map.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                    uuid, Mod.ATTRIBUTE_MODIFIER,
+                    BASE_ATTACK_DAMAGE_UUID, Mod.ATTRIBUTE_MODIFIER,
                     data.meleeDamage(),
                     AttributeModifier.Operation.ADDITION
             ));
