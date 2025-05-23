@@ -117,7 +117,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         }
 
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(dmgStr)
                         .withStyle(ChatFormatting.GREEN));
     }
@@ -130,11 +130,11 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
                 (GunData.from(this.stack).getAvailableFireModes().contains(FireMode.AUTO)
                         || GunData.from(this.stack).getAvailableFireModes().contains(FireMode.BURST))) {
             return Component.translatable("des.superbwarfare.guns.rpm").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.empty().withStyle(ChatFormatting.RESET))
                     .append(Component.literal(FormatTool.format0D(getGunData().rpm()))
                             .withStyle(ChatFormatting.GREEN));
         }
-        return Component.literal("");
+        return Component.empty();
     }
 
     /**
@@ -167,9 +167,9 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         }
 
         return Component.translatable("des.superbwarfare.guns.level").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(level + "").withStyle(formatting).withStyle(ChatFormatting.BOLD))
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(" (" + FormatTool.DECIMAL_FORMAT_2ZZZ.format(rate * 100) + "%)").withStyle(ChatFormatting.GRAY));
     }
 
@@ -179,7 +179,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected Component getUpgradePointComponent() {
         int upgradePoint = Mth.floor(getGunData().upgradePoint.get());
         return Component.translatable("des.superbwarfare.guns.upgrade_point").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));
     }
 
@@ -208,7 +208,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         double bypassRate = Math.max(getGunData().bypassArmor() + perkBypassArmorRate, 0);
 
         return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format2D(bypassRate * 100, "%")).withStyle(ChatFormatting.GOLD));
     }
 
@@ -218,7 +218,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected Component getHeadshotComponent() {
         double headshot = getGunData().headshot();
         return Component.translatable("des.superbwarfare.guns.headshot").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(Component.literal(FormatTool.format1D(headshot, "x")).withStyle(ChatFormatting.AQUA));
     }
 

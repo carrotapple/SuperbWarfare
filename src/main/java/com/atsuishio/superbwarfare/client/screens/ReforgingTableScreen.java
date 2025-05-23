@@ -18,6 +18,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(Dist.CLIENT)
 public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTableMenu> {
 
@@ -39,6 +41,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
@@ -109,7 +112,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         public ReforgeButton(int pX, int pY) {
-            super(pX, pY, 40, 16, Component.literal(""));
+            super(pX, pY, 40, 16, Component.empty());
         }
 
         @Override
@@ -133,7 +136,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
-            super(pX, pY, 9, 9, Component.literal(""));
+            super(pX, pY, 9, 9, Component.empty());
             this.type = type;
         }
 
@@ -184,7 +187,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
-            super(pX, pY, 12, 12, Component.literal(""));
+            super(pX, pY, 12, 12, Component.empty());
             this.type = type;
         }
 
