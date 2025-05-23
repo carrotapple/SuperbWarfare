@@ -241,8 +241,6 @@ public class ClientEventHandler {
 
         isProne(player);
         beamShoot(player, stack);
-        handleLungeAttack(player, stack);
-        handleGunMelee(player, stack);
 
         var options = Minecraft.getInstance().options;
         short keys = 0;
@@ -295,6 +293,8 @@ public class ClientEventHandler {
             CrossHairOverlay.handleRenderDamageIndicator();
             staminaSystem();
             handlePlayerSprint();
+            handleLungeAttack(player, stack);
+            handleGunMelee(player, stack);
         }
     }
 
@@ -441,12 +441,12 @@ public class ClientEventHandler {
 
     public static void handleLungeAttack(Player player, ItemStack stack) {
         if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && lungeDraw == 0 && holdFire) {
-            lungeAttack = 36;
+            lungeAttack = 18;
             holdFire = false;
             player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
         }
 
-        if (stack.is(ModItems.LUNGE_MINE.get()) && ((lungeAttack >= 18 && lungeAttack <= 21) || lungeSprint > 0)) {
+        if (stack.is(ModItems.LUNGE_MINE.get()) && ((lungeAttack >= 9 && lungeAttack <= 10.5) || lungeSprint > 0)) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 1.5);
 
             BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 0.5)),
@@ -459,12 +459,12 @@ public class ClientEventHandler {
                 Mod.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
-                lungeDraw = 30;
+                lungeDraw = 15;
             } else if ((blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) && lungeSprint == 0) {
                 Mod.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
-                lungeDraw = 30;
+                lungeDraw = 15;
             }
         }
 
