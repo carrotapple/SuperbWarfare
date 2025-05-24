@@ -263,7 +263,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         String base = modLoc("item/" + name + "_base").toString();
         String icon = modLoc("item/" + name + "_icon").toString();
 
-        return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
+        return getBuilder(item.getId().getPath())
                 .guiLight(BlockModel.GuiLight.FRONT)
                 .customLoader(CustomSeparateModelBuilder::begin)
                 .base(base)
