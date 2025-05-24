@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.entity.projectile;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.network.message.receive.ClientMotionSyncMessage;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -10,10 +12,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public abstract class FastThrowableProjectile extends ThrowableItemProjectile implements CustomSyncMotionEntity, IEntityAdditionalSpawnData {
+
+    public static Consumer<FastThrowableProjectile> flySound = projectile -> {
+    };
+    public static Consumer<FastThrowableProjectile> nearFlySound = projectile -> {
+    };
+
+    private boolean isFastMoving = false;
 
     public FastThrowableProjectile(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -34,6 +45,12 @@ public abstract class FastThrowableProjectile extends ThrowableItemProjectile im
     @Override
     public void tick() {
         super.tick();
+
+        if (!this.isFastMoving && this.isFastMoving() && this.level().isClientSide) {
+            flySound.accept(this);
+            nearFlySound.accept(this);
+        }
+        this.isFastMoving = this.isFastMoving();
 
         Vec3 vec3 = this.getDeltaMovement();
         float friction;
@@ -66,6 +83,10 @@ public abstract class FastThrowableProjectile extends ThrowableItemProjectile im
         }
     }
 
+    public boolean isFastMoving() {
+        return this.getDeltaMovement().lengthSqr() >= 2500;
+    }
+
     public boolean shouldSyncMotion() {
         return false;
     }
@@ -81,5 +102,19 @@ public abstract class FastThrowableProjectile extends ThrowableItemProjectile im
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
         this.setDeltaMovement(additionalData.readFloat(), additionalData.readFloat(), additionalData.readFloat());
+    }
+
+    @NotNull
+    public SoundEvent getCloseSound() {
+        return SoundEvents.EMPTY;
+    }
+
+    @NotNull
+    public SoundEvent getSound() {
+        return SoundEvents.EMPTY;
+    }
+
+    public float getVolume() {
+        return 0.5f;
     }
 }

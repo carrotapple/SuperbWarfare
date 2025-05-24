@@ -1,8 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
-import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -36,8 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,7 +47,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class MortarShellEntity extends FastThrowableProjectile implements GeoEntity, LoudlyEntity, ExplosiveProjectile {
+public class MortarShellEntity extends FastThrowableProjectile implements GeoEntity, ExplosiveProjectile {
 
     private float damage = 50;
     private float explosionDamage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
@@ -90,7 +86,6 @@ public class MortarShellEntity extends FastThrowableProjectile implements GeoEnt
 
     public MortarShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.MORTAR_SHELL.get(), level);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
     public void setEffectsFromItem(ItemStack pStack) {
