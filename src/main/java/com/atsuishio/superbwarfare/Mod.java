@@ -3,22 +3,15 @@ package com.atsuishio.superbwarfare;
 import com.atsuishio.superbwarfare.api.event.RegisterContainersEvent;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
 import com.atsuishio.superbwarfare.client.molang.MolangVariable;
-import com.atsuishio.superbwarfare.client.sound.FastProjectileSoundInstance;
-import com.atsuishio.superbwarfare.client.sound.VehicleFireSoundInstance;
-import com.atsuishio.superbwarfare.client.sound.VehicleSoundInstance;
+import com.atsuishio.superbwarfare.client.sound.ModSoundInstances;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.ClientConfig;
 import com.atsuishio.superbwarfare.config.CommonConfig;
 import com.atsuishio.superbwarfare.config.ServerConfig;
-import com.atsuishio.superbwarfare.entity.projectile.FastThrowableProjectile;
-import com.atsuishio.superbwarfare.entity.vehicle.A10Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Hpj11Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.receive.*;
 import com.atsuishio.superbwarfare.network.message.send.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -214,15 +207,6 @@ public class Mod {
     public void onClientSetup(final FMLClientSetupEvent event) {
         MouseMovementHandler.init();
         MolangVariable.register();
-
-        MobileVehicleEntity.trackSound = vehicle -> Minecraft.getInstance().getSoundManager().play(new VehicleSoundInstance.TrackSound(vehicle));
-        MobileVehicleEntity.engineSound = vehicle -> Minecraft.getInstance().getSoundManager().play(new VehicleSoundInstance.EngineSound(vehicle));
-        MobileVehicleEntity.swimSound = vehicle -> Minecraft.getInstance().getSoundManager().play(new VehicleSoundInstance.SwimSound(vehicle));
-
-        A10Entity.fireSound = vehicle -> Minecraft.getInstance().getSoundManager().play(new VehicleFireSoundInstance.A10FireSound(vehicle));
-        Hpj11Entity.fireSound = vehicle -> Minecraft.getInstance().getSoundManager().play(new VehicleFireSoundInstance.HPJ11CloseFireSound(vehicle));
-
-        FastThrowableProjectile.flySound = entity -> Minecraft.getInstance().getSoundManager().play(new FastProjectileSoundInstance.FlySound(entity));
-        FastThrowableProjectile.nearFlySound = entity -> Minecraft.getInstance().getSoundManager().play(new FastProjectileSoundInstance.NearFlySound(entity));
+        event.enqueueWork(ModSoundInstances::init);
     }
 }
