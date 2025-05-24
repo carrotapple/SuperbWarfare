@@ -92,7 +92,7 @@ public class ElectricBaton extends SwordItem {
             if (energy >= ENERGY_COST) {
                 pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(e -> e.extractEnergy(ENERGY_COST, false));
                 if (!pTarget.level().isClientSide) {
-                    pTarget.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 20, 2), pAttacker);
+                    pTarget.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 30, 2), pAttacker);
                 }
             }
         }
