@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.advancement.CriteriaRegister;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -143,6 +145,18 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
+    protected void addPassenger(@NotNull Entity newPassenger) {
+        super.addPassenger(newPassenger);
+
+        if (newPassenger instanceof ServerPlayer player
+                && (player.getMainHandItem().getItem() == ModItems.ELECTRIC_BATON.get()
+                || player.getOffhandItem().getItem() == ModItems.ELECTRIC_BATON.get())
+        ) {
+            CriteriaRegister.OTTO_SPRINT.trigger(player);
+        }
+    }
+
+    @Override
     public void travel() {
         Entity passenger = this.getFirstPassenger();
 
@@ -202,7 +216,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1.25 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
         this.setRightWheelRot((float) (this.getRightWheelRot() - 1.25 * s0) + 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
 
-        float power = this.entityData.get(POWER) * Mth.clamp(1 + (s0 > 0 ? 1 : -1) * getXRot() / 35, 0 , 2);
+        float power = this.entityData.get(POWER) * Mth.clamp(1 + (s0 > 0 ? 1 : -1) * getXRot() / 35, 0, 2);
         this.setDeltaMovement(this.getDeltaMovement().add(getViewVector(1).scale((this.onGround() ? 1 : 0.1) * power)));
     }
 
