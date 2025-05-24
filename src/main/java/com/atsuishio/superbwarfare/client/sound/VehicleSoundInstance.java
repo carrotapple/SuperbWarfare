@@ -110,7 +110,7 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
 
         @Override
         protected boolean canPlay(MobileVehicleEntity mobileVehicle) {
-            return mobileVehicle.engineRunning() && mobileVehicle.onGround();
+            return mobileVehicle.engineRunning();
         }
 
         @Override
