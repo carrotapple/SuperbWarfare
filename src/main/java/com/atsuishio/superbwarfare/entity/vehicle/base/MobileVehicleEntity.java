@@ -171,11 +171,14 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             pPlayer.setDeltaMovement(pPlayer.getDeltaMovement().add(new Vec3(this.position().vectorTo(pPlayer.position()).toVector3f()).scale(0.1 * f1 * pPlayer.getDeltaMovement().length())));
         }
     }
-    
+
     @Override
     public void baseTick() {
         if (!this.wasEngineRunning && this.engineRunning() && this.level().isClientSide()) {
             engineSound.accept(this);
+            if (this.hasTracks()) {
+                trackSound.accept(this);
+            }
         }
         this.wasEngineRunning = this.engineRunning();
 
@@ -921,6 +924,10 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
         compound.putInt("DecoyCount", this.entityData.get(DECOY_COUNT));
         compound.putInt("GearRot", this.entityData.get(GEAR_ROT));
         compound.putBoolean("GearUp", this.entityData.get(GEAR_UP));
+    }
+
+    public boolean hasTracks() {
+        return false;
     }
 
     public boolean canCrushEntities() {

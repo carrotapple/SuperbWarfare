@@ -85,7 +85,6 @@ import java.util.List;
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-// TODO 添加正确的履带音效播放条件
 public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEntity, LandArmorEntity, WeaponVehicleEntity {
 
     public static final EntityDataAccessor<Integer> MG_AMMO = SynchedEntityData.defineId(Yx100Entity.class, EntityDataSerializers.INT);
@@ -1125,6 +1124,11 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public int zoomFov() {
         return 3;
+    }
+
+    @Override
+    public boolean hasTracks() {
+        return true;
     }
 
     @Override
