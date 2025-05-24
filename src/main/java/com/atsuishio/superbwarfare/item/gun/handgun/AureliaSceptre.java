@@ -60,7 +60,7 @@ public class AureliaSceptre extends GunItem implements GeoItem {
 
             private static final HumanoidModel.ArmPose AureliaSceptrePose = HumanoidModel.ArmPose.create("AureliaSceptre", false, (model, entity, arm) -> {
                 if (arm != HumanoidArm.LEFT) {
-                    model.rightArm.xRot = -67.5f * Mth.DEG_TO_RAD + model.head.xRot;
+                    model.rightArm.xRot = -67.5f * Mth.DEG_TO_RAD + model.head.xRot + 0.2f * model.rightArm.xRot;
                     model.rightArm.yRot = 5f * Mth.DEG_TO_RAD;
                 }
             });
@@ -89,8 +89,16 @@ public class AureliaSceptre extends GunItem implements GeoItem {
 
         if (player.isSprinting() && player.onGround()
                 && ClientEventHandler.cantSprint == 0
-                && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty()) && ClientEventHandler.drawTime < 0.01) {
+                && !(GunData.from(stack).reload.normal() || GunData.from(stack).reload.empty()) && ClientEventHandler.drawTime < 0.01 && ClientEventHandler.gunMelee == 0) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aurelia_sceptre.run"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aurelia_sceptre.idle"));
+    }
+
+    private PlayState meleePredicate(AnimationState<AureliaSceptre> event) {
+        if (ClientEventHandler.gunMelee > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aurelia_sceptre.hit"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aurelia_sceptre.idle"));
@@ -112,6 +120,8 @@ public class AureliaSceptre extends GunItem implements GeoItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var idleController = new AnimationController<>(this, "idleController", 6, this::idlePredicate);
         data.add(idleController);
+        var meleeController = new AnimationController<>(this, "meleeController", 0, this::meleePredicate);
+        data.add(meleeController);
     }
 
     @Override

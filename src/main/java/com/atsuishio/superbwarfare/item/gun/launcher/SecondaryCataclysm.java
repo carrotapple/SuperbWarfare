@@ -147,10 +147,6 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.secondary_cataclysm.iterativeload2"));
         }
 
-        if (ClientEventHandler.gunMelee > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.secondary_cataclysm.hit"));
-        }
-
         if (data.reload.stage() == 3) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.secondary_cataclysm.finish"));
         }
@@ -184,6 +180,14 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.secondary_cataclysm.idle"));
     }
 
+    private PlayState meleePredicate(AnimationState<SecondaryCataclysm> event) {
+        if (ClientEventHandler.gunMelee > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.secondary_cataclysm.hit"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.secondary_cataclysm.idle"));
+    }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
@@ -195,6 +199,8 @@ public class SecondaryCataclysm extends GunItem implements GeoItem {
         data.add(reloadAnimController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
+        var meleeController = new AnimationController<>(this, "meleeController", 0, this::meleePredicate);
+        data.add(meleeController);
     }
 
     @Override
