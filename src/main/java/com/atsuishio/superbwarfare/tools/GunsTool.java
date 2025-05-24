@@ -62,6 +62,11 @@ public class GunsTool {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            var server = player.getServer();
+            if (server != null && server.isSingleplayer()) {
+                return;
+            }
+
             Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), GunsDataMessage.create());
         }
     }
@@ -74,6 +79,10 @@ public class GunsTool {
     @SubscribeEvent
     public static void onDataPackSync(OnDatapackSyncEvent event) {
         initJsonData(event.getPlayerList().getServer().getResourceManager());
+
+        if (event.getPlayerList().getServer().isSingleplayer()) {
+            return;
+        }
 
         event.getPlayerList().getPlayers().forEach(player -> Mod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), GunsDataMessage.create()));
     }
