@@ -67,21 +67,25 @@ public class ElectricBaton extends SwordItem {
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        return pStack.getOrCreateTag().getBoolean(TAG_OPEN);
+        return pStack.getOrCreateTag().getBoolean(TAG_OPEN) || super.isBarVisible(pStack);
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        var energy = pStack.getCapability(ForgeCapabilities.ENERGY)
-                .map(IEnergyStorage::getEnergyStored)
-                .orElse(0);
+        if (pStack.getOrCreateTag().getBoolean(TAG_OPEN)) {
+            var energy = pStack.getCapability(ForgeCapabilities.ENERGY)
+                    .map(IEnergyStorage::getEnergyStored)
+                    .orElse(0);
 
-        return Math.round((float) energy * 13.0F / MAX_ENERGY);
+            return Math.round((float) energy * 13.0F / MAX_ENERGY);
+        } else {
+            return super.getBarWidth(pStack);
+        }
     }
 
     @Override
     public int getBarColor(@NotNull ItemStack pStack) {
-        return 0xFFFF00;
+        return pStack.getOrCreateTag().getBoolean(TAG_OPEN) ? 0xFFFF00 : super.getBarColor(pStack);
     }
 
     @Override
