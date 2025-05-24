@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
@@ -41,6 +42,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -66,18 +69,8 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
     private float explosionDamage = ExplosionConfig.AGM_65_EXPLOSION_DAMAGE.get();
     private float explosionRadius = ExplosionConfig.AGM_65_EXPLOSION_RADIUS.get().floatValue();
     private boolean distracted = false;
-
-    public boolean soundStart;
-
-    @Override
-    public boolean isStarted() {
-        return soundStart;
-    }
-
-    @Override
-    public void setStart(boolean start) {
-        soundStart = start;
-    }
+    private int durability = 40;
+    private boolean firstHit = true;
 
     public Agm65Entity(EntityType<? extends Agm65Entity> type, Level world) {
         super(type, world);
@@ -94,7 +87,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
 
     public Agm65Entity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.AGM_65.get(), level);
-        
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
     @Override
@@ -359,7 +352,6 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, D
     public float getVolume() {
         return 0.7f;
     }
-
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {

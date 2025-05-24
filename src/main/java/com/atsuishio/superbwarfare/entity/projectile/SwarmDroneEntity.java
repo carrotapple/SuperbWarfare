@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -37,6 +38,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -69,18 +72,6 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
     private float randomFloat;
     private int guideType = 0;
 
-    public boolean soundStart;
-
-    @Override
-    public boolean isStarted() {
-        return soundStart;
-    }
-
-    @Override
-    public void setStart(boolean start) {
-        soundStart = start;
-    }
-
     public SwarmDroneEntity(EntityType<? extends SwarmDroneEntity> type, Level level) {
         super(type, level);
         this.noCulling = true;
@@ -98,7 +89,7 @@ public class SwarmDroneEntity extends FastThrowableProjectile implements GeoEnti
 
     public SwarmDroneEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.SWARM_DRONE.get(), level);
-        
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
     }
 
     @Override
