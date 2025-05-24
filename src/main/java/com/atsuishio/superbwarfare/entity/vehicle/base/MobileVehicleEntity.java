@@ -88,6 +88,8 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public double lastTickVerticalSpeed;
     public int collisionCoolDown;
 
+    private boolean wasEngineRunning = false;
+
     public float rudderRot;
     public float rudderRotO;
 
@@ -169,9 +171,14 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
             pPlayer.setDeltaMovement(pPlayer.getDeltaMovement().add(new Vec3(this.position().vectorTo(pPlayer.position()).toVector3f()).scale(0.1 * f1 * pPlayer.getDeltaMovement().length())));
         }
     }
-
+    
     @Override
     public void baseTick() {
+        if (!this.wasEngineRunning && this.engineRunning() && this.level().isClientSide()) {
+            engineSound.accept(this);
+        }
+        this.wasEngineRunning = this.engineRunning();
+
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
 
@@ -222,9 +229,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
         // 更新前一时刻的速度
         previousVelocity = currentVelocity;
-
-
-        engineSound.accept(this);
 
         double direct = (90 - calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
         setVelocity(Mth.lerp(0.4, getVelocity(), getDeltaMovement().horizontalDistance() * direct * 20));
@@ -880,6 +884,10 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
     public boolean hasDecoy() {
         return false;
+    }
+
+    public boolean engineRunning() {
+        return Math.abs(this.entityData.get(POWER)) > 0;
     }
 
     @Override
