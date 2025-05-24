@@ -15,4 +15,8 @@ public interface LoudlyEntity {
     SoundEvent getSound();
 
     float getVolume();
+
+    boolean isStarted();
+
+    void setStart(boolean start);
 }

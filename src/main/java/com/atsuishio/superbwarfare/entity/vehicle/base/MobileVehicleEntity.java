@@ -47,11 +47,9 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.StreamSupport;
 
 public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements ControllableVehicle {
-    public static Consumer<MobileVehicleEntity> engineSound = e -> {};
     public static final EntityDataAccessor<Integer> CANNON_RECOIL_TIME = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(MobileVehicleEntity.class, EntityDataSerializers.FLOAT);
@@ -126,6 +124,10 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
     public float flap3Rot;
     public float flap3RotO;
     public float gearRotO;
+    public boolean engineSoundStart;
+    public boolean trackSoundStart;
+    public boolean swimSoundStart;
+    public boolean shootSoundStart;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -217,9 +219,6 @@ public abstract class MobileVehicleEntity extends EnergyVehicleEntity implements
 
         // 更新前一时刻的速度
         previousVelocity = currentVelocity;
-
-
-        engineSound.accept(this);
 
         double direct = (90 - calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
         setVelocity(Mth.lerp(0.4, getVelocity(), getDeltaMovement().horizontalDistance() * direct * 20));

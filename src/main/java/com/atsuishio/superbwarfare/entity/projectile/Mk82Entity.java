@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.client.sound.ClientSoundHandler;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.LoudlyEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -25,8 +24,6 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -46,6 +43,18 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
     private float explosionDamage = ExplosionConfig.MK_82_EXPLOSION_DAMAGE.get();
     private float explosionRadius = ExplosionConfig.MK_82_EXPLOSION_RADIUS.get().floatValue();
 
+    public boolean soundStart;
+
+    @Override
+    public boolean isStarted() {
+        return soundStart;
+    }
+
+    @Override
+    public void setStart(boolean start) {
+        soundStart = start;
+    }
+
     public Mk82Entity(EntityType<? extends Mk82Entity> type, Level world) {
         super(type, world);
         this.noCulling = true;
@@ -57,7 +66,7 @@ public class Mk82Entity extends FastThrowableProjectile implements GeoEntity, De
 
     public Mk82Entity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.MK_82.get(), level);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSoundHandler.playClientSoundInstance(this));
+        
     }
 
     public Mk82Entity(EntityType<? extends ThrowableItemProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel) {
