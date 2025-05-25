@@ -46,10 +46,10 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
         event.add(ModEntities.HPJ_11);
         event.add(ModEntities.ANNIHILATOR);
         event.add(ModEntities.LASER_TOWER);
-        event.add(ModEntities.SPEEDBOAT, true);
+        event.add(ModEntities.SPEEDBOAT);
         event.add(ModEntities.AH_6);
-        event.add(ModEntities.LAV_150, true);
-        event.add(ModEntities.BMP_2, true);
+        event.add(ModEntities.LAV_150);
+        event.add(ModEntities.BMP_2);
         event.add(ModEntities.PRISM_TANK);
         event.add(ModEntities.YX_100);
         event.add(ModEntities.WHEEL_CHAIR);
@@ -65,26 +65,18 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        ItemStack stack = context.getItemInHand();
-        if (stack.getTag() != null && stack.getTag().getBoolean("CanPlacedAboveWater")) {
-            return InteractionResult.PASS;
-        }
-        return super.useOn(context);
+        return InteractionResult.PASS;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getTag() != null && stack.getTag().getBoolean("CanPlacedAboveWater")) {
-            BlockHitResult playerPOVHitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.WATER);
-            if (playerPOVHitResult.getType() == HitResult.Type.MISS) {
-                return super.use(level, player, hand);
-            }
-            BlockHitResult blockHitResult = playerPOVHitResult.withPosition(playerPOVHitResult.getBlockPos().above());
-            InteractionResult interactionresult = super.useOn(new UseOnContext(player, hand, blockHitResult));
-            return new InteractionResultHolder<>(interactionresult, player.getItemInHand(hand));
+        BlockHitResult playerPOVHitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.WATER);
+        if (playerPOVHitResult.getType() == HitResult.Type.MISS) {
+            return super.use(level, player, hand);
         }
-        return super.use(level, player, hand);
+        BlockHitResult blockHitResult = playerPOVHitResult.withPosition(playerPOVHitResult.getBlockPos().above());
+        InteractionResult interactionresult = super.useOn(new UseOnContext(player, hand, blockHitResult));
+        return new InteractionResultHolder<>(interactionresult, player.getItemInHand(hand));
     }
 
     @Override
@@ -135,29 +127,19 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     }
 
     public static ItemStack createInstance(Entity entity) {
-        return createInstance(entity, false);
-    }
-
-    public static ItemStack createInstance(EntityType<?> entityType) {
-        return createInstance(entityType, false);
-    }
-
-    public static ItemStack createInstance(Entity entity, boolean canPlacedAboveWater) {
         ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
         CompoundTag tag = new CompoundTag();
         tag.put("Entity", entity.serializeNBT());
         tag.putString("EntityType", EntityType.getKey(entity.getType()).toString());
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
-        stack.getOrCreateTag().putBoolean("CanPlacedAboveWater", canPlacedAboveWater);
         return stack;
     }
 
-    public static ItemStack createInstance(EntityType<?> entityType, boolean canPlacedAboveWater) {
+    public static ItemStack createInstance(EntityType<?> entityType) {
         ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
         CompoundTag tag = new CompoundTag();
         tag.putString("EntityType", EntityType.getKey(entityType).toString());
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
-        stack.getOrCreateTag().putBoolean("CanPlacedAboveWater", canPlacedAboveWater);
         return stack;
     }
 }
