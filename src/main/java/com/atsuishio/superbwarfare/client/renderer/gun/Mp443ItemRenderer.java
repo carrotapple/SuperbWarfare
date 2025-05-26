@@ -46,7 +46,7 @@ public class Mp443ItemRenderer extends CustomGunRenderer<Mp443Item> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 0.33345, 0.3);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

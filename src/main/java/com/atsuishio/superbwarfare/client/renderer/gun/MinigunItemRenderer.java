@@ -54,7 +54,7 @@ public class MinigunItemRenderer extends CustomGunRenderer<MinigunItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0.1, 1.45, 0.9);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

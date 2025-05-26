@@ -74,7 +74,7 @@ public class SvdItemRenderer extends CustomGunRenderer<SvdItem> {
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

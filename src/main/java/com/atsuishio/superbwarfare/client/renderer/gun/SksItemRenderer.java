@@ -48,7 +48,7 @@ public class SksItemRenderer extends CustomGunRenderer<SksItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.4375, 0.35);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

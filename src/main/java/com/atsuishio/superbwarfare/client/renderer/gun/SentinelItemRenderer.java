@@ -61,7 +61,7 @@ public class SentinelItemRenderer extends CustomGunRenderer<SentinelItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.53125, 0.6);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.gun;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.model.item.RpgItemLODModel;
 import com.atsuishio.superbwarfare.client.model.item.RpgItemModel;
 import com.atsuishio.superbwarfare.client.renderer.CustomGunRenderer;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -23,7 +24,7 @@ import software.bernie.geckolib.util.RenderUtils;
 public class RpgItemRenderer extends CustomGunRenderer<RpgItem> {
 
     public RpgItemRenderer() {
-        super(new RpgItemModel());
+        super(new RpgItemModel(), new RpgItemLODModel());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class RpgItemRenderer extends CustomGunRenderer<RpgItem> {
 
         AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 0.625, 0.7);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

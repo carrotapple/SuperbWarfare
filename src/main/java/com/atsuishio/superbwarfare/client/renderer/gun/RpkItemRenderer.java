@@ -89,7 +89,7 @@ public class RpkItemRenderer extends CustomGunRenderer<RpkItem> {
         }
 
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

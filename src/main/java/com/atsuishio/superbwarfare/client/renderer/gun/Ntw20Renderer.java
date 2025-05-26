@@ -77,7 +77,7 @@ public class Ntw20Renderer extends CustomGunRenderer<Ntw20Item> {
 
         ItemModelHelper.handleGunAttachments(bone, itemStack, name);
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {

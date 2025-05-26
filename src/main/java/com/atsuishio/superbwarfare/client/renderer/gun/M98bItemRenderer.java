@@ -79,7 +79,7 @@ public class M98bItemRenderer extends CustomGunRenderer<M98bItem> {
 //            bone.setHidden(GunData.from(itemStack).attachment.get(AttachmentType.SCOPE) != 0);
 //        }
 
-        if (this.transformType.firstPerson() && renderingArms) {
+        if (this.renderPerspective.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
             if (localPlayer == null) {
