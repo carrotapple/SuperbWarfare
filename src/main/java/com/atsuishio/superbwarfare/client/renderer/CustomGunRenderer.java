@@ -7,8 +7,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -27,16 +25,9 @@ public class CustomGunRenderer<T extends Item & GeoAnimatable> extends GeoItemRe
     protected boolean renderArms = false;
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
-    public ItemDisplayContext transformType;
 
     public CustomGunRenderer(GeoModel<T> model) {
         super(model);
-    }
-
-    @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int packedOverlay) {
-        this.transformType = transformType;
-        super.renderByItem(stack, transformType, matrixStack, bufferIn, combinedLightIn, packedOverlay);
     }
 
     @Override
