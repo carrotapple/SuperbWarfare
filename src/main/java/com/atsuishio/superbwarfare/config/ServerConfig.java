@@ -13,6 +13,7 @@ public class ServerConfig {
         ExplosionConfig.init(builder);
         VehicleConfig.init(builder);
         MiscConfig.init(builder);
+        SeekConfig.init(builder);
 
         return builder.build();
     }
