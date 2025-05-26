@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.gun;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
-import com.atsuishio.superbwarfare.client.model.item.RpgItemLODModel;
 import com.atsuishio.superbwarfare.client.model.item.RpgItemModel;
 import com.atsuishio.superbwarfare.client.renderer.CustomGunRenderer;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -24,7 +23,7 @@ import software.bernie.geckolib.util.RenderUtils;
 public class RpgItemRenderer extends CustomGunRenderer<RpgItem> {
 
     public RpgItemRenderer() {
-        super(new RpgItemModel(), new RpgItemLODModel());
+        super(new RpgItemModel());
     }
 
     @Override
