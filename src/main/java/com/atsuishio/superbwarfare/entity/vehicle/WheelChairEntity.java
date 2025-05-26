@@ -176,7 +176,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         if (this.forwardInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
+            this.entityData.set(POWER, this.entityData.get(POWER) + (sprintInputDown ? 0.02f : 0.01f));
             if (this.getEnergy() <= 0 && passenger instanceof Player player) {
                 moveWithOutPower(player, true);
             }
@@ -239,7 +239,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public float getEngineSoundVolume() {
-        return entityData.get(POWER);
+        return getEnergy() > 0 ? entityData.get(POWER) : 0;
     }
 
     protected void clampRotation(Entity entity) {
