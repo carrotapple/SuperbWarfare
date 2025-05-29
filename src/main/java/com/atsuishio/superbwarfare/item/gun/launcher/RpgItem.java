@@ -28,23 +28,18 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class RpgItem extends GunItem implements GeoItem {
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class RpgItem extends GunItem {
 
     public RpgItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
@@ -98,11 +93,6 @@ public class RpgItem extends GunItem implements GeoItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override

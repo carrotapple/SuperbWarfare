@@ -45,6 +45,10 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
@@ -52,11 +56,19 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber
-public abstract class GunItem extends Item {
+public abstract class GunItem extends Item implements GeoItem {
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public GunItem(Properties properties) {
         super(properties);
         addReloadTimeBehavior(this.reloadTimeBehaviors);
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override

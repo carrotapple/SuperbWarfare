@@ -19,21 +19,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Aa12Item extends GunItem implements GeoItem {
+public class Aa12Item extends GunItem {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
 
     public Aa12Item() {
@@ -105,11 +101,6 @@ public class Aa12Item extends GunItem implements GeoItem {
         data.add(procedureController);
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override

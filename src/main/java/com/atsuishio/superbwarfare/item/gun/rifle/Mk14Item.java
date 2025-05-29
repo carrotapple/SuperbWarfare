@@ -22,22 +22,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Mk14Item extends GunItem implements GeoItem {
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class Mk14Item extends GunItem {
 
     public Mk14Item() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
@@ -140,11 +135,6 @@ public class Mk14Item extends GunItem implements GeoItem {
         data.add(idleController);
         var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
         data.add(editController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override

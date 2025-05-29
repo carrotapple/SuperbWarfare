@@ -22,21 +22,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Hk416Item extends GunItem implements GeoItem {
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class Hk416Item extends GunItem {
 
     public Hk416Item() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
@@ -164,11 +159,6 @@ public class Hk416Item extends GunItem implements GeoItem {
     @Override
     public boolean canAdjustZoom(ItemStack stack) {
         return GunData.from(stack).attachment.get(AttachmentType.SCOPE) == 3;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override

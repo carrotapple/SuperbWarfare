@@ -25,23 +25,18 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class AureliaSceptre extends GunItem implements GeoItem {
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class AureliaSceptre extends GunItem {
 
     public AureliaSceptre() {
         super(new Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
@@ -136,11 +131,6 @@ public class AureliaSceptre extends GunItem implements GeoItem {
         data.add(fireController);
         var meleeController = new AnimationController<>(this, "meleeController", 0, this::meleePredicate);
         data.add(meleeController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override

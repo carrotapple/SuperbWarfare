@@ -18,21 +18,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class InsidiousItem extends GunItem implements GeoItem {
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class InsidiousItem extends GunItem {
 
     public InsidiousItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.EPIC));
@@ -80,11 +75,6 @@ public class InsidiousItem extends GunItem implements GeoItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         AnimationController<InsidiousItem> idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override
