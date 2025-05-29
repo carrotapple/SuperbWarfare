@@ -145,7 +145,7 @@ public class Mod {
     public void onCommonSetup(final FMLCommonSetupEvent event) {
         addNetworkMessage(ZoomMessage.class, ZoomMessage::encode, ZoomMessage::decode, ZoomMessage::handler);
         addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::encode, DoubleJumpMessage::decode, DoubleJumpMessage::handler);
-        addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, GunsDataMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, (message, ctx1) -> GunsDataMessage.handler(message), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(FireKeyMessage.class, FireKeyMessage::encode, FireKeyMessage::decode, FireKeyMessage::handler);
         addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::encode, VehicleFireMessage::decode, VehicleFireMessage::handler);
         addNetworkMessage(FireModeMessage.class, FireModeMessage::encode, FireModeMessage::decode, FireModeMessage::handler);
