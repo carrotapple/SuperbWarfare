@@ -30,8 +30,6 @@ import java.util.function.Consumer;
 
 public class Aa12Item extends GunItem {
 
-    public String animationProcedure = "empty";
-
     public Aa12Item() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
@@ -60,45 +58,27 @@ public class Aa12Item extends GunItem {
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (GunData.from(stack).reload.empty()) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa_12.reload_empty"));
-            }
-
-            if (GunData.from(stack).reload.normal()) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa_12.reload_normal"));
-            }
-
-            if (player.isSprinting() && player.onGround() && ClientEventHandler.cantSprint == 0 && ClientEventHandler.drawTime < 0.01) {
-                if (ClientEventHandler.tacticalSprint) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.run"));
-                }
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.idle"));
+        if (GunData.from(stack).reload.empty()) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa_12.reload_empty"));
         }
-        return PlayState.STOP;
-    }
 
-    private PlayState procedurePredicate(AnimationState<Aa12Item> event) {
-        if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationProcedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (this.animationProcedure.equals("empty")) {
-            return PlayState.STOP;
+        if (GunData.from(stack).reload.normal()) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa_12.reload_normal"));
         }
-        return PlayState.CONTINUE;
+
+        if (player.isSprinting() && player.onGround() && ClientEventHandler.cantSprint == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (ClientEventHandler.tacticalSprint) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.run"));
+            }
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.aa_12.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
