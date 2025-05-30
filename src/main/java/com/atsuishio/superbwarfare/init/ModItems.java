@@ -118,6 +118,7 @@ public class ModItems {
     public static final RegistryObject<Item> RGO_GRENADE = AMMO.register("rgo_grenade", RgoGrenade::new);
     public static final RegistryObject<Item> CLAYMORE_MINE = AMMO.register("claymore_mine", ClaymoreMine::new);
     public static final RegistryObject<Item> C4_BOMB = AMMO.register("c4_bomb", C4Bomb::new);
+    public static final RegistryObject<Item> BLU_43_MINE = AMMO.register("blu_43_mine", Blu43Mine::new);
     public static final RegistryObject<Item> SMALL_SHELL = AMMO.register("small_shell", SmallShellItem::new);
     public static final RegistryObject<Item> ROCKET_70 = AMMO.register("rocket_70", Rocket70::new);
     public static final RegistryObject<Item> WIRE_GUIDE_MISSILE = AMMO.register("wire_guide_missile", WireGuideMissile::new);
