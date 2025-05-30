@@ -38,12 +38,15 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.network.SerializableDataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoBlockEntity {
+
+    public static SerializableDataTicket<Double> FUMO25_TICK;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -154,6 +157,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider, GeoB
 
         if (blockEntity.tick >= 200) {
             blockEntity.tick = 0;
+            blockEntity.setAnimData(FUMO25_TICK, (double) blockEntity.tick);
         }
 
         if (blockEntity.time <= 0 && blockEntity.type != FuncType.NORMAL) {

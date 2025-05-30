@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare;
 
 import com.atsuishio.superbwarfare.api.event.RegisterContainersEvent;
+import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
 import com.atsuishio.superbwarfare.client.molang.MolangVariable;
 import com.atsuishio.superbwarfare.client.sound.ModSoundInstances;
@@ -24,7 +25,6 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -36,6 +36,8 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib.network.SerializableDataTicket;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -77,8 +79,9 @@ public class Mod {
         bus.addListener(this::onClientSetup);
         bus.addListener(ModItems::registerDispenserBehavior);
 
-        if (ModList.get().isLoaded("tacz") && ModList.get().getModFileById("tacz") != null
-                && ModList.get().getModFileById("tacz").versionString().startsWith("1.1.4")) {
+        registerDataTickets();
+
+        if (TACZGunEventHandler.compatCondition()) {
             MinecraftForge.EVENT_BUS.addListener(TACZGunEventHandler::entityHurtByTACZGun);
         }
 
@@ -208,5 +211,9 @@ public class Mod {
         MouseMovementHandler.init();
         MolangVariable.register();
         event.enqueueWork(ModSoundInstances::init);
+    }
+
+    private void registerDataTickets() {
+        FuMO25BlockEntity.FUMO25_TICK = GeckoLibUtil.addDataTicket(SerializableDataTicket.ofDouble(loc("fumo25_tick")));
     }
 }
