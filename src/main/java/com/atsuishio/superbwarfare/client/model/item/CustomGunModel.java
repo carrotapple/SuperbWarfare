@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.mixins.AnimationProcessorAccessor;
 import com.atsuishio.superbwarfare.mixins.GeoModelAccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -20,6 +21,14 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.util.RenderUtils;
 
 public abstract class CustomGunModel<T extends GunItem & GeoAnimatable> extends GeoModel<T> {
+
+    public ResourceLocation getLODModelResource(T animatable) {
+        return this.getModelResource(animatable);
+    }
+
+    public ResourceLocation getLODTextureResource(T animatable) {
+        return this.getTextureResource(animatable);
+    }
 
     @Override
     public void handleAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
