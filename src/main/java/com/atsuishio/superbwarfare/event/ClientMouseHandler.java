@@ -21,8 +21,8 @@ public class ClientMouseHandler {
 
     public static Vec2 posO = new Vec2(0, 0);
     public static Vec2 posN = new Vec2(0, 0);
-    public static double lerpPosX = 0;
-    public static double lerpPosY = 0;
+    public static double lerpSpeedX = 0;
+    public static double lerpSpeedY = 0;
 
     public static double speedX = 0;
     public static double speedY = 0;
@@ -57,11 +57,11 @@ public class ClientMouseHandler {
         posN = MouseMovementHandler.getMousePos();
 
         if (!notInGame() && player.getVehicle() instanceof VehicleEntity vehicle) {
-            speedX = 0.1 * (posN.x - posO.x);
-            speedY = 0.1 * (posN.y - posO.y);
+            speedX = vehicle.getMouseSensitivity() * (posN.x - posO.x);
+            speedY = vehicle.getMouseSensitivity() * (posN.y - posO.y);
 
-            lerpPosX = Mth.lerp(0.4, lerpPosX, speedX);
-            lerpPosY = Mth.lerp(0.4, lerpPosY, speedY);
+            lerpSpeedX = Mth.lerp(vehicle.getMouseSpeedX(), lerpSpeedX, speedX);
+            lerpSpeedY = Mth.lerp(vehicle.getMouseSpeedY(), lerpSpeedY, speedY);
 
             double i = 0;
 
@@ -78,11 +78,11 @@ public class ClientMouseHandler {
             if (!isFreeCam(player)) {
                 if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                     com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(
-                            (1 - (Mth.abs(vehicle.getRoll()) / 90)) * lerpPosX + ((Mth.abs(vehicle.getRoll()) / 90)) * lerpPosY * i,
-                            (1 - (Mth.abs(vehicle.getRoll()) / 90)) * lerpPosY + ((Mth.abs(vehicle.getRoll()) / 90)) * lerpPosX * (vehicle.getRoll() < 0 ? -1 : 1))
+                            (1 - (Mth.abs(vehicle.getRoll()) / 90)) * lerpSpeedX + ((Mth.abs(vehicle.getRoll()) / 90)) * lerpSpeedY * i,
+                            (1 - (Mth.abs(vehicle.getRoll()) / 90)) * lerpSpeedY + ((Mth.abs(vehicle.getRoll()) / 90)) * lerpSpeedX * (vehicle.getRoll() < 0 ? -1 : 1))
                     );
                 } else {
-                    com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(lerpPosX, lerpPosY));
+                    com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(lerpSpeedX, lerpSpeedY));
                 }
             } else {
                 com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
@@ -99,8 +99,8 @@ public class ClientMouseHandler {
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
         if (isFreeCam(player)) {
-            freeCameraYaw -= 0.4f * times * lerpPosX;
-            freeCameraPitch += 0.2f * times * lerpPosY;
+            freeCameraYaw -= 0.4f * times * lerpSpeedX;
+            freeCameraPitch += 0.2f * times * lerpSpeedY;
         } else {
             freeCameraYaw = Mth.lerp(0.075 * event.getPartialTick(), freeCameraYaw, 0);
             freeCameraPitch = Mth.lerp(0.075 * event.getPartialTick(), freeCameraPitch, 0);

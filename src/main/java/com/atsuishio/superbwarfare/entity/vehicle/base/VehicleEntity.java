@@ -1002,6 +1002,18 @@ public abstract class VehicleEntity extends Entity {
         return getEyePosition();
     }
 
+    public double getMouseSensitivity() {
+        return 0.1;
+    }
+
+    public double getMouseSpeedX() {
+        return 0.4;
+    }
+
+    public double getMouseSpeedY() {
+        return 0.4;
+    }
+
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
