@@ -4,6 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class DisplayConfig {
 
+    public static ForgeConfigSpec.BooleanValue ENABLE_GUN_LOD;
     public static ForgeConfigSpec.BooleanValue KILL_INDICATION;
     public static ForgeConfigSpec.BooleanValue AMMO_HUD;
     public static ForgeConfigSpec.BooleanValue FLOAT_CROSS_HAIR;
@@ -18,6 +19,10 @@ public class DisplayConfig {
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
+
+        // TODO 实现低模切换
+        builder.comment("Set true to enable gun lod");
+        ENABLE_GUN_LOD = builder.define("enable_gun_lod", false);
 
         builder.comment("Set true if you want to show kill indication while killing an entity");
         KILL_INDICATION = builder.define("kill_indication", true);
