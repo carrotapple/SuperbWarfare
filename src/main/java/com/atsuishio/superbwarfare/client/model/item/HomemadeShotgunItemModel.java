@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 
-// TODO 这个模型里面有俩莫名其妙的块
 public class HomemadeShotgunItemModel extends CustomGunModel<HomemadeShotgunItem> {
 
     @Override
