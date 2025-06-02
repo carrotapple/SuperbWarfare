@@ -19,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.cache.object.GeoBone;
 
+import java.util.Set;
+
 public class Mp5ItemRenderer extends CustomGunRenderer<Mp5Item> {
 
     public Mp5ItemRenderer() {
@@ -55,11 +57,6 @@ public class Mp5ItemRenderer extends CustomGunRenderer<Mp5Item> {
                 }
                 AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0.05, 1, 0.35);
                 ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-            } else if (this.renderPerspective == ItemDisplayContext.FIXED) {
-                ItemModelHelper.hideAllAttachments(bone, name);
-                if (name.equals("yugu")) {
-                    bone.setHidden(true);
-                }
             }
 
             int scopeType = GunData.from(itemStack).attachment.get(AttachmentType.SCOPE);
@@ -69,11 +66,6 @@ public class Mp5ItemRenderer extends CustomGunRenderer<Mp5Item> {
                 case 2 ->
                         AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.52, 14, 1.4f, 255, 0, 0, 255, "acog", true);
             }
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
-            if (name.equals("yugu")) {
-                bone.setHidden(true);
-            }
         }
 
         if (renderingArms) {
@@ -81,5 +73,10 @@ public class Mp5ItemRenderer extends CustomGunRenderer<Mp5Item> {
         }
 
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    }
+
+    @Override
+    public Set<String> getHiddenBonesInOtherPerspective() {
+        return Set.of("yugu");
     }
 }
