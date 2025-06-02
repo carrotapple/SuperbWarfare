@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.AirEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.message.send.MouseMoveMessage;
@@ -62,7 +63,7 @@ public class ClientMouseHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+        if (!notInGame() && stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
             if (drone != null) {
                 speedX = drone.getMouseSensitivity() * (posN.x - posO.x);
@@ -137,6 +138,11 @@ public class ClientMouseHandler {
         }
         while (freeCameraPitch <= -180F) {
             freeCameraPitch += 360;
+        }
+
+        if (player.getVehicle() instanceof AirEntity) {
+            player.setYRot(player.getVehicle().getYRot());
+            player.setYHeadRot(player.getYRot());
         }
     }
 }
