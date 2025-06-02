@@ -370,7 +370,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     }
 
     protected void clampRotation(Entity entity) {
-        if (entity == getNthEntity(1)) {
+        if (entity == getNthEntity(0)) {
             float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
             float f3 = Mth.clamp(f2, -80.0F, 80.0F);
             entity.yRotO += f3 - f2;
@@ -450,7 +450,6 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
 
     public void copyEntityData(Entity entity) {
         if (entity == getNthEntity(0)) {
-            entity.setXRot(entity.getXRot() + delta_x);
             entity.setYHeadRot(entity.getYHeadRot() + delta_y);
             entity.setYRot(entity.getYRot() + delta_y);
             entity.setYBodyRot(this.getYRot());
