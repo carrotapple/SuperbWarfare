@@ -68,8 +68,6 @@ public class AK12ItemRenderer extends CustomGunRenderer<AK12Item> {
 
             AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, -0.012, 0.02, 1.25229375, 0.3);
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
         }
 
         if (renderingArms) {

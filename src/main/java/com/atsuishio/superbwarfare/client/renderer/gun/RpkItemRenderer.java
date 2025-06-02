@@ -19,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.cache.object.GeoBone;
 
+import java.util.Set;
+
 public class RpkItemRenderer extends CustomGunRenderer<RpkItem> {
 
     public RpkItemRenderer() {
@@ -79,16 +81,16 @@ public class RpkItemRenderer extends CustomGunRenderer<RpkItem> {
 
             AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, height, 1.475, 0.3);
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
-            if (name.equals("humu2")) {
-                bone.setHidden(true);
-            }
         }
 
         if (renderingArms) {
             AnimationHelper.renderArms(player, this.renderPerspective, stack, name, bone, buffer, type, packedLightIn, false);
         }
         super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    }
+
+    @Override
+    public Set<String> getHiddenBonesInOtherPerspective() {
+        return Set.of("humu2");
     }
 }

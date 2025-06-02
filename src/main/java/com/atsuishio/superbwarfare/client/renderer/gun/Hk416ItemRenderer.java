@@ -67,8 +67,6 @@ public class Hk416ItemRenderer extends CustomGunRenderer<Hk416Item> {
 
             AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 1.440625, 0.3);
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
         }
 
         if (renderingArms) {

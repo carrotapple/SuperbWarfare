@@ -74,8 +74,6 @@ public class M4ItemRenderer extends CustomGunRenderer<M4Item> {
                 case 3 ->
                         AnimationHelper.handleZoomCrossHair(currentBuffer, renderType, name, stack, bone, buffer, 0, 0.283, 27, 2f, 255, 0, 0, 255, "sniper", true);
             }
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
         }
 
         if (renderingArms) {

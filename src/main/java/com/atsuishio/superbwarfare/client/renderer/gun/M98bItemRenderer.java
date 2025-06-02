@@ -70,8 +70,6 @@ public class M98bItemRenderer extends CustomGunRenderer<M98bItem> {
 
             AnimationHelper.handleShootFlare(name, stack, itemStack, bone, buffer, packedLightIn, 0, 0, 2.15625, 0.6);
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-        } else {
-            ItemModelHelper.hideAllAttachments(bone, name);
         }
 
         if (renderingArms) {
