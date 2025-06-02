@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.entity.Blu43Entity;
+import com.atsuishio.superbwarfare.client.renderer.item.Tm62ItemRenderer;
+import com.atsuishio.superbwarfare.entity.Tm62Entity;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -15,14 +17,44 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Consumer;
 
-public class Blu43Mine extends Item implements DispenserLaunchable {
-    public Blu43Mine() {
-        super(new Properties());
+public class Tm62 extends Item implements GeoItem, DispenserLaunchable {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public Tm62() {
+        super(new Properties().stacksTo(8));
+    }
+
+    @Override
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
+        super.initializeClient(consumer);
+        consumer.accept(new IClientItemExtensions() {
+            private final BlockEntityWithoutLevelRenderer renderer = new Tm62ItemRenderer();
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return renderer;
+            }
+        });
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override
@@ -31,7 +63,7 @@ public class Blu43Mine extends Item implements DispenserLaunchable {
 
         if (!level.isClientSide) {
             float randomRot = (float) Mth.clamp((2 * Math.random() - 1) * 180 , -180, 180);
-            Blu43Entity entity = new Blu43Entity(player, level);
+            Tm62Entity entity = new Tm62Entity(player, level, player.isCrouching());
             entity.moveTo(player.getX(), player.getY() + 1.1, player.getZ(), randomRot, 0);
             entity.setYBodyRot(randomRot);
             entity.setYHeadRot(randomRot);
@@ -40,7 +72,7 @@ public class Blu43Mine extends Item implements DispenserLaunchable {
             level.addFreshEntity(entity);
         }
 
-        player.getCooldowns().addCooldown(this, 4);
+        player.getCooldowns().addCooldown(this, 20);
 
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
@@ -59,18 +91,18 @@ public class Blu43Mine extends Item implements DispenserLaunchable {
                 Position position = DispenserBlock.getDispensePosition(pSource);
                 Direction direction = pSource.getBlockState().getValue(DispenserBlock.FACING);
 
-                var blu43 = new Blu43Entity(ModEntities.BLU_43.get(), level);
-                blu43.setPos(position.x(), position.y(), position.z());
+                var tm62 = new Tm62Entity(ModEntities.TM_62.get(), level);
+                tm62.setPos(position.x(), position.y(), position.z());
                 float randomRot = (float) Mth.clamp((2 * Math.random() - 1) * 180 , -180, 180);
 
                 var pX = direction.getStepX();
                 var pY = direction.getStepY();
                 var pZ = direction.getStepZ();
-                blu43.shoot(pX, pY, pZ, 0.4f, 10);
-                blu43.setYRot(randomRot);
-                blu43.yRotO = blu43.getYRot();
+                tm62.shoot(pX, pY, pZ, 0.2f, 25);
+                tm62.setYRot(randomRot);
+                tm62.yRotO = tm62.getYRot();
 
-                level.addFreshEntity(blu43);
+                level.addFreshEntity(tm62);
                 pStack.shrink(1);
                 return pStack;
             }
