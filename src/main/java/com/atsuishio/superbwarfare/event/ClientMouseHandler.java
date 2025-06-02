@@ -1,12 +1,16 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.message.send.MouseMoveMessage;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ViewportEvent;
@@ -56,7 +60,23 @@ public class ClientMouseHandler {
         posO = posN;
         posN = MouseMovementHandler.getMousePos();
 
-        if (!notInGame() && player.getVehicle() instanceof VehicleEntity vehicle) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+            if (drone != null) {
+                speedX = drone.getMouseSensitivity() * (posN.x - posO.x);
+                speedY = drone.getMouseSensitivity() * (posN.y - posO.y);
+
+                lerpSpeedX = Mth.lerp(drone.getMouseSpeedX(), lerpSpeedX, speedX);
+                lerpSpeedY = Mth.lerp(drone.getMouseSpeedY(), lerpSpeedY, speedY);
+
+                com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(lerpSpeedX, lerpSpeedY));
+            }
+            return;
+        }
+
+        if (!notInGame() && player.getVehicle() instanceof VehicleEntity vehicle && player == vehicle.getFirstPassenger()) {
             speedX = vehicle.getMouseSensitivity() * (posN.x - posO.x);
             speedY = vehicle.getMouseSensitivity() * (posN.y - posO.y);
 
