@@ -586,6 +586,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
 
     @Override
     public @Nullable ResourceLocation getVehicleItemIcon() {
-        return Mod.loc("textures/gui/vehicle/water.png");
+        return Mod.loc("textures/gui/vehicle/type/water.png");
     }
 }
