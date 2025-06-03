@@ -9,10 +9,12 @@ import com.atsuishio.superbwarfare.client.renderer.block.SmallContainerBlockEnti
 import com.atsuishio.superbwarfare.client.tooltip.*;
 import com.atsuishio.superbwarfare.client.tooltip.component.*;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -62,5 +64,10 @@ public class ClientRenderHandler {
         event.registerBelowAll(HelicopterHudOverlay.ID, new HelicopterHudOverlay());
         event.registerBelowAll(AircraftOverlay.ID, new AircraftOverlay());
         event.registerBelowAll(MortarInfoOverlay.ID, new MortarInfoOverlay());
+    }
+
+    @SubscribeEvent
+    public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
+        event.register(ModItems.CONTAINER.get(), new ContainerItemDecorator());
     }
 }
