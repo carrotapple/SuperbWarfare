@@ -828,4 +828,9 @@ public class PrismTankEntity extends ContainerMobileVehicleEntity implements Geo
     public boolean useFixedCameraPos(Entity entity) {
         return this.getSeatIndex(entity) == 0;
     }
+
+    @Override
+    public @Nullable ResourceLocation getVehicleItemIcon() {
+        return Mod.loc("textures/gui/vehicle/land.png");
+    }
 }
