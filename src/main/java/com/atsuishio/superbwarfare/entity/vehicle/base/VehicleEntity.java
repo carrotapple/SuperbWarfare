@@ -1037,6 +1037,14 @@ public abstract class VehicleEntity extends Entity {
     }
 
     /**
+     * 载具在集装箱物品上显示的贴图
+     */
+    @Nullable
+    public ResourceLocation getVehicleItemIcon() {
+        return null;
+    }
+
+    /**
      * 渲染载具的第一人称UI
      * 务必标记 @OnlyIn(Dist.CLIENT) !
      */
