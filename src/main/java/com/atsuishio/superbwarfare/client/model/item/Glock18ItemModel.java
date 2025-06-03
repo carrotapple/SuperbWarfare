@@ -36,6 +36,16 @@ public class Glock18ItemModel extends CustomGunModel<Glock18Item> {
     }
 
     @Override
+    public ResourceLocation getLODModelResource(Glock18Item animatable) {
+        return Mod.loc("geo/lod/glock_17.geo.json");
+    }
+
+    @Override
+    public ResourceLocation getLODTextureResource(Glock18Item animatable) {
+        return Mod.loc("textures/item/lod/glock_17.png");
+    }
+
+    @Override
     public void setCustomAnimations(Glock18Item animatable, long instanceId, AnimationState<Glock18Item> animationState) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -43,7 +53,6 @@ public class Glock18ItemModel extends CustomGunModel<Glock18Item> {
         if (shouldCancelRender(stack, animationState)) return;
 
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone slide = getAnimationProcessor().getBone("huatao");
         CoreGeoBone bullet = getAnimationProcessor().getBone("bullet");
         CoreGeoBone switch_ = getAnimationProcessor().getBone("kuaimanji");
 
@@ -93,8 +102,6 @@ public class Glock18ItemModel extends CustomGunModel<Glock18Item> {
 
         CrossHairOverlay.gunRot = body.getRotZ();
 
-        slide.setPosZ(1.5f * (float) fp);
-
         ClientEventHandler.gunRootMove(getAnimationProcessor());
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
@@ -121,7 +128,6 @@ public class Glock18ItemModel extends CustomGunModel<Glock18Item> {
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
         CoreGeoBone barrel = getAnimationProcessor().getBone("guan");
         if (GunData.from(stack).holdOpen.get()) {
-            slide.setPosZ(1.5f);
             barrel.setRotX(4 * Mth.DEG_TO_RAD);
             bullet.setScaleX(0);
             bullet.setScaleY(0);
