@@ -133,6 +133,9 @@ public class AK47ItemModel extends CustomGunModel<AK47Item> {
 
         CrossHairOverlay.gunRot = shen.getRotZ();
 
+        CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
+        shuan.setPosZ(2.4f * (float) ClientEventHandler.firePos);
+
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
         rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
