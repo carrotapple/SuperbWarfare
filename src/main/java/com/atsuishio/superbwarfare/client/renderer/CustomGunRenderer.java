@@ -5,11 +5,15 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -23,6 +27,8 @@ import software.bernie.geckolib.util.RenderUtils;
 public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoItemRenderer<T> {
 
     public static final float SCALE_RECIPROCAL = 1.0f / 16.0f;
+
+    public static final int LOD_DISTANCE = 100;
 
     protected T animatable;
     protected boolean renderArms = false;
@@ -47,7 +53,7 @@ public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoIte
 
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
@@ -64,6 +70,44 @@ public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoIte
         return geoModel.getTextureResource(animatable);
     }
 
+    public ResourceLocation getTextureLocation(T animatable, PoseStack poseStack) {
+        var geoModel = getGeoModel();
+
+        if (renderPerspective != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND
+                && DisplayConfig.ENABLE_GUN_LOD.get()
+                && geoModel instanceof CustomGunModel<T> gunModel
+        ) {
+            var player = Minecraft.getInstance().player;
+            if (player != null) {
+                Vec3 pos = new Vec3(poseStack.last().pose().m30(), poseStack.last().pose().m31(), poseStack.last().pose().m32());
+                if (pos.lengthSqr() >= LOD_DISTANCE) {
+                    return gunModel.getLODTextureResource(animatable);
+                } else {
+                    return geoModel.getTextureResource(animatable);
+                }
+            }
+            return gunModel.getLODTextureResource(animatable);
+        }
+        return geoModel.getTextureResource(animatable);
+    }
+
+    @Override
+    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        this.animatable = (T) stack.getItem();
+        this.currentItemStack = stack;
+        this.renderPerspective = transformType;
+
+        if (transformType == ItemDisplayContext.GUI) {
+            renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
+        } else {
+            RenderType renderType = getRenderType(this.animatable, getTextureLocation(this.animatable, poseStack), bufferSource, Minecraft.getInstance().getFrameTime());
+            VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, false, this.currentItemStack != null && this.currentItemStack.hasFoil());
+
+            defaultRender(poseStack, this.animatable, bufferSource, renderType, buffer,
+                    0, Minecraft.getInstance().getFrameTime(), packedLight);
+        }
+    }
+
     @Override
     public void defaultRender(PoseStack poseStack, T animatable, MultiBufferSource bufferSource, @Nullable RenderType renderType, @Nullable VertexConsumer buffer, float yaw, float partialTick, int packedLight) {
         poseStack.pushPose();
@@ -75,13 +119,25 @@ public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoIte
         float alpha = renderColor.getAlphaFloat();
         int packedOverlay = getPackedOverlay(animatable, 0, partialTick);
 
+        var player = Minecraft.getInstance().player;
+
         ResourceLocation modelLocation;
         var geoModel = getGeoModel();
         if (renderPerspective != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND
                 && DisplayConfig.ENABLE_GUN_LOD.get()
                 && geoModel instanceof CustomGunModel<T> gunModel
         ) {
-            modelLocation = gunModel.getLODModelResource(animatable);
+            if (player != null) {
+                Vec3 pos = new Vec3(poseStack.last().pose().m30(), poseStack.last().pose().m31(), poseStack.last().pose().m32());
+                if (pos.lengthSqr() >= LOD_DISTANCE) {
+                    modelLocation = gunModel.getLODModelResource(animatable);
+                } else {
+                    // TODO 这个地方有问题，如果是在这里使用了高模，会导致custom animation无法分离
+                    modelLocation = geoModel.getModelResource(animatable);
+                }
+            } else {
+                modelLocation = gunModel.getLODModelResource(animatable);
+            }
         } else {
             modelLocation = geoModel.getModelResource(animatable);
         }
@@ -89,7 +145,7 @@ public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoIte
         BakedGeoModel model = geoModel.getBakedModel(modelLocation);
 
         if (renderType == null)
-            renderType = getRenderType(animatable, getTextureLocation(animatable), bufferSource, partialTick);
+            renderType = getRenderType(animatable, getTextureLocation(animatable, poseStack), bufferSource, partialTick);
 
         if (buffer == null)
             buffer = bufferSource.getBuffer(renderType);
@@ -142,7 +198,7 @@ public class CustomGunRenderer<T extends GunItem & GeoAnimatable> extends GeoIte
         RenderUtils.prepMatrixForBone(poseStack, bone);
 
         if (bone.getName().endsWith("_illuminated")) {
-            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable))),
+            renderCubesOfBone(poseStack, bone, bufferSource.getBuffer(ModRenderTypes.ILLUMINATED.apply(this.getTextureLocation(animatable, poseStack))),
                     packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
         }
         this.illuminatedRenderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
