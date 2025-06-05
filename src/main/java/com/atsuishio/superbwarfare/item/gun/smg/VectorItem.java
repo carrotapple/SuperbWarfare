@@ -130,10 +130,15 @@ public class VectorItem extends GunItem {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         int scopeType = GunData.from(stack).attachment.get(AttachmentType.SCOPE);
+        int gripType = GunData.from(stack).attachment.get(AttachmentType.GRIP);
 
         if (scopeType == 3) {
             CompoundTag tag = GunData.from(stack).attachment();
             tag.putInt("Scope", 0);
+        }
+        if (gripType == 3) {
+            CompoundTag tag = GunData.from(stack).attachment();
+            tag.putInt("Grip", 0);
         }
     }
 
