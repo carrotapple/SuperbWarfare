@@ -1019,6 +1019,7 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public double getMouseSensitivity() {
         return 0.07;
     }
+
     @Override
     public double getMouseSpeedX() {
         return 0.3;
@@ -1027,6 +1028,11 @@ public class A10Entity extends ContainerMobileVehicleEntity implements GeoEntity
     @Override
     public double getMouseSpeedY() {
         return 0.3;
+    }
+
+    @Override
+    public boolean isEnclosed(int index) {
+        return true;
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -655,7 +655,7 @@ public class LivingEventHandler {
     @SubscribeEvent
     public static void onEffectApply(MobEffectEvent.Applicable event) {
         if (event.getEffectInstance().getEffect().getCategory() == MobEffectCategory.HARMFUL &&
-                event.getEntity().getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.hidePassenger(event.getEntity())) {
+                event.getEntity().getVehicle() instanceof VehicleEntity vehicle && vehicle.isEnclosed(vehicle.getSeatIndex(event.getEntity()))) {
             event.setResult(Event.Result.DENY);
         }
     }
