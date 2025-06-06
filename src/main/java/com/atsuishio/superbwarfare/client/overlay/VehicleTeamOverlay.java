@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.FormatTool;
@@ -26,6 +27,8 @@ public class VehicleTeamOverlay implements IGuiOverlay {
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
+        if (!DisplayConfig.VEHICLE_INFO.get()) return;
+
         Minecraft mc = gui.getMinecraft();
         Player player = mc.player;
         Camera camera = mc.gameRenderer.getMainCamera();
@@ -33,7 +36,8 @@ public class VehicleTeamOverlay implements IGuiOverlay {
         PoseStack poseStack = guiGraphics.pose();
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) return;
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked"))
+            return;
 
         boolean lookAtEntity = false;
 
