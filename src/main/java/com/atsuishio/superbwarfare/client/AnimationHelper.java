@@ -160,7 +160,7 @@ public class AnimationHelper {
 
     public static void renderArms(LocalPlayer localPlayer, ItemDisplayContext transformType, PoseStack stack, String name, GeoBone bone,
                                   MultiBufferSource currentBuffer, RenderType renderType, int packedLightIn, boolean useOldHandRender) {
-        if (transformType.firstPerson()) {
+        if (transformType != null && transformType.firstPerson()) {
             Minecraft mc = Minecraft.getInstance();
 
             if (localPlayer == null) {
