@@ -34,6 +34,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -653,7 +654,8 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onEffectApply(MobEffectEvent.Applicable event) {
-        if (event.getEntity().getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.hidePassenger(event.getEntity())) {
+        if (event.getEffectInstance().getEffect().getCategory() == MobEffectCategory.HARMFUL &&
+                event.getEntity().getVehicle() instanceof ArmedVehicleEntity vehicle && vehicle.hidePassenger(event.getEntity())) {
             event.setResult(Event.Result.DENY);
         }
     }
