@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
 import com.atsuishio.superbwarfare.client.molang.MolangVariable;
 import com.atsuishio.superbwarfare.client.sound.ModSoundInstances;
+import com.atsuishio.superbwarfare.compat.coldsweat.ColdSweatCompatHandler;
 import com.atsuishio.superbwarfare.compat.tacz.TACZGunEventHandler;
 import com.atsuishio.superbwarfare.config.ClientConfig;
 import com.atsuishio.superbwarfare.config.CommonConfig;
@@ -83,6 +84,9 @@ public class Mod {
 
         if (TACZGunEventHandler.compatCondition()) {
             MinecraftForge.EVENT_BUS.addListener(TACZGunEventHandler::entityHurtByTACZGun);
+        }
+        if (ColdSweatCompatHandler.hasMod()) {
+            MinecraftForge.EVENT_BUS.addListener(ColdSweatCompatHandler::onPlayerInVehicle);
         }
 
         MinecraftForge.EVENT_BUS.register(this);
