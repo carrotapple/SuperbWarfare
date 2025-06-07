@@ -52,7 +52,9 @@ public class Tm62Entity extends Entity implements GeoEntity, OwnableEntity {
 
     public Tm62Entity(LivingEntity owner, Level level, boolean fuse) {
         super(ModEntities.TM_62.get(), level);
-        this.setOwnerUUID(owner.getUUID());
+        if (owner != null) {
+            this.setOwnerUUID(owner.getUUID());
+        }
         this.entityData.set(FUSE, fuse);
     }
 
