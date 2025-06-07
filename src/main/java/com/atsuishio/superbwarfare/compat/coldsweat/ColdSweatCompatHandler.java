@@ -12,7 +12,7 @@ public class ColdSweatCompatHandler {
         var player = event.player;
         if (player == null) return;
         if (player.getVehicle() instanceof EnergyVehicleEntity vehicle && vehicle.isEnclosed(vehicle.getSeatIndex(player)) && vehicle.getEnergy() > 0) {
-            Temperature.set(player, Temperature.Trait.WORLD, 1);
+            Temperature.set(player, Temperature.Trait.CORE, 1);
         }
     }
 
