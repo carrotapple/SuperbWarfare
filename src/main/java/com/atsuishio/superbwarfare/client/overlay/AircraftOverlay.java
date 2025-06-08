@@ -88,7 +88,7 @@ public class AircraftOverlay implements IGuiOverlay {
             Vec3 pos = cameraPos.add(mobileVehicle.getViewVector(partialTick).scale(192));
             Vec3 lookAngle = lookVec.normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
-            Vec3 posCross = cameraPos.add(aircraftEntity.shootVec(partialTick).scale(192));
+            Vec3 posCross = aircraftEntity.shootPos(partialTick).add(aircraftEntity.shootVec(partialTick).scale(192));
             Vec3 lookAngle2 = lookVec.normalize().scale(posCross.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
             var cPos = cameraPos.add(lookAngle);
@@ -216,8 +216,8 @@ public class AircraftOverlay implements IGuiOverlay {
             // 准星
             if (pCross != null) {
                 poseStack.pushPose();
-                float x = (float) pCross.x + (zoomVehicle ? 8 * (float) (Minecraft.getInstance().options.fov().get() / 70) : 3);
-                float y = (float) pCross.y + (zoomVehicle ? 25 * (float) (Minecraft.getInstance().options.fov().get() / 70) : 5);
+                float x = (float) pCross.x;
+                float y = (float) pCross.y + (zoomVehicle ? 15 * (float) (Minecraft.getInstance().options.fov().get() / 70) : 5);
 
                 if (mc.options.getCameraType() == CameraType.FIRST_PERSON && !(mobileVehicle instanceof A10Entity a10Entity && a10Entity.getWeaponIndex(0) == 3)) {
                     RenderSystem.disableDepthTest();
