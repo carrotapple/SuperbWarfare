@@ -29,13 +29,16 @@ public class TACZGunEventHandler {
     }
 
     public static boolean compatCondition() {
-        AtomicBoolean flag = new AtomicBoolean(false);
-        VERSIONS.forEach(version -> {
-            if (ModList.get().getModFileById("tacz").versionString().startsWith(version)) {
-                flag.set(true);
-            }
-        });
-        return hasMod() && ModList.get().getModFileById("tacz") != null && flag.get();
+        if (hasMod() && ModList.get().getModFileById("tacz") != null) {
+            AtomicBoolean flag = new AtomicBoolean(false);
+            VERSIONS.forEach(version -> {
+                if (ModList.get().getModFileById("tacz").versionString().startsWith(version)) {
+                    flag.set(true);
+                }
+            });
+            return flag.get();
+        }
+        return false;
     }
 
     public static ResourceLocation getTaczCompatIcon(ItemStack stack) {
