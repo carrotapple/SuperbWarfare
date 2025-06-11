@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:glock_18_blueprint"
+  "addition": {
+    "item": "minecraft:gold_ingot"
   },
   "base": {
     "item": "superbwarfare:rare_material_pack"
   },
-  "addition": {
-    "item": "minecraft:gold_ingot"
-  },
   "result": {
     "item": "superbwarfare:glock_18"
+  },
+  "template": {
+    "item": "superbwarfare:glock_18_blueprint"
   }
 }
