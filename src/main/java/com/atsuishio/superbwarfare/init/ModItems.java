@@ -225,7 +225,7 @@ public class ModItems {
     public static final RegistryObject<Item> GLOCK_17_BLUEPRINT = ITEMS.register("glock_17_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> MP_443_BLUEPRINT = ITEMS.register("mp_443_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> GLOCK_18_BLUEPRINT = ITEMS.register("glock_18_blueprint", () -> new BlueprintItem(Rarity.RARE));
-    public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> RPG_BLUEPRINT = ITEMS.register("rpg_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> BOCEK_BLUEPRINT = ITEMS.register("bocek_blueprint", () -> new BlueprintItem(Rarity.EPIC));
@@ -239,7 +239,7 @@ public class ModItems {
     public static final RegistryObject<Item> VECTOR_BLUEPRINT = ITEMS.register("vector_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> MINIGUN_BLUEPRINT = ITEMS.register("minigun_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> MK_14_BLUEPRINT = ITEMS.register("mk_14_blueprint", () -> new BlueprintItem(Rarity.EPIC));
-    public static final RegistryObject<Item> SENTINEL_BLUEPRINT = ITEMS.register("sentinel_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> SENTINEL_BLUEPRINT = ITEMS.register("sentinel_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> M_60_BLUEPRINT = ITEMS.register("m_60_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> SVD_BLUEPRINT = ITEMS.register("svd_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> MARLIN_BLUEPRINT = ITEMS.register("marlin_blueprint", () -> new BlueprintItem(Rarity.COMMON));

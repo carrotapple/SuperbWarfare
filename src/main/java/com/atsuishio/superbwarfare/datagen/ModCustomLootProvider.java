@@ -65,9 +65,10 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.RPG_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.M_2_HB_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.MP_5_BLUEPRINT.get(), 15),
+                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 15),
 
                                 new ItemEntry(ModItems.TRACHELIUM_BLUEPRINT.get(), 1),
-                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 1),
+                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 1),
                                 new ItemEntry(ModItems.BOCEK_BLUEPRINT.get(), 1),
                                 new ItemEntry(ModItems.RPK_BLUEPRINT.get(), 1),
                                 new ItemEntry(ModItems.VECTOR_BLUEPRINT.get(), 1),
@@ -120,9 +121,10 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.QBZ_95_BLUEPRINT.get(), 30),
                                 new ItemEntry(ModItems.RPG_BLUEPRINT.get(), 30),
                                 new ItemEntry(ModItems.M_2_HB_BLUEPRINT.get(), 30),
+                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 30),
 
                                 new ItemEntry(ModItems.TRACHELIUM_BLUEPRINT.get(), 10),
-                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 10),
+                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.BOCEK_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.RPK_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.VECTOR_BLUEPRINT.get(), 10),
@@ -136,7 +138,6 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.AA_12_BLUEPRINT.get(), 3),
                                 new ItemEntry(ModItems.NTW_20_BLUEPRINT.get(), 3),
                                 new ItemEntry(ModItems.MINIGUN_BLUEPRINT.get(), 3),
-                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 3),
                                 new ItemEntry(ModItems.JAVELIN_BLUEPRINT.get(), 3),
                                 new ItemEntry(ModItems.SECONDARY_CATACLYSM_BLUEPRINT.get(), 3),
                                 new ItemEntry(ModItems.AURELIA_SCEPTRE_BLUEPRINT.get(), 2),
@@ -170,7 +171,7 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                 LootTable.lootTable()
                         .withPool(multiItems(1, 0,
                                 new ItemEntry(ModItems.TRACHELIUM_BLUEPRINT.get(), 10),
-                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 10),
+                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.BOCEK_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.RPK_BLUEPRINT.get(), 10),
                                 new ItemEntry(ModItems.VECTOR_BLUEPRINT.get(), 10),
@@ -184,7 +185,6 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.AA_12_BLUEPRINT.get(), 20),
                                 new ItemEntry(ModItems.NTW_20_BLUEPRINT.get(), 20),
                                 new ItemEntry(ModItems.MINIGUN_BLUEPRINT.get(), 20),
-                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 20),
                                 new ItemEntry(ModItems.JAVELIN_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.SECONDARY_CATACLYSM_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.AURELIA_SCEPTRE_BLUEPRINT.get(), 10),
@@ -240,9 +240,10 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.AK_12_BLUEPRINT.get(), 42),
                                 new ItemEntry(ModItems.QBZ_95_BLUEPRINT.get(), 42),
                                 new ItemEntry(ModItems.RPG_BLUEPRINT.get(), 42),
+                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 42),
 
                                 new ItemEntry(ModItems.TRACHELIUM_BLUEPRINT.get(), 15),
-                                new ItemEntry(ModItems.HUNTING_RIFLE_BLUEPRINT.get(), 15),
+                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.BOCEK_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.RPK_BLUEPRINT.get(), 15),
                                 new ItemEntry(ModItems.VECTOR_BLUEPRINT.get(), 15),
@@ -256,9 +257,9 @@ public class ModCustomLootProvider implements LootTableSubProvider {
                                 new ItemEntry(ModItems.AA_12_BLUEPRINT.get(), 5),
                                 new ItemEntry(ModItems.NTW_20_BLUEPRINT.get(), 5),
                                 new ItemEntry(ModItems.MINIGUN_BLUEPRINT.get(), 5),
-                                new ItemEntry(ModItems.SENTINEL_BLUEPRINT.get(), 5),
                                 new ItemEntry(ModItems.JAVELIN_BLUEPRINT.get(), 5),
-                                new ItemEntry(ModItems.SECONDARY_CATACLYSM_BLUEPRINT.get(), 5)
+                                new ItemEntry(ModItems.SECONDARY_CATACLYSM_BLUEPRINT.get(), 5),
+                                new ItemEntry(ModItems.AURELIA_SCEPTRE_BLUEPRINT.get(), 5)
                         ))
         );
         pOutput.accept(containers("common"),

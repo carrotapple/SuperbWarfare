@@ -9,7 +9,6 @@ import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,6 +24,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -48,7 +48,7 @@ public class SentinelItem extends GunItem {
     private final Supplier<Integer> energyCapacity;
 
     public SentinelItem() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
         this.energyCapacity = () -> 24000;
     }

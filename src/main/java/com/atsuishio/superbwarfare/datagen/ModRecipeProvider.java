@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.ModRecipes;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -32,7 +33,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         gunSmithing(writer, ModItems.GLOCK_17_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.GLOCK_17.get());
         gunSmithing(writer, ModItems.MP_443_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.MP_443.get());
         gunSmithing(writer, ModItems.GLOCK_18_BLUEPRINT.get(), GunRarity.RARE, Items.GOLD_INGOT, ModItems.GLOCK_18.get());
-//        gunSmithing(writer, ModItems.HUNTING_RIFLE_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.HUNTING_RIFLE.get());
+        gunSmithing(writer, ModItems.HUNTING_RIFLE_BLUEPRINT.get(), GunRarity.RARE, ItemTags.LOGS, ModItems.HUNTING_RIFLE.get());
+
+        gunSmithing(writer, ModItems.SENTINEL_BLUEPRINT.get(), GunRarity.EPIC, ModItems.CELL.get(), ModItems.SENTINEL.get());
 
         copyBlueprint(writer, ModItems.TRACHELIUM_BLUEPRINT.get());
         copyBlueprint(writer, ModItems.GLOCK_17_BLUEPRINT.get());

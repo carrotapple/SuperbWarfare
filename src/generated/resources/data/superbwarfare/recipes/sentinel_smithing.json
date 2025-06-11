@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:sentinel_blueprint"
-  },
-  "base": {
-    "item": "superbwarfare:legendary_material_pack"
-  },
   "addition": {
     "item": "superbwarfare:cell"
   },
+  "base": {
+    "item": "superbwarfare:epic_material_pack"
+  },
   "result": {
     "item": "superbwarfare:sentinel"
+  },
+  "template": {
+    "item": "superbwarfare:sentinel_blueprint"
   }
 }
