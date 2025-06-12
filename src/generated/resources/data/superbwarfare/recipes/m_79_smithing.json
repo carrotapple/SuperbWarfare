@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:m_79_blueprint"
+  "addition": {
+    "item": "minecraft:dispenser"
   },
   "base": {
     "item": "superbwarfare:rare_material_pack"
   },
-  "addition": {
-    "item": "minecraft:dispenser"
-  },
   "result": {
     "item": "superbwarfare:m_79"
+  },
+  "template": {
+    "item": "superbwarfare:m_79_blueprint"
   }
 }

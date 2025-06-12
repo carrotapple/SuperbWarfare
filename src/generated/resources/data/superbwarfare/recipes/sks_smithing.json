@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:sks_blueprint"
+  "addition": {
+    "tag": "minecraft:logs"
   },
   "base": {
     "item": "superbwarfare:rare_material_pack"
   },
-  "addition": {
-    "tag": "minecraft:logs"
-  },
   "result": {
     "item": "superbwarfare:sks"
+  },
+  "template": {
+    "item": "superbwarfare:sks_blueprint"
   }
 }
