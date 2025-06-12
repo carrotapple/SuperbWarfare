@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:mosin_nagant_blueprint"
+  "addition": {
+    "tag": "minecraft:logs"
   },
   "base": {
     "item": "superbwarfare:rare_material_pack"
   },
-  "addition": {
-    "tag": "minecraft:logs"
-  },
   "result": {
     "item": "superbwarfare:mosin_nagant"
+  },
+  "template": {
+    "item": "superbwarfare:mosin_nagant_blueprint"
   }
 }

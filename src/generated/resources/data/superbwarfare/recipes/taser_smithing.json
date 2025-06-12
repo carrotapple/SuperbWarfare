@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
-  "template": {
-    "item": "superbwarfare:taser_blueprint"
+  "addition": {
+    "item": "minecraft:yellow_concrete"
   },
   "base": {
     "item": "superbwarfare:common_material_pack"
   },
-  "addition": {
-    "item": "minecraft:yellow_concrete"
-  },
   "result": {
     "item": "superbwarfare:taser"
+  },
+  "template": {
+    "item": "superbwarfare:taser_blueprint"
   }
 }
