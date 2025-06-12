@@ -3,9 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.*;
-import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.ProjectileWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.event.ClientMouseHandler;
@@ -113,17 +111,6 @@ public class SpeedboatEntity extends ContainerMobileVehicleEntity implements Geo
     @Override
     public double getPassengersRidingOffset() {
         return super.getPassengersRidingOffset() - 0.8;
-    }
-
-    @Override
-    public DamageModifier getDamageModifier() {
-        return super.getDamageModifier()
-                .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof AerialBombEntity) {
-                        return 2f * damage;
-                    }
-                    return damage;
-                });
     }
 
     @Override
