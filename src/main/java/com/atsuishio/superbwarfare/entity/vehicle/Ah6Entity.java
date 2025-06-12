@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ContainerMobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.HelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.ThirdPersonCameraPosition;
@@ -13,10 +12,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.weapon.HeliRocketWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.SmallCannonShellWeapon;
 import com.atsuishio.superbwarfare.entity.vehicle.weapon.VehicleWeapon;
 import com.atsuishio.superbwarfare.event.ClientMouseHandler;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.tools.*;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.Pair;
@@ -142,7 +138,8 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public DamageModifier getDamageModifier() {
         return super.getDamageModifier()
                 .custom((source, damage) -> {
-                    if (source.getDirectEntity() instanceof AerialBombEntity) {
+                    var entity = source.getDirectEntity();
+                    if (entity != null && entity.getType().is(ModTags.EntityTypes.AERIAL_BOMB)) {
                         damage *= 2;
                     }
                     damage *= getHealth() > 0.1f ? 0.7f : 0.05f;
@@ -703,6 +700,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public double getMouseSensitivity() {
         return 0.15;
     }
+
     @Override
     public double getMouseSpeedX() {
         return 0.35;
@@ -748,7 +746,7 @@ public class Ah6Entity extends ContainerMobileVehicleEntity implements GeoEntity
     public Vec3 getCameraPosition(float partialTicks, Player player, boolean zoom, boolean isFirstPerson) {
         if (this.getSeatIndex(player) == 0) {
             Matrix4f transform = getClientVehicleTransform(partialTicks);
-            Vector4f maxCameraPosition = transformPosition(transform, -2.1f, 1, -10 - (float)ClientMouseHandler.custom3pDistanceLerp);
+            Vector4f maxCameraPosition = transformPosition(transform, -2.1f, 1, -10 - (float) ClientMouseHandler.custom3pDistanceLerp);
             Vec3 finalPos = CameraTool.getMaxZoom(transform, maxCameraPosition);
 
             if (isFirstPerson) {

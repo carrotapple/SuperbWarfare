@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class MelonBombEntity extends FastThrowableProjectile implements DestroyableProjectileEntity, AerialBombEntity {
+public class MelonBombEntity extends FastThrowableProjectile implements ExplosiveProjectile {
 
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(MelonBombEntity.class, EntityDataSerializers.FLOAT);
 
