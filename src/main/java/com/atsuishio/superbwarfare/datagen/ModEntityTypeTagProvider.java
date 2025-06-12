@@ -24,9 +24,19 @@ public class ModEntityTypeTagProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-        this.tag(ModTags.EntityTypes.AERIAL_BOMB).add(ModEntities.MELON_BOMB.get(), ModEntities.MK_82.get());
-        this.tag(ModTags.EntityTypes.DESTROYABLE_PROJECTILE).add(ModEntities.AGM_65.get(), ModEntities.JAVELIN_MISSILE.get(),
-                ModEntities.MELON_BOMB.get(), ModEntities.MK_82.get(), ModEntities.SWARM_DRONE.get(), ModEntities.WG_MISSILE.get());
+        this.tag(ModTags.EntityTypes.AERIAL_BOMB).add(
+                ModEntities.MELON_BOMB.get(),
+                ModEntities.MK_82.get()
+        );
+
+        this.tag(ModTags.EntityTypes.DESTROYABLE_PROJECTILE).add(
+                ModEntities.AGM_65.get(),
+                ModEntities.JAVELIN_MISSILE.get(),
+                ModEntities.MELON_BOMB.get(),
+                ModEntities.MK_82.get(),
+                ModEntities.SWARM_DRONE.get(),
+                ModEntities.WG_MISSILE.get()
+        );
     }
 
     public static TagKey<EntityType<?>> forgeTag(String name) {

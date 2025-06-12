@@ -130,11 +130,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             case LEGENDARY -> ModItems.LEGENDARY_MATERIAL_PACK.get();
         };
 
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(blueprint),
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(blueprint),
                         Ingredient.of(pack),
                         ingredient,
                         RecipeCategory.COMBAT,
-                        pResultItem)
+                        pResultItem
+                )
                 .unlocks(getHasName(blueprint), has(blueprint))
                 .save(writer, Mod.loc(getItemName(pResultItem) + "_smithing"));
     }
@@ -143,6 +145,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         COMMON,
         RARE,
         EPIC,
-        LEGENDARY
+        LEGENDARY,
     }
 }
