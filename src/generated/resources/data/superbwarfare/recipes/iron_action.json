@@ -1,18 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "pattern": [
-    "a",
-    "a",
-    "a"
-  ],
   "key": {
-    "a": {
+    "A": {
       "item": "minecraft:iron_ingot"
     }
   },
+  "pattern": [
+    "AAA",
+    "  A"
+  ],
   "result": {
-    "item": "superbwarfare:iron_spring",
-    "count": 1
-  }
+    "item": "superbwarfare:iron_action"
+  },
+  "show_notification": true
 }

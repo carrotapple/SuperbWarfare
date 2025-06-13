@@ -30,10 +30,39 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> writer) {
+        // special
         SpecialRecipeBuilder.special(ModRecipes.POTION_MORTAR_SHELL_SERIALIZER.get()).save(writer, "potion_mortar_shell");
         SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_ADD_AMMO_SERIALIZER.get()).save(writer, "ammo_box_add_ammo");
         SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_EXTRACT_AMMO_SERIALIZER.get()).save(writer, "ammo_box_extract_ammo");
 
+        // items
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IRON_BARREL.get())
+                .pattern("AAA")
+                .define('A', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
+                .save(writer, Mod.loc(getItemName(ModItems.IRON_BARREL.get())));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IRON_ACTION.get())
+                .pattern("AAA")
+                .pattern("  A")
+                .define('A', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
+                .save(writer, Mod.loc(getItemName(ModItems.IRON_ACTION.get())));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IRON_SPRING.get())
+                .pattern("A")
+                .pattern("A")
+                .pattern("A")
+                .define('A', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
+                .save(writer, Mod.loc(getItemName(ModItems.IRON_SPRING.get())));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IRON_TRIGGER.get())
+                .pattern("BA")
+                .pattern(" A")
+                .define('A', Items.IRON_INGOT)
+                .define('B', Items.TRIPWIRE_HOOK)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
+                .save(writer, Mod.loc(getItemName(ModItems.IRON_TRIGGER.get())));
+
+        // vehicles
         containerRecipe(ModEntities.A_10A.get())
                 .pattern("dad")
                 .pattern("ece")
@@ -47,6 +76,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy(getHasName(ModItems.HEAVY_ARMAMENT_MODULE.get()), has(ModItems.HEAVY_ARMAMENT_MODULE.get()))
                 .save(writer, Mod.loc(getContainerRecipeName(ModEntities.A_10A.get())));
 
+        // guns
         gunSmithing(writer, ModItems.TRACHELIUM_BLUEPRINT.get(), GunRarity.EPIC, ModTags.Items.INGOTS_CEMENTED_CARBIDE, ModItems.TRACHELIUM.get());
         gunSmithing(writer, ModItems.GLOCK_17_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.GLOCK_17.get());
         gunSmithing(writer, ModItems.MP_443_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.MP_443.get());
@@ -85,6 +115,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         gunSmithing(writer, ModItems.INSIDIOUS_BLUEPRINT.get(), GunRarity.EPIC, ModTags.Items.INGOTS_CEMENTED_CARBIDE, ModItems.INSIDIOUS.get());
         gunSmithing(writer, ModItems.AURELIA_SCEPTRE_BLUEPRINT.get(), GunRarity.LEGENDARY, Items.END_CRYSTAL, ModItems.AURELIA_SCEPTRE.get());
 
+        // blueprints
         copyBlueprint(writer, ModItems.TRACHELIUM_BLUEPRINT.get());
         copyBlueprint(writer, ModItems.GLOCK_17_BLUEPRINT.get());
         copyBlueprint(writer, ModItems.MP_443_BLUEPRINT.get());
