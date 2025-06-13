@@ -1306,9 +1306,7 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     // TODO 实现正确的旋转设置
     @Override
     public void updateOBB() {
-
-
-        Quaternionf rotation = eulerToQuaternion(-getYRot(), getXRot(), getRoll());
+        Quaternionf rotation = eulerToQuaternion(-getRoll(), -getYRot(), getXRot());
         this.obb.setRotation(rotation);
         this.obb.center().set(this.position().toVector3f());
     }
