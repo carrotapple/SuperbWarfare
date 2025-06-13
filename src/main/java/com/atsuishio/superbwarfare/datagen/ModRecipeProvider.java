@@ -1,13 +1,18 @@
 package com.atsuishio.superbwarfare.datagen;
 
 import com.atsuishio.superbwarfare.Mod;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModRecipes;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.recipe.NBTShapedRecipeBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,6 +33,19 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         SpecialRecipeBuilder.special(ModRecipes.POTION_MORTAR_SHELL_SERIALIZER.get()).save(writer, "potion_mortar_shell");
         SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_ADD_AMMO_SERIALIZER.get()).save(writer, "ammo_box_add_ammo");
         SpecialRecipeBuilder.special(ModRecipes.AMMO_BOX_EXTRACT_AMMO_SERIALIZER.get()).save(writer, "ammo_box_extract_ammo");
+
+        containerRecipe(ModEntities.A_10A.get())
+                .pattern("dad")
+                .pattern("ece")
+                .pattern("fbf")
+                .define('a', ModItems.MEDIUM_ARMAMENT_MODULE.get())
+                .define('b', ModTags.Items.STORAGE_BLOCK_STEEL)
+                .define('c', ModItems.HEAVY_ARMAMENT_MODULE.get())
+                .define('d', ModItems.LARGE_PROPELLER.get())
+                .define('e', ModItems.LARGE_MOTOR.get())
+                .define('f', ModItems.MEDIUM_BATTERY_PACK.get())
+                .unlockedBy(getHasName(ModItems.HEAVY_ARMAMENT_MODULE.get()), has(ModItems.HEAVY_ARMAMENT_MODULE.get()))
+                .save(writer, Mod.loc(getContainerRecipeName(ModEntities.A_10A.get())));
 
         gunSmithing(writer, ModItems.TRACHELIUM_BLUEPRINT.get(), GunRarity.EPIC, ModTags.Items.INGOTS_CEMENTED_CARBIDE, ModItems.TRACHELIUM.get());
         gunSmithing(writer, ModItems.GLOCK_17_BLUEPRINT.get(), GunRarity.COMMON, Items.IRON_INGOT, ModItems.GLOCK_17.get());
@@ -146,5 +164,26 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         RARE,
         EPIC,
         LEGENDARY,
+    }
+
+    public static NBTShapedRecipeBuilder containerRecipe(EntityType<?> type) {
+        return NBTShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, ModItems.CONTAINER.get())
+                .withNBT(createContainerTag(type));
+    }
+
+    public static CompoundTag createContainerTag(EntityType<?> type) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("EntityType", EntityType.getKey(type).toString());
+        CompoundTag beTag = new CompoundTag();
+        beTag.put("BlockEntityTag", tag);
+        return beTag;
+    }
+
+    protected static String getEntityTypeName(EntityType<?> entityType) {
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType).getPath();
+    }
+
+    public static String getContainerRecipeName(EntityType<?> entityType) {
+        return getEntityTypeName(entityType) + "_container";
     }
 }
