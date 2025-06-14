@@ -1,4 +1,4 @@
-// 1.20.1	2025-06-11T18:39:16.8444597	Loot Tables
+// 1.20.1	2025-06-15T00:37:08.6547163	Loot Tables
 e71d9e1055ddb98520b16fafd202f9db3a696f54 data/superbwarfare/loot_tables/blocks/aircraft_catapult.json
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
 811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
@@ -20,6 +20,7 @@ a223f61202cf9937e8be5b90791925bba09d17b9 data/superbwarfare/loot_tables/blocks/s
 015f852f7abbf1ecf2d730a61537b4e58b3e17bd data/superbwarfare/loot_tables/blocks/silver_ore.json
 66dd0e24fc30c75599eb6ff39dba80c9fe020011 data/superbwarfare/loot_tables/blocks/small_container.json
 83112ebff477e322bd3d23ed4653c7c02b230473 data/superbwarfare/loot_tables/blocks/steel_block.json
+a2eb9639d1e17d10a31d32168e3188e062ae6f01 data/superbwarfare/loot_tables/blocks/superb_item_interface.json
 71fc892124b5343e10688cabc2fb7c87d83cfef8 data/superbwarfare/loot_tables/blocks/tungsten_block.json
 5f0de0936df3f782d015d5ee22a224e54c943d5c data/superbwarfare/loot_tables/blocks/vehicle_deployer.json
 efdfb87ebe609e34f8d64b283022e2fc2ee051f5 data/superbwarfare/loot_tables/chests/ancient_cpu.json
