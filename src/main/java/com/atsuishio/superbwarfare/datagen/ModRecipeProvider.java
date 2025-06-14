@@ -40,7 +40,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         generateMaterialRecipes(writer, ModItems.IRON_MATERIALS, Items.IRON_INGOT);
         generateMaterialRecipes(writer, ModItems.STEEL_MATERIALS, ModItems.STEEL_INGOT.get());
         generateMaterialRecipes(writer, ModItems.CEMENTED_CARBIDE_MATERIALS, ModItems.CEMENTED_CARBIDE_INGOT.get());
-        // TODO 下界合金材料
+        generateSmithingMaterialRecipe(writer, ModItems.CEMENTED_CARBIDE_MATERIALS, ModItems.NETHERITE_MATERIALS, Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, Items.NETHERITE_INGOT);
 
         // 材料包
         generateMaterialPackRecipe(writer, ModItems.IRON_MATERIALS, ModItems.COMMON_MATERIAL_PACK.get());
@@ -234,6 +234,52 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('B', Items.TRIPWIRE_HOOK)
                 .unlockedBy(getHasName(ingredient), has(ingredient))
                 .save(writer, Mod.loc(getItemName(material.trigger().get())));
+    }
+
+    public static void generateSmithingMaterialRecipe(@NotNull Consumer<FinishedRecipe> writer, ModItems.Materials material, ModItems.Materials result, Item template, Item ingredient) {
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(template),
+                        Ingredient.of(material.barrel().get()),
+                        Ingredient.of(ingredient),
+                        RecipeCategory.MISC,
+                        result.barrel().get()
+                )
+                .unlocks(getHasName(template), has(template))
+                .unlocks(getHasName(material.barrel().get()), has(material.barrel().get()))
+                .save(writer, Mod.loc(getItemName(result.barrel().get())));
+
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(template),
+                        Ingredient.of(material.action().get()),
+                        Ingredient.of(ingredient),
+                        RecipeCategory.MISC,
+                        result.action().get()
+                )
+                .unlocks(getHasName(template), has(template))
+                .unlocks(getHasName(material.action().get()), has(material.action().get()))
+                .save(writer, Mod.loc(getItemName(result.action().get())));
+
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(template),
+                        Ingredient.of(material.spring().get()),
+                        Ingredient.of(ingredient),
+                        RecipeCategory.MISC,
+                        result.spring().get()
+                )
+                .unlocks(getHasName(template), has(template))
+                .unlocks(getHasName(material.spring().get()), has(material.spring().get()))
+                .save(writer, Mod.loc(getItemName(result.spring().get())));
+
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(template),
+                        Ingredient.of(material.trigger().get()),
+                        Ingredient.of(ingredient),
+                        RecipeCategory.MISC,
+                        result.trigger().get()
+                )
+                .unlocks(getHasName(template), has(template))
+                .unlocks(getHasName(material.trigger().get()), has(material.trigger().get()))
+                .save(writer, Mod.loc(getItemName(result.trigger().get())));
     }
 
     public static void generateMaterialPackRecipe(@NotNull Consumer<FinishedRecipe> writer, ModItems.Materials material, Item pack) {
