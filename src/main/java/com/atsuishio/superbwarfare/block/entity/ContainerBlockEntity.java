@@ -10,7 +10,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +30,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     public EntityType<?> entityType;
-    public Entity entity = null;
+    public CompoundTag entityTag = null;
     public int tick = 0;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -56,18 +55,16 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
         } else {
             var direction = pState.getValue(ContainerBlock.FACING);
 
-            if (blockEntity.entity != null) {
-                blockEntity.entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
-                blockEntity.entity.setYRot(direction.toYRot());
-                pLevel.addFreshEntity(blockEntity.entity);
-            } else if (blockEntity.entityType != null) {
-                var entity = blockEntity.entityType.create(pLevel);
-                if (entity != null) {
-                    entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
-                    entity.setYRot(direction.toYRot());
-                    pLevel.addFreshEntity(entity);
-                }
+            var entity = blockEntity.entityType.create(pLevel);
+            if (entity == null) return;
+
+            if (blockEntity.entityTag != null) {
+                entity.load(blockEntity.entityTag);
             }
+
+            entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
+            entity.setYRot(direction.toYRot());
+            pLevel.addFreshEntity(entity);
 
             pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
         }
@@ -96,11 +93,8 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
         if (compound.contains("EntityType")) {
             this.entityType = EntityType.byString(compound.getString("EntityType")).orElse(null);
         }
-        if (compound.contains("Entity") && this.entityType != null && this.level != null) {
-            this.entity = this.entityType.create(this.level);
-            if (entity != null) {
-                entity.load(compound.getCompound("Entity"));
-            }
+        if (compound.contains("Entity")) {
+            this.entityTag = compound.getCompound("Entity");
         }
         this.tick = compound.getInt("Tick");
     }
@@ -108,8 +102,8 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
-        if (this.entity != null) {
-            compound.put("Entity", this.entity.serializeNBT());
+        if (this.entityTag != null) {
+            compound.put("Entity", this.entityTag);
         }
         if (this.entityType != null) {
             compound.putString("EntityType", EntityType.getKey(this.entityType).toString());

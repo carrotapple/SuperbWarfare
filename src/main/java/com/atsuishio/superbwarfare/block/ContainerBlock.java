@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -69,7 +68,7 @@ public class ContainerBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
-        if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entity)) {
+        if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entityTag)) {
             pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
             pLevel.playSound(null, BlockPos.containing(pPos.getX(), pPos.getY(), pPos.getZ()), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1);
 
@@ -83,19 +82,21 @@ public class ContainerBlock extends BaseEntityBlock {
     public boolean hasEntity(Level pLevel, BlockPos pPos) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return false;
-        return containerBlockEntity.entity != null || containerBlockEntity.entityType != null;
+        return containerBlockEntity.entityTag != null || containerBlockEntity.entityType != null;
     }
 
-    public static boolean canOpen(Level pLevel, BlockPos pPos, EntityType<?> entityType, Entity entity) {
+    public static boolean canOpen(Level pLevel, BlockPos pPos, EntityType<?> entityType, CompoundTag tag) {
+        if (entityType == null) return false;
+
+        var entity = entityType.create(pLevel);
+        if (entity != null && tag != null) {
+            entity.load(tag);
+        }
+
         boolean flag = true;
 
-        int w = 0;
-        int h = 0;
-
-        if (entityType != null) {
-            w = (int) (entityType.getDimensions().width / 2 + 1);
-            h = (int) (entityType.getDimensions().height + 1);
-        }
+        int w = (int) (entityType.getDimensions().width / 2 + 1);
+        int h = (int) (entityType.getDimensions().height + 1);
 
         if (entity != null) {
             w = (int) (entity.getType().getDimensions().width / 2 + 1);
