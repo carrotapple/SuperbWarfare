@@ -61,14 +61,23 @@ public class ClientMouseHandler {
             return;
         }
 
+        if (notInGame()) {
+            com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
+            return;
+        }
+
         posO = posN;
         posN = MouseMovementHandler.getMousePos();
 
         ItemStack stack = player.getMainHandItem();
 
-        if (!notInGame() && stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
             if (drone != null) {
+                if (notInGame()) {
+                    com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
+                    return;
+                }
                 speedX = drone.getMouseSensitivity() * (posN.x - posO.x);
                 speedY = drone.getMouseSensitivity() * (posN.y - posO.y);
 
@@ -80,7 +89,12 @@ public class ClientMouseHandler {
             return;
         }
 
-        if (!notInGame() && player.getVehicle() instanceof VehicleEntity vehicle && player == vehicle.getFirstPassenger()) {
+        if (player.getVehicle() instanceof VehicleEntity vehicle && player == vehicle.getFirstPassenger()) {
+
+            if (notInGame()) {
+                com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
+                return;
+            }
 
             int y = 1;
 
@@ -132,8 +146,8 @@ public class ClientMouseHandler {
         freeCameraYaw -= 0.4f * times * lerpSpeedX;
         freeCameraPitch += 0.3f * times * lerpSpeedY;
         if (!isFreeCam(player)) {
-            freeCameraYaw = Mth.lerp(0.4 * times, freeCameraYaw, 0);
-            freeCameraPitch = Mth.lerp(0.4 * times, freeCameraPitch, 0);
+            freeCameraYaw = Mth.lerp(0.6 * times, freeCameraYaw, 0);
+            freeCameraPitch = Mth.lerp(0.6 * times, freeCameraPitch, 0);
         }
 
         while (freeCameraYaw > 180F) {
