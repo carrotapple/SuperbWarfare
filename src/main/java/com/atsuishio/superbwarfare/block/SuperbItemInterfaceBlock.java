@@ -45,7 +45,7 @@ public class SuperbItemInterfaceBlock extends BaseEntityBlock {
         return new SuperbItemInterfaceBlockEntity(pPos, pState);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlockEntities.SUPERB_ITEM_INTERFACE.get(), SuperbItemInterfaceBlockEntity::serverTick);
     }
