@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.block;
 
+import com.atsuishio.superbwarfare.block.entity.SuperbItemInterfaceBlockEntity;
+import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.stats.Stats;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -39,16 +42,21 @@ public class SuperbItemInterfaceBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return null;
+        return new SuperbItemInterfaceBlockEntity(pPos, pState);
+    }
+
+    @javax.annotation.Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlockEntities.SUPERB_ITEM_INTERFACE.get(), SuperbItemInterfaceBlockEntity::serverTick);
     }
 
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
         if (pStack.hasCustomHoverName()) {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-//            if (blockentity instanceof HopperBlockEntity) {
-//                ((HopperBlockEntity) blockentity).setCustomName(pStack.getHoverName());
-//            }
+            if (blockentity instanceof SuperbItemInterfaceBlockEntity entity) {
+                entity.setCustomName(pStack.getHoverName());
+            }
         }
     }
 
@@ -65,9 +73,8 @@ public class SuperbItemInterfaceBlock extends BaseEntityBlock {
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof HopperBlockEntity) {
-                pPlayer.openMenu((HopperBlockEntity) blockentity);
-                pPlayer.awardStat(Stats.INSPECT_HOPPER);
+            if (blockentity instanceof SuperbItemInterfaceBlockEntity entity) {
+                pPlayer.openMenu(entity);
             }
 
             return InteractionResult.CONSUME;
@@ -90,10 +97,10 @@ public class SuperbItemInterfaceBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-//            if (blockentity instanceof HopperBlockEntity) {
-//                Containers.dropContents(pLevel, pPos, (HopperBlockEntity)blockentity);
-//                pLevel.updateNeighbourForOutputSignal(pPos, this);
-//            }
+            if (blockentity instanceof SuperbItemInterfaceBlockEntity entity) {
+                Containers.dropContents(pLevel, pPos, entity);
+                pLevel.updateNeighbourForOutputSignal(pPos, this);
+            }
 
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
