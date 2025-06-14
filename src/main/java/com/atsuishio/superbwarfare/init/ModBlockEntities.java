@@ -23,4 +23,6 @@ public class ModBlockEntities {
             () -> BlockEntityType.Builder.of(SmallContainerBlockEntity::new, ModBlocks.SMALL_CONTAINER.get()).build(null));
     public static final RegistryObject<BlockEntityType<VehicleDeployerBlockEntity>> VEHICLE_DEPLOYER = REGISTRY.register("vehicle_deployer",
             () -> BlockEntityType.Builder.of(VehicleDeployerBlockEntity::new, ModBlocks.VEHICLE_DEPLOYER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<SuperbItemInterfaceBlockEntity>> SUPERB_ITEM_INTERFACE = REGISTRY.register("superb_item_interface",
+            () -> BlockEntityType.Builder.of(SuperbItemInterfaceBlockEntity::new, ModBlocks.SUPERB_ITEM_INTERFACE.get()).build(null));
 }

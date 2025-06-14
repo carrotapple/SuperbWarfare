@@ -282,6 +282,7 @@ public class ModItems {
     public static final RegistryObject<Item> FUMO_25 = block(ModBlocks.FUMO_25);
     public static final RegistryObject<Item> VEHICLE_DEPLOYER = BLOCKS.register("vehicle_deployer", VehicleDeployerBlockItem::new);
     public static final RegistryObject<Item> AIRCRAFT_CATAPULT = block(ModBlocks.AIRCRAFT_CATAPULT);
+    public static final RegistryObject<Item> SUPERB_ITEM_INTERFACE = block(ModBlocks.SUPERB_ITEM_INTERFACE);
 
     // 这俩放最后
     public static final RegistryObject<Item> CONTAINER = BLOCKS.register("container", ContainerBlockItem::new);
