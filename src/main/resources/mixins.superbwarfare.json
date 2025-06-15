@@ -11,6 +11,7 @@
     "ExplosionMixin",
     "FishingHookMixin",
     "GeoModelAccessor",
+    "LevelMixin",
     "LivingEntityMixin",
     "PlayerMixin",
     "VillagerMixin"
