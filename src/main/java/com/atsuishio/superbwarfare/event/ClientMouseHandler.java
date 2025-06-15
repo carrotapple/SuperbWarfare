@@ -62,8 +62,10 @@ public class ClientMouseHandler {
         }
 
         if (notInGame()) {
-            com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
-            return;
+            speedX = 0;
+            speedY = 0;
+            lerpSpeedX = 0;
+            lerpSpeedY = 0;
         }
 
         posO = posN;
@@ -90,7 +92,6 @@ public class ClientMouseHandler {
         }
 
         if (player.getVehicle() instanceof VehicleEntity vehicle && player == vehicle.getFirstPassenger()) {
-
             if (notInGame()) {
                 com.atsuishio.superbwarfare.Mod.PACKET_HANDLER.sendToServer(new MouseMoveMessage(0, 0));
                 return;
@@ -141,6 +142,13 @@ public class ClientMouseHandler {
         if (player == null) {
             return;
         }
+
+        if (notInGame()) {
+            freeCameraYaw = 0;
+            freeCameraPitch = 0;
+            return;
+        }
+
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
         freeCameraYaw -= 0.4f * times * lerpSpeedX;
@@ -161,11 +169,6 @@ public class ClientMouseHandler {
         }
         while (freeCameraPitch <= -180F) {
             freeCameraPitch += 360;
-        }
-
-        if (player.getVehicle() instanceof VehicleEntity vehicle && player == vehicle.getFirstPassenger() && vehicle instanceof AirEntity) {
-            player.setYRot(player.getVehicle().getYRot());
-            player.setYHeadRot(player.getYRot());
         }
 
         custom3pDistanceLerp = Mth.lerp(times, custom3pDistanceLerp, custom3pDistance);
