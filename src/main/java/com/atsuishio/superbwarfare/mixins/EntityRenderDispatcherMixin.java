@@ -19,7 +19,7 @@ public class EntityRenderDispatcherMixin {
             at = @At("RETURN"))
     private static void renderHitbox(PoseStack pMatrixStack, VertexConsumer pBuffer, Entity pEntity, float pPartialTicks, CallbackInfo ci) {
         if (pEntity instanceof OBBEntity obbEntity && pEntity instanceof VehicleEntity vehicle) {
-            OBBRenderer.INSTANCE.render(vehicle, obbEntity.getOBBs(), pMatrixStack, pBuffer, 0, 1, 0, 1);
+            OBBRenderer.INSTANCE.render(vehicle, obbEntity.getOBBs(), pMatrixStack, pBuffer, 0, 1, 0, 1, pPartialTicks);
         }
     }
 }
