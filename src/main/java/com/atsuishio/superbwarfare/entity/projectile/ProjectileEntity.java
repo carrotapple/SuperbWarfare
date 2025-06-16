@@ -166,7 +166,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
                 this,
                 this.getBoundingBox()
                         .expandTowards(this.getDeltaMovement())
-                        .inflate(this.beast ? 3 : 1),
+                        .inflate(1),
                 PROJECTILE_TARGETS
         );
         for (Entity entity : entities) {

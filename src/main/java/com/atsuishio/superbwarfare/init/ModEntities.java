@@ -104,7 +104,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WheelChairEntity>> WHEEL_CHAIR = register("wheel_chair",
             EntityType.Builder.<WheelChairEntity>of(WheelChairEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(WheelChairEntity::new).fireImmune().sized(1.0f, 1.0f));
     public static final RegistryObject<EntityType<Ah6Entity>> AH_6 = register("ah_6",
-            EntityType.Builder.<Ah6Entity>of(Ah6Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Ah6Entity::new).fireImmune().sized(2.8f, 2.9f));
+            EntityType.Builder.<Ah6Entity>of(Ah6Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Ah6Entity::new).fireImmune().sized(3.6f, 2.9f));
     public static final RegistryObject<EntityType<Lav150Entity>> LAV_150 = register("lav_150",
             EntityType.Builder.<Lav150Entity>of(Lav150Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(Lav150Entity::new).fireImmune().sized(2.8f, 3.1f));
     public static final RegistryObject<EntityType<Tom6Entity>> TOM_6 = register("tom_6",
@@ -121,7 +121,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<PrismTankEntity>> PRISM_TANK = register("prism_tank",
             EntityType.Builder.<PrismTankEntity>of(PrismTankEntity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(PrismTankEntity::new).fireImmune().sized(5f, 2.6f));
     public static final RegistryObject<EntityType<A10Entity>> A_10A = register("a_10a",
-            EntityType.Builder.<A10Entity>of(A10Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(A10Entity::new).fireImmune().sized(6f, 3.5f));
+            EntityType.Builder.<A10Entity>of(A10Entity::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(A10Entity::new).fireImmune().sized(9f, 3.5f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

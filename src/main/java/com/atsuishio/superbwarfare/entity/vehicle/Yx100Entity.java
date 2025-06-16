@@ -241,7 +241,6 @@ public class Yx100Entity extends ContainerMobileVehicleEntity implements GeoEnti
     @Override
     public void baseTick() {
         super.baseTick();
-
         this.updateOBB();
 
         if (getLeftTrack() < 0) {
