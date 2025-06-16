@@ -39,6 +39,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.superbwarfare]]
+modId = "geckoanimfix"
+mandatory = false
+versionRange = "[114.514.Remove Iris/Oculus & GeckoLib Compat as it is incompatible with Superb Warfare and does nothing along with the latest version of GeckoLib!,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.superbwarfare]]
 modId = "patchouli"
 mandatory = false
 versionRange = "[1.20.1-84,)"
