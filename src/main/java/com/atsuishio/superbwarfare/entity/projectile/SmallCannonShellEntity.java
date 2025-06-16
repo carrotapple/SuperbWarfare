@@ -109,6 +109,8 @@ public class SmallCannonShellEntity extends FastThrowableProjectile implements G
     @Override
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
+
+        if (this.getOwner() != null && this.getOwner().getVehicle() != null && entity == this.getOwner().getVehicle()) return;
         if (this.level() instanceof ServerLevel) {
 
             if (this.getOwner() instanceof LivingEntity living) {
