@@ -4,10 +4,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.projectile.*;
 import com.atsuishio.superbwarfare.entity.vehicle.base.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Monitor;
 import com.atsuishio.superbwarfare.item.common.ammo.MortarShell;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -443,7 +440,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
         for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
             if (this != target && target != null
-                    && !(target instanceof ItemEntity || target instanceof Projectile || target instanceof ProjectileEntity || target instanceof LaserEntity || target instanceof DecoyEntity || target instanceof AreaEffectCloud || target instanceof C4Entity)) {
+                    && !(target instanceof ItemEntity || target instanceof Projectile || target instanceof ProjectileEntity || target instanceof LaserEntity
+                    || target.getType().is(ModTags.EntityTypes.DECOY) || target instanceof AreaEffectCloud || target instanceof C4Entity)) {
                 hitEntityCrash(controller, target);
             }
         }

@@ -3,10 +3,7 @@ package com.atsuishio.superbwarfare.entity.projectile;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
@@ -192,7 +189,8 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
     protected void onHitEntity(EntityHitResult result) {
         float damageMultiplier = 1 + this.monsterMultiplier;
         Entity entity = result.getEntity();
-        if (this.getOwner() != null && this.getOwner().getVehicle() != null && entity == this.getOwner().getVehicle()) return;
+        if (this.getOwner() != null && this.getOwner().getVehicle() != null && entity == this.getOwner().getVehicle())
+            return;
         if (this.level() instanceof ServerLevel) {
             if (entity == this.getOwner() || (this.getOwner() != null && entity == this.getOwner().getVehicle()))
                 return;
@@ -305,9 +303,10 @@ public class JavelinMissileEntity extends FastThrowableProjectile implements Geo
         List<Entity> decoy = SeekTool.seekLivingEntities(this, this.level(), 32, 90);
 
         for (var e : decoy) {
-            if (e instanceof DecoyEntity decoyEntity && !distracted) {
-                this.entityData.set(TARGET_UUID, decoyEntity.getDecoyUUID());
-                distracted = true;
+            if (e.getType().is(ModTags.EntityTypes.DECOY) && !this.distracted) {
+                this.entityData.set(TARGET_UUID, e.getStringUUID());
+                this.distracted = true;
+                break;
             }
         }
 
