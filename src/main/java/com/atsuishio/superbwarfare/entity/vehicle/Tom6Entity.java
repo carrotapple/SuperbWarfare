@@ -107,12 +107,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.playSound(ModSounds.WHEEL_STEP.get(), (float) (getDeltaMovement().length() * 0.3), random.nextFloat() * 0.1f + 1f);
     }
 
-
-    @Override
-    public boolean sendFireStarParticleOnHurt() {
-        return false;
-    }
-
     @Override
     public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
         if (player.getMainHandItem().is(Items.MELON) && !entityData.get(MELON)) {
