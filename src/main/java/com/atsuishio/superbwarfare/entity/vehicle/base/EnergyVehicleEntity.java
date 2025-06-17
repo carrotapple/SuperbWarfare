@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base;
 
 import com.atsuishio.superbwarfare.capability.energy.SyncedEntityEnergyStorage;
+import com.atsuishio.superbwarfare.capability.energy.VehicleEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,8 +20,7 @@ public abstract class EnergyVehicleEntity extends VehicleEntity {
 
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
 
-    // TODO 在数据更新时修改能量相关属性
-    protected final SyncedEntityEnergyStorage energyStorage = new SyncedEntityEnergyStorage(this.getMaxEnergy(), this.entityData, ENERGY);
+    protected final SyncedEntityEnergyStorage energyStorage = new VehicleEnergyStorage(this);
     protected final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public EnergyVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
@@ -32,6 +32,10 @@ public abstract class EnergyVehicleEntity extends VehicleEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ENERGY, 0);
+    }
+
+    public EntityDataAccessor<Integer> getEnergyDataAccessor() {
+        return ENERGY;
     }
 
     @Override

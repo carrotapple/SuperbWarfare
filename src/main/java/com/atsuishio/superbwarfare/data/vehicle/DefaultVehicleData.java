@@ -46,7 +46,7 @@ public class DefaultVehicleData {
 
 
     @SerializedName("MaxEnergy")
-    public int maxEnergy = 100000;
+    public int maxEnergy = Integer.MAX_VALUE;
 
     @SerializedName("UpStep")
     public float upStep = 0;
