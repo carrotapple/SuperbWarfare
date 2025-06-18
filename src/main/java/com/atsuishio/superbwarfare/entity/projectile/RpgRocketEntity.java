@@ -138,6 +138,11 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
             float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
             if (hardness != -1) {
                 if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                    if (firstHit) {
+                        causeExplode(blockHitResult.getLocation());
+                        firstHit = false;
+                        Mod.queueServerWork(3, this::discard);
+                    }
                     this.level().destroyBlock(resultPos, true);
                 }
             }
@@ -195,7 +200,6 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
         ParticleTool.spawnHugeExplosionParticles(this.level(), vec3);
-        discard();
     }
 
     @Override
@@ -223,11 +227,6 @@ public class RpgRocketEntity extends FastThrowableProjectile implements GeoEntit
             this.discard();
         }
         destroyBlock();
-    }
-
-    @Override
-    public void destroy(Vec3 pos) {
-        causeExplode(pos);
     }
 
     private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {

@@ -176,6 +176,8 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
             }
 
             causeExplode(result.getLocation());
+
+            discard();
         }
     }
 
@@ -186,6 +188,11 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
             float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
             if (hardness != -1) {
                 if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                    if (firstHit) {
+                        causeExplode(blockHitResult.getLocation());
+                        firstHit = false;
+                        Mod.queueServerWork(3, this::discard);
+                    }
                     this.level().destroyBlock(resultPos, true);
                 }
             }
@@ -216,7 +223,6 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), vec3);
         }
-        discard();
     }
 
     @Override
@@ -282,13 +288,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
         destroyBlock();
     }
-
-    @Override
-    public void destroy(Vec3 pos) {
-        causeExplode(pos);
-
-    }
-
+    
     @Override
     public boolean isNoGravity() {
         return true;

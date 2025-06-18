@@ -68,7 +68,7 @@ public class WgMissileEntity extends FastThrowableProjectile implements GeoEntit
         this.damage = damage;
         this.explosionDamage = explosionDamage;
         this.explosionRadius = explosionRadius;
-        this.durability = 25;
+        this.durability = 50;
     }
 
     public WgMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -155,6 +155,11 @@ public class WgMissileEntity extends FastThrowableProjectile implements GeoEntit
             float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
             if (hardness != -1) {
                 if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                    if (firstHit) {
+                        causeExplode(blockHitResult.getLocation());
+                        firstHit = false;
+                        Mod.queueServerWork(3, this::discard);
+                    }
                     this.level().destroyBlock(resultPos, true);
                 }
             }
@@ -257,13 +262,7 @@ public class WgMissileEntity extends FastThrowableProjectile implements GeoEntit
         }
         destroyBlock();
     }
-
-    @Override
-    public void destroy(Vec3 pos) {
-        causeExplode(pos);
-        discard();
-    }
-
+    
     private PlayState movementPredicate(AnimationState<WgMissileEntity> event) {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.jvm.idle"));
     }
