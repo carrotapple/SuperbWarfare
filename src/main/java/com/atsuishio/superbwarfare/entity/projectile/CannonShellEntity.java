@@ -28,7 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -56,7 +56,6 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
     private float explosionDamage = 0;
     private float fireProbability = 0;
     private int fireTime = 0;
-    private int durability = 40;
     public Set<Long> loadedChunks = new HashSet<>();
     private float gravity = 0.1f;
 
@@ -82,6 +81,11 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
     public CannonShellEntity durability(int durability) {
         this.durability = durability;
         return this;
+    }
+
+    @Override
+    public boolean isColliding(BlockPos pPos, BlockState pState) {
+        return true;
     }
 
     @Override
@@ -157,6 +161,23 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
     }
 
     @Override
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        if (this.level() instanceof ServerLevel) {
+            BlockPos resultPos = blockHitResult.getBlockPos();
+            float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
+            if (hardness != -1) {
+                if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                    this.level().destroyBlock(resultPos, true);
+                }
+            }
+            if (!ExplosionConfig.EXPLOSION_DESTROY.get()) {
+                causeExplode(blockHitResult.getLocation());
+                this.discard();
+            }
+        }
+    }
+
+    @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         if (this.level() instanceof ServerLevel) {
             Entity entity = entityHitResult.getEntity();
@@ -177,50 +198,11 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
             }
 
             ParticleTool.cannonHitParticles(this.level(), this.position(), this);
-            causeExplode(entityHitResult.getLocation(), this.radius, true);
+            causeExplode(entityHitResult.getLocation());
             if (entity instanceof VehicleEntity) {
                 this.discard();
             }
 
-        }
-    }
-
-    @Override
-    public void onHitBlock(BlockHitResult blockHitResult) {
-        if (this.level() instanceof ServerLevel) {
-            BlockPos resultPos = blockHitResult.getBlockPos();
-
-            float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
-
-            if (hardness == -1) {
-                this.discard();
-                causeExplode(blockHitResult.getLocation(), this.radius, true);
-                return;
-            } else {
-                if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
-                    this.level().destroyBlock(resultPos, true);
-                }
-            }
-
-            causeExplode(blockHitResult.getLocation(), this.radius, true);
-
-            for (int i = 0; i < 5; i++) {
-                Vec3 hitPos = blockHitResult.getLocation().add(getDeltaMovement().normalize().scale(i));
-                AABB aabb = new AABB(hitPos, hitPos).inflate(0.25);
-                if (durability > 0) {
-                    BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
-                        float hard = this.level().getBlockState(pos).getBlock().defaultDestroyTime();
-                        durability -= (int) hard;
-                        if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
-                            this.level().destroyBlock(pos, true);
-                        }
-                        causeExplode(hitPos, this.radius * 0.5f, false);
-                    });
-                }
-            }
-            if (durability <= 0) {
-                discard();
-            }
         }
     }
 
@@ -234,9 +216,12 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
             // 更新需要加载的区块
             ChunkLoadTool.updateLoadedChunks(serverLevel, this, this.loadedChunks);
         }
+
+        destroyBlock();
+
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode(position(), this.radius, true);
+                causeExplode(position());
             }
             this.discard();
         }
@@ -249,7 +234,12 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
         }
     }
 
-    private void causeExplode(Vec3 vec3, float radius, boolean isHuge) {
+    @Override
+    public void destroy(Vec3 pos) {
+        causeExplode(pos);
+    }
+
+    private void causeExplode(Vec3 vec3) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
                         this,
@@ -264,11 +254,12 @@ public class CannonShellEntity extends FastThrowableProjectile implements GeoEnt
         explosion.explode();
         ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        if (isHuge) {
+        if (radius > 9) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), vec3);
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), vec3);
         }
+        discard();
     }
 
     private PlayState movementPredicate(AnimationState<CannonShellEntity> event) {

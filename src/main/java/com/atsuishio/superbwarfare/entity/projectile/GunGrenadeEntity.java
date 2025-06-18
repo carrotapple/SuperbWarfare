@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.Mod;
-import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -167,15 +166,6 @@ public class GunGrenadeEntity extends FastThrowableProjectile implements GeoEnti
     public void onHitBlock(BlockHitResult blockHitResult) {
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-
-        if (this.level() instanceof ServerLevel) {
-            float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
-            if (hardness != -1) {
-                if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
-                    this.level().destroyBlock(resultPos, true);
-                }
-            }
-        }
 
         if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
