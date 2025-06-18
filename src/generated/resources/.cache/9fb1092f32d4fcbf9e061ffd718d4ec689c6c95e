@@ -1,4 +1,4 @@
-// 1.20.1	2025-06-14T14:44:35.0761631	Recipes
+// 1.20.1	2025-06-18T21:19:48.5513056	Recipes
 9775e550332c69f1ee2ac4a09834a35db6f6a2ed data/minecraft/recipes/ammo_box_add_ammo.json
 b23d5c199168cf868d89722c62042bfa8852b768 data/minecraft/recipes/ammo_box_extract_ammo.json
 2e1d1bbf32801f3d355c0d3f78ebbb1122cebd4c data/minecraft/recipes/potion_mortar_shell.json
@@ -99,9 +99,11 @@ e7d8ab3493692afe72764f315b9d48ab86cc5e53 data/superbwarfare/advancements/recipes
 0abe16a012370a11b1cf154a30c8c4316080201f data/superbwarfare/advancements/recipes/misc/taser_blueprint.json
 0eb647e24c091afded4cf014b12ebad5d00326cc data/superbwarfare/advancements/recipes/misc/trachelium_blueprint.json
 3e335292f52ac196d2b7e2892a3b7c4aa0f9ff99 data/superbwarfare/advancements/recipes/misc/vector_blueprint.json
+116cfd2b302026b3eb00c031bb0a27ed654b78ff data/superbwarfare/advancements/recipes/transportation/ah_6_container.json
 5bea1f2666945bcfba7fcce33e0d5d90c8ada2fb data/superbwarfare/advancements/recipes/transportation/a_10a_container.json
 e6b6307ea57ac31023eda4e1ef9f646741299bc4 data/superbwarfare/recipes/aa_12_blueprint.json
 fd05200aed1639db4119df15acb17abdd4daea14 data/superbwarfare/recipes/aa_12_smithing.json
+2254116bf8b3650d0cdd042cc4b2b12526c81883 data/superbwarfare/recipes/ah_6_container.json
 caeff37658aa636f56279e640433cdb13f7509b6 data/superbwarfare/recipes/ak_12_blueprint.json
 fcc31c48e00c25cdb5f35f98780673c78b1057e1 data/superbwarfare/recipes/ak_12_smithing.json
 3e0f8eddb3209d2ebc16ccb3b9899a159343c863 data/superbwarfare/recipes/ak_47_blueprint.json
