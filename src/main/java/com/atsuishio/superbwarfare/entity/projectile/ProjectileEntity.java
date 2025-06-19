@@ -42,6 +42,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -536,7 +537,7 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
             this.damage *= this.undeadMultiple;
         }
 
-        if (entity instanceof LivingEntity living && (living.getMobType() == MobType.ILLAGER || living instanceof Vex || living instanceof Ravager)) {
+        if (entity instanceof LivingEntity living && (living.getMobType() == MobType.ILLAGER || living instanceof Vex || living instanceof Ravager || living instanceof Witch)) {
             this.damage *= this.illagerMultiple;
         }
 
