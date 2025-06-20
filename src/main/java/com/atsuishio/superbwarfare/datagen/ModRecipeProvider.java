@@ -49,6 +49,16 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         generateMaterialPackRecipe(writer, ModItems.CEMENTED_CARBIDE_MATERIALS, ModItems.EPIC_MATERIAL_PACK.get());
         generateMaterialPackRecipe(writer, ModItems.NETHERITE_MATERIALS, ModItems.LEGENDARY_MATERIAL_PACK.get());
 
+        // 方块
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.SUPERB_ITEM_INTERFACE.get())
+                .pattern(" aa")
+                .pattern("aba")
+                .pattern("aa ")
+                .define('a', Items.HOPPER)
+                .define('b', Items.DROPPER)
+                .unlockedBy(getHasName(Items.HOPPER), has(Items.DROPPER))
+                .save(writer, Mod.loc(getItemName(ModItems.SUPERB_ITEM_INTERFACE.get())));
+
         // vehicles
         containerRecipe(ModEntities.A_10A.get())
                 .pattern("dad")
