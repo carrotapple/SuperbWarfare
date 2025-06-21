@@ -17,6 +17,7 @@ public class VehicleEnergyStorage extends SyncedEntityEnergyStorage {
     public int extractEnergy(int maxExtract, boolean simulate) {
         if (VehicleData.from(vehicle).isDefaultData) return 0;
 
+        this.capacity = getMaxEnergyStored();
         this.maxExtract = getMaxEnergyStored();
         return super.extractEnergy(maxExtract, simulate);
     }
@@ -25,6 +26,7 @@ public class VehicleEnergyStorage extends SyncedEntityEnergyStorage {
     public int receiveEnergy(int maxReceive, boolean simulate) {
         if (VehicleData.from(vehicle).isDefaultData) return 0;
 
+        this.capacity = getMaxEnergyStored();
         this.maxReceive = getMaxEnergyStored();
         return super.receiveEnergy(maxReceive, simulate);
     }
