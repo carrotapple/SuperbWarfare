@@ -92,9 +92,14 @@ public abstract class VehicleEntity extends Entity {
     public static final EntityDataAccessor<Float> MOUSE_SPEED_Y = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<IntList> SELECTED_WEAPON = SynchedEntityData.defineId(VehicleEntity.class, ModSerializers.INT_LIST_SERIALIZER.get());
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> TURRET_DAMAGED_TIME = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> L_WHEEL_DAMAGED_TIME = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> R_WHEEL_DAMAGED_TIME = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.INT);
+
+    public static final EntityDataAccessor<Float> TURRET_HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> L_WHEEL_HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> R_WHEEL_HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
+
+    public static final EntityDataAccessor<Boolean> TURRET_DAMAGED = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> L_WHEEL_DAMAGED = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> R_WHEEL_DAMAGED = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.BOOLEAN);
 
     public VehicleWeapon[][] availableWeapons;
 
@@ -303,9 +308,12 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.define(MOUSE_SPEED_X, 0f);
         this.entityData.define(MOUSE_SPEED_Y, 0f);
         this.entityData.define(HEAT, 0);
-        this.entityData.define(TURRET_DAMAGED_TIME, 0);
-        this.entityData.define(L_WHEEL_DAMAGED_TIME, 0);
-        this.entityData.define(R_WHEEL_DAMAGED_TIME, 0);
+        this.entityData.define(TURRET_HEALTH, getTurretMaxHealth());
+        this.entityData.define(L_WHEEL_HEALTH, getLeftWheelMaxHealth());
+        this.entityData.define(R_WHEEL_HEALTH, getRightWheelMaxHealth());
+        this.entityData.define(TURRET_DAMAGED, false);
+        this.entityData.define(L_WHEEL_DAMAGED, false);
+        this.entityData.define(R_WHEEL_DAMAGED, false);
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             this.entityData.define(SELECTED_WEAPON, IntList.of(initSelectedWeaponArray(weaponVehicle)));
@@ -329,9 +337,14 @@ public abstract class VehicleEntity extends Entity {
         this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         this.entityData.set(LAST_DRIVER_UUID, compound.getString("LastDriver"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
-        this.entityData.set(TURRET_DAMAGED_TIME, compound.getInt("TurretDamagedTime"));
-        this.entityData.set(L_WHEEL_DAMAGED_TIME, compound.getInt("LWheelDamagedTime"));
-        this.entityData.set(R_WHEEL_DAMAGED_TIME, compound.getInt("RWheelDamagedTime"));
+
+        this.entityData.set(TURRET_HEALTH, compound.getFloat("TurretHealth"));
+        this.entityData.set(L_WHEEL_HEALTH, compound.getFloat("LeftWheelHealth"));
+        this.entityData.set(R_WHEEL_HEALTH, compound.getFloat("RightWheelHealth"));
+
+        this.entityData.set(TURRET_DAMAGED, compound.getBoolean("TurretDamaged"));
+        this.entityData.set(L_WHEEL_DAMAGED, compound.getBoolean("LeftDamaged"));
+        this.entityData.set(R_WHEEL_DAMAGED, compound.getBoolean("RightDamaged"));
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             var selected = compound.getIntArray("SelectedWeapon");
@@ -350,9 +363,14 @@ public abstract class VehicleEntity extends Entity {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         compound.putString("LastDriver", this.entityData.get(LAST_DRIVER_UUID));
-        compound.putInt("TurretDamagedTime", this.entityData.get(TURRET_DAMAGED_TIME));
-        compound.putInt("LWheelDamagedTime", this.entityData.get(L_WHEEL_DAMAGED_TIME));
-        compound.putInt("RWheelDamagedTime", this.entityData.get(R_WHEEL_DAMAGED_TIME));
+
+        compound.putFloat("TurretHealth", this.entityData.get(TURRET_HEALTH));
+        compound.putFloat("LeftWheelHealth", this.entityData.get(L_WHEEL_HEALTH));
+        compound.putFloat("RightWheelHealth", this.entityData.get(R_WHEEL_HEALTH));
+
+        compound.putBoolean("TurretDamaged", this.entityData.get(TURRET_DAMAGED));
+        compound.putBoolean("LeftWheelDamaged", this.entityData.get(L_WHEEL_DAMAGED));
+        compound.putBoolean("RightWheelDamaged", this.entityData.get(R_WHEEL_DAMAGED));
 
         if (this instanceof WeaponVehicleEntity weaponVehicle && weaponVehicle.getAllWeapons().length > 0) {
             compound.putIntArray("SelectedWeapon", this.entityData.get(SELECTED_WEAPON).toIntArray());
@@ -452,8 +470,16 @@ public abstract class VehicleEntity extends Entity {
         if (source.getDirectEntity() instanceof Projectile projectile) {
             OBBHitter accessor = OBBHitter.getInstance(projectile);
             //炮塔损伤
-            if (this instanceof OBBEntity obbEntity && accessor.sbw$getCurrentHitPart() == OBB.Part.TURRET && computedAmount > turretDamagedMin()) {
-                entityData.set(TURRET_DAMAGED_TIME, (int)(entityData.get(TURRET_DAMAGED_TIME) + computedAmount * turretDamagedMultiply()));
+            if (this instanceof OBBEntity && accessor.sbw$getCurrentHitPart() == OBB.Part.TURRET) {
+                entityData.set(TURRET_HEALTH, entityData.get(TURRET_HEALTH) - computedAmount);
+            }
+            //左轮损伤
+            if (this instanceof OBBEntity && accessor.sbw$getCurrentHitPart() == OBB.Part.WHEEL_LEFT) {
+                entityData.set(L_WHEEL_HEALTH, entityData.get(L_WHEEL_HEALTH) - computedAmount);
+            }
+            //右轮损伤
+            if (this instanceof OBBEntity && accessor.sbw$getCurrentHitPart() == OBB.Part.WHEEL_RIGHT) {
+                entityData.set(R_WHEEL_HEALTH, entityData.get(R_WHEEL_HEALTH) - computedAmount);
             }
 //            System.out.println(accessor.sbw$getCurrentHitPart());
         }
@@ -521,6 +547,18 @@ public abstract class VehicleEntity extends Entity {
 
     public float getMaxHealth() {
         return data().maxHealth();
+    }
+
+    public float getTurretMaxHealth() {
+        return 50;
+    }
+
+    public float getLeftWheelMaxHealth() {
+        return 50;
+    }
+
+    public float getRightWheelMaxHealth() {
+        return 50;
     }
 
     @Override
@@ -656,13 +694,44 @@ public abstract class VehicleEntity extends Entity {
 
         clearArrow();
 
+        // 炮塔损毁特效
+        turretDamagedEffect();
+
+        //部件血量
         partDamaged();
+
         this.refreshDimensions();
     }
 
     public void partDamaged() {
-        // 炮塔损毁特效
-        if (entityData.get(TURRET_DAMAGED_TIME) > 0) {
+        if (entityData.get(TURRET_HEALTH) < 0) {
+            entityData.set(TURRET_DAMAGED, true);
+        }
+        if (entityData.get(TURRET_HEALTH) > 40) {
+            entityData.set(TURRET_DAMAGED, false);
+        }
+
+        if (entityData.get(L_WHEEL_HEALTH) < 0) {
+            entityData.set(L_WHEEL_DAMAGED, true);
+        }
+        if (entityData.get(L_WHEEL_HEALTH) > 40) {
+            entityData.set(L_WHEEL_DAMAGED, false);
+        }
+
+        if (entityData.get(R_WHEEL_HEALTH) < 0) {
+            entityData.set(R_WHEEL_DAMAGED, true);
+        }
+        if (entityData.get(R_WHEEL_HEALTH) > 40) {
+            entityData.set(R_WHEEL_DAMAGED, false);
+        }
+
+        entityData.set(TURRET_HEALTH, Math.min(entityData.get(TURRET_HEALTH) + 0.25f, 50));
+        entityData.set(L_WHEEL_HEALTH, Math.min(entityData.get(L_WHEEL_HEALTH) + 0.25f, 50));
+        entityData.set(R_WHEEL_HEALTH, Math.min(entityData.get(R_WHEEL_HEALTH) + 0.25f, 50));
+    }
+
+    public void turretDamagedEffect() {
+        if (entityData.get(TURRET_DAMAGED)) {
             List<Entity> entities = getPlayer(level());
             for (var e : entities) {
                 if (e instanceof ServerPlayer player) {
@@ -674,7 +743,6 @@ public abstract class VehicleEntity extends Entity {
                     }
                 }
             }
-            entityData.set(TURRET_DAMAGED_TIME, entityData.get(TURRET_DAMAGED_TIME) - 1);
         }
     }
 
@@ -739,7 +807,7 @@ public abstract class VehicleEntity extends Entity {
 
             this.turretTurnSound(diffX, diffY, 0.95f);
 
-            if (entityData.get(TURRET_DAMAGED_TIME) > 0) {
+            if (entityData.get(TURRET_DAMAGED)) {
                 ySpeed *= 0.2f;
                 xSpeed *= 0.2f;
             }
@@ -1087,14 +1155,6 @@ public abstract class VehicleEntity extends Entity {
     public void addDeltaMovement(Vec3 pAddend) {
         if (pAddend.length() > 0.1) return;
         super.addDeltaMovement(pAddend);
-    }
-
-    public float turretDamagedMin() {
-        return 30;
-    }
-
-    public float turretDamagedMultiply() {
-        return 4;
     }
 
     /**
