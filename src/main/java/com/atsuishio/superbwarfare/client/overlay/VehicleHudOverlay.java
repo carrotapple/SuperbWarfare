@@ -213,7 +213,12 @@ public class VehicleHudOverlay implements IGuiOverlay {
 
                 //引擎
                 ResourceLocation engine;
-                engine = Mod.loc("textures/screens/land/engine.png");
+
+                if (mobileVehicle.getEntityData().get(ENGINE_DAMAGED)) {
+                    engine = Mod.loc("textures/screens/land/engine_damaged.png");
+                } else {
+                    engine = Mod.loc("textures/screens/land/engine.png");
+                }
 
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, iLand.turretYRotO(), iLand.turretYRot())), screenWidth / 2f + 112, screenHeight - 56, 0);
 
