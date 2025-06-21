@@ -22,9 +22,11 @@ public class VehicleData {
     public final String id;
     public final DefaultVehicleData data;
     public final VehicleEntity vehicle;
+    public final boolean isDefaultData;
 
     private VehicleData(VehicleEntity entity) {
         this.id = EntityType.getKey(entity.getType()).toString();
+        this.isDefaultData = !VehicleDataTool.vehicleData.containsKey(id);
         this.data = VehicleDataTool.vehicleData.getOrDefault(id, new DefaultVehicleData());
         this.vehicle = entity;
     }
