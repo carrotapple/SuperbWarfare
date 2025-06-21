@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.block.entity;
 
 import com.atsuishio.superbwarfare.block.SuperbItemInterfaceBlock;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.menu.SuperbItemInterfaceMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -32,7 +33,7 @@ public class SuperbItemInterfaceBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private int cooldownTime = -1;
 
-    private Direction facing;
+    private final Direction facing;
 
     public SuperbItemInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SUPERB_ITEM_INTERFACE.get(), pPos, pBlockState);
@@ -105,10 +106,9 @@ public class SuperbItemInterfaceBlockEntity extends BaseContainerBlockEntity {
         return Component.translatable("container.superbwarfare.superb_item_interface");
     }
 
-    // TODO 实现菜单
     @Override
     protected @NotNull AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pInventory) {
-        return null;
+        return new SuperbItemInterfaceMenu(pContainerId, pInventory);
     }
 
     @Override

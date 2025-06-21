@@ -21,6 +21,9 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<VehicleMenu>> VEHICLE_MENU =
             REGISTRY.register("vehicle_menu",
                     () -> IForgeMenuType.create((windowId, inv, data) -> new VehicleMenu(windowId, inv)));
+    public static final RegistryObject<MenuType<SuperbItemInterfaceMenu>> SUPERB_ITEM_INTERFACE_MENU =
+            REGISTRY.register("superb_item_interface_menu",
+                    () -> IForgeMenuType.create((windowId, inv, data) -> new SuperbItemInterfaceMenu(windowId, inv)));
     public static final RegistryObject<MenuType<FuMO25Menu>> FUMO_25_MENU =
             REGISTRY.register("fumo_25_menu",
                     () -> IForgeMenuType.create((windowId, inv, data) -> new FuMO25Menu(windowId, inv)));

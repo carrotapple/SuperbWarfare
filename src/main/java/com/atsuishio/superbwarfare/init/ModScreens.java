@@ -16,6 +16,7 @@ public class ModScreens {
             MenuScreens.register(ModMenuTypes.REFORGING_TABLE_MENU.get(), ReforgingTableScreen::new);
             MenuScreens.register(ModMenuTypes.CHARGING_STATION_MENU.get(), ChargingStationScreen::new);
             MenuScreens.register(ModMenuTypes.VEHICLE_MENU.get(), VehicleScreen::new);
+            MenuScreens.register(ModMenuTypes.SUPERB_ITEM_INTERFACE_MENU.get(), SuperbItemInterfaceScreen::new);
             MenuScreens.register(ModMenuTypes.FUMO_25_MENU.get(), FuMO25Screen::new);
             MenuScreens.register(ModMenuTypes.DOG_TAG_EDITOR_MENU.get(), DogTagEditorScreen::new);
         });
