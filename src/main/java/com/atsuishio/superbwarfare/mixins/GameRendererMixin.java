@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.vehicle.base.LandArmorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -46,7 +48,9 @@ public class GameRendererMixin {
     public void superbWarfare$renderWorld(float tickDelta, long limitTime, PoseStack matrices, CallbackInfo ci) {
         Entity entity = mainCamera.getEntity();
 
-        if (entity != null && !mainCamera.isDetached() && entity.getRootVehicle() instanceof VehicleEntity vehicle) {
+        matrices.mulPose(Axis.ZP.rotationDegrees(ClientEventHandler.cameraRoll));
+
+        if (entity != null && entity.getRootVehicle() instanceof VehicleEntity vehicle && (!mainCamera.isDetached() || (vehicle instanceof LandArmorEntity && ClientEventHandler.zoomVehicle))) {
             // rotate camera
             float a = vehicle.getTurretYaw(tickDelta);
             float r = (Mth.abs(a) - 90f) / 90f;

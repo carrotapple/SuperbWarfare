@@ -968,7 +968,7 @@ public class ClientEventHandler {
         float pitch = event.getPitch();
         float roll = event.getRoll();
 
-        shakeTime = Mth.lerp(0.05 * event.getPartialTick(), shakeTime, 0);
+        shakeTime = Mth.lerp(0.02 * event.getPartialTick(), shakeTime, 0);
 
         if (player != null && shakeTime > 0) {
             float shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0, 1);
@@ -978,17 +978,16 @@ public class ClientEventHandler {
             if (shakeType > 0) {
                 event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType * (onVehicle ? 0.1 : 1))));
                 event.setPitch((float) (pitch - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType * (onVehicle ? 0.1 : 1))));
-                event.setRoll((float) (roll - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * (onVehicle ? 0.1 : 1))));
+                cameraRoll = (float) (roll - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * (onVehicle ? 0.1 : 1)));
             } else {
                 event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType * (onVehicle ? 0.1 : 1))));
                 event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType * (onVehicle ? 0.1 : 1))));
-                event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * (onVehicle ? 0.1 : 1))));
+                cameraRoll = (float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * (onVehicle ? 0.1 : 1)));
             }
         }
 
         cameraPitch = event.getPitch();
         cameraYaw = event.getYaw();
-        cameraRoll = event.getRoll();
 
         if (player != null && player.getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
             return;
@@ -1235,11 +1234,11 @@ public class ClientEventHandler {
             if (recoilY > 0) {
                 event.setYaw((float) (yaw - shake[0] * rpm));
                 event.setPitch((float) (pitch + shake[0] * rpm));
-                event.setRoll((float) (roll + shake[1] * rpm));
+                cameraRoll = (float) (roll + shake[1] * rpm);
             } else if (recoilY <= 0) {
                 event.setYaw((float) (yaw + shake[0] * rpm));
                 event.setPitch((float) (pitch - shake[0] * rpm));
-                event.setRoll((float) (roll - shake[1] * rpm));
+                cameraRoll = (float) (roll - shake[1] * rpm);
             }
         }
     }
@@ -1369,7 +1368,7 @@ public class ClientEventHandler {
                     (float) Mth.nextDouble(RandomSource.create(), -3, 3) * shakeStrength);
             event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() +
                     (float) Mth.nextDouble(RandomSource.create(), -3, 3) * shakeStrength);
-            event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12) * shakeStrength);
+            cameraRoll = (float) Mth.nextDouble(RandomSource.create(), 8, 12) * shakeStrength;
         }
     }
 
@@ -1428,7 +1427,7 @@ public class ClientEventHandler {
             event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1]));
         }
 
-        event.setRoll((float) (roll + cameraRot[2] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.35 : 0) * turnRot[2]));
+        cameraRoll = (float) (roll + cameraRot[2] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.35 : 0) * turnRot[2]);
     }
 
     private static void handleBowPullAnimation(LivingEntity entity, ItemStack stack) {

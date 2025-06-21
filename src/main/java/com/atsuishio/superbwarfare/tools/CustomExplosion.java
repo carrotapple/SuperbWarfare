@@ -71,13 +71,13 @@ public class CustomExplosion extends Explosion {
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
         this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, pBlockInteraction);
 
-        ShakeClientMessage.sendToNearbyPlayers(level, pToBlowX, pToBlowY, pToBlowZ, 4 * radius, 5 + 0.02 * damage, 0.75 * pRadius, 4 + 0.02 * damage);
+        ShakeClientMessage.sendToNearbyPlayers(level, pToBlowX, pToBlowY, pToBlowZ, 4 * radius, 20 + 0.02 * damage, 3 * pRadius, 50 + 0.05 * damage);
     }
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius) {
         this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, BlockInteraction.KEEP);
 
-        ShakeClientMessage.sendToNearbyPlayers(level, pToBlowX, pToBlowY, pToBlowZ, radius, 20 + 0.02 * damage, pRadius, 10 + 0.03 * damage);
+        ShakeClientMessage.sendToNearbyPlayers(level, pToBlowX, pToBlowY, pToBlowZ, radius, 5 + 0.02 * damage, 0.75 * pRadius, 2 + 0.002 * damage);
     }
 
     public CustomExplosion setFireTime(int fireTime) {
