@@ -214,7 +214,7 @@ public class VehicleHudOverlay implements IGuiOverlay {
                 //引擎
                 ResourceLocation engine;
 
-                if (mobileVehicle.getEntityData().get(ENGINE_DAMAGED)) {
+                if (mobileVehicle.getEntityData().get(ENGINE1_DAMAGED)) {
                     engine = Mod.loc("textures/screens/land/engine_damaged.png");
                 } else {
                     engine = Mod.loc("textures/screens/land/engine.png");
