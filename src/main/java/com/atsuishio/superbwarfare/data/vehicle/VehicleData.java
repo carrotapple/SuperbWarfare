@@ -9,7 +9,6 @@ import com.google.common.cache.LoadingCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -118,14 +117,8 @@ public class VehicleData {
         var modifier = new DamageModifier();
 
         if (data.applyDefaultDamageModifiers) {
-            modifier.immuneTo(EntityType.POTION)
-                    .immuneTo(EntityType.AREA_EFFECT_CLOUD)
-                    .immuneTo(DamageTypes.FALL)
-                    .immuneTo(DamageTypes.DROWN)
-                    .immuneTo(DamageTypes.DRAGON_BREATH)
-                    .immuneTo(DamageTypes.WITHER)
-                    .immuneTo(DamageTypes.WITHER_SKULL)
-                    .reduce(5, ModDamageTypes.VEHICLE_STRIKE);
+            modifier.addAll(DamageModifier.createDefaultModifier().toList());
+            modifier.reduce(5, ModDamageTypes.VEHICLE_STRIKE);
         }
 
         return modifier.addAll(data.damageModifiers);

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
@@ -12,11 +13,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -25,6 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 
 public class MelonBombEntity extends FastThrowableProjectile implements ExplosiveProjectile {
 
@@ -47,12 +46,12 @@ public class MelonBombEntity extends FastThrowableProjectile implements Explosiv
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return Items.MELON;
     }
 
@@ -61,22 +60,11 @@ public class MelonBombEntity extends FastThrowableProjectile implements Explosiv
         return true;
     }
 
+    private static final DamageModifier DAMAGE_MODIFIER = DamageModifier.createDefaultModifier();
+
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        amount = DAMAGE_MODIFIER.compute(source, amount);
         this.entityData.set(HEALTH, this.entityData.get(HEALTH) - amount);
 
         return super.hurt(source, amount);
@@ -93,7 +81,7 @@ public class MelonBombEntity extends FastThrowableProjectile implements Explosiv
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
@@ -103,7 +91,7 @@ public class MelonBombEntity extends FastThrowableProjectile implements Explosiv
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Health", this.entityData.get(HEALTH));
         if (compound.contains("ExplosionDamage")) {
@@ -115,7 +103,7 @@ public class MelonBombEntity extends FastThrowableProjectile implements Explosiv
     }
 
     @Override
-    public void onHitBlock(BlockHitResult blockHitResult) {
+    public void onHitBlock(@NotNull BlockHitResult blockHitResult) {
         if (this.level() instanceof ServerLevel) {
             AABB aabb = new AABB(blockHitResult.getLocation(), blockHitResult.getLocation()).inflate(5);
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {

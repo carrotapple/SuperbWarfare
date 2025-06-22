@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.projectile;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.*;
@@ -21,14 +22,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -39,6 +37,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -61,7 +60,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     private float explosionDamage = ExplosionConfig.AGM_65_EXPLOSION_DAMAGE.get();
     private float explosionRadius = ExplosionConfig.AGM_65_EXPLOSION_RADIUS.get().floatValue();
     private boolean distracted = false;
-    private int durability = 50;
+    private int durability;
 
     public Agm65Entity(EntityType<? extends Agm65Entity> type, Level world) {
         super(type, world);
@@ -83,26 +82,16 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return ModItems.AGM.get();
     }
 
+
+    private static final DamageModifier DAMAGE_MODIFIER = DamageModifier.createDefaultModifier();
+
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        amount = DAMAGE_MODIFIER.compute(source, amount);
         this.entityData.set(HEALTH, this.entityData.get(HEALTH) - amount);
 
         return super.hurt(source, amount);
@@ -121,7 +110,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
@@ -141,7 +130,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Damage", this.damage);
@@ -182,7 +171,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    public void onHitBlock(BlockHitResult blockHitResult) {
+    public void onHitBlock(@NotNull BlockHitResult blockHitResult) {
         if (this.level() instanceof ServerLevel) {
             BlockPos resultPos = blockHitResult.getBlockPos();
             float hardness = this.level().getBlockState(resultPos).getBlock().defaultDestroyTime();
@@ -288,7 +277,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
         destroyBlock();
     }
-    
+
     @Override
     public boolean isNoGravity() {
         return true;
@@ -319,12 +308,12 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    public SoundEvent getCloseSound() {
+    public @NotNull SoundEvent getCloseSound() {
         return ModSounds.ROCKET_ENGINE.get();
     }
 
     @Override
-    public SoundEvent getSound() {
+    public @NotNull SoundEvent getSound() {
         return ModSounds.ROCKET_FLY.get();
     }
 
@@ -334,7 +323,7 @@ public class Agm65Entity extends FastThrowableProjectile implements GeoEntity, E
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

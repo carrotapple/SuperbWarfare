@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity;
 import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.damage.DamageModifier;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -18,16 +19,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -68,25 +68,14 @@ public class ClaymoreEntity extends Entity implements GeoEntity, OwnableEntity {
         return !this.isRemoved();
     }
 
+    private static final DamageModifier DAMAGE_MODIFIER = DamageModifier.createDefaultModifier()
+            .multiply(0.2f, ModDamageTypes.CUSTOM_EXPLOSION)
+            .multiply(0.2f, ModDamageTypes.MINE)
+            .multiply(0.2f, ModDamageTypes.PROJECTILE_BOOM);
+
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION) || source.is(ModDamageTypes.MINE) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.2f;
-        }
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        amount = DAMAGE_MODIFIER.compute(source, amount);
 
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
@@ -152,7 +141,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, OwnableEntity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isOwnedBy(player) && player.isShiftKeyDown()) {
             if (!this.level().isClientSide()) {
                 this.discard();
@@ -254,7 +243,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, OwnableEntity {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose p_33597_) {
         return super.getDimensions(p_33597_).scale((float) 0.5);
     }
 
