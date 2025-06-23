@@ -190,7 +190,7 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return;
-        if (event.getEntity() instanceof TargetEntity) return;
+        if (event.getEntity().getType().is(ModTags.EntityTypes.NO_EXPERIENCE)) return;
 
         var data = GunData.from(stack);
         double amount = Math.min(0.125 * event.getAmount(), event.getEntity().getMaxHealth());
@@ -215,7 +215,7 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return;
-        if (event.getEntity() instanceof TargetEntity) return;
+        if (event.getEntity().getType().is(ModTags.EntityTypes.NO_EXPERIENCE)) return;
 
         var data = GunData.from(stack);
         double amount = 20 + 2 * event.getEntity().getMaxHealth();
@@ -254,7 +254,7 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof GunItem)) return;
-        if (event.getEntity() instanceof TargetEntity) return;
+        if (event.getEntity().getType().is(ModTags.EntityTypes.NO_EXPERIENCE)) return;
 
         var data = GunData.from(stack);
         int level = data.level.get();
