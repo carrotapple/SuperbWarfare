@@ -16,6 +16,7 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "ProjectileUtilMixin",
+    "SteelPipeFallMixin",
     "VillagerMixin",
     "tacz.EntityUtilMixin"
   ],

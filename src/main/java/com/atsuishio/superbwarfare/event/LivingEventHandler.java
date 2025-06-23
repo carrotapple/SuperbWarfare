@@ -45,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -658,14 +657,6 @@ public class LivingEventHandler {
         if (event.getEffectInstance().getEffect().getCategory() == MobEffectCategory.HARMFUL &&
                 event.getEntity().getVehicle() instanceof VehicleEntity vehicle && vehicle.isEnclosed(vehicle.getSeatIndex(event.getEntity()))) {
             event.setResult(Event.Result.DENY);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onItemSpawned(ItemTossEvent event) {
-        if (event.getEntity().getItem().getItem() == ModItems.STEEL_PIPE.get()) {
-            Mod.queueServerWork(5, () ->
-                    event.getEntity().level().playSound(null, event.getEntity().getOnPos(), ModSounds.STEEL_PIPE_DROP.get(), SoundSource.PLAYERS, 2, 1));
         }
     }
 }
