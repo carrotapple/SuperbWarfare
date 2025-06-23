@@ -1,6 +1,6 @@
 # SuperbWarfare
 
-[中文](./README.md) | **[English](./README-en.md)**
+**[Korean](./README.md)** | [中文](README-cn.md) | **[English](./README-en.md)**
 
 ## Introduction
 
