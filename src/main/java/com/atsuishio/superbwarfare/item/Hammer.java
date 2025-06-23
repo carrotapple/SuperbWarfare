@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 public class Hammer extends SwordItem {
 
     public Hammer() {
-        super(Tiers.IRON, 9, -3.2f, new Item.Properties().durability(400));
+        super(Tiers.IRON, 11, -3.2f, new Item.Properties().durability(400));
     }
 
     @Override
