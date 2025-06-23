@@ -63,11 +63,7 @@ public class LivingEventHandler {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && event.getEntity().getVehicle() instanceof VehicleEntity vehicle) {
             if (event.getEntity().getVehicle() instanceof ArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger(event.getEntity())) {
-                if (!(event.getSource().is(DamageTypes.EXPLOSION)
-                        || event.getSource().is(DamageTypes.PLAYER_EXPLOSION)
-                        || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
-                        || event.getSource().is(ModDamageTypes.MINE)
-                        || event.getSource().is(ModDamageTypes.PROJECTILE_BOOM))) {
+                if (!event.getSource().is(ModTags.DamageTypes.VEHICLE_NOT_ABSORB)) {
                     vehicle.hurt(event.getSource(), event.getAmount());
                 }
                 event.setCanceled(true);
@@ -152,9 +148,8 @@ public class LivingEventHandler {
         ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
 
         if (armor != ItemStack.EMPTY && armor.getTag() != null && armor.getTag().contains("ArmorPlate")) {
-            double armorValue;
-            armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
-            armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
+            double armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
+            armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armorValue - damage, 0));
             damage = Math.max(damage - armorValue, 0);
         }
 
@@ -437,10 +432,7 @@ public class LivingEventHandler {
     }
 
     private static void stopGunReloadSound(ServerPlayer player, GunItem gun) {
-        gun.getReloadSound().forEach(sound -> {
-            var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
-            player.connection.send(clientboundstopsoundpacket);
-        });
+        gun.getReloadSound().forEach(sound -> player.connection.send(new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS)));
     }
 
     /**
