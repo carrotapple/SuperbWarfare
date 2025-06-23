@@ -34,6 +34,9 @@ public class ModDamageTypeTagProvider extends DamageTypeTagsProvider {
                 .addOptional(new ResourceLocation("tacz", "bullet_ignore_armor"))
                 .addOptional(new ResourceLocation("tacz", "bullet_void_ignore_armor"))
                 .addOptional(new ResourceLocation("dreamaticvoyage", "leviy_beam_absolute"));
+        this.tag(ModTags.DamageTypes.VEHICLE_IGNORE)
+                .addOptional(new ResourceLocation("sona", "injury"));
+        this.tag(ModTags.DamageTypes.VEHICLE_NOT_ABSORB)
+                .add(DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION, ModDamageTypes.CUSTOM_EXPLOSION, ModDamageTypes.MINE, ModDamageTypes.PROJECTILE_BOOM);
     }
-
 }
