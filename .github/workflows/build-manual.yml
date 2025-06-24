@@ -24,6 +24,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.target_branch }}
       
+      - name: Enchant permission
+        run: chmod +x gradlew
+      
       - name: Setting java
         uses: actions/setup-java@v4
         with:
