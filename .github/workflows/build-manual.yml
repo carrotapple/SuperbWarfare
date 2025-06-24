@@ -1,0 +1,91 @@
+name: manual build and release
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'branch'
+        required: true
+        default: 'release'
+      release_tag_suffix:
+        description: 'prefix'
+        required: false
+        default: ''
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+      
+      - name: Setting java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Setting gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.x'
+      
+      - name: Build gradle project
+        run: |
+          ./gradlew build --stacktrace
+      
+      - name: Find build jar
+        id: find_jar
+        run: |
+          JAR_FILE=$(find build/libs -name "*.jar" -not -name "*-plain.jar" -print -quit)
+          if [ -z "$JAR_FILE" ]; then
+            echo "::error::Cannot find jar, check build path."
+            exit 1
+          fi
+          echo "Found jar: $JAR_FILE"
+          echo "jar_path=$JAR_FILE" >> "$GITHUB_OUTPUT"
+          
+          JAR_NAME=$(basename "$JAR_FILE")
+          JAR_NAME_WITHOUT_EXT="${JAR_NAME%.jar}"
+          echo "jar_name_without_extension=$JAR_NAME_WITHOUT_EXT" >> "$GITHUB_OUTPUT"
+      
+      - name: Create release info
+        id: generate_release_info
+        run: |
+          BRANCH_NAME_SLUGGED=$(echo "${{ github.event.inputs.target_branch }}" | tr '/' '-')
+          COMMIT_SHA_SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
+          JAR_NAME_FOR_RELEASE="${{ steps.find_jar.outputs.jar_name_without_extension }}"
+          TIMESTAMP_RAW=$(date +%Y%m%d-%H%M%S)
+          TIMESTAMP_FORMATTED=$(date +%Y-%m-%d\ %H:%M:%S)
+          
+          RELEASE_TAG="build-${BRANCH_NAME_SLUGGED}-${TIMESTAMP_RAW}-${COMMIT_SHA_SHORT}"
+          if [ -n "${{ github.event.inputs.release_tag_suffix }}" ]; then
+            RELEASE_TAG="${RELEASE_TAG}-${{ github.event.inputs.release_tag_suffix }}"
+          fi
+          echo "generated_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          
+          RELEASE_NAME="${BRANCH_NAME_SLUGGED}-${COMMIT_SHA_SHORT}-${JAR_NAME_FOR_RELEASE}"
+          echo "generated_name=$RELEASE_NAME" >> "$GITHUB_OUTPUT"
+          echo "formatted_timestamp=$TIMESTAMP_FORMATTED" >> "$GITHUB_OUTPUT"
+      
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.generate_release_info.outputs.generated_tag }}
+          name: ${{ steps.generate_release_info.outputs.generated_name }}
+          body: |
+            This release based on branch **${{ github.event.inputs.target_branch }}**
+            Commit SHA: `${{ github.sha }}`
+            Build jar: `${{ steps.find_jar.outputs.jar_name_without_extension }}.jar`
+            Trigger time: `${{ steps.generate_release_info.outputs.formatted_timestamp }}`
+            Prefix: `${{ github.event.inputs.release_tag_suffix }}`
+          draft: false
+          prerelease: true
+          files: ${{ steps.find_jar.outputs.jar_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
