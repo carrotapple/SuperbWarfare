@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -208,8 +209,10 @@ public class TaserItem extends GunItem {
 
         if (player instanceof ServerPlayer serverPlayer) {
             var level = serverPlayer.level();
+			JsonObject projectileData = data.projectileInfo().data;
+			int duration = projectileData.get("Duration").getAsInt();
             TaserBulletEntity projectile = new TaserBulletEntity(player, level,
-                    (float) data.damage());
+                    (float) data.damage(), duration);
 
             for (Perk.Type type : Perk.Type.values()) {
                 var instance = data.perk.getInstance(type);
@@ -230,19 +233,31 @@ public class TaserItem extends GunItem {
     public void afterShoot(GunData data, Player player) {
         super.afterShoot(data, player);
         var stack = data.stack;
+	    var tag = stack.getTag();
+		
         int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
+		
+		if (tag == null || !tag.contains("Unbreakable") || !tag.getBoolean("Unbreakable"))
+		{
+			stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> energy.extractEnergy(400 + 100 * perkLevel, false));
+		}
     }
 
     @Override
     public boolean canShoot(GunData data) {
         var stack = data.stack;
+	    var tag = stack.getTag();
 
         int perkLevel = data.perk.getLevel(ModPerks.VOLT_OVERLOAD);
-        var hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
-                .map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
-                .orElse(false);
-
+	    var hasEnoughEnergy = tag != null && tag.contains("Unbreakable") && tag.getBoolean("Unbreakable");
+		
+		if (!hasEnoughEnergy)
+		{
+			hasEnoughEnergy = stack.getCapability(ForgeCapabilities.ENERGY)
+				.map(storage -> storage.getEnergyStored() >= 400 + 100 * perkLevel)
+				.orElse(false);
+		}
+		
         if (!hasEnoughEnergy) return false;
         if (data.reloading()) return false;
         return super.canShoot(data);
