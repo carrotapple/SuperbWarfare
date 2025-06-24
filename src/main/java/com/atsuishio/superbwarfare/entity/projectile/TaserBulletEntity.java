@@ -44,6 +44,7 @@ public class TaserBulletEntity extends AbstractArrow implements GeoEntity {
 
     private float damage = 1f;
     private int volt = 0;
+	private int duration = 100;
     private int wireLength = 0;
     private boolean stop = false;
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.AIR);
@@ -65,6 +66,12 @@ public class TaserBulletEntity extends AbstractArrow implements GeoEntity {
         super(ModEntities.TASER_BULLET.get(), entity, level);
         this.damage = damage;
     }
+	
+	public TaserBulletEntity(LivingEntity entity, Level level, float damage, int duration) {
+		super(ModEntities.TASER_BULLET.get(), entity, level);
+		this.damage = damage;
+		this.duration = duration;
+	}
 
     public TaserBulletEntity(EntityType<? extends TaserBulletEntity> type, Level world) {
         super(type, world);
@@ -130,7 +137,7 @@ public class TaserBulletEntity extends AbstractArrow implements GeoEntity {
                 if (living instanceof Creeper creeper && living.level() instanceof ServerLevel serverLevel) {
                     creeper.thunderHit(serverLevel, new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel));
                 } else {
-                    living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100 + volt * 30, volt), this.getOwner());
+                    living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), duration, volt), this.getOwner());
                 }
             }
         }
