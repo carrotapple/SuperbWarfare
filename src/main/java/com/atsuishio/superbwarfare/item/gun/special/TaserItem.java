@@ -210,7 +210,17 @@ public class TaserItem extends GunItem {
         if (player instanceof ServerPlayer serverPlayer) {
             var level = serverPlayer.level();
 			JsonObject projectileData = data.projectileInfo().data;
-			int duration = projectileData.get("Duration").getAsInt();
+			int duration = 100;
+			
+			try
+			{
+				duration = projectileData.get("Duration").getAsInt();
+			}
+			catch (Exception e)
+			{
+				Mod.LOGGER.error(e.getMessage());
+			}
+			
             TaserBulletEntity projectile = new TaserBulletEntity(player, level,
                     (float) data.damage(), duration);
 
