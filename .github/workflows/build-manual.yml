@@ -24,6 +24,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.target_branch }}
       
+      - name: Enchant permission
+        run: chmod +x gradlew
+      
       - name: Setting java
         uses: actions/setup-java@v4
         with:
@@ -33,7 +36,7 @@ jobs:
       - name: Setting gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.x'
+          gradle-version: '8.1.1'
       
       - name: Build gradle project
         run: |
