@@ -3,10 +3,6 @@ name: manual build and release
 on:
   workflow_dispatch:
     inputs:
-      target_branch:
-        description: 'branch'
-        required: true
-        default: 'release'
       release_tag_suffix:
         description: 'prefix'
         required: false
@@ -42,39 +38,40 @@ jobs:
         run: |
           ./gradlew build --stacktrace
       
-      - name: Find build jar
+      - name: Find main jar for release naming
         id: find_jar
         run: |
-          JAR_FILE=$(find build/libs -name "*.jar" -not -name "*-plain.jar" -print -quit)
+          JAR_FILE=$(find build/libs -name "*.jar" -print -quit)
           if [ -z "$JAR_FILE" ]; then
-            echo "::error::Cannot find jar, check build path."
-            exit 1
+            echo "::warning::Cannot find a representative jar for naming, proceeding without it."
+            echo "jar_name_without_extension=no-main-jar" >> "$GITHUB_OUTPUT"
+          else
+            echo "Found representative jar: $JAR_FILE"
+            JAR_NAME=$(basename "$JAR_FILE")
+            JAR_NAME_WITHOUT_EXT="${JAR_NAME%.jar}"
+            echo "jar_name_without_extension=$JAR_NAME_WITHOUT_EXT" >> "$GITHUB_OUTPUT"
           fi
-          echo "Found jar: $JAR_FILE"
           echo "jar_path=$JAR_FILE" >> "$GITHUB_OUTPUT"
-          
-          JAR_NAME=$(basename "$JAR_FILE")
-          JAR_NAME_WITHOUT_EXT="${JAR_NAME%.jar}"
-          echo "jar_name_without_extension=$JAR_NAME_WITHOUT_EXT" >> "$GITHUB_OUTPUT"
       
       - name: Create release info
         id: generate_release_info
         run: |
-          BRANCH_NAME_SLUGGED=$(echo "${{ github.event.inputs.target_branch }}" | tr '/' '-')
-          COMMIT_SHA_SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
-          JAR_NAME_FOR_RELEASE="${{ steps.find_jar.outputs.jar_name_without_extension }}"
-          TIMESTAMP_RAW=$(date +%Y%m%d-%H%M%S)
-          TIMESTAMP_FORMATTED=$(date +%Y-%m-%d\ %H:%M:%S)
+          BRANCH_NAME_SLUGGED=$(echo "${{ github.event.inputs.target_branch }}" | tr '/' '-') # 브랜치 이름을 URL 친화적인 형태로 변환
+          COMMIT_SHA_SHORT=$(echo "${{ github.sha }}" | cut -c1-7) # 커밋 SHA의 앞 7자리 사용
+          DATE_ONLY=$(date +%Y%m%d) # 날짜만 가져옵니다 (YYYYMMDD 형식)
           
-          RELEASE_TAG="build-${BRANCH_NAME_SLUGGED}-${TIMESTAMP_RAW}-${COMMIT_SHA_SHORT}"
+          # 릴리즈 이름 및 태그의 기본 형식: build-{branch}-{date}-{hash}
+          BASE_NAME="build-${BRANCH_NAME_SLUGGED}-${DATE_ONLY}-${COMMIT_SHA_SHORT}"
+          
+          # suffix가 있을 경우 추가합니다.
+          RELEASE_FULL_NAME="$BASE_NAME"
           if [ -n "${{ github.event.inputs.release_tag_suffix }}" ]; then
-            RELEASE_TAG="${RELEASE_TAG}-${{ github.event.inputs.release_tag_suffix }}"
+            RELEASE_FULL_NAME="${RELEASE_FULL_NAME}-${{ github.event.inputs.release_tag_suffix }}"
           fi
-          echo "generated_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
           
-          RELEASE_NAME="${BRANCH_NAME_SLUGGED}-${COMMIT_SHA_SHORT}-${JAR_NAME_FOR_RELEASE}"
-          echo "generated_name=$RELEASE_NAME" >> "$GITHUB_OUTPUT"
-          echo "formatted_timestamp=$TIMESTAMP_FORMATTED" >> "$GITHUB_OUTPUT"
+          echo "generated_tag=$RELEASE_FULL_NAME" >> "$GITHUB_OUTPUT" # 태그와 이름 모두 동일한 형식으로
+          echo "generated_name=$RELEASE_FULL_NAME" >> "$GITHUB_OUTPUT"
+          echo "formatted_timestamp=$(date +%Y-%m-%d\ %H:%M:%S)" >> "$GITHUB_OUTPUT" # 릴리즈 본문용 전체 타임스탬프
       
       - name: Create release
         uses: softprops/action-gh-release@v1
@@ -84,11 +81,11 @@ jobs:
           body: |
             This release based on branch **${{ github.event.inputs.target_branch }}**
             Commit SHA: `${{ github.sha }}`
-            Build jar: `${{ steps.find_jar.outputs.jar_name_without_extension }}.jar`
+            Included files from `build/libs/` directory.
             Trigger time: `${{ steps.generate_release_info.outputs.formatted_timestamp }}`
-            Prefix: `${{ github.event.inputs.release_tag_suffix }}`
+            Suffix: `${{ github.event.inputs.release_tag_suffix }}`
           draft: false
           prerelease: true
-          files: ${{ steps.find_jar.outputs.jar_path }}
+          files: build/libs/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
